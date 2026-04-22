@@ -1,50 +1,24 @@
 package dao;
 
-import java.sql.*;
-
 import dto.MemberDTO;
 
-public class MemberDAO {
+public interface MemberDAO {
+	// 회원가입
+	int insertMember(MemberDTO member);
+	
+    // 로그인
+    MemberDTO login(String email, String password);
 
-    public void insertUser(String username, String password, String nickname,
-                           String phone, String role,
-                           String height, String weight,
-                           String diet, String workout) {
+    // 이메일 중복 체크
+    boolean isEmailExists(String email);
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/yourdb",
-                "root",
-                "1234"
-            );
-
-            String sql = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ps.setString(3, nickname);
-            ps.setString(4, phone);
-            ps.setString(5, role);
-            ps.setString(6, height);
-            ps.setString(7, weight);
-            ps.setString(8, diet);
-            ps.setString(9, workout);
-
-            ps.executeUpdate();
-
-            conn.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-	public MemberDTO loginCheck(MemberDTO memberDTO) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    // 카카오 회원 가입
+    void insertKakaoUser(MemberDTO dto);
+    
+    // 로그인 체크
+    MemberDTO loginCheck(MemberDTO dto);
+    
+    // 회원 조회
+    MemberDTO findByEmail(String email);
+    
 }

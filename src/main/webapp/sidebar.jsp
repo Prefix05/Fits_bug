@@ -11,8 +11,7 @@
 
         <!-- 로고 -->
         <div class="text-2xl font-black text-blue-600 dark:text-blue-500 italic mb-4 flex items-center gap-2">
-            <img class="w-8 h-8 rounded-full"
-                 src="<%=contextPath%>/resources/images/logo.png"/>
+            <img class="w-8 h-8 rounded-full" alt="Fitbull Logo" src="<%=contextPath%>/resources/images/logo.png" onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuCveWQWdmN7R9sHZYJtczW7JlQkSJksW17FyrAjX0sIqVNoO7rUvZ5aVmTxr--s6QdrpYaJkNs9Aj3Lm4Z9ICG1waBV-yEKtgQqf7a77X3bEMweDYmiRv_2wprNj_xs__Vqyh2f5bVQr3QkuYOxRdXb5jfED0ktJFxf9r0RpjFrb6By02eTD3KzReErGiYzzhFyCBXRSRYqsQM2VKkdk7mWWO2R5jjBRMjcPYzPyBozh6wbh3bLzhw8KrRNIyipW0rhClHJNWthxiM'"/>
             <span>핏츠버그</span>
         </div>
 
@@ -77,15 +76,10 @@
             <span class="text-sm">고객센터</span>
         </a>
 
-        <!-- 로그인 / 회원가입 -->
+        <!-- 로그아웃 -->
         <button onclick="location.href='<%=contextPath%>/login.jsp'"
                 class="bg-blue-600 text-white py-2 rounded-xl text-sm font-bold">
-            로그인
-        </button>
-
-        <button onclick="location.href='<%=contextPath%>/join.jsp'"
-                class="border py-2 rounded-xl text-sm font-bold hover:bg-gray-100">
-            회원가입
+            로그아웃
         </button>
 
     </div>

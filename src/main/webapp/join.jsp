@@ -1,244 +1,3 @@
-<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100">
-
-<div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-
-    <!-- STEP 1 -->
-    <div id="step1">
-        <h2 class="text-xl font-bold mb-4">회원가입</h2>
-
-        <select id="role" class="w-full border p-2 mb-3">
-            <option value="USER">일반</option>
-            <option value="TRAINER">트레이너</option>
-            <option value="GYM">헬스장</option>
-        </select>
-
-        <input id="id" placeholder="아이디" class="w-full border p-2 mb-2">
-        <input id="pw" placeholder="비밀번호" type="password" class="w-full border p-2 mb-2">
-        <input id="name" placeholder="이름" class="w-full border p-2 mb-4">
-
-        <button onclick="submitJoin()" class="w-full bg-orange-500 text-white py-2">
-            회원가입 완료
-        </button>
-    </div>
-
-    <!-- STEP 2 (트레이너) -->
-    <div id="step2" class="hidden">
-        <h2 class="text-xl font-bold mb-4">트레이너 인증</h2>
-
-        <input id="career" placeholder="경력" class="w-full border p-2 mb-2">
-        <input id="cert" placeholder="자격증" class="w-full border p-2 mb-4">
-
-        <button onclick="submitTrainer()" class="w-full bg-blue-500 text-white py-2">
-            제출하기
-        </button>
-    </div>
-
-    <!-- STEP 3 (헬스장) -->
-    <div id="step3" class="hidden">
-        <h2 class="text-xl font-bold mb-4">사업자 인증</h2>
-
-        <input id="bizNo" placeholder="사업자번호" class="w-full border p-2 mb-4">
-
-        <button onclick="submitGym()" class="w-full bg-green-500 text-white py-2">
-            제출하기
-        </button>
-    </div>
-
-</div>
-
-<script>
-function submitJoin() {
-    const data = {
-        id: document.getElementById("id").value,
-        pw: document.getElementById("pw").value,
-        name: document.getElementById("name").value,
-        role: document.getElementById("role").value
-    };
-
-    fetch("join", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.result === "trainer") {
-            showStep(2);
-        } else if (res.result === "gym") {
-            showStep(3);
-        } else {
-            alert("회원가입 완료");
-        }
-    });
-}
-
-function submitTrainer() {
-    fetch("trainer", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            career: document.getElementById("career").value,
-            cert: document.getElementById("cert").value
-        })
-    }).then(() => alert("트레이너 인증 완료"));
-}
-
-function submitGym() {
-    fetch("gym", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            bizNo: document.getElementById("bizNo").value
-        })
-    }).then(() => alert("사업자 인증 완료"));
-}
-
-function showStep(step) {
-    document.getElementById("step1").classList.add("hidden");
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("step3").classList.add("hidden");
-
-    document.getElementById("step" + step).classList.remove("hidden");
-}
-</script>
-
-</body>
-</html> --%>
-
-<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-50">
-
-<!-- ================= STEP 1 ================= -->
-<div id="step1" class="min-h-screen flex">
-
-    <div class="w-1/2 p-10">
-        <h1 class="text-3xl font-bold mb-6">회원가입</h1>
-
-        <!-- 역할 선택 -->
-        <div class="flex gap-2 mb-6">
-            <button type="button" onclick="selectRole('member')" class="roleBtn bg-blue-500 text-white px-4 py-2 rounded">회원</button>
-            <button type="button" onclick="selectRole('trainer')" class="roleBtn bg-gray-200 px-4 py-2 rounded">트레이너</button>
-            <button type="button" onclick="selectRole('gym')" class="roleBtn bg-gray-200 px-4 py-2 rounded">헬스장</button>
-        </div>
-
-        <form id="joinForm" method="post" action="join.do">
-
-            <input type="hidden" name="role" id="role" value="member"/>
-
-            <input name="id" placeholder="아이디" class="block w-full mb-3 p-3 border"/>
-
-            <input name="pw" type="password" placeholder="비밀번호" class="block w-full mb-3 p-3 border"/>
-
-            <input name="name" placeholder="이름" class="block w-full mb-3 p-3 border"/>
-
-            <input name="phone" placeholder="전화번호" class="block w-full mb-6 p-3 border"/>
-
-            <button type="button" onclick="goStep2()" class="bg-blue-500 text-white w-full py-3 rounded">
-                다음 단계
-            </button>
-        </form>
-    </div>
-
-    <div class="w-1/2 bg-black"></div>
-</div>
-
-<!-- ================= STEP 2 ================= -->
-<div id="step2" class="hidden fixed inset-0 bg-black/50 flex justify-center items-center">
-
-    <div class="bg-white p-8 rounded w-[500px]">
-        <h2 class="text-xl font-bold mb-6">맞춤형 정보 입력</h2>
-
-        <input name="height" placeholder="키(cm)" class="block w-full mb-3 p-3 border"/>
-        <input name="weight" placeholder="몸무게(kg)" class="block w-full mb-6 p-3 border"/>
-
-        <div class="flex justify-between">
-            <button onclick="backStep1()" class="px-4 py-2 border">이전</button>
-            <button onclick="goStep3()" class="bg-blue-500 text-white px-6 py-2 rounded">다음</button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= STEP 3 ================= -->
-<div id="step3" class="hidden fixed inset-0 bg-black/50 flex justify-center items-center">
-
-    <div class="bg-white p-8 rounded w-[500px]">
-        <h2 class="text-xl font-bold mb-6">운동 목표</h2>
-
-        <select name="goal" class="w-full mb-6 p-3 border">
-            <option value="light">주 1~2회</option>
-            <option value="normal">주 3~4회</option>
-            <option value="hard">주 5회 이상</option>
-        </select>
-
-        <div class="flex justify-between">
-            <button onclick="backStep2()" class="px-4 py-2 border">이전</button>
-
-            <!-- 최종 submit -->
-            <button onclick="submitJoin()" class="bg-blue-500 text-white px-6 py-2 rounded">
-                가입 완료
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-
-function selectRole(role){
-    document.getElementById("role").value = role;
-
-    document.querySelectorAll(".roleBtn").forEach(btn=>{
-        btn.classList.remove("bg-blue-500","text-white");
-        btn.classList.add("bg-gray-200");
-    });
-
-    event.target.classList.add("bg-blue-500","text-white");
-}
-
-// step 이동
-function goStep2(){
-    document.getElementById("step2").classList.remove("hidden");
-}
-
-function goStep3(){
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("step3").classList.remove("hidden");
-}
-
-function backStep1(){
-    document.getElementById("step2").classList.add("hidden");
-}
-
-function backStep2(){
-    document.getElementById("step3").classList.add("hidden");
-    document.getElementById("step2").classList.remove("hidden");
-}
-
-// 최종 submit
-function submitJoin(){
-    document.getElementById("joinForm").submit();
-}
-
-</script>
-
-</body>
-</html> --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -267,101 +26,109 @@ tailwind.config = {
 <style>
 body { font-family: 'Public Sans', sans-serif; }
 
-/* 선택된 역할 스타일 */
 .active-role {
     background-color: #2563EB !important;
     color: white !important;
     ring: 1px solid #2563EB;
 }
 </style>
-
 </head>
 
-<body class="bg-white min-h-screen flex items-center justify-center font-body text-slate-900">
+<body class="bg-white min-h-screen flex items-center justify-center text-slate-900">
 
-<div class="w-full min-h-screen flex flex-col md:flex-row">
+<div class="w-full min-h-screen flex">
 
 <!-- LEFT -->
-<div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 bg-white">
+<div class="w-full md:w-1/2 flex flex-col justify-center px-12 py-12">
 
-<!-- 로고 -->
-<div class="flex items-center gap-3 mb-16">
-<img class="w-10 h-10 rounded-full bg-slate-100 p-1"
-src="https://lh3.googleusercontent.com/aida/ADBb0ujjoLwjvLo850PgDZwzgmAYzZTgTk21eSgJ3rWxU-xEuAs9e-R7sXqi0uUJBAQPNA0NEJxsFWsTqdfMku_dWbd9ATeoYS_ItBbJP-RdVQfpAJhuNPZxHtnvGvZNjggxjgVuKb1MicmYie3MM69SHptMJ09BTGw047UVywTqEE-3qSW5zEUZMKD3ldCnv3D2f5w63ffSNZWnc6KuEw5JdR0BFEgXIX4RomxnpNrEpgD9cE47jjl6IjBS9X5WROo6UcnpdohMd8g_"/>
-<span class="text-2xl font-black">핏츠버그</span>
-</div>
-
-<!-- 타이틀 -->
-<div class="mb-10">
-<h1 class="text-3xl md:text-4xl font-bold mb-4">
-핏츠버그 파트너스 가입을<br/>환영합니다
-</h1>
-<p class="text-slate-500 text-lg">혼자서도 완벽한 운동을 시작해 보세요.</p>
-</div>
+<h1 class="text-3xl font-bold mb-8">회원가입</h1>
 
 <!-- 역할 선택 -->
-<div class="flex flex-wrap gap-2 mb-10">
-<button type="button" class="role-btn active-role px-6 py-2.5 rounded-full text-sm font-medium"
-data-role="member">회원</button>
-
-<button type="button" class="role-btn px-6 py-2.5 rounded-full bg-slate-50 text-slate-600 text-sm font-medium ring-1 ring-slate-200"
-data-role="trainer">트레이너</button>
-
-<button type="button" class="role-btn px-6 py-2.5 rounded-full bg-slate-50 text-slate-600 text-sm font-medium ring-1 ring-slate-200"
-data-role="gym">헬스장</button>
+<div class="flex gap-2 mb-8">
+<button type="button" class="role-btn active-role px-5 py-2 rounded-full" data-role="member">회원</button>
+<button type="button" class="role-btn px-5 py-2 rounded-full bg-gray-200" data-role="trainer">트레이너</button>
+<button type="button" class="role-btn px-5 py-2 rounded-full bg-gray-200" data-role="gym">헬스장</button>
 </div>
 
-<!-- FORM -->
-<form action="join" method="post" class="space-y-6 w-full max-w-md">
+<form action="join" method="post" class="space-y-5 max-w-md">
 
 <input type="hidden" name="role" id="role" value="member">
+<input type="hidden" name="verified" value="true">
 
-<!-- 아이디 -->
+<!-- 이메일 (아이디) -->
 <div>
-<label class="block text-sm font-semibold mb-2">아이디</label>
-<div class="flex gap-3">
-<input name="username" required
-class="w-full rounded-xl py-3 ring-1 ring-slate-300 px-3"
-placeholder="아이디를 입력해주세요">
+<label class="block mb-1 font-semibold">아이디 (이메일)</label>
 
-<button type="button"
-class="px-6 py-3 bg-slate-100 rounded-xl text-sm font-semibold whitespace-nowrap">
-중복확인
+<div class="flex gap-2">
+<input name="username" id="username" required
+class="flex-1 p-3 border rounded"
+placeholder="example@email.com">
+
+<button type="button" onclick="checkEmail()"
+class="px-4 bg-gray-200 rounded whitespace-nowrap">중복확인</button>
+</div>
+
+<!-- 메시지 -->
+<div id="emailMsg" class="text-sm mt-1"></div>
+</div>
+
+<!-- 인증 영역 -->
+<div>
+
+<div class="flex gap-2 mt-2">
+<input type="text" id="emailDisplay" readonly
+class="flex-1 p-3 border rounded bg-gray-100"
+placeholder="발급된 인증 코드를 입력해주세요">
+
+<button type="button" id="verifyBtn" onclick="sendCode()"
+class="px-4 bg-gray-200 rounded whitespace-nowrap" disabled>
+본인인증
 </button>
 </div>
+
+<!-- 코드 입력 -->
+<div id="codeBox" class="hidden mt-3">
+
+<div class="flex gap-2">
+<input type="text" id="code"
+class="w-full p-3 border rounded"
+placeholder="인증 코드 입력">
+
+<button type="button" id="confirmBtn" onclick="verifyCode()"
+class="px-4 bg-gray-200 rounded">확인</button>
+</div>
+
+<div id="codeMsg" class="text-sm mt-1"></div>
+<div id="timer" class="text-xs text-red-500"></div>
+
+</div>
+
 </div>
 
 <!-- 비밀번호 -->
 <div>
-<label class="block text-sm font-semibold mb-2">비밀번호</label>
+<label class="block mb-1 font-semibold">비밀번호</label>
 <input type="password" name="password" required
-class="w-full rounded-xl py-3 ring-1 ring-slate-300 px-3"
-placeholder="비밀번호를 입력해주세요">
+class="w-full p-3 border rounded">
 </div>
 
 <!-- 이름 -->
 <div>
-<label class="block text-sm font-semibold mb-2">이름 / 닉네임</label>
+<label class="block mb-1 font-semibold">닉네임</label>
 <input name="nickname" required
-class="w-full rounded-xl py-3 ring-1 ring-slate-300 px-3"
-placeholder="이름 또는 닉네임">
+class="w-full p-3 border rounded">
 </div>
 
 <!-- 연락처 -->
 <div>
-<label class="block text-sm font-semibold mb-2">연락처</label>
+<label class="block mb-1 font-semibold">연락처</label>
 <input name="phone" required
-class="w-full rounded-xl py-3 ring-1 ring-slate-300 px-3"
-placeholder="010-0000-0000">
+class="w-full p-3 border rounded">
 </div>
 
-<!-- 버튼 -->
-<div class="pt-4">
-<button type="submit"
-class="w-full py-4 rounded-xl text-white font-bold bg-blue-600 hover:bg-blue-700">
-회원가입 완료
+<button class="w-full bg-blue-600 text-white py-3 rounded font-bold">
+회원가입
 </button>
-</div>
 
 </form>
 </div>
@@ -397,63 +164,153 @@ style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AX
 
 <!-- JS -->
 <script>
-const buttons = document.querySelectorAll(".role-btn");
+
+// ================= 역할 선택 =================
+const roleBtns = document.querySelectorAll(".role-btn");
 const roleInput = document.getElementById("role");
 
-buttons.forEach(btn => {
-  btn.addEventListener("click", () => {
-	  
-	  const role = btn.dataset.role;
-
-      // ⭐ 트레이너 선택 시 페이지 이동
-      if(role === "trainer"){
-          window.location.href = "trainerJoin.jsp";
-          return;
-      }
-
-  	  // ⭐ 헬스장 이동 (추가된 부분)
-      if(role === "gym"){
-          window.location.href = "gymJoin.jsp";
-          return;
-      }
-      
-      // 기본 회원 처리
-        buttons.forEach(b => {
-            b.classList.remove("active-role");
-            b.classList.add("bg-gray-200");
-        });
-
-        btn.classList.add("active-role");
-        btn.classList.remove("bg-gray-200");
-
-        roleInput.value = role;
-
-    /* buttons.forEach(b => {
-      b.classList.remove("active-role");
-      b.classList.add("bg-slate-50","text-slate-600");
-    });
-
-    btn.classList.add("active-role");
-    btn.classList.remove("bg-slate-50","text-slate-600");
-
-    roleInput.value = btn.dataset.role; */
-  });
-});
-</script>
-<script>
-const buttons = document.querySelectorAll(".role-btn");
-
-buttons.forEach(btn => {
+roleBtns.forEach(btn => {
     btn.addEventListener("click", () => {
+
         const role = btn.dataset.role;
 
         if(role === "trainer"){
-            location.href = "trainerJoin";
-        } else if(role === "gym"){
-            location.href = "gymJoin";
+            location.href = "trainerJoin.jsp";
+            return;
         }
+        if(role === "gym"){
+            location.href = "gymJoin.jsp";
+            return;
+        }
+
+        roleBtns.forEach(b => b.classList.remove("active-role"));
+        btn.classList.add("active-role");
+
+        roleInput.value = role;
     });
 });
+
+
+// ================= 이메일 중복확인 =================
+function checkEmail(){
+
+    const email = document.getElementById("username").value;
+
+    if(!email.includes("@")){
+        showEmailMsg("이메일 형식이 아닙니다.", "red");
+        return;
+    }
+
+    fetch("checkEmail?email=" + email)
+    .then(res => res.json())
+    .then(res => {
+
+        if(res.exists){
+            showEmailMsg("이미 사용중인 아이디입니다.", "red");
+            document.getElementById("verifyBtn").disabled = true;
+        }else{
+            showEmailMsg("사용 가능한 이메일입니다.", "green");
+
+            document.getElementById("emailDisplay").value = email;
+            document.getElementById("verifyBtn").disabled = false;
+        }
+
+    });
+}
+
+function showEmailMsg(msg, color){
+    const el = document.getElementById("emailMsg");
+    el.innerText = msg;
+    el.className = "text-" + color + "-500 text-sm mt-1";
+}
+
+
+// ================= 인증 =================
+let timerInterval;
+let timeLeft = 180;
+
+// 인증 코드 요청
+function sendCode(){
+
+    const email = document.getElementById("username").value;
+
+    fetch("sendEmailCode", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({email})
+    });
+
+    document.getElementById("codeBox").classList.remove("hidden");
+    document.getElementById("codeMsg").innerText = "인증 코드가 전송되었습니다.";
+
+    startTimer();
+}
+
+// 타이머
+function startTimer(){
+    clearInterval(timerInterval);
+    timeLeft = 180;
+
+    timerInterval = setInterval(() => {
+        const min = Math.floor(timeLeft / 60);
+        const sec = timeLeft % 60;
+
+        document.getElementById("timer").innerText =
+            `남은 시간: ${min}:${sec.toString().padStart(2,'0')}`;
+
+        timeLeft--;
+
+        if(timeLeft < 0){
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "인증 시간 만료";
+        }
+    }, 1000);
+}
+
+
+// 인증 코드 확인
+function verifyCode(){
+
+    const email = document.getElementById("username").value;
+    const code = document.getElementById("code").value;
+
+    fetch("verifyEmailCode", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({email, code})
+    })
+    .then(res => res.json())
+    .then(res => {
+
+        if(res.success){
+            successVerify();
+        }else{
+            document.getElementById("codeMsg").innerText = "코드가 올바르지 않습니다.";
+            document.getElementById("codeMsg").className = "text-red-500 text-sm";
+        }
+
+    });
+}
+
+
+// 인증 성공
+function successVerify(){
+
+    clearInterval(timerInterval);
+
+    document.getElementById("verifyBtn").innerText = "✔ 인증완료";
+    document.getElementById("verifyBtn").classList.add("bg-green-500","text-white");
+    document.getElementById("verifyBtn").disabled = true;
+
+    document.getElementById("codeMsg").innerText = "인증 완료";
+    document.getElementById("codeMsg").className = "text-green-500 text-sm";
+
+    document.getElementById("code").readOnly = true;
+    document.getElementById("confirmBtn").disabled = true;
+
+    document.getElementById("verified").value = "true";
+}
+
 </script>
 
 </body>

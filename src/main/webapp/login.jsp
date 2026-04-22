@@ -127,36 +127,35 @@ body {
         <div class="title">로그인</div>
         <div class="subtitle">오늘도 완벽한 운동을 시작하세요 💪</div>
 
+<% if(request.getAttribute("error") != null){ %>
+    <p style="color:red;">
+<%= request.getAttribute("error") %></p>
+<% } %>
         <form action="login" method="post">
-            <div class="input-box">
-                <label>아이디</label>
-                <input type="text" name="userId" placeholder="아이디">
-            </div>
+  		  	<div class="input-box">
+       	  <label>아이디(이메일)</label>
+          <input type="text" name="email" placeholder="이메일 입력">
+    	    </div>
 
-            <div class="input-box">
-                <label>비밀번호</label>
-                <input type="password" name="password" placeholder="비밀번호">
-            </div>
-
-            <div class="options">
-                <div><input type="checkbox"> 아이디 저장</div>
-                <a href="#">비밀번호 찾기</a>
-            </div>
-
-            <button class="login-btn">로그인</button>
-        </form>
+    		<div class="input-box">
+          <label>비밀번호</label>
+          <input type="password" name="password" placeholder="비밀번호">
+   			 </div>
+    	  <button class="login-btn">로그인</button>
+		</form>
 
         <div class="divider">또는</div>
 
         <!-- 카카오 로그인 -->
-        <button class="kakao-btn"
-            onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=YOUR_REST_API_KEY&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code'">
-            카카오로 로그인
-        </button>
+		<button class="kakao-btn"
+			onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=REST_API_KEY&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code'">
+			카카오로 로그인
+		</button>
 
-        <div class="signup">
-            아직 회원이 아니신가요? <a href="#">회원가입</a>
-        </div>
+		<div class="signup">
+    		아직 회원이 아니신가요? 
+    		<a href="join.jsp">회원가입</a>
+		</div>
     </div>
 </div>
 <div class="guest">

@@ -4,13 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBUtil {
+	public static Connection getConnection() {
 
-    public static Connection getConnection() throws Exception {
-        String url = "jdbc:mysql://localhost:8080/testdb_26";
-        String user = "root";
-        String password = "1234";
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(url, user, password);
-    }
+            return DriverManager.getConnection(
+                "jdbc:mariadb://localhost:3306/fitsbug",
+                "root",
+                "7564"
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+	}
 }
