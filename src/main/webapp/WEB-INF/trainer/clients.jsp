@@ -1,0 +1,475 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: jinhoyon
+  Date: 4/22/26
+  Time: 2:46 PM
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Fitzberg - Clients</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
+          rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"/>
+    <script
+            id="tailwind-config">tailwind.config = {
+        darkMode: "class", theme: {
+            extend: {
+                colors: {
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1a1c1f",
+                    "on-secondary-container": "#2d4c83",
+                    "surface-container-high": "#e8e8ed",
+                    tertiary: "#9e3d00",
+                    surface: "#f9f9fe",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-tertiary-container": "#fffbff",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container": "#ededf2",
+                    "primary-fixed-dim": "#adc6ff",
+                    "tertiary-fixed-dim": "#ffb595",
+                    "on-background": "#1a1c1f",
+                    "surface-variant": "#e2e2e7",
+                    "inverse-primary": "#adc6ff",
+                    "tertiary-fixed": "#ffdbcc",
+                    "outline-variant": "#c1c6d7",
+                    "on-secondary-fixed-variant": "#26467d",
+                    "on-primary-container": "#fefcff",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "primary-fixed": "#d8e2ff",
+                    "on-tertiary-fixed-variant": "#7c2e00",
+                    "surface-dim": "#d9dade",
+                    "on-surface-variant": "#414755",
+                    "surface-container-low": "#f3f3f8",
+                    outline: "#717786",
+                    "on-tertiary-fixed": "#351000",
+                    "error-container": "#ffdad6",
+                    secondary: "#405e96",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#2e3034",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-primary-fixed": "#001a41",
+                    primary: "#0058bc",
+                    "tertiary-container": "#c64f00",
+                    "on-secondary-fixed": "#001a41",
+                    "secondary-container": "#a1befd",
+                    "primary-container": "#0070eb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#005bc1",
+                    error: "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    background: "#f9f9fe",
+                    "inverse-on-surface": "#f0f0f5"
+                },
+                borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"},
+                fontFamily: {headline: ["Inter"], body: ["Inter"], label: ["Inter"], display: "Inter"},
+                boxShadow: {"primary-glow": "0 0 15px -3px rgba(0, 88, 188, 0.2), 0 4px 6px -2px rgba(0, 88, 188, 0.1)"},
+                keyframes: {
+                    pulseCustom: {
+                        "0%, 100%": {opacity: 1, transform: "scale(1)"},
+                        "50%": {opacity: 0.5, transform: "scale(1.2)"}
+                    }
+                },
+                animation: {"pulse-dot": "pulseCustom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"}
+            }
+        }
+    };</script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #client-list-container {
+            scrollbar-width: thin;
+            scrollbar-color: #e2e2e7 transparent;
+        }
+
+        #client-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #client-list-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #client-list-container::-webkit-scrollbar-thumb {
+            background-color: #e2e2e7;
+            border-radius: 20px;
+        }
+
+        .client-stats p {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface antialiased">
+
+<!-- Mobile Top Bar -->
+<header
+        class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-[#007AFF] rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-lg">exercise</span>
+        </div>
+        <h1 class="text-lg font-bold text-on-surface">Fitsbug</h1>
+    </div>
+    <div class="flex items-center gap-1">
+        <button class="p-2 rounded-lg hover:bg-slate-200">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+            <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
+        </a>
+    </div>
+</header>
+
+<!-- Mobile Bottom Nav -->
+<nav
+        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
+    <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">distance</span>
+        <span class="text-[10px] font-medium">내주변</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/dashboards"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
+        <span class="text-[10px] font-medium">대시보드</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
+        <span class="material-symbols-outlined text-[22px]">group</span>
+        <span class="text-[10px] font-bold text-blue-700">화원관리</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+        <span class="text-[10px] font-medium">일정</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">chat</span>
+        <span class="text-[10px] font-medium">메시지</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">payments</span>
+        <span class="text-[10px] font-medium">수익</span>
+    </a>
+</nav>
+
+<!-- Refactored SideNavBar -->
+<aside
+        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
+    <a href="" class="flex items-center gap-3 mb-10">
+        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
+    </a>
+    <nav class="flex-1 space-y-1" id="main-nav">
+
+        <!-- 공통 nav item -->
+
+        <!-- 내주변 -->
+        <div class="relative">
+            <!-- Parent toggle -->
+            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
+               onclick="
+                            this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
+                            this.querySelector('.chevron').classList.toggle('rotate-180');
+                        " href="#">
+                <span class="material-symbols-outlined">distance</span>
+                내주변
+                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
+                      style="font-size:18px">expand_more</span>
+            </a>
+
+            <!-- Dropdown children -->
+            <div class="dropdown hidden flex-col pl-4">
+                <!-- 헬스장 -->
+                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+                   href="#">
+                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
+                    헬스장
+                </a>
+                <!-- 트레이너 -->
+                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+                   href="#">
+                    <span class="material-symbols-outlined" data-icon="">person</span>
+                    트레이너
+                </a>
+            </div>
+        </div>
+
+        <!-- 트레이너  nav item-->
+
+        <!-- 대시보드 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="${pageContext.request.contextPath}/dashboards" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드
+        </a>
+
+        <!-- 회원관리 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원관리
+        </a>
+
+        <!-- 일정 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="/calendar.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정
+        </a>
+
+        <!-- 메시지 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="/messages.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">chat</span>
+            메시지
+        </a>
+
+        <!-- 수익 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="earnings.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익
+        </a>
+    </nav>
+
+    <!-- 공통 nav item -->
+    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
+            설정</a>
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
+            지원</a>
+        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
+    </div>
+
+
+    <!-- 마이프로필 nav item -->
+    <a href="./profile.html"
+       class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
+        <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
+             style=""/>
+        <div class="overflow-hidden">
+            <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
+            <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
+        </div>
+    </a>
+</aside>
+
+
+<!-- Main Content Canvas (Adjusted with ml-64) -->
+<div class="lg:ml-64 min-h-screen flex flex-col pt-20 lg:pt-8 pb-20 lg:pb-0">
+    <!-- TopNavBar Shell -->
+    <main class="flex-1 overflow-hidden pt-6 md:pt-8 px-4 md:px-8 pb-12 flex flex-col">
+        <!-- Header & Control Bar -->
+        <div class="flex-none max-w-7xl w-full mx-auto mb-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight text-on-surface" style="">회원 관리</h2>
+                    <p class="text-on-surface-variant mt-1" style="">활성 교육 명단을 관리하고 성과를 추적하세요.</p>
+                </div>
+            </div>
+            <!-- Control Row -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div class="flex flex-col md:flex-row md:items-center gap-4 flex-1">
+                    <!-- Integrated Search Bar -->
+                    <div class="relative w-full lg:max-w-[300px]">
+                            <span
+                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg"
+                                    data-icon="search" style="">search</span>
+                        <input
+                                class="w-full bg-white border border-outline-variant rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-outline text-on-surface"
+                                placeholder="회원 검색..." type="text"/>
+                    </div>
+                    <!-- Segmented Control Filter -->
+                    <div class="flex items-center gap-1 p-1 bg-surface-container-high rounded-2xl w-full">
+                        <button class="flex-[1] whitespace-nowrap px-2 py-2 text-sm font-semibold rounded-xl bg-white shadow-sm text-primary transition-all">
+                            전체
+                        </button>
+                        <button class="flex-[1] whitespace-nowrap px-2 py-2 text-sm font-medium rounded-xl text-on-surface-variant hover:bg-white/50 transition-all flex items-center justify-center gap-1">
+                            새활동<span
+                                class="bg-primary text-on-primary text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                        </button>
+                        <button class="flex-[1] whitespace-nowrap px-2 py-2 text-sm font-medium rounded-xl text-on-surface-variant hover:bg-white/50 transition-all">
+                            수업완료
+                        </button>
+                        <%--                        <button class="flex-[1] whitespace-nowrap px-2 py-2 text-sm font-medium rounded-xl text-on-surface-variant hover:bg-white/50 transition-all">완료</button>--%>
+                    </div>
+                </div>
+                <!-- Sort Dropdown Far Right -->
+                <div class="flex items-center gap-3">
+                    <div class="relative w-full lg:w-auto">
+                        <select
+                                class="w-full lg:w-auto appearance-none bg-white border border-outline-variant rounded-xl pl-4 pr-10 py-2.5 text-sm font-medium text-on-surface-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer">
+                            <option>정렬 기준: 다음 세션</option>
+                            <option>정렬 기준: 최근 활동</option>
+                            <option>정렬 기준: 남은 세션</option>
+                        </select>
+                        <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-lg"
+                                data-icon="expand_more" style="">expand_more</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Scrollable Client List Container -->
+        <div class="flex-1 overflow-y-auto max-w-7xl w-full mx-auto" id="client-list-container">
+            <div class="space-y-3 md:space-y-4 pr-2 pt-3 md:pt-0">
+                <%-- Client Cards:--%>
+                <c:forEach var="client" items="${clients}">
+                    <div class="bg-white border border-surface-container-highest rounded-2xl p-3 md:p-5
+                grid grid-cols-[1fr_auto] md:grid-cols-[280px_1fr_auto]
+                items-center gap-3 md:gap-6 hover:shadow-md transition-shadow
+                min-h-[72px] md:min-h-[96px] group cursor-pointer">
+                        <div class="flex items-start gap-3">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center
+                        border-2 border-white shadow-sm shrink-0">
+                <span class="text-primary font-bold text-base">
+                        ${fn:substring(client.name, 0, 1)}
+                </span>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-base font-bold text-on-surface leading-none">${client.name}</h3>
+                                <div class="flex flex-wrap gap-2 mt-1">
+                                    <c:forEach var="tag" items="${fn:split(client.goals, ',')}">
+                        <span class="text-[10px] bg-surface-container-low text-on-surface-variant
+                                     font-medium px-2 py-0.5 rounded-full">
+                                ${fn:trim(tag)}
+                        </span>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:grid grid-cols-3 gap-4 lg:gap-6 px-4 lg:px-6
+                    border-x border-gray-50 items-start client-stats">
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">다음 세션</p>
+                                <p class="text-sm font-bold text-on-surface">${client.nextSession}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">남은 세션
+                                    횟수</p>
+                                    <%-- 2개 이하면 경고 색상 --%>
+                                <c:choose>
+                                    <c:when test="${client.lessonCount <= 2}">
+                                        <p class="text-sm font-bold text-error flex items-center gap-1">
+                                                ${client.lessonCount}
+                                            <span class="material-symbols-outlined text-sm">warning</span>
+                                        </p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p class="text-sm font-bold text-on-surface">${client.lessonCount}</p>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">전 세션</p>
+                                <p class="text-sm font-medium text-outline">${client.lastSession}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end items-center gap-2">
+            <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
+                chevron_right
+            </span>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+        <div class="flex justify-center items-center py-6 mt-2 border-slate-100 sticky bottom-0">
+            <nav aria-label="Pagination" class="flex items-center gap-1">
+
+                <%-- 이전 버튼 --%>
+                <c:choose>
+                    <c:when test="${currentPage <= 1}">
+                        <button disabled class="w-9 h-9 flex items-center justify-center rounded-lg
+                                    text-slate-300 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-xl">chevron_left</span>
+                        </button>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="clients?page=${currentPage - 1}"
+                           class="w-9 h-9 flex items-center justify-center rounded-lg
+                      text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                            <span class="material-symbols-outlined text-xl">chevron_left</span>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+
+                <%-- 페이지 번호 버튼 --%>
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <c:choose>
+                        <c:when test="${i == currentPage}">
+                            <button class="w-9 h-9 flex items-center justify-center rounded-lg
+                               text-sm font-semibold bg-[#007AFF] text-white shadow-sm shadow-blue-200">
+                                    ${i}
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="clients?page=${i}"
+                               class="w-9 h-9 flex items-center justify-center rounded-lg
+                          text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors">
+                                    ${i}
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <%-- 다음 버튼 --%>
+                <c:choose>
+                    <c:when test="${currentPage >= totalPages}">
+                        <button disabled class="w-9 h-9 flex items-center justify-center rounded-lg
+                                    text-slate-300 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-xl">chevron_right</span>
+                        </button>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="clients?page=${currentPage + 1}"
+                           class="w-9 h-9 flex items-center justify-center rounded-lg
+                      text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                            <span class="material-symbols-outlined text-xl">chevron_right</span>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </nav>
+        </div>
+    </main>
+</div>
+</body>
+
+</html>
