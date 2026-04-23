@@ -1,4 +1,4 @@
-package controller;
+package controller.trainer;
 
 import dao.trainer.ClientDAOImpl;
 import dto.trainer.ClientDTO;

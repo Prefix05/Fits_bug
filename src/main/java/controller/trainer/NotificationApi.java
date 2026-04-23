@@ -1,6 +1,7 @@
 package controller.trainer;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -22,7 +23,7 @@ public class NotificationApi extends HttpServlet {
         String userId = resolveUserId(request);
         String memberName = request.getParameter("memberName");
         int limit = parsePositiveInt(request.getParameter("limit"), 20);
-        List<NotificationDTO> notifications = notificationDAO.findRecentByUserAndMember(userId, memberName, limit);
+        List<NotificationDTO> notifications = notificationDAO.findRecentByUserAndMember(userId, memberName, limit, LocalDate.now());
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
