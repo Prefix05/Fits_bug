@@ -51,7 +51,7 @@ public class Clients extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentFilter", filter);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/clients.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/trainer/clients.jsp");
         dispatcher.forward(request, response);
     }
 

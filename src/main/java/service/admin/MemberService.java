@@ -9,6 +9,6 @@ public interface MemberService {
 	List<Member> getTrainerlist() throws Exception;
 	List<Member> getClientlist() throws Exception;
 	List<Member> gymList(PageInfo pageInfo, String gymName) throws Exception;
-	List<Member> trainerList(PageInfo pageInfo) throws Exception;
-	List<Member> clientList(PageInfo pageInfo) throws Exception;
+	List<Member> trainerList(PageInfo pageInfo, String trainerName) throws Exception;
+	List<Member> clientList(PageInfo pageInfo, String clientName) throws Exception;
 }

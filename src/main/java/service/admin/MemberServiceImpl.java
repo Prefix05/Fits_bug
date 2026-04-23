@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<Member> trainerList(PageInfo pageInfo) throws Exception {
+	public List<Member> trainerList(PageInfo pageInfo, String trainerName) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
 		Integer trainerCnt = memberDAO.selectTrainerCnt(); // db에 등록된 전체 헬스장 수
@@ -72,14 +72,15 @@ public class MemberServiceImpl implements MemberService {
 		
 		Integer row = (pageInfo.getCurPage()-1)*pageRow;
 		
-		Map<String, Integer> pagingMap = new HashMap<>();
+		Map<String, Object> pagingMap = new HashMap<>();
 		pagingMap.put("row", row);
 		pagingMap.put("pageRow", pageRow);
+		pagingMap.put("trainerName", trainerName);
 		return memberDAO.selectTrainerList(pagingMap);
 	}
 
 	@Override
-	public List<Member> clientList(PageInfo pageInfo) throws Exception {
+	public List<Member> clientList(PageInfo pageInfo, String clientName) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
 		Integer clientCnt = memberDAO.selectClientCnt(); // db에 등록된 전체 헬스장 수
@@ -94,9 +95,10 @@ public class MemberServiceImpl implements MemberService {
 		
 		Integer row = (pageInfo.getCurPage()-1)*pageRow;
 		
-		Map<String, Integer> pagingMap = new HashMap<>();
+		Map<String, Object> pagingMap = new HashMap<>();
 		pagingMap.put("row", row);
 		pagingMap.put("pageRow", pageRow);
+		pagingMap.put("clientName", clientName);
 		return memberDAO.selectClientList(pagingMap);
 	}
 }
