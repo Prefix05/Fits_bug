@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mapper.review">
+  	<resultMap type="dto.Review" id="reviewMap">
+  		<id property="reviewNum" column="review_num"/>
+  		<result property="gymId" column="gym_id"/>
+  		<result property="clientId" column="client_id"/>
+  		<result property="clientName" column="client_name"/>
+  		<result property="createdAt" column="created_at"/>
+  	</resultMap>
+  	
+  	<select id="selectRecentReviewByGym" parameterType="int" resultMap="reviewMap">
+  		SELECT
+            r.review_num,
+            r.gym_id,
+            r.client_id,
+            m.name AS client_name,
+            r.rating,
+            r.comment,
+            r.file,
+            r.created_at
+        FROM REVIEW_GYM r
+        JOIN MEMBER m
+            ON r.client_id = m.id
+        WHERE r.gym_id = #{value}
+        ORDER BY r.created_at DESC
+        LIMIT 4
+  	</select>
+  </mapper>
