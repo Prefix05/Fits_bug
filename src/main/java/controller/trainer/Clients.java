@@ -1,23 +1,19 @@
-package controller.trainer;
+package controller;
 
+import dao.trainer.ClientDAOImpl;
+import dto.trainer.ClientDTO;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import dao.trainer.ClientDAO;
-import dto.trainer.ClientDTO;
 
 @WebServlet("/clients")
 public class Clients extends HttpServlet {
 
     private static final int DEFAULT_PAGE_SIZE = 5;
-    private final ClientDAO clientDAO = new ClientDAO();
+    private final ClientDAOImpl clientDAO = new ClientDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

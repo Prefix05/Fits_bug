@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.trainer.ClientDAO;
+import dao.trainer.ClientDAOImpl;
 import dao.trainer.LessonDAO;
-import dao.trainer.LessonMyBatisDAO;
+import dao.trainer.LessonDAOImpl;
 import dto.trainer.ClientDTO;
 import dto.trainer.LessonDTO;
 
-public class LessonInfoServlet extends HttpServlet {
-    private final LessonDAO lessonDAO = new LessonMyBatisDAO();
-    private final ClientDAO clientDAO = new ClientDAO(); // 추가
+public class LessonInfo extends HttpServlet {
+    private final LessonDAO lessonDAO = new LessonDAOImpl();
+    private final ClientDAOImpl clientDAO = new ClientDAOImpl(); // 추가
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

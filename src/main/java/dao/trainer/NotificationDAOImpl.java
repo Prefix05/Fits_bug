@@ -1,23 +1,24 @@
 package dao.trainer;
 
+import dto.trainer.NotificationDTO;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
+
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
+public class NotificationDAOImpl implements NotificationDAO {
 
-import dto.trainer.NotificationDTO;
-import util.MybatisSqlSessionFactory;
-
-public class NotificationMyBatisDAO implements NotificationDAO {
     @Override
     public List<NotificationDTO> findRecentByUser(String userId, int limit) {
-        return findRecentByUserAndMember(userId, null, limit);
+        return findRecentByUserAndMember(userId, null, limit, LocalDate.now());
     }
 
     @Override
-    public List<NotificationDTO> findRecentByUserAndMember(String userId, String memberName, int limit) {
+    public List<NotificationDTO> findRecentByUserAndMember(String userId, String memberName, int limit, LocalDate today) {
         if (userId == null || userId.trim().isEmpty()) {
             return Collections.emptyList();
         }
@@ -28,9 +29,10 @@ public class NotificationMyBatisDAO implements NotificationDAO {
         params.put("userId", userId);
         params.put("memberName", memberName);
         params.put("limit", safeLimit);
+        params.put("today", today.toString()); // "2026-04-23"
 
         try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sqlSession.selectList("notification.findRecentByUser", params);
+            return sqlSession.selectList("dao.NotificationMapper.findRecentByUserAndMember", params);
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();

@@ -1,9 +1,9 @@
 package service.trainer;
 
-import java.util.List;
-
 import dto.trainer.LessonDTO;
 import dto.trainer.NotificationDTO;
+
+import java.util.List;
 
 public class DashboardData {
 

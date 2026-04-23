@@ -1,15 +1,14 @@
 package dao.trainer;
 
+import dto.trainer.LessonDTO;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
-
-import dto.trainer.LessonDTO;
-import util.MybatisSqlSessionFactory;
-
-public class LessonMyBatisDAO implements LessonDAO {
+public class LessonDAOImpl implements LessonDAO {
     @Override
     public List<LessonDTO> findLessonsByDate(LocalDate date) {
         if (date == null) {

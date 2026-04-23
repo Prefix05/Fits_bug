@@ -4,4 +4,6 @@
 # IntelliJ IDEA
 .idea/
 *.iml
-/build/
+
+build/
+*.class
