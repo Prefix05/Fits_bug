@@ -16,7 +16,7 @@ import service.admin.MemberServiceImpl;
 /**
  * Servlet implementation class MemberTrainer
  */
-@WebServlet("/memberTrainer")
+@WebServlet("/admin/memberTrainer")
 public class MemberTrainer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,7 +36,7 @@ public class MemberTrainer extends HttpServlet {
 			MemberService service = new MemberServiceImpl();
 			List<Member> list = service.getTrainerlist();
 			request.setAttribute("list", list);
-			request.getRequestDispatcher("/adminMember/memberTrainer.jsp").forward(request, response);
+			request.getRequestDispatcher("/admin/memberTrainer.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "오류가 발생했습니다.");

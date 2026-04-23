@@ -102,7 +102,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectGymList(Map<String, Integer> pagingMap) throws Exception {
+	public List<Member> selectGymList(Map<String, Object> pagingMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> gymList = null;
 		try {
@@ -117,7 +117,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectTrainerList(Map<String, Integer> pagingMap) throws Exception {
+	public List<Member> selectTrainerList(Map<String, Object> pagingMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> trainerList = null;
 		try {
@@ -132,7 +132,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectClientList(Map<String, Integer> pagingMap) throws Exception {
+	public List<Member> selectClientList(Map<String, Object> pagingMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> clientList = null;
 		try {

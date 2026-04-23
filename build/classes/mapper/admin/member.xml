@@ -38,6 +38,12 @@
 		left join client c on(g.id=c.gym_id)
 		left join trainer t on(g.id=t.gym_id)
 		left join payment p on(p.user_num=g.user_id)
+			
+		<where>
+			<if test="gymName != null and gymName != ''">
+				And g.name like concat('%', #{gymName}, '%')
+			</if>
+		</where>
 		group by g.name, u.tel, u.created_at
 		order by g.name
 		limit #{row}, #{pageRow}

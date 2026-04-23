@@ -5,13 +5,13 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Review;
-import util.MyBatisSqlSessionFactory;
+import util.MybatisSqlSessionFactory;
 
 public class ReviewDaoImpl implements ReviewDao {
 	private SqlSession sqlSession;
 	
 	public ReviewDaoImpl() {
-		sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	}
 
 	@Override

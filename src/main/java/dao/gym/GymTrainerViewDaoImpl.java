@@ -5,13 +5,13 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.GymTrainerView;
-import util.MyBatisSqlSessionFactory;
+import util.MybatisSqlSessionFactory;
 
 public class GymTrainerViewDaoImpl implements GymTrainerViewDao {
 	private SqlSession sqlSession;
 	
 	public GymTrainerViewDaoImpl() {
-		sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	}
 	
 	@Override

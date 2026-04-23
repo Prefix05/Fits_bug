@@ -1,6 +1,7 @@
 package controller.admin;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import util.PageInfo;
 /**
  * Servlet implementation class Member
  */
-@WebServlet("/memberGym")
+@WebServlet("/admin/memberGym")
 public class MemberGym extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -26,8 +27,48 @@ public class MemberGym extends HttpServlet {
      */
     public MemberGym() {
         super();
-        // TODO Auto-generated constructor stub
     }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String gymName = request.getParameter("gymName");
+		
+		if(gymName != null) {
+			if(gymName.trim().isEmpty()) {
+				gymName = null;
+			}
+			PageInfo pageInfo = new PageInfo(1);
+			
+			try {
+				MemberService service = new MemberServiceImpl();
+				List<Member> list = service.gymList(pageInfo, gymName);
+				
+				response.setContentType("application/json;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				
+				StringBuilder json = new StringBuilder();
+				json.append("[");
+				for (int i = 0; i < list.size(); i++) {
+	                Member m = list.get(i);
+	                json.append("{");
+	                json.append("\"gymName\":\"" + m.getGymName() + "\",");
+	                json.append("\"gymTel\":\"" + m.getGymTel() + "\",");
+	                json.append("\"regDate\":\"" + m.getRegDate() + "\",");
+	                json.append("\"gymClientCount\":" + m.getGymClientCount() + ",");
+	                json.append("\"gymCal\":" + m.getGymCal());
+	                json.append("}");
+	                if (i < list.size() - 1) json.append(",");
+	            }
+	            json.append("]");
+
+	            out.print(json.toString());
+	            out.flush();
+	            return; // 비동기 응답 후 종료
+	        } catch (Exception e) {
+	            e.printStackTrace();
+			}
+		}
+			
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = request.getParameter("page");
@@ -40,10 +81,10 @@ public class MemberGym extends HttpServlet {
 		
 		try {
 			MemberService service = new MemberServiceImpl();
-			List<Member> gymList = service.gymList(pageInfo);
+			List<Member> gymList = service.gymList(pageInfo, null);
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("gymList", gymList); //여기의 gymList와 JSP의 gymList 이름이 같아야함.
-			request.getRequestDispatcher("/adminMember/memberGym.jsp").forward(request, response);
+			request.getRequestDispatcher("/admin/memberGym.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 			request.setAttribute("err", "게시글 목록 조회에 오류가 발생했습니다.");

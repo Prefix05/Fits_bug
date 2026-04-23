@@ -3,13 +3,13 @@ package dao.gym;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Gym;
-import util.MyBatisSqlSessionFactory;
+import util.MybatisSqlSessionFactory;
 
 public class GymMainDaoImpl implements GymMainDao {
 	private SqlSession sqlSession;
 	
 	public GymMainDaoImpl() {
-		sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	}
 	@Override
 	public Gym selectGymMainInfo(int gymId) throws Exception {

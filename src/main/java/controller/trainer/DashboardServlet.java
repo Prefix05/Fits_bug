@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.trainer.LessonDAO;
+import dao.trainer.LessonMyBatisDAO;
+import dao.trainer.NotificationDAO;
 import dao.trainer.NotificationMyBatisDAO;
 import dto.trainer.LessonDTO;
-import dto.trainer.LessonMyBatisDAO;
-import dto.trainer.NotificationDAO;
 import dto.trainer.NotificationDTO;
 
 public class DashboardServlet extends HttpServlet {

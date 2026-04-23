@@ -3,13 +3,13 @@ package dao.gym;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Schedule;
-import util.MyBatisSqlSessionFactory;
+import util.MybatisSqlSessionFactory;
 
 public class ScheduleDaoImpl implements ScheduleDao {
 	private SqlSession sqlSession;
 	
 	public ScheduleDaoImpl() {
-		sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	}
 	
 	@Override
