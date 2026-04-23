@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notification">
+
+    <resultMap id="notificationMap" type="notification">
+        <id property="notificationId" column="notification_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="memberName" column="member_name"/>
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="message" column="message"/>
+        <result property="targetUrl" column="target_url"/>
+        <result property="read" column="is_read"/>
+        <result property="createdAtLabel" column="created_at_label"/>
+    </resultMap>
+
+    <select id="findRecentByUser" parameterType="map" resultMap="notificationMap">
+        SELECT
+            notification_id,
+            user_id,
+            member_name,
+            type,
+            title,
+            message,
+            target_url,
+            is_read,
+            CASE
+                WHEN TIMESTAMPDIFF(MINUTE, created_at, NOW()) &lt; 1 THEN '방금 전'
+                WHEN TIMESTAMPDIFF(MINUTE, created_at, NOW()) &lt; 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, created_at, NOW()), '분 전')
+                WHEN TIMESTAMPDIFF(HOUR, created_at, NOW()) &lt; 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, created_at, NOW()), '시간 전')
+                WHEN TIMESTAMPDIFF(DAY, created_at, NOW()) = 1 THEN '어제'
+                ELSE DATE_FORMAT(created_at, '%m/%d')
+            END AS created_at_label
+        FROM notification
+        WHERE user_id = #{userId}
+        <if test="memberName != null and memberName != ''">
+            AND member_name = #{memberName}
+        </if>
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <update id="markAsRead" parameterType="map">
+        UPDATE notification
+        SET is_read = 1
+        WHERE notification_id = #{notificationId}
+          AND user_id = #{userId}
+    </update>
+
+    <update id="markAllAsRead" parameterType="map">
+        UPDATE notification
+        SET is_read = 1
+        WHERE user_id = #{userId}
+        <if test="memberName != null and memberName != ''">
+            AND member_name = #{memberName}
+        </if>
+          AND is_read = 0
+    </update>
+</mapper>

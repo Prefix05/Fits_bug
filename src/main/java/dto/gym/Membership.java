@@ -1,0 +1,70 @@
+package dto.gym;
+
+public class Membership {
+	private int membershipNum;
+	private int gymNum;
+	private String type;
+	private int typeRep;
+	private int price;
+	
+	public Membership() {
+		super();
+	}
+
+	public Membership(int membershipNum, int gymNum, String type, int typeRep, int price) {
+		super();
+		this.membershipNum = membershipNum;
+		this.gymNum = gymNum;
+		this.type = type;
+		this.typeRep = typeRep;
+		this.price = price;
+	}
+
+	public int getMembershipNum() {
+		return membershipNum;
+	}
+
+	public void setMembershipNum(int membershipNum) {
+		this.membershipNum = membershipNum;
+	}
+
+	public int getGymNum() {
+		return gymNum;
+	}
+
+	public void setGymNum(int gymNum) {
+		this.gymNum = gymNum;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getTypeRep() {
+		return typeRep;
+	}
+
+	public void setTypeRep(int typeRep) {
+		this.typeRep = typeRep;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	@Override
+	public String toString() {
+		return "Membership [membershipNum=" + membershipNum + ", gymNum=" + gymNum + ", type=" + type + ", typeRep="
+				+ typeRep + ", price=" + price + "]";
+	}
+	
+	
+}
