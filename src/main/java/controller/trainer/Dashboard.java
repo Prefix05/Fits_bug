@@ -7,9 +7,10 @@ import service.trainer.DashboardService;
 import service.trainer.DashboardServiceImpl;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-
+@WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
     private final DashboardService dashboardService = new DashboardServiceImpl();
@@ -33,7 +34,7 @@ public class Dashboard extends HttpServlet {
         }
         request.setAttribute("notifications", data.getNotifications());
         request.setAttribute("hasSelectedLesson", data.getSelectedLesson() != null);
-        request.getRequestDispatcher("/WEB-INF/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/trainer/dashboard.jsp").forward(request, response);
     }
 
     //    Helper Functions

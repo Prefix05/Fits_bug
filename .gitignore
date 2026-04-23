@@ -5,5 +5,8 @@
 .idea/
 *.iml
 
+# build/artifacts
 build/
-*.class
+classes/
+out/
+target/
