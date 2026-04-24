@@ -11,9 +11,9 @@ public interface MemberDAO {
 	List<Member> selectAllTrainer() throws Exception;
 	List<Member> selectAllClient() throws Exception;
 	
-	List<Member> selectGymList(Map<String, Integer> pagingMap) throws Exception;
-	List<Member> selectTrainerList(Map<String, Integer> pagingMap) throws Exception;
-	List<Member> selectClientList(Map<String, Integer> pagingMap) throws Exception;
+	List<Member> selectGymList(Map<String, Object> pagingMap) throws Exception;
+	List<Member> selectTrainerList(Map<String, Object> pagingMap) throws Exception;
+	List<Member> selectClientList(Map<String, Object> pagingMap) throws Exception;
  	
 	Integer selectGymCnt() throws Exception;
 	Integer selectTrainerCnt() throws Exception;

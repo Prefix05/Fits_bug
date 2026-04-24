@@ -232,8 +232,6 @@
             </div>
         </div>
 
-        <!-- 트레이너  nav item-->
-
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
            href="" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
@@ -261,7 +259,7 @@
             수익</a>
     </nav>
 
-    <!-- 공통 nav item -->
+    <!--설정, 고객 지원-->
     <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
            href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
@@ -272,7 +270,7 @@
         <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
     </div>
 
-    <!-- 마이프로필 nav item -->
+    <!-- 마이프로필 -->
     <a href="./profile.html"
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
         <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
@@ -291,10 +289,10 @@
     <div class="p-4 md:p-8 max-w-6xl mx-auto flex-1 flex flex-col space-y-8 w-full">
         <!-- 1. Lesson Info Card-->
         <section class="flex-shrink-0">
-            <div
-                    class="relative overflow-hidden rounded-2xl p-6 md:p-8 bg-slate-900 text-white shadow-2xl shadow-blue-900/20">
+            <div class="relative overflow-hidden rounded-2xl p-6 md:p-8 bg-slate-900 text-white shadow-2xl shadow-blue-900/20">
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl"></div>
                 <div class="relative flex flex-col gap-4">
+
                     <!-- Session Info -->
                     <div class="space-y-2">
                         <c:choose>
@@ -329,58 +327,60 @@
                                         </p>
                                     </div>
                                 </div>
+                                <!-- Actions Row -->
+                                <div class="flex items-center gap-2">
+                                    <!-- Mobile: icon buttons -->
+                                    <button
+                                            class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
+                                        <span class="material-symbols-outlined text-[20px]">person</span>
+                                    </button>
+                                    <button
+                                            class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
+                                        <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+                                    </button>
+                                    <button
+                                            class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
+                                        <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                    </button>
+
+                                    <!-- Desktop: full buttons -->
+                                    <div class="hidden md:flex flex-wrap gap-3">
+                                        <button
+                                                class="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-blue-50 transition-colors active:scale-95">
+                                            프로필
+                                            보기
+                                        </button>
+                                        <button
+                                                class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold backdrop-blur-md transition-colors active:scale-95">
+                                            +
+                                            운동 추가
+                                        </button>
+                                        <button
+                                                class="p-3 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors">
+                                            <span class="material-symbols-outlined">chat_bubble</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <span
-                                            class="whitespace-nowrap px-2.5 py-0.5 bg-white/10 text-blue-200 text-xs font-bold rounded-full border border-white/20 tracking-wider">오늘
-                                        일정 종료</span>
-                                </div>
-                                <div>
-                                    <h2 class="text-2xl md:text-3xl font-bold tracking-tight whitespace-nowrap">남은 수업이
-                                        없습니다</h2>
+                                <div class="flex flex-col gap-2">
                                     <div class="flex items-center gap-2">
-                                        <p class="whitespace-nowrap text-blue-100/70 text-sm md:text-lg">내일 일정을 확인해
-                                            주세요</p>
+            <span class="whitespace-nowrap px-2.5 py-0.5 bg-white/10 text-blue-200
+                         text-xs font-bold rounded-full border border-white/20 tracking-wider">
+                오늘 일정 없음
+            </span>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">
+                                            수업이 없습니다
+                                        </h2>
+                                        <p class="text-blue-100/70 text-sm md:text-lg">
+                                            내일 일정을 확인해 주세요
+                                        </p>
                                     </div>
                                 </div>
                             </c:otherwise>
                         </c:choose>
-                    </div>
-
-                    <!-- Actions Row -->
-                    <div class="flex items-center gap-2">
-                        <!-- Mobile: icon buttons -->
-                        <button
-                                class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
-                            <span class="material-symbols-outlined text-[20px]">person</span>
-                        </button>
-                        <button
-                                class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
-                            <span class="material-symbols-outlined text-[20px]">fitness_center</span>
-                        </button>
-                        <button
-                                class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
-                            <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                        </button>
-
-                        <!-- Desktop: full buttons -->
-                        <div class="hidden md:flex flex-wrap gap-3">
-                            <button
-                                    class="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-blue-50 transition-colors active:scale-95">
-                                프로필
-                                보기
-                            </button>
-                            <button
-                                    class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold backdrop-blur-md transition-colors active:scale-95">
-                                +
-                                운동 추가
-                            </button>
-                            <button
-                                    class="p-3 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors">
-                                <span class="material-symbols-outlined">chat_bubble</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -389,43 +389,56 @@
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 min-h-0 items-start w-full">
             <!-- 2. Today's Schedule (2/3 width) -->
             <div class="lg:col-span-2 flex flex-col">
-                <div class="flex justify-between items-end flex-shrink-0 mb-6">
-                    <h3 class="text-xl font-semibold tracking-tight text-on-surface">오늘의 일정</h3>
-                    <a class="text-sm font-semibold text-primary hover:underline" href="#">캘린더 보기</a>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold text-on-surface">오늘의 일정</h3>
+                    <a class="text-xs font-bold text-primary hover:underline" href="#">캘린더 보기</a>
                 </div>
-                <div
-                        class="space-y-3 overflow-y-auto pr-2 schedule-scrollbar h-[250px] md:h-[280px] lg:h-[320px] xl:h-[535px]">
-                    <!-- Lesson List -->
-                    <c:forEach var="lesson" items="${todayLessons}">
-                        <a href="dashboard?lessonId=${lesson.lessonId}" class="block lesson-item" data-lesson-id="${lesson.lessonId}">
-                            <div class="lesson-item-card flex items-center justify-between p-4 mx-0.5 rounded-xl border-2 transition-all ${hasSelectedLesson and selectedLesson.lessonId eq lesson.lessonId ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-surface-container-low border-transparent hover:bg-surface-container-high'}">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 text-center">
-                                        <p class="text-sm font-bold text-on-surface">${lesson.startTime}</p>
-                                        <p class="text-[10px] font-medium text-on-surface-variant">${lesson.durationMinutes}m</p>
-                                    </div>
-                                    <div class="h-10 w-[2px] bg-slate-300"></div>
-                                    <div>
-                                        <p class="text-lg text-on-surface font-semibold">${lesson.memberName}</p>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[10px] font-bold text-slate-500 uppercase">${lesson.lessonName}</span>
-                                        </div>
-                                    </div>
+                <div class="space-y-3 overflow-y-auto schedule-scrollbar h-[250px] md:h-[280px] lg:h-[320px] xl:h-[535px]">
+                    <c:choose>
+                        <%-- 수업이 없을 때 빈 상태 표시 --%>
+                        <c:when test="${empty todayLessons}">
+                            <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+                                <div class="flex flex-col items-center justify-center gap-3 text-center h-[200px] px-4">
+                                    <span class="material-symbols-outlined text-4xl text-slate-300">event_busy</span>
+                                    <p class="text-sm font-semibold text-on-surface">오늘 예정된 수업이 없습니다</p>
+                                    <p class="text-xs text-slate-400">새로운 수업을 추가하거나 내일 일정을 확인해보세요.</p>
                                 </div>
-                                <c:choose>
-                                    <c:when test="${lesson.status eq 'Now'}">
-                                        <span class="px-2.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">${lesson.status}</span>
-                                    </c:when>
-                                    <c:when test="${lesson.status eq 'Up Next'}">
-                                        <span class="px-2.5 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full">${lesson.status}</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="px-2.5 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">${lesson.status}</span>
-                                    </c:otherwise>
-                                </c:choose>
                             </div>
-                        </a>
-                    </c:forEach>
+                        </c:when>
+                        <%-- 수업이 있을 때 목록 표시 --%>
+                        <c:otherwise>
+                            <c:forEach var="lesson" items="${todayLessons}">
+                                <a href="dashboard?lessonId=${lesson.lessonId}" class="block lesson-item" data-lesson-id="${lesson.lessonId}">
+                                    <div class="lesson-item-card flex items-center justify-between p-4 mx-0.5 rounded-xl border-2 transition-all ${hasSelectedLesson and selectedLesson.lessonId eq lesson.lessonId ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-surface-container-low border-transparent hover:bg-surface-container-high'}">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 text-center">
+                                                <p class="text-sm font-bold text-on-surface">${lesson.startTime}</p>
+                                                <p class="text-[10px] font-medium text-on-surface-variant">${lesson.durationMinutes}m</p>
+                                            </div>
+                                            <div class="h-10 w-[2px] bg-slate-300"></div>
+                                            <div>
+                                                <p class="text-lg text-on-surface font-semibold">${lesson.memberName}</p>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[10px] font-bold text-slate-500 uppercase">${lesson.lessonName}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <c:choose>
+                                            <c:when test="${lesson.status eq 'Now'}">
+                                                <span class="px-2.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">${lesson.status}</span>
+                                            </c:when>
+                                            <c:when test="${lesson.status eq 'Up Next'}">
+                                                <span class="px-2.5 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full">${lesson.status}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="px-2.5 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">${lesson.status}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </a>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
             <!-- 3. Sidebar Tools & Notifications (1/3 width) -->
@@ -441,13 +454,17 @@
                         <div id="notifications-list" class="overflow-y-auto schedule-scrollbar">
                             <c:choose>
                                 <c:when test="${empty notifications}">
-                                    <div class="p-6 text-center text-sm text-slate-500">알림이 없습니다.</div>
+                                    <div class="flex flex-col items-center justify-center gap-3 text-center h-[200px] px-4">
+                                        <span class="material-symbols-outlined text-4xl text-slate-300">notifications_off</span>
+                                        <p class="text-sm font-semibold text-on-surface">알림이 없습니다</p>
+                                        <p class="text-xs text-slate-400">새로운 알림이 오면 여기에 표시됩니다.</p>
+                                    </div>
                                 </c:when>
                                 <c:otherwise>
                                     <c:forEach var="notification" items="${notifications}">
                                         <div class="notification-item relative p-4 pr-12 border-b border-slate-200/60 hover:bg-surface-container-high transition-colors cursor-pointer ${notification.read ? '' : 'group'}"
-                                                data-notification-id="${notification.notificationId}"
-                                                data-target-url="${notification.targetUrl}">
+                                             data-notification-id="${notification.notificationId}"
+                                             data-target-url="${notification.targetUrl}">
                                             <div class="flex items-start gap-3">
                                                 <c:choose>
                                                     <c:when test="${notification.type eq 'SCHEDULE'}">
@@ -479,15 +496,13 @@
                                             </div>
                                         </div>
                                     </c:forEach>
+                                    <div class="p-3 bg-slate-50 text-center border-t border-slate-200/60">
+                                        <button class="text-[11px] font-bold text-slate-500 hover:text-on-surface transition-colors">
+                                            모든 알림 보기
+                                        </button>
+                                    </div>
                                 </c:otherwise>
                             </c:choose>
-                        </div>
-                        <div class="p-3 bg-slate-50 text-center border-t border-slate-200/60">
-                            <button
-                                    class="text-[11px] font-bold text-slate-500 hover:text-on-surface transition-colors">
-                                모든
-                                알림 보기
-                            </button>
                         </div>
                     </div>
                 </section>
@@ -495,229 +510,12 @@
         </div>
     </div>
 </main>
+
+<%--dashboard.js--%>
 <script>
-    (function () {
-        var lessonItems = document.querySelectorAll('.lesson-item');
-        var notificationsList = document.getElementById('notifications-list');
-        var markAllButton = document.getElementById('notifications-mark-all');
-        var statusBadge = document.getElementById('lesson-status-badge');
-        var lessonTimeRange = document.getElementById('lesson-time-range');
-        var lessonMemberName = document.getElementById('lesson-member-name');
-        var lessonName = document.getElementById('lesson-name');
-        var duration = document.getElementById('lesson-duration');
-        var contextPath = '${pageContext.request.contextPath}';
-        var currentMemberName = lessonMemberName ? lessonMemberName.textContent.trim() : '';
-
-        function badgeClassByStatus(status) {
-            if (status === 'Now') {
-                return 'whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-green-300 text-xs font-bold rounded-full border border-green-400/30 tracking-wider';
-            }
-            if (status === 'Up Next') {
-                return 'whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-blue-300 text-xs font-bold rounded-full border border-blue-400/30 tracking-wider';
-            }
-            return 'whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-slate-300 text-xs font-bold rounded-full border border-slate-400/30 tracking-wider';
-        }
-
-        function postForm(url, params) {
-            return fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept': 'application/json'
-                },
-                body: new URLSearchParams(params)
-            });
-        }
-
-        function updateLessonCard(data) {
-            if (!statusBadge || !lessonTimeRange || !lessonMemberName || !lessonName || !duration) {
-                return;
-            }
-            statusBadge.textContent = data.status;
-            statusBadge.className = badgeClassByStatus(data.status);
-            lessonTimeRange.innerHTML = '<span class=\"material-symbols-outlined text-xs\">schedule</span> ' + data.startTime + ' - ' + data.endTime;
-            lessonMemberName.textContent = data.memberName;
-            lessonName.textContent = data.lessonName;
-            duration.textContent = data.lessonCount + '회 남음';
-        }
-
-        function escapeHtml(value) {
-            if (value == null) {
-                return '';
-            }
-            return String(value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
-        function notificationIconHtml(type) {
-            if (type === 'SCHEDULE') {
-                return '<div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0"><span class="material-symbols-outlined text-[18px]" data-icon="event_note">event_note</span></div>';
-            }
-            if (type === 'DIET') {
-                return '<div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0"><span class="material-symbols-outlined text-[18px]" data-icon="restaurant">restaurant</span></div>';
-            }
-            return '<div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0"><span class="material-symbols-outlined text-[18px]" data-icon="task_alt">task_alt</span></div>';
-        }
-
-        function renderNotifications(notifications) {
-            if (!notificationsList) {
-                return;
-            }
-
-            if (!notifications || notifications.length === 0) {
-                notificationsList.innerHTML = '<div class="p-6 text-center text-sm text-slate-500">알림이 없습니다.</div>';
-                return;
-            }
-
-            var html = notifications.map(function (n) {
-                var unreadDot = n.isRead ? '' : '<div class="notification-unread-dot w-2 h-2 bg-primary rounded-full"></div>';
-                var unreadClass = n.isRead ? '' : ' group';
-                return '' +
-                    '<div class="notification-item relative p-4 pr-12 border-b border-slate-200/60 hover:bg-surface-container-high transition-colors cursor-pointer' + unreadClass + '"' +
-                    ' data-notification-id="' + n.notificationId + '"' +
-                    ' data-target-url="' + escapeHtml(n.targetUrl || '') + '">' +
-                    '<div class="flex items-start gap-3">' +
-                    notificationIconHtml(n.type) +
-                    '<div>' +
-                    '<p class="text-xs font-bold text-on-surface">' + escapeHtml(n.title) + '</p>' +
-                    '<p class="text-[11px] text-on-surface-variant mt-0.5">' + escapeHtml(n.message) + '</p>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="absolute right-4 top-4 flex flex-col items-end gap-1.5">' +
-                    '<span class="text-[10px] text-slate-400">' + escapeHtml(n.createdAtLabel) + '</span>' +
-                    unreadDot +
-                    '</div>' +
-                    '</div>';
-            }).join('');
-
-            notificationsList.innerHTML = html;
-        }
-
-        function fetchNotificationsByMember(memberName) {
-            var query = new URLSearchParams({ limit: '20' });
-            if (memberName) {
-                query.set('memberName', memberName);
-            }
-
-            return fetch(contextPath + '/dashboard/notifications?' + query.toString(), {
-                headers: { 'Accept': 'application/json' }
-            }).then(function (res) {
-                if (!res.ok) {
-                    throw new Error('Failed to load notifications');
-                }
-                return res.json();
-            }).then(function (data) {
-                renderNotifications(data.notifications || []);
-            });
-        }
-
-        function updateSelectedLessonRow(lessonId) {
-            lessonItems.forEach(function (item) {
-                var card = item.querySelector('.lesson-item-card');
-                if (!card) {
-                    return;
-                }
-
-                if (item.getAttribute('data-lesson-id') === String(lessonId)) {
-                    card.classList.remove('bg-surface-container-low');
-                    card.classList.remove('border-transparent');
-                    card.classList.remove('hover:bg-surface-container-high');
-                    card.classList.add('bg-blue-50', 'border-blue-200');
-                    card.classList.add('hover:bg-blue-100');
-                } else {
-                    card.classList.remove('bg-blue-50', 'border-blue-200');
-                    card.classList.remove('hover:bg-blue-100');
-                    card.classList.add('bg-surface-container-low');
-                    card.classList.add('border-transparent');
-                    card.classList.add('hover:bg-surface-container-high');
-                }
-            });
-        }
-
-        lessonItems.forEach(function (item) {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
-                var lessonId = item.getAttribute('data-lesson-id');
-                fetch(contextPath + '/dashboard/lesson-info?lessonId=' + encodeURIComponent(lessonId), {
-                    headers: { 'Accept': 'application/json' }
-                })
-                    .then(function (res) {
-                        if (!res.ok) {
-                            throw new Error('Failed to load lesson info');
-                        }
-                        return res.json();
-                    })
-                    .then(function (data) {
-                        updateLessonCard(data);
-                        updateSelectedLessonRow(data.lessonId);
-                        currentMemberName = data.memberName || '';
-                        return fetchNotificationsByMember(currentMemberName);
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                    });
-            });
-        });
-
-        if (markAllButton) {
-            markAllButton.addEventListener('click', function () {
-                postForm(contextPath + '/dashboard/notifications/read-all', {memberName: currentMemberName})
-                    .then(function (res) {
-                        if (!res.ok) {
-                            throw new Error('Failed to mark all notifications as read');
-                        }
-                        var notificationItems = notificationsList ? notificationsList.querySelectorAll('.notification-item') : [];
-                        notificationItems.forEach(function (item) {
-                            item.classList.remove('group');
-                            var dot = item.querySelector('.notification-unread-dot');
-                            if (dot) {
-                                dot.remove();
-                            }
-                        });
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                    });
-            });
-        }
-
-        if (notificationsList) {
-            notificationsList.addEventListener('click', function (event) {
-                var item = event.target.closest('.notification-item');
-                if (!item) {
-                    return;
-                }
-
-                var notificationId = item.getAttribute('data-notification-id');
-                var targetUrl = item.getAttribute('data-target-url');
-                var dot = item.querySelector('.notification-unread-dot');
-
-                var done = Promise.resolve();
-                if (dot && notificationId) {
-                    done = postForm(contextPath + '/dashboard/notifications/read', {notificationId: notificationId})
-                        .then(function (res) {
-                            if (!res.ok) {
-                                throw new Error('Failed to mark notification as read');
-                            }
-                            dot.remove();
-                            item.classList.remove('group');
-                        });
-                }
-
-                done.then(function () {
-                    if (targetUrl && targetUrl !== '#') {
-                        window.location.href = targetUrl;
-                    }
-                }).catch(function (err) {
-                    console.error(err);
-                });
-            });
-        }
-    })();
+    var contextPath = '${pageContext.request.contextPath}'; // JSP 값만 여기서 주입
 </script>
+<script src="${pageContext.request.contextPath}/js/dashboard.js"></script>
+
 </body>
 </html>

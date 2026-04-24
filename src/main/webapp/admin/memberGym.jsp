@@ -2,8 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String contextPath = request.getContextPath();
+%>
 <!DOCTYPE html>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -75,6 +78,74 @@
         },
       }
     </script>
+<script type="text/javascript">
+	function fn_search(){
+		const keyword = $("#searchKeyword").val();
+
+		$.ajax({
+            url: "${pageContext.request.contextPath}/admin/memberGym",
+            type: "POST",
+            data: { gymName: keyword },
+            dataType: "json",
+            success: function(data) {
+                let html = "";
+                
+                if(data.length === 0) {
+                    html = `<tr><td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+                            등록된 헬스장 정보가 없습니다.</td></tr>`;
+                } else {
+                    $.each(data, function(index, item) {
+                    	// 값이 없을 경우를 대비한 기본값 설정
+                        const name = item.gymName || '이름 없음';
+                        const tel = item.gymTel || '-';
+                        const date = item.regDate || '-';
+                        const count = item.gymClientCount || 0;
+                        // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
+                        const cal = Number(item.gymCal || 0).toLocaleString();
+                        
+                        html += `
+                            <tr class="hover:bg-surface-container-low transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                            <span class="material-symbols-outlined">fitness_center</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-on-surface">\${name}</p>
+                                            <p class="text-xs text-on-surface-variant">\${tel}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-on-surface-variant">\${date}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">\${count}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">₩\${cal}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+                                        <span class="material-symbols-outlined">chevron_right</span>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        });
+                }
+                // tbody에 결과 꽂아넣기
+                $("#memberTableBody").html(html);
+            },
+            error: function(err) {
+                console.log("검색 중 에러 발생:", err);
+            }
+        });
+    }
+	$(document).ready(function() {
+        // ID가 searchKeyword인 입력창에서 키보드가 눌렸을 때
+        $("#searchKeyword").on("keydown", function(e) {
+            // 눌린 키가 엔터(Enter, 코드 13)라면
+            if (e.keyCode === 13) {
+                e.preventDefault(); // 엔터 시 페이지 새로고침 방지 (보안용)
+                fn_search();        // 위에서 만든 검색 함수 실행
+            }
+        });
+    });
+</script>
 <style>
       .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -86,13 +157,11 @@
       .primary-gradient {
         background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
       }
-    </style>
+</style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
 <!-- SideNavBar Shell -->
-<%
-    String contextPath = request.getContextPath();
-%>
+
 <div class="flex">
 	<jsp:include page="../member/sidebar.jsp"></jsp:include>
 </div>
@@ -109,23 +178,23 @@
 </div>
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-8 border-b border-outline-variant/20">
-<a href="<%= request.getContextPath() %>/memberAuth"
+<a href="<%= contextPath %>/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= request.getContextPath() %>/memberGym"
+<a href="<%= contextPath %>/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 <!-- Bento Filter Section -->
 <div class="grid grid-cols-12 gap-6 mb-8">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
-<a href="<%= contextPath %>/memberGym"
+<a href="<%= contextPath %>/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
 헬스장
 </a>
-<a href="<%= contextPath %>/memberTrainer"
+<a href="<%= contextPath %>/admin/memberTrainer"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:bg-surface-container flex items-center justify-center">
 트레이너
 </a>
-<a href="<%= contextPath %>/memberClient"
+<a href="<%= contextPath %>/admin/memberClient"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surface-variant hover:bg-surface-container flex items-center justify-center">
 회원
 </a>
@@ -144,11 +213,16 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 <!-- Table Section -->
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
 <div class="px-6 py-4 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
 <div class="relative w-72">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
 search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
+<input id="searchKeyword" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
 placeholder="헬스장명 검색..." type="text"/>
+</div>
+<button id="searchBtn" type="button" onclick="fn_search()" class="px-4 py-2 bg-primary text-on-primary text-sm font-medium rounded-lg transition-all active:scale-95 active:bg-primary-dark shrink-0">
+검색
+</button>
 </div>
 </div>
 <table class="w-full text-left border-collapse">
@@ -160,7 +234,7 @@ placeholder="헬스장명 검색..." type="text"/>
 <th class="px-6 py-4 font-semibold text-right">상세보기</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/10">
+<tbody id="memberTableBody" class="divide-y divide-outline-variant/10">
 <!-- Row  -->
 <c:forEach var="item" items="${gymList }">
 <tr class="hover:bg-surface-container-low transition-colors group">

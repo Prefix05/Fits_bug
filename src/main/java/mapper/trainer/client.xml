@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ClientMapper">
+    <resultMap id="clientResultMap" type="dto.trainer.ClientDTO">
+        <id     property="clientId"     column="client_id"/>
+        <result property="name"         column="name"/>
+        <result property="goals"        column="goals"/>
+        <result property="nextSession"  column="next_session"/>
+        <result property="lessonCount"  column="lesson_count"/>
+        <result property="lastSession"  column="last_session"/>
+        <result property="status"       column="status"/>
+    </resultMap>
+
+    <!-- 전체 조회 (페이지네이션) -->
+    <select id="selectClients" resultMap="clientResultMap">
+        SELECT * FROM clients
+        <where>
+            <if test="filter != null and filter != 'all'">
+                status = #{filter}
+            </if>
+        </where>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 개수 -->
+    <select id="countClients" resultType="int">
+        SELECT COUNT(*) FROM clients
+        <where>
+            <if test="filter != null and filter != 'all'">
+                status = #{filter}
+            </if>
+        </where>
+    </select>
+
+    <!-- ID로 단건 조회 -->
+    <select id="selectClientById" resultMap="clientResultMap">
+        SELECT * FROM clients WHERE client_id = #{clientId}
+    </select>
+
+    <!-- 이름으로 단건 조회 -->
+    <select id="selectClientByName" resultMap="clientResultMap">
+        SELECT * FROM clients WHERE name = #{name}
+    </select>
+
+</mapper>
