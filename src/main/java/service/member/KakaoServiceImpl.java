@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;

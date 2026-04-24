@@ -32,13 +32,9 @@
 package controller.member;
 
 import java.io.IOException;
-
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
 @WebServlet("/join")
 public class JoinController extends HttpServlet {
@@ -59,6 +55,7 @@ public class JoinController extends HttpServlet {
         session.setAttribute("username", request.getParameter("username"));
         session.setAttribute("password", request.getParameter("password"));
         session.setAttribute("nickname", request.getParameter("nickname"));
+        session.setAttribute("name", request.getParameter("name"));
         session.setAttribute("phone", request.getParameter("phone"));
         session.setAttribute("role", request.getParameter("role"));
 

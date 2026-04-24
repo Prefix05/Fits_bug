@@ -1,7 +1,7 @@
 package controller.member;
 
 import java.io.IOException;
-import java.net.PasswordAuthentication;
+import javax.mail.PasswordAuthentication;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.Session;
+import javax.mail.Session;
 
 @WebServlet("/sendEmailCode")
 public class SendEmailController extends HttpServlet {

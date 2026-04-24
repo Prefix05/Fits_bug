@@ -6,7 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class KakaoUtil {
     private static final String CLIENT_ID = "8f4eb9739b20ebd5580366d6839c08af";

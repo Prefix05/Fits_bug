@@ -122,7 +122,7 @@ body { font-family: 'Inter', sans-serif; }
 
 <div class="p-5">
     <h3 class="font-bold mb-2">테스트 게시글</h3>
-    <p>모달 테스트용 게시글입니다 💪</p>
+    <p>모달 테스트용 게시글입니다 </p>
 
     <div class="text-blue-500 text-sm mt-2">
         #테스트 #오운완
