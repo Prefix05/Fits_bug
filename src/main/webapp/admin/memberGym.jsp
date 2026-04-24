@@ -85,7 +85,7 @@
 		$.ajax({
             url: "${pageContext.request.contextPath}/admin/memberGym",
             type: "POST",
-            data: { gymName: keyword },
+            data: { gymName: keyword }, //이 gymName과 controller doPost의 gymName 같아야함
             dataType: "json",
             success: function(data) {
                 let html = "";
@@ -100,7 +100,7 @@
                         const tel = item.gymTel || '-';
                         const date = item.regDate || '-';
                         const count = item.gymClientCount || 0;
-                        // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
+                        // gymCal이 null이면 0으로 처리하고 숫자 포맷팅. 숫자데이터를 3자리마다 , 찍어줌
                         const cal = Number(item.gymCal || 0).toLocaleString();
                         
                         html += `
@@ -110,7 +110,7 @@
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                             <span class="material-symbols-outlined">fitness_center</span>
                                         </div>
-                                        <div>
+                                        <div> //역슬래시를 통해 JSP엔진이 처리하지않게하기위함. JS가 실행하게끔 유도
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
                                             <p class="text-xs text-on-surface-variant">\${tel}</p>
                                         </div>
@@ -218,7 +218,7 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
 search</span>
 <input id="searchKeyword" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
-placeholder="헬스장명 검색..." type="text"/>
+placeholder="헬스장명 검색" type="text"/>
 </div>
 <button id="searchBtn" type="button" onclick="fn_search()" class="px-4 py-2 bg-primary text-on-primary text-sm font-medium rounded-lg transition-all active:scale-95 active:bg-primary-dark shrink-0">
 검색
