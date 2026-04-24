@@ -92,7 +92,7 @@
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 </head>
 <body class="bg-background font-body text-on-surface">
-	<jsp:include page="sidebar.jsp"></jsp:include>
+	<jsp:include page="common/sidebar.jsp"></jsp:include>
 
 	<!-- Main Content Area -->
 	<main class="ml-64 pt-16 min-h-screen bg-surface">
@@ -115,11 +115,11 @@
 		<!-- Sorting UI -->
 		<div class="flex items-center justify-between mb-6">
 			<div class="flex items-center gap-4">
-				<a href="${pageContext.request.contextPath}/common/notice?sort=latest&page=1"
+				<a href="${pageContext.request.contextPath}/gym/notice?sort=latest&page=1"
    		   		   class="${empty sort || sort eq 'latest' ? 'text-sm font-bold text-primary border-b-2 border-primary pb-1' : 'text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors pb-1 border-b-2 border-transparent'}">
    					최신순
 				</a>
-				<a href="${pageContext.request.contextPath}/common/notice?sort=view&page=1"
+				<a href="${pageContext.request.contextPath}/gym/notice?sort=view&page=1"
    		   		   class="${sort eq 'view' ? 'text-sm font-bold text-primary border-b-2 border-primary pb-1' : 'text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors pb-1 border-b-2 border-transparent'}">
    					조회수순
 				</a>
@@ -132,7 +132,7 @@
 		<!-- Notice List -->
 		<div class="space-y-4">
 			<c:forEach var="notice" items="${noticeList}">
-				<a href="${pageContext.request.contextPath}/common/noticeDetail?id=${notice.id}"
+				<a href="${pageContext.request.contextPath}/gym/noticeDetail?id=${notice.id}"
 			   	   class="block bg-white hover:bg-surface-container-low p-6 rounded-lg transition-all duration-200 flex items-start gap-6 group cursor-pointer border border-outline-variant/10">
 			
 				<div class="flex-shrink-0 text-center w-16">
@@ -174,20 +174,20 @@
 	<!-- Pagination -->
 	<div class="mt-12 flex justify-center items-center gap-2">
 		<c:if test="${page > 1}">
-			<a href="${pageContext.request.contextPath}/common/notice?page=${page-1}&sort=${sort}"
+			<a href="${pageContext.request.contextPath}/gym/notice?page=${page-1}&sort=${sort}"
 			   class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent hover:bg-white transition-colors text-outline-variant">
 				<span class="material-symbols-outlined" style="">chevron_left</span>
 			</a>
 		</c:if>
 		
 		<c:forEach var="i" begin="${startPage}" end="${endPage}">
-			<a href="${pageContext.request.contextPath}/common/notice?page=${i}&sort=${sort}"
+			<a href="${pageContext.request.contextPath}/gym/notice?page=${i}&sort=${sort}"
 			   class="${i == page ? 'w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm' : 'w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white transition-colors text-sm font-medium text-on-surface-variant'}">
 				${i}
 			</a>
 		</c:forEach>
 		<c:if test="${page < totalPage}">
-			<a href="${pageContext.request.contextPath}/common/notice?page=${page+1}&sort=${sort}"
+			<a href="${pageContext.request.contextPath}/gym/notice?page=${page+1}&sort=${sort}"
 			   class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent hover:bg-white transition-colors text-outline-variant">
 				<span class="material-symbols-outlined" style="">chevron_right</span>
 			</a>
@@ -214,7 +214,7 @@
         </div>
 
         <!-- 모달 내용 -->
-        <form action="${pageContext.request.contextPath}/GYM/noticeWrite"
+        <form action="${pageContext.request.contextPath}/gym/noticeWrite"
               method="post"
               onsubmit="return submitNoticeForm();"
               class="px-8 pb-8 pt-6 space-y-6">

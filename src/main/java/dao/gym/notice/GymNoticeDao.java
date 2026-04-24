@@ -1,9 +1,11 @@
 package dao.gym.notice;
 
+
 import java.util.List;
 import java.util.Map;
 
 import dto.gym.GymNotice;
+import dto.gym.NoticeImages;
 
 public interface GymNoticeDao {
 	int selectNoticeCount(int gymId) throws Exception;
@@ -11,4 +13,10 @@ public interface GymNoticeDao {
 	GymNotice selectNoticeDetail(int id) throws Exception;
 	void updateViewCount(int id) throws Exception;
 	void insertNotice(GymNotice notice) throws Exception;
+	void updateNotice(GymNotice notice) throws Exception;
+	List<NoticeImages> selectImagesByNoticeId(int noticeId) throws Exception;
+	void insertImages(NoticeImages image) throws Exception;
+	void deleteImages(List<Integer> imageIds) throws Exception;
+	void deleteNotice(int noticeId) throws Exception;
+	void deleteImagesByNoticeId(int noticeId) throws Exception;
 }

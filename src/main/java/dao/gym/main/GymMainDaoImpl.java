@@ -11,7 +11,7 @@ public class GymMainDaoImpl implements GymMainDao {
 	public Gym selectGymMainInfo(int gymId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return sqlSession.selectOne("mapper.main.selectGymMainInfo", gymId);
+			return sqlSession.selectOne("mapper.gymMain.selectGymMainInfo", gymId);
 		}finally{
 			sqlSession.close();
 		}

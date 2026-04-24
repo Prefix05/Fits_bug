@@ -6,6 +6,7 @@ import java.util.Map;
 import dao.gym.notice.GymNoticeDao;
 import dao.gym.notice.GymNoticeDaoImpl;
 import dto.gym.GymNotice;
+import dto.gym.NoticeImages;
 
 public class GymNoticeServiceImpl implements GymNoticeService {
 	private GymNoticeDao gymNoticeDao = new GymNoticeDaoImpl();
@@ -33,6 +34,41 @@ public class GymNoticeServiceImpl implements GymNoticeService {
 	@Override
 	public void writeNotice(GymNotice notice) throws Exception {
 		gymNoticeDao.insertNotice(notice);
+	}
+	
+	@Override
+	public void updateNotice(GymNotice notice) throws Exception {
+		gymNoticeDao.updateNotice(notice);
+	}
+	
+	@Override
+	public List<NoticeImages> getImagesBtNoticeId(int noticeId) throws Exception {
+		return gymNoticeDao.selectImagesByNoticeId(noticeId);
+	}
+	
+	@Override
+	public void addImage(NoticeImages image) throws Exception {
+		gymNoticeDao.insertImages(image);
+	}
+	
+	@Override
+	public void removeImages(List<Integer> imageId) throws Exception {
+		gymNoticeDao.deleteImages(imageId);
+	}
+
+	@Override
+	public List<NoticeImages> getImagesByNoticeId(int noticeId) throws Exception {
+		return gymNoticeDao.selectImagesByNoticeId(noticeId);
+	}
+
+	@Override
+	public void deleteNotice(int noticeId) throws Exception {
+		gymNoticeDao.deleteNotice(noticeId);
+	}
+
+	@Override
+	public void deleteImagesByNoticeId(int noticeId) throws Exception {
+		gymNoticeDao.deleteImagesByNoticeId(noticeId);
 	}
 
 }

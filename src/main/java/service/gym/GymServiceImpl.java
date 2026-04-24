@@ -6,14 +6,14 @@ import dao.gym.main.GymMainDao;
 import dao.gym.main.GymMainDaoImpl;
 import dao.gym.main.GymMainNoticeDao;
 import dao.gym.main.GymMainNoticeDaoImpl;
-import dao.gym.main.GymTrainerViewDao;
+import dao.gym.main.GymMainTrainerViewDao;
 import dao.gym.main.GymTrainerViewDaoImpl;
-import dao.gym.main.MembershipDao;
-import dao.gym.main.MembershipDaoImpl;
-import dao.gym.main.ReviewDao;
-import dao.gym.main.ReviewDaoImpl;
-import dao.gym.main.ScheduleDao;
-import dao.gym.main.ScheduleDaoImpl;
+import dao.gym.main.GymMainMembershipDao;
+import dao.gym.main.GymMainMembershipDaoImpl;
+import dao.gym.main.GymMainReviewDao;
+import dao.gym.main.GymMainReviewDaoImpl;
+import dao.gym.main.GymMainScheduleDao;
+import dao.gym.main.GymMainScheduleDaoImpl;
 import dto.gym.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
@@ -24,10 +24,10 @@ import dto.gym.Schedule;
 public class GymServiceImpl implements GymService {
 	private GymMainDao mainDao = new GymMainDaoImpl();
 	private GymMainNoticeDao noticeDao = new GymMainNoticeDaoImpl();
-	private MembershipDao membershipDao = new MembershipDaoImpl();
-	private GymTrainerViewDao trainerViewDao = new GymTrainerViewDaoImpl();
-	private ReviewDao reviewDao = new ReviewDaoImpl();
-	private ScheduleDao scheduleDao = new ScheduleDaoImpl();
+	private GymMainMembershipDao membershipDao = new GymMainMembershipDaoImpl();
+	private GymMainTrainerViewDao trainerViewDao = new GymTrainerViewDaoImpl();
+	private GymMainReviewDao reviewDao = new GymMainReviewDaoImpl();
+	private GymMainScheduleDao scheduleDao = new GymMainScheduleDaoImpl();
 
 	@Override
 	public Gym getGymMainInfo(int gymId) throws Exception {
