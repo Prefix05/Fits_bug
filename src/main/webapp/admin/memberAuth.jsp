@@ -107,9 +107,9 @@
 </div>
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-8 border-b border-outline-variant/20">
-<a href="<%= request.getContextPath() %>/memberAuth"
+<a href="<%= request.getContextPath() %>/admin/memberAuth"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">자격승인</a>
-<a href="<%= request.getContextPath() %>/memberGym"
+<a href="<%= request.getContextPath() %>/admin/memberGym"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">회원리스트</a>
 </div>
 <!-- Content Grid: Member List + Detail Profile -->

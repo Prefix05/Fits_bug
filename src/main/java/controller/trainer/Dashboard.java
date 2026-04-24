@@ -1,22 +1,20 @@
 package controller.trainer;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import dao.trainer.ClientDAO;
+import dao.trainer.ClientDAOImpl;
 import dto.trainer.ClientDTO;
 import service.trainer.DashboardData;
+import service.trainer.DashboardService;
 import service.trainer.DashboardServiceImpl;
 
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+@WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
-    private final DashboardServiceImpl dashboardService = new DashboardServiceImpl();
-    private final ClientDAO clientDAO = new ClientDAO();
+    private final DashboardService dashboardService = new DashboardServiceImpl();
+    private final ClientDAOImpl clientDAO = new ClientDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,10 +34,10 @@ public class Dashboard extends HttpServlet {
         }
         request.setAttribute("notifications", data.getNotifications());
         request.setAttribute("hasSelectedLesson", data.getSelectedLesson() != null);
-        request.getRequestDispatcher("/WEB-INF/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/trainer/dashboard.jsp").forward(request, response);
     }
 
-//    Helper Functions
+    //    Helper Functions
     private String resolveUserId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {

@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String contextPath = request.getContextPath();
+%>    
 <!DOCTYPE html>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -73,6 +78,74 @@
         },
       }
     </script>
+<script type="text/javascript">
+	function fn_search(){
+		const keyword = $("#searchKeyword").val();
+
+		$.ajax({
+            url: "${pageContext.request.contextPath}/admin/memberTrainer",
+            type: "POST",
+            data: { trainerName: keyword },
+            dataType: "json",
+            success: function(data) {
+                let html = "";
+                
+                if(data.length === 0) {
+                    html = `<tr><td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+                            등록된 헬스장 정보가 없습니다.</td></tr>`;
+                } else {
+                    $.each(data, function(index, item) {
+                    	// 값이 없을 경우를 대비한 기본값 설정
+                        const name = item.trainerName || '이름 없음';
+                        const tel = item.trainerTel || '-';
+                        const date = item.regDate || '-';
+                        const count = item.trainerClientCount || 0;
+                        // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
+                        const cal = Number(item.trainerCal || 0).toLocaleString();
+                        
+                        html += `
+                            <tr class="hover:bg-surface-container-low transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                            <span class="material-symbols-outlined">fitness_center</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-on-surface">\${name}</p>
+                                            <p class="text-xs text-on-surface-variant">\${tel}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-on-surface-variant">\${date}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">\${count}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">₩\${cal}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+                                        <span class="material-symbols-outlined">chevron_right</span>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        });
+                }
+                // tbody에 결과 꽂아넣기
+                $("#memberTableBody").html(html);
+            },
+            error: function(err) {
+                console.log("검색 중 에러 발생:", err);
+            }
+        });
+    }
+	$(document).ready(function() {
+        // ID가 searchKeyword인 입력창에서 키보드가 눌렸을 때
+        $("#searchKeyword").on("keydown", function(e) {
+            // 눌린 키가 엔터(Enter, 코드 13)라면
+            if (e.keyCode === 13) {
+                e.preventDefault(); // 엔터 시 페이지 새로고침 방지 (보안용)
+                fn_search();        // 위에서 만든 검색 함수 실행
+            }
+        });
+    });
+</script>    
 <style>
       .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -87,9 +160,7 @@
     </style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
-<%
-    String contextPath = request.getContextPath();
-%>
+<!-- SideNavBar Shell -->
 <div class="flex">
 	<jsp:include page="../member/sidebar.jsp"></jsp:include>
 </div>
@@ -106,23 +177,23 @@
 </div>
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-8 border-b border-outline-variant/20">
-<a href="<%= request.getContextPath() %>/memberAuth"
+<a href="<%= contextPath %>/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= request.getContextPath() %>/memberGym"
+<a href="<%= contextPath %>/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 <!-- Bento Filter Section -->
 <div class="grid grid-cols-12 gap-6 mb-8">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
-<a href="<%= contextPath %>/memberGym"
+<a href="<%= contextPath %>/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:bg-surface-container flex items-center justify-center">
 헬스장
 </a>
-<a href="<%= contextPath %>/memberTrainer"
+<a href="<%= contextPath %>/admin/memberTrainer"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
 트레이너
 </a>
-<a href="<%= contextPath %>/memberClient"
+<a href="<%= contextPath %>/admin/memberClient"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surface-variant hover:bg-surface-container flex items-center justify-center">
 회원
 </a>
@@ -142,10 +213,15 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
 <div class="px-6 py-4 border-b border-outline-variant/10">
 <div class="relative w-72">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="트레이너 이름 또는 전화번호 검색" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">
+search</span>
+<input id="searchKeyword" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
+placeholder="트레이너 이름 또는 전화번호 검색" type="text"/>
 </div>
 </div>
+<button id="searchBtn" type="button" onclick="fn_search()" class="px-4 py-2 bg-primary text-on-primary text-sm font-medium rounded-lg transition-all active:scale-95 active:bg-primary-dark shrink-0">
+검색
+</button>
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
@@ -157,112 +233,89 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/10">
-<!-- Row 1 -->
+<!-- Row  -->
+<!-- Row  -->
+<c:forEach var="item" items="${trainerList }">
 <tr class="hover:bg-surface-container-low transition-colors group">
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
-<img alt="Trainer" class="w-10 h-10 rounded-full object-cover bg-surface-container-high ring-2 ring-white shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbdHMSism2OALhybjISTJkkOs4q8cWXO-xWzC8HFb2oQWPUMltEwc5odouydVh5-oB5BKvnWhrBKaSM02qqBMoZckigdiOjxXQyUyV8R9QU393cg3GFz_K2xVEeT3jLrqpbnSc1PLWZ8xM6eYO9meNRXDb3zLedEkYorqYa_0qW7IBkiMbq9bY7hbc4ItwA4t-MqCYFC-FZAH6Y9tfOBoRhyKdGH5PJ0Dahn-LzjWEiWscPEM0tiHK8ePZfXU863cjaYaTwZojSGw"/>
-<div>
-<div class="flex items-center gap-1.5">
-<p class="text-sm font-bold text-on-surface">김철수</p>
-<span class="material-symbols-outlined text-primary text-[18px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">trainer</span>
 </div>
-<p class="text-xs text-on-surface-variant">010-1234-5678</p>
+<div>
+<p class="text-sm font-bold text-on-surface">${item.trainerName }</p>
+<p class="text-xs text-on-surface-variant">${item.trainerTel }</p>
 </div>
 </div>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.11.15</td>
-<td class="px-6 py-4 text-sm font-medium">24명</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩2,450,000</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">${item.regDate }</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">${item.trainerClientCount }</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">
+₩<fmt:formatNumber value="${item.trainerCal }" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
 <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>
 </button>
 </td>
 </tr>
-<!-- Row 2 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<img alt="Trainer" class="w-10 h-10 rounded-full object-cover bg-surface-container-high ring-2 ring-white shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARAwfBDow1KyWT8fbgA-mgNUz0nWZ-Ng9vTK2urUdWKNRizNPv-SEmQtX7QHouqoZ4kF8PHbyyeUtKLtMwjNaKN3x-_QyzAi7zKn4RU5GQgEHuLvRpbst-uy__6jj2BbRlEgghhELxxjoJ9GPnZiBKms4ipZlng5euLo-0qw_cPDBlhAFDzNrZLaV_J5XyLNVRTrVY79mmTbDkWs_GMHTxlrW_xGZsy9LMiQhy29Ji2EsCr1WzGwhYP6TdlW_ajXXbZu2draNWChE"/>
-<div>
-<div class="flex items-center gap-1.5">
-<p class="text-sm font-bold text-on-surface">박민지</p>
-<span class="material-symbols-outlined text-primary text-[18px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<p class="text-xs text-on-surface-variant">010-9876-5432</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.09.28</td>
-<td class="px-6 py-4 text-sm font-medium">42명</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩4,820,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
+</c:forEach>
+<c:if test="${empty trainerList }">
+<tr>
+<td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+등록된 트레이너 정보가 없습니다.
 </td>
 </tr>
-<!-- Row 3 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<img alt="Trainer" class="w-10 h-10 rounded-full object-cover bg-surface-container-high ring-2 ring-white shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwQyouU30gTuS_r9tnlKqs--XNSuJeDpSHxr1iAQtPzdgKhDkTrCeCwFT2mtcDLYOnadO4yQ66OwW6Llon3BMaC8eqqDOQ2Ah9yQKIoE5lYJKgEwu14Jgx0ZxA7oYqAcIHWIZnDIU1e-CyUCnr4R0WIVVUmGA0NwqhIFNaCXmx3x9-asQTaGg0c-bZGLUdRdKEbTOWJwihoKu7S5XoiYW2hmU_q8yzui73YaRV7xuRzwX0bGrl088b71h3vimUluWMGw7cKpymGaA"/>
-<div>
-<p class="text-sm font-bold text-on-surface">이태원</p>
-<p class="text-xs text-on-surface-variant">010-1111-2222</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.10.05</td>
-<td class="px-6 py-4 text-sm font-medium">15명</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩1,120,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<img alt="Trainer" class="w-10 h-10 rounded-full object-cover bg-surface-container-high ring-2 ring-white shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-gBcP1f7z2P4haxxf5bFWbfGOrcQp-No01Br2ljTX4hXi4SClsdZy_an-K6u85RSeyC4VQ42eVJqEJJ8LcaKcOQImFuYE4biYU59vqwx3iEGmsFKnTK16wPcpuj0vR6MPW3TtSarcMZSIfOluhVZs04RPsz1Z7WqwyiBzYh8zqMV_-W2uiL0BRLDgvInW6x_oAlvBXhMQi_Afx7lnA36ODqRIGROx1D8OBkjlwNzf8wrltzCrQ9QA5svXsq-NrFm8QRY2vx85F4Y"/>
-<div>
-<div class="flex items-center gap-1.5">
-<p class="text-sm font-bold text-on-surface">정수정</p>
-<span class="material-symbols-outlined text-primary text-[18px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<p class="text-xs text-on-surface-variant">010-3333-4444</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.08.12</td>
-<td class="px-6 py-4 text-sm font-medium">31명</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩3,100,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</td>
-</tr>
+</c:if>
 </tbody>
 </table>
 <!-- Pagination -->
 <div class="px-6 py-4 flex items-center justify-between bg-surface-container-low/30 border-t border-outline-variant/10">
-<p class="text-xs text-on-surface-variant">전체 48명 중 1-4 표시 중</p>
+<p class="text-xs text-on-surface-variant">
+전체 ${pageInfo.allPage }페이지 중 ${pageInfo.curPage }페이지 표시 중</p>
 <div class="flex items-center gap-1">
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<c:choose>
+<c:when test="${pageInfo.curPage>1 }">
+<a href="memberGym?page=${pageInfo.curPage-1}"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</a>
+</c:when>
+<c:otherwise>
+<button class="w-8 h-8 flex items-center justify-center rounded opacity-30 cursor-not allowed">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
 </button>
-<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs shadow-sm">1</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">2</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">3</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">...</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">9</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+</c:otherwise>
+</c:choose>
+
+<c:forEach begin="${pageInfo.startPage }" end="${pageInfo.endPage }" var="page">
+<c:choose>
+<c:when test="${pageInfo.curPage == page }">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs shadow-sm">
+${page }
+</button>
+</c:when>
+<c:otherwise>
+<a href="memberGym?page=${page }"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">
+${page }
+</a>
+</c:otherwise>
+</c:choose>
+</c:forEach>
+
+<c:choose>
+<c:when test="${pageInfo.curPage < pageInfo.allPage}">
+<a href="memberGym?page=${pageInfo.curPage + 1}"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</a>
+</c:when>
+<c:otherwise>
+<button class="w-8 h-8 flex items-center justify-center rounded opacity-30 cursor-not allowed">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
 </button>
+</c:otherwise>
+</c:choose>
 </div>
 </div>
 </div>

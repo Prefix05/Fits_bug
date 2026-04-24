@@ -4,3 +4,9 @@
 # IntelliJ IDEA
 .idea/
 *.iml
+
+# build/artifacts
+build/
+classes/
+out/
+target/
