@@ -1,9 +1,9 @@
-package dao.gym;
+package dao.gym.main;
 
 import java.util.List;
 
 import dto.gym.GymNotice;
 
-public interface GymNoticeDao {
+public interface GymMainNoticeDao {
 	List<GymNotice> selectRecentNoticeByGym(int gymId) throws Exception;
 }

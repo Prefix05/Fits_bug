@@ -108,7 +108,7 @@
 </style>
 </head>
 <body class="bg-background font-body text-on-surface">
-<jsp:include page="../member/sidebar.jsp"></jsp:include>
+<jsp:include page="sidebar.jsp"></jsp:include>
 
 <!-- Main Content Area -->
 <main class="ml-64 pt-16 min-h-screen bg-surface">
@@ -186,6 +186,7 @@
 	</div>
 </section>
 </div>
+
 <!-- Reviews -->
 <section id="reviewSection" class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col h-[420px]">
 	<div class="flex justify-between items-center mb-4 flex-shrink-0">
@@ -206,7 +207,39 @@
 			</div>
 		</div>
 	</div>
-<div id="reviewList" class="grid grid-cols-2 gap-4">
+	<!-- 리뷰 작성 영역 (여기 추가) -->
+	<c:if test="${not empty sessionScope.loginUser}">
+    	<div class="mb-6 p-4 bg-surface-container-low rounded-lg border border-outline-variant/10">
+        
+        	<!-- 별점 -->
+        	<div class="flex items-center space-x-1 text-yellow-400">
+            	<c:forEach begin="1" end="5" var="i">
+                	<span onclick="setStar(${i})"
+                      	  class="material-symbols-outlined cursor-pointer">star</span>
+            	</c:forEach>
+            	<span class="text-[10px] ml-2">평점을 선택해주세요</span>
+        	</div>
+
+        	<!-- 내용 -->
+        	<textarea id="reviewContent"
+                  	  class="w-full mt-2 p-3 bg-white border rounded"
+                  	  placeholder="리뷰를 작성해주세요"
+                  	  rows="3"></textarea>
+
+        	<!-- 버튼 -->
+        	<div class="flex justify-between mt-2">
+            	<button class="w-8 h-8 border rounded">
+                	📷
+            	</button>
+
+            	<button onclick="submitReview()"
+                    	class="bg-primary text-white px-4 py-2 rounded text-xs font-bold">
+                	리뷰 등록
+            	</button>
+        	</div>
+    	</div>
+	</c:if>
+	<div id="reviewList" class="grid grid-cols-2 gap-4">
 	<c:choose>
 		<c:when test="${not empty reviewList}">
 			<c:forEach var="review" items="${reviewList}">
@@ -236,6 +269,17 @@
 										<span class="material-symbols-outlined text-sm">report</span>
 									</button>
 								</div>
+							</c:if>
+							
+							<c:if test="${sessionScope.loginUser.id == review.clientId}">
+    							<div class="flex items-center space-x-1.5 ml-2">
+        							<button onclick="editReview(${review.reviewNum})">
+            							<span class="material-symbols-outlined text-sm">edit</span>
+        							</button>
+        							<button onclick="deleteReview(${review.reviewNum})">
+            							<span class="material-symbols-outlined text-sm">delete</span>
+        							</button>
+    							</div>
 							</c:if>
 						</div>
 					</div>
@@ -556,6 +600,40 @@ function reportReview(reviewNum) {
             map.setCenter(coords);
         }
     });
+</script>
+
+<script>
+let selectedStar = 0;
+
+function setStar(star){
+    selectedStar = star;
+    alert("별점 선택: " + star);
+}
+
+function submitReview(){
+    const content = document.getElementById("reviewContent").value;
+
+    if(selectedStar === 0){
+        alert("별점을 선택하세요");
+        return;
+    }
+    if(content.trim() === ""){
+        alert("내용 입력하세요");
+        return;
+    }
+
+    location.href = "/review/write?star=" + selectedStar + "&content=" + content;
+}
+
+function editReview(id){
+    location.href = "/review/edit?reviewNum=" + id;
+}
+
+function deleteReview(id){
+    if(confirm("삭제하시겠습니까?")){
+        location.href = "/review/delete?reviewNum=" + id;
+    }
+}
 </script>
 </body>
 </html>
