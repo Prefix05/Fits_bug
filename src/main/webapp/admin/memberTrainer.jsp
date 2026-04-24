@@ -92,7 +92,7 @@
                 
                 if(data.length === 0) {
                     html = `<tr><td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
-                            등록된 헬스장 정보가 없습니다.</td></tr>`;
+                            등록된 트레이너 정보가 없습니다.</td></tr>`;
                 } else {
                     $.each(data, function(index, item) {
                     	// 값이 없을 경우를 대비한 기본값 설정
@@ -108,7 +108,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">fitness_center</span>
+                                            <span class="material-symbols-outlined">fitness_trainer</span>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -212,16 +212,18 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 <!-- Table Section -->
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
 <div class="px-6 py-4 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
 <div class="relative w-72">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">
 search</span>
 <input id="searchKeyword" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
-placeholder="트레이너 이름 또는 전화번호 검색" type="text"/>
-</div>
+placeholder="트레이너 이름 검색" type="text"/>
 </div>
 <button id="searchBtn" type="button" onclick="fn_search()" class="px-4 py-2 bg-primary text-on-primary text-sm font-medium rounded-lg transition-all active:scale-95 active:bg-primary-dark shrink-0">
 검색
 </button>
+</div>
+</div>
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
@@ -232,15 +234,14 @@ placeholder="트레이너 이름 또는 전화번호 검색" type="text"/>
 <th class="px-6 py-4 font-semibold text-right">상세보기</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/10">
-<!-- Row  -->
+<tbody id="memberTableBody" class="divide-y divide-outline-variant/10">
 <!-- Row  -->
 <c:forEach var="item" items="${trainerList }">
 <tr class="hover:bg-surface-container-low transition-colors group">
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">trainer</span>
+<span class="material-symbols-outlined">fitness_trainer</span>
 </div>
 <div>
 <p class="text-sm font-bold text-on-surface">${item.trainerName }</p>
