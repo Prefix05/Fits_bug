@@ -1,4 +1,4 @@
-package dao.gym;
+package dao.gym.main;
 
 import dto.gym.Schedule;
 

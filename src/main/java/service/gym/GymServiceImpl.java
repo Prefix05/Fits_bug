@@ -2,18 +2,18 @@ package service.gym;
 
 import java.util.List;
 
-import dao.gym.GymMainDao;
-import dao.gym.GymMainDaoImpl;
-import dao.gym.GymNoticeDao;
-import dao.gym.GymNoticeDaoImpl;
-import dao.gym.GymTrainerViewDao;
-import dao.gym.GymTrainerViewDaoImpl;
-import dao.gym.MembershipDao;
-import dao.gym.MembershipDaoImpl;
-import dao.gym.ReviewDao;
-import dao.gym.ReviewDaoImpl;
-import dao.gym.ScheduleDao;
-import dao.gym.ScheduleDaoImpl;
+import dao.gym.main.GymMainDao;
+import dao.gym.main.GymMainDaoImpl;
+import dao.gym.main.GymMainNoticeDao;
+import dao.gym.main.GymMainNoticeDaoImpl;
+import dao.gym.main.GymTrainerViewDao;
+import dao.gym.main.GymTrainerViewDaoImpl;
+import dao.gym.main.MembershipDao;
+import dao.gym.main.MembershipDaoImpl;
+import dao.gym.main.ReviewDao;
+import dao.gym.main.ReviewDaoImpl;
+import dao.gym.main.ScheduleDao;
+import dao.gym.main.ScheduleDaoImpl;
 import dto.gym.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
@@ -23,7 +23,7 @@ import dto.gym.Schedule;
 
 public class GymServiceImpl implements GymService {
 	private GymMainDao mainDao = new GymMainDaoImpl();
-	private GymNoticeDao noticeDao = new GymNoticeDaoImpl();
+	private GymMainNoticeDao noticeDao = new GymMainNoticeDaoImpl();
 	private MembershipDao membershipDao = new MembershipDaoImpl();
 	private GymTrainerViewDao trainerViewDao = new GymTrainerViewDaoImpl();
 	private ReviewDao reviewDao = new ReviewDaoImpl();
