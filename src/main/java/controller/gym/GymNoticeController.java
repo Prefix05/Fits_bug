@@ -19,7 +19,7 @@ import service.gym.GymNoticeServiceImpl;
 /**
  * Servlet implementation class GymNotice
  */
-@WebServlet("/common/notice")
+@WebServlet("/gym/notice")
 public class GymNoticeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -136,7 +136,7 @@ public class GymNoticeController extends HttpServlet {
 			request.setAttribute("startPage", startPage);
 			request.setAttribute("endPage", endPage);
 			
-			request.getRequestDispatcher("/gym/common/gym_notice.jsp").forward(request, response);
+			request.getRequestDispatcher("/gym/gym_notice.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new ServletException("공지사항 목록 조회 중 오류", e);

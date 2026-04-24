@@ -4,19 +4,19 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.gym.Review;
+import dto.gym.Membership;
 import util.MybatisSqlSessionFactory;
 
-public class ReviewDaoImpl implements ReviewDao {
-
+public class GymMainMembershipDaoImpl implements GymMainMembershipDao {
+	
 	@Override
-	public List<Review> selectRecentReviewByGym(int gymId) throws Exception {
+	public List<Membership> selectMembershipByGym(int gymNum) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return sqlSession.selectList("mapper.review.selectRecentReviewByGym", gymId);
+			return sqlSession.selectList("mapper.membership.selectMembershipByGym", gymNum);
 		}finally{
 			sqlSession.close();
 		}
 	}
-	
+
 }

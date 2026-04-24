@@ -108,7 +108,7 @@
 </style>
 </head>
 <body class="bg-background font-body text-on-surface">
-<jsp:include page="sidebar.jsp"></jsp:include>
+<jsp:include page="common/sidebar.jsp"></jsp:include>
 
 <!-- Main Content Area -->
 <main class="ml-64 pt-16 min-h-screen bg-surface">
@@ -161,7 +161,7 @@
 <section class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/15">
 	<div class="flex justify-between items-center mb-3">
 		<h3 class="text-sm font-bold tracking-tight">공지사항</h3>
-		<a href="${pageContext.request.contextPath}/COMMON/notice?gymId=${gym.id}" class="text-[10px] font-bold text-primary">전체보기</a>
+		<a href="${pageContext.request.contextPath}/gym/notice?gymId=${gym.id}" class="text-[10px] font-bold text-primary">전체보기</a>
 	</div>
 	<div class="space-y-1.5">
 		<c:choose>

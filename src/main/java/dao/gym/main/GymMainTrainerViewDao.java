@@ -4,6 +4,6 @@ import java.util.List;
 
 import dto.gym.GymTrainerView;
 
-public interface GymTrainerViewDao {
+public interface GymMainTrainerViewDao {
 	List<GymTrainerView> selectGymTrainerViewBtGym(int gymId) throws Exception;
 }
