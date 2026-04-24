@@ -4,6 +4,7 @@ public class MemberDTO {
 	private String email;
     private String password;
     private String nickname;
+    private String name;
     private String phone;
     private String profileImage;
     private boolean emailVerified;
@@ -16,12 +17,13 @@ public class MemberDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public MemberDTO(String email, String password, String nickname, String phone, String profileImage,
+	public MemberDTO(String email, String password, String nickname, String name, String phone, String profileImage,
 			boolean emailVerified, String socialType) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
+		this.name = name;
 		this.phone = phone;
 		this.profileImage = profileImage;
 		this.emailVerified = emailVerified;
@@ -50,6 +52,14 @@ public class MemberDTO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	
+	public String getname() {
+		return name;
+	}
+	
+	public void setname(String name) {
+		this.name = name;
 	}
 
 	public String getPhone() {

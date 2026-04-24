@@ -112,10 +112,17 @@ class="px-4 bg-gray-200 rounded">확인</button>
 class="w-full p-3 border rounded">
 </div>
 
-<!-- 이름 -->
+<!-- 닉네임 -->
 <div>
 <label class="block mb-1 font-semibold">닉네임</label>
 <input name="nickname" required
+class="w-full p-3 border rounded">
+</div>
+
+<!-- 이름 -->
+<div>
+<label class="block mb-1 font-semibold">이름</label>
+<input name="name" required
 class="w-full p-3 border rounded">
 </div>
 

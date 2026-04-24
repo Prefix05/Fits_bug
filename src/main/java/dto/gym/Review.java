@@ -1,5 +1,7 @@
 package dto.gym;
 
+import java.util.Date;
+
 public class Review {
 	private int reviewNum;
 	private int gymId;
@@ -8,14 +10,14 @@ public class Review {
 	private int star;
 	private double rating;
 	private String comment;
-	private String createdAt;
+	private Date createdAt;
 	private String file;
 	
 	public Review() {
 		super();
 	}
 
-	public Review(int reviewNum, int gymId, int clientId, String clientName, int star, double rating, String comment, String createdAt,
+	public Review(int reviewNum, int gymId, int clientId, String clientName, int star, double rating, String comment, Date createdAt,
 			String file) {
 		super();
 		this.reviewNum = reviewNum;
@@ -77,11 +79,11 @@ public class Review {
 		this.comment = comment;
 	}
 
-	public String getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
