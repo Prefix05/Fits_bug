@@ -2,7 +2,9 @@ package controller.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,17 +32,25 @@ public class MemberGym extends HttpServlet {
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String gymName = request.getParameter("gymName");
+		String gymName = request.getParameter("gymName"); //jsp의 비동기에서 보낸 값 수령
+		String sortColumn = request.getParameter("sortColumn");
+		String sortOrder = request.getParameter("sortOrder");
 		
 		if(gymName != null) {
 			if(gymName.trim().isEmpty()) {
 				gymName = null;
 			}
-			PageInfo pageInfo = new PageInfo(1);
 			
+			//가져온 값들을 Map에 담기
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("pageInfo", new PageInfo(1));
+			paramMap.put("gymName", gymName);
+			paramMap.put("sortColumn", sortColumn);
+			paramMap.put("sortOrder", sortOrder);
+
 			try {
 				MemberService service = new MemberServiceImpl();
-				List<Member> list = service.gymList(pageInfo, gymName);
+				List<Member> list = service.gymList(paramMap);
 				
 				response.setContentType("application/json;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -72,18 +82,27 @@ public class MemberGym extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = request.getParameter("page");
-		Integer reqPage = 1;
-		//페이지를 누르면, 해당 페이지로 바뀌도록 하는 함수
-		if(page!=null) { // 첫 접속시 
-			reqPage = Integer.parseInt(page);
-		}
-		PageInfo pageInfo = new PageInfo(reqPage);
+		int reqPage = (page!=null)? Integer.parseInt(page) : 1;
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("pageInfo", new PageInfo(reqPage));
+		paramMap.put("gymName", null);
+		paramMap.put("sortColumn", null);
+		paramMap.put("sortOrder", null);
 		
 		try {
 			MemberService service = new MemberServiceImpl();
-			List<Member> gymList = service.gymList(pageInfo, null);
-			request.setAttribute("pageInfo", pageInfo);
+			List<Member> gymList = service.gymList(paramMap);
+			int totalCount = service.totalCnt();
+			int gymCount = service.gymCnt();
+			int trainerCount = service.trainerCnt();
+			int clientCount = service.clientCnt();
+			request.setAttribute("pageInfo", paramMap.get("pageInfo"));
 			request.setAttribute("gymList", gymList); //여기의 gymList와 JSP의 gymList 이름이 같아야함.
+			request.setAttribute("totalCount", totalCount);
+			request.setAttribute("gymCount", gymCount);
+			request.setAttribute("trainerCount", trainerCount);
+			request.setAttribute("clientCount", clientCount);
 			request.getRequestDispatcher("/admin/memberGym.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();

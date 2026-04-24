@@ -102,11 +102,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectGymList(Map<String, Object> pagingMap) throws Exception {
+	public List<Member> selectGymList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> gymList = null;
 		try {
-			gymList = sqlSession.selectList("mapper.admin.member.selectGymList", pagingMap);
+			gymList = sqlSession.selectList("mapper.admin.member.selectGymList", paramMap);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -117,11 +117,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectTrainerList(Map<String, Object> pagingMap) throws Exception {
+	public List<Member> selectTrainerList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> trainerList = null;
 		try {
-			trainerList = sqlSession.selectList("mapper.admin.member.selectTrainerList", pagingMap);
+			trainerList = sqlSession.selectList("mapper.admin.member.selectTrainerList", paramMap);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -132,11 +132,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectClientList(Map<String, Object> pagingMap) throws Exception {
+	public List<Member> selectClientList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<Member> clientList = null;
 		try {
-			clientList = sqlSession.selectList("mapper.admin.member.selectClientList", pagingMap);
+			clientList = sqlSession.selectList("mapper.admin.member.selectClientList", paramMap);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -144,5 +144,51 @@ public class MemberDAOImpl implements MemberDAO {
 			sqlSession.close();
 		}
 		return clientList;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAuthList() throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		List<Map<String, Object>> authList = null;
+		try {
+			authList = sqlSession.selectList("mapper.admin.member.selectAuthList");
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		return authList;
+	}
+
+
+	@Override
+	public Map<String, Object> selectGymAuthDetail(String userId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Map<String, Object> gymAuthDetail = null;
+		try {
+			gymAuthDetail = sqlSession.selectOne("mapper.admin.member.selectGymAuthDetail", userId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		return gymAuthDetail;
+	}
+
+	@Override
+	public Map<String, Object> selectTrainerAuthDetail(String userId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Map<String, Object> trainerAuthDetail = null;
+		try {
+			trainerAuthDetail = sqlSession.selectOne("mapper.admin.member.selectTrainerAuthDetail", userId);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		return trainerAuthDetail;
 	}
 }

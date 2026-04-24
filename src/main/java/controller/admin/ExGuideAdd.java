@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class MemberAuth
+ * Servlet implementation class ExGuideAdd
  */
-@WebServlet("/admin/memberAuth")
-public class MemberAuth extends HttpServlet {
+@WebServlet("/admin/exGuideAdd")
+public class ExGuideAdd extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MemberAuth() {
+    public ExGuideAdd() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +26,16 @@ public class MemberAuth extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 최초 접속 시 화면만 띄워줌
-        request.getRequestDispatcher("/admin/memberAuth.jsp").forward(request, response);
+		
+		request.getRequestDispatcher("/admin/exGuideAdd.jsp").forward(request, response);
 	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
 }

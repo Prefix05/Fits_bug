@@ -45,8 +45,14 @@
 			</if>
 		</where>
 		group by g.name, u.tel, u.created_at
-		order by g.name
-		limit #{row}, #{pageRow}
+		order by 
+		<choose>
+			<when test="sortColumn == 'gymClientCount'">gymClientCount</when>
+			<when test="sortColumn == 'gymCal'">gymCal</when>
+			<when test="sortColumn == 'regDate'">regDate</when>
+			<otherwise>g.name</otherwise>
+		</choose>
+		${sortOrder} limit #{row}, #{pageRow}
 	</select>
 	<select id="selectGymCnt" resultType="Integer">
 		select count(*) from gym
@@ -87,5 +93,53 @@
 	</select>
 	<select id="selectClientCnt" resultType="Integer">
 		select count(*) from member
+	</select>
+	
+	
+	<select id="selectAuthList" resultType="Map">
+		select u.id as userId, g.name as userName, u.created_at as regDate, 'GYM' as authType, g.approval_status as status
+		from user u
+		join gym g on(u.id=g.user_id)
+		where g.approval_status='PENDING' 
+		
+		union all
+		
+		SELECT u.id AS userId, u.name AS userName, u.created_at AS regDate, 'TRAINER' AS authType, t.approval_status AS status
+    	FROM USER u
+    	JOIN TRAINER t ON u.id = t.user_id
+    	WHERE t.approval_status = 'PENDING' 
+    	
+    	ORDER BY regDate DESC
+	</select>
+	<select id="selectGymAuthDetail" parameterType="String" resultType="Map">
+   		 SELECT 
+        	g.name AS name,
+        	u.email AS email,
+        	u.tel AS tel,
+        	u.profileImg as profileImg,
+        	g.address AS address,
+        	g.address_detail AS address_detail,
+        	g.business_registration_num AS bizNum,
+        	g.br_file as authDoc
+    	FROM user u
+    	JOIN gym g ON u.id = g.user_id
+    	WHERE u.id = #{userId}
+	</select>
+
+	<select id="selectTrainerAuthDetail" parameterType="String" resultType="Map">
+    	SELECT 
+        	u.name AS name,
+        	u.email AS email,
+        	u.tel AS tel,
+        	u.profileImg as profileImg,
+ 
+        	t.address AS address,
+
+        	'' AS address_detail, 
+        	t.business_registration_num AS bizNum,
+        	t.br_file AS authDoc
+    	FROM user u
+    	JOIN trainer t ON u.id = t.user_id
+    	WHERE u.id = #{userId}
 	</select>
 </mapper>	

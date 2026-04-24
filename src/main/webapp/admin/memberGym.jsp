@@ -79,13 +79,20 @@
       }
     </script>
 <script type="text/javascript">
+	let currentSortColumn = 'gymName';
+	let currentSortOrder = 'ASC';
+
 	function fn_search(){
 		const keyword = $("#searchKeyword").val();
 
 		$.ajax({
             url: "${pageContext.request.contextPath}/admin/memberGym",
             type: "POST",
-            data: { gymName: keyword }, //이 gymName과 controller doPost의 gymName 같아야함
+            data: { 
+            	gymName: keyword,
+            	sortColumn: currentSortColumn,
+            	sortOrder: currentSortOrder
+            	}, //이 gymName과 controller doPost의 gymName 같아야함
             dataType: "json",
             success: function(data) {
                 let html = "";
@@ -110,7 +117,7 @@
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                             <span class="material-symbols-outlined">fitness_center</span>
                                         </div>
-                                        <div> //역슬래시를 통해 JSP엔진이 처리하지않게하기위함. JS가 실행하게끔 유도
+                                        <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
                                             <p class="text-xs text-on-surface-variant">\${tel}</p>
                                         </div>
@@ -145,6 +152,18 @@
             }
         });
     });
+	
+	//테이블 칼럼 누르면 오름차순,내림차순 바뀌는 기능
+	function fn_sort(column){
+		if(currentSortColumn === column){
+			currentSortOrder = (currentSortOrder === 'ASC')? 'DESC':'ASC';
+		} else{
+			//새로운 칼람 누르면 해당 컬럼으로 변경, 오름차순 시작.
+			currentSortColumn = column;
+			currentSortOrder = 'ASC';
+		}
+		fn_search();
+	}
 </script>
 <style>
       .material-symbols-outlined {
@@ -199,16 +218,7 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 회원
 </a>
 </div>
-<div class="col-span-12 lg:col-span-8 flex justify-end items-center gap-4">
-<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest rounded-lg border border-outline-variant/20 shadow-sm">
-<span class="text-xs font-label text-on-surface-variant">기간 설정</span>
-<select class="text-sm border-none bg-transparent focus:ring-0 cursor-pointer text-on-surface font-medium">
-<option>전체 기간</option>
-<option>최근 1개월</option>
-<option>최근 3개월</option>
-</select>
-</div>
-</div>
+
 </div>
 <!-- Table Section -->
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
@@ -226,13 +236,22 @@ placeholder="헬스장명 검색" type="text"/>
 </div>
 </div>
 <table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
-<th class="px-6 py-4 font-semibold">헬스장 정보</th>
-<th class="px-6 py-4 font-semibold">가입일자</th>
-<th class="px-6 py-4 font-semibold">담당회원수</th><th class="px-6 py-4 font-semibold">정산 내역</th>
-<th class="px-6 py-4 font-semibold text-right">상세보기</th>
-</tr>
+<thead class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
+    <tr>
+        <th class="px-6 py-4 font-semibold" onclick="fn_sort('gymName')" style="cursor:pointer">
+            헬스장 정보 <span class="material-symbols-outlined text-xs">unfold_more</span>
+        </th>
+        <th class="px-6 py-4 font-semibold" onclick="fn_sort('regDate')" style="cursor:pointer">
+            가입일자 <span class="material-symbols-outlined text-xs">unfold_more</span>
+        </th>
+        <th class="px-6 py-4 font-semibold" onclick="fn_sort('gymClientCount')" style="cursor:pointer">
+            담당회원수 <span class="material-symbols-outlined text-xs">unfold_more</span>
+        </th>
+        <th class="px-6 py-4 font-semibold" onclick="fn_sort('gymCal')" style="cursor:pointer">
+            정산 내역 <span class="material-symbols-outlined text-xs">unfold_more</span>
+        </th>
+        <th class="px-6 py-4 font-semibold text-right">상세보기</th>
+    </tr>
 </thead>
 <tbody id="memberTableBody" class="divide-y divide-outline-variant/10">
 <!-- Row  -->
@@ -321,7 +340,8 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 </div>
 <!-- Summary Section Metrics -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10"><!-- Card 1: Total Members -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+<!-- Card 1: Total Members -->
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
 <div class="flex items-center justify-between mb-4">
 <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -329,19 +349,9 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 </div>
 <p class="text-xs font-label text-on-surface-variant uppercase mb-1">전체회원</p>
-<h3 class="text-2xl font-bold text-on-surface">2,842명</h3>
+<h3 class="text-2xl font-bold text-on-surface">${totalCount }명</h3>
 </div>
-<!-- Card 2: Members -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="flex items-center justify-between mb-4">
-<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-</div>
-</div>
-<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
-<h3 class="text-2xl font-bold text-on-surface">1,520명</h3>
-</div>
-<!-- Card 3: Gyms -->
+<!-- Card 2: Gyms -->
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
 <div class="flex items-center justify-between mb-4">
 <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
@@ -349,9 +359,9 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 </div>
 <p class="text-xs font-label text-on-surface-variant uppercase mb-1">헬스장</p>
-<h3 class="text-2xl font-bold text-on-surface">128개</h3>
+<h3 class="text-2xl font-bold text-on-surface">${gymCount }개</h3>
 </div>
-<!-- Card 4: Trainers -->
+<!-- Card 3: Trainers -->
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
 <div class="flex items-center justify-between mb-4">
 <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
@@ -359,8 +369,19 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 </div>
 <p class="text-xs font-label text-on-surface-variant uppercase mb-1">트레이너</p>
-<h3 class="text-2xl font-bold text-on-surface">48명</h3>
-</div></div>
+<h3 class="text-2xl font-bold text-on-surface">${trainerCount }명</h3>
+</div>
+<!-- Card 4: Members -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${clientCount }명</h3>
+</div>
+</div>
 </div>
 </main>
 </body></html>

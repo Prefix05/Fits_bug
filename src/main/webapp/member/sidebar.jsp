@@ -95,7 +95,7 @@
             </button>
         <% } else { %>
             <!-- 로그인 -->
-            <button onclick="location.href='<%=contextPath%>/login.jsp'"
+            <button onclick="location.href='<%=contextPath%>/member/login.jsp'"
                     class="bg-blue-600 text-white py-2 rounded-xl text-sm font-bold">
                 로그인
             </button>

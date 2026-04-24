@@ -321,53 +321,45 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 <!-- Summary Section Metrics -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-<!-- Card 1: 전체회원 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="groups">groups</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">전체회원</p>
-<h3 class="text-xl font-bold text-on-surface">2,842명</h3>
+<!-- Card 1: Total Members -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="group">group</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">전체회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${totalCount }명</h3>
 </div>
-<!-- Card 2: 회원 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="person">person</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">회원</p>
-<h3 class="text-xl font-bold text-on-surface">1,520명</h3>
+<!-- Card 2: Gyms -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">헬스장</p>
+<h3 class="text-2xl font-bold text-on-surface">${gymCount }개</h3>
 </div>
-<!-- Card 3: 헬스장 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="fitness_center">fitness_center</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">헬스장</p>
-<h3 class="text-xl font-bold text-on-surface">128개</h3>
+<!-- Card 3: Trainers -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">트레이너</p>
+<h3 class="text-2xl font-bold text-on-surface">${trainerCount }명</h3>
 </div>
-<!-- Card 4: 트레이너 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="badge">badge</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">트레이너</p>
-<h3 class="text-xl font-bold text-on-surface">48명</h3>
+<!-- Card 4: Members -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="person">person</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${clientCount }명</h3>
 </div>
 </div>
 </div>

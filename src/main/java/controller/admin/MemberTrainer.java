@@ -80,8 +80,16 @@ public class MemberTrainer extends HttpServlet {
 		try {
 			MemberService service = new MemberServiceImpl();
 			List<Member> trainerList = service.trainerList(pageInfo, null);
+			int totalCount = service.totalCnt();
+			int gymCount = service.gymCnt();
+			int trainerCount = service.trainerCnt();
+			int clientCount = service.clientCnt();
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("trainerList", trainerList);
+			request.setAttribute("totalCount", totalCount);
+			request.setAttribute("gymCount", gymCount);
+			request.setAttribute("trainerCount", trainerCount);
+			request.setAttribute("clientCount", clientCount);
 			request.getRequestDispatcher("/admin/memberTrainer.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
