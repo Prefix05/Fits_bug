@@ -1,5 +1,7 @@
 package dao.gym.notice;
 
+
+import dto.gym.NoticeImages;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,90 @@ public class GymNoticeDaoImpl implements GymNoticeDao {
 			sqlSession.close();
 		}
 		
+	}
+
+	@Override
+	public void updateNotice(GymNotice notice) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.update("mapper.gymNotice.updateNotice", notice);
+			sqlSession.commit();
+		}catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		}finally{
+			sqlSession.close();
+		}
+		
+	}
+
+	@Override
+	public List<NoticeImages> selectImagesByNoticeId(int noticeId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			return sqlSession.selectList("mapper.gymNotice.selectImagesByNoticeId", noticeId);
+		}finally{
+			sqlSession.close();
+		}
+	}
+
+	@Override
+	public void insertImages(NoticeImages image) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.insert("mapper.gymNotice.insertImages", image);
+			sqlSession.commit();
+		}catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		}finally{
+			sqlSession.close();
+		}
+		
+	}
+
+	@Override
+	public void deleteImages(List<Integer> imageIds) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.delete("mapper.gymNotice.deleteImages", imageIds);
+			sqlSession.commit();
+		}catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		}finally{
+			sqlSession.close();
+		}
+		
+	}
+
+	@Override
+	public void deleteNotice(int noticeId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.delete("mapper.gymNotice.deleteNotice", noticeId);
+			sqlSession.commit();
+		}catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		}finally{
+			sqlSession.close();
+		}
+		
+	}
+
+	@Override
+	public void deleteImagesByNoticeId(int noticeId) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			sqlSession.delete("mapper.gymNotice.deleteImagesByNoticeId", noticeId);
+			sqlSession.commit();
+		}catch(Exception e) {
+			sqlSession.rollback();
+			throw e;
+		}finally{
+			sqlSession.close();
+		}
 	}
 
 }

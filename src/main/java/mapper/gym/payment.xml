@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mapper.payment">
+
+    <!-- 멤버십 등록 -->
+    <insert id="insertMembershipRegistration"
+            parameterType="dto.gym.MembershipRegistration"
+            useGeneratedKeys="true"
+            keyProperty="mrNum">
+        INSERT INTO MEMBERSHIP_REGISTRATION (
+            member_num,
+            membership_num,
+            register_date,
+            start_date,
+            end_date,
+            status
+        ) VALUES (
+            #{memberNum},
+            #{membershipNum},
+            CURDATE(),
+            #{startDate},
+            #{endDate},
+            #{status}
+        )
+    </insert>
+
+    <!-- 결제 정보 저장 -->
+    <insert id="insertPayment"
+            parameterType="dto.gym.Payment"
+            useGeneratedKeys="true"
+            keyProperty="paymentNum">
+        INSERT INTO PAYMENT (
+            user_num,
+            membership_num,
+            mr_num,
+            payment_date,
+            payment_price,
+            payment_fee,
+            method,
+            status,
+            created_at
+        ) VALUES (
+            #{userNum},
+            #{membershipNum},
+            #{mrNum},
+            NOW(),
+            #{paymentPrice},
+            #{paymentFee},
+            #{method},
+            #{status},
+            NOW()
+        )
+    </insert>
+
+    <!-- 멤버십 등록 조회 -->
+    <select id="selectMembershipRegistration"
+            parameterType="int"
+            resultType="dto.gym.MembershipRegistration">
+        SELECT
+            mr_num AS mrNum,
+            member_num AS memberNum,
+            membership_num AS membershipNum,
+            register_date AS registerDate,
+            start_date AS startDate,
+            end_date AS endDate,
+            status
+        FROM MEMBERSHIP_REGISTRATION
+        WHERE mr_num = #{mrNum}
+    </select>
+
+    <!-- 결제 조회 -->
+    <select id="selectPayment"
+            parameterType="int"
+            resultType="dto.gym.Payment">
+        SELECT
+            payment_num AS paymentNum,
+            user_num AS userNum,
+            membership_num AS membershipNum,
+            mr_num AS mrNum,
+            payment_date AS paymentDate,
+            payment_price AS paymentPrice,
+            payment_fee AS paymentFee,
+            method,
+            status,
+            created_at AS createdAt
+        FROM PAYMENT
+        WHERE payment_num = #{paymentNum}
+    </select>
+    
+    <!-- 멤버십 상품 조회 -->
+	<select id="selectMembership"
+        	parameterType="int"
+        	resultType="dto.gym.Membership">
+    	SELECT
+        	membership_num AS membershipNum,
+        	gym_num AS gymNum,
+        	type,
+        	type_rep AS typeRep,
+        	price
+    	FROM MEMBERSHIP
+    	WHERE membership_num = #{membershipNum}
+	</select>
+
+</mapper>

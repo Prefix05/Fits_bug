@@ -108,7 +108,7 @@
 </style>
 </head>
 <body class="bg-background font-body text-on-surface">
-<jsp:include page="sidebar.jsp"></jsp:include>
+<jsp:include page="common/sidebar.jsp"></jsp:include>
 
 <!-- Main Content Area -->
 <main class="ml-64 pt-16 min-h-screen bg-surface">
@@ -161,7 +161,7 @@
 <section class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/15">
 	<div class="flex justify-between items-center mb-3">
 		<h3 class="text-sm font-bold tracking-tight">공지사항</h3>
-		<a href="${pageContext.request.contextPath}/COMMON/notice?gymId=${gym.id}" class="text-[10px] font-bold text-primary">전체보기</a>
+		<a href="${pageContext.request.contextPath}/gym/notice?gymId=${gym.id}" class="text-[10px] font-bold text-primary">전체보기</a>
 	</div>
 	<div class="space-y-1.5">
 		<c:choose>
@@ -308,23 +308,29 @@
 					<c:forEach var="m" items="${membershipList}">
 						<c:choose>
 							<c:when test="${m.type eq 'month' and m.typeRep == 3}">
-								<div class="p-3 rounded-lg bg-primary text-white shadow-lg relative overflow-hidden">
-									<div class="absolute top-0 right-0 bg-white text-primary text-[7px] font-black px-1.5 py-0.5 rounded-bl uppercase">Best</div>
-									<p class="text-[9px] font-bold text-white/80 mb-1 uppercase tracking-widest">
-										<c:choose>
-											<c:when test="${m.type eq 'day'}">${m.typeRep} Day</c:when>
-											<c:when test="${m.type eq 'month' and m.typeRep == 12}">Annual</c:when>
-											<c:when test="${m.type eq 'month'}">${m.typeRep} Months</c:when>
-										</c:choose>
-									</p>
-									
-									<p class="text-base font-black tracking-tighter mb-1">₩${m.price}</p>
-									<p class="text-[9px] text-white/70">인기 패키지</p>
-								</div>
+    							<div onclick="openPaymentModal('${m.id}', '${m.type}', '${m.typeRep}', '${m.price}')"
+         							 class="p-3 rounded-lg bg-primary text-white shadow-lg relative overflow-hidden cursor-pointer">
+
+        							<div class="absolute top-0 right-0 bg-white text-primary text-[7px] font-black px-1.5 py-0.5 rounded-bl uppercase">
+            							Best
+        							</div>
+
+        							<p class="text-[9px] font-bold text-white/80 mb-1 uppercase tracking-widest">
+            							<c:choose>
+                							<c:when test="${m.type eq 'day'}">${m.typeRep} Day</c:when>
+                							<c:when test="${m.type eq 'month' and m.typeRep == 12}">Annual</c:when>
+                							<c:when test="${m.type eq 'month'}">${m.typeRep} Months</c:when>
+            							</c:choose>
+        							</p>
+
+        							<p class="text-base font-black tracking-tighter mb-1">₩${m.price}</p>
+        							<p class="text-[9px] text-white/70">인기 패키지</p>
+    							</div>
 							</c:when>
 							
 							<c:otherwise>
-								<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/10">
+								<div onclick="openPaymentModal('${m.id}', '${m.type}', '${m.typeRep}', '${m.price}')"
+									 class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/10 cursor-pointer">
 									<p class="text-[9px] font-bold text-on-surface-variant mb-1 uppercase tracking-widest">
 										<c:choose>
 											<c:when test="${m.type eq 'day'}">${m.typeRep} Day</c:when>
@@ -633,6 +639,254 @@ function deleteReview(id){
     if(confirm("삭제하시겠습니까?")){
         location.href = "/review/delete?reviewNum=" + id;
     }
+}
+</script>
+
+<!-- Payment Modal -->
+<div id="paymentModal" style="display:none;"
+     class="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
+
+    <div class="flex flex-row max-w-5xl w-full h-[600px] shadow-2xl overflow-hidden rounded-lg">
+
+        <!-- Side Navigation -->
+        <aside class="hidden md:flex flex-col w-64 h-full py-8 px-4 bg-slate-50 border-r border-outline-variant/10">
+            <div class="mb-10 px-4">
+                <h2 class="text-xl font-black text-primary mb-1">멤버십 결제</h2>
+            </div>
+
+            <nav class="flex flex-col gap-2">
+                <div id="stepNav1" class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary border-r-2 border-primary bg-primary/5 font-medium">
+                    <span class="material-symbols-outlined">assignment</span>
+                    <span class="text-sm">멤버십</span>
+                </div>
+
+                <div id="stepNav2" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400">
+                    <span class="material-symbols-outlined">calendar_today</span>
+                    <span class="text-sm">시작일</span>
+                </div>
+
+                <div id="stepNav3" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400">
+                    <span class="material-symbols-outlined">payments</span>
+                    <span class="text-sm">결제</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col bg-surface-container-lowest">
+
+            <!-- Step 1: Membership -->
+            <section id="paymentStep1" class="flex-1 flex flex-col">
+                <header class="flex justify-between items-center px-8 py-6">
+                    <div>
+                        <p class="text-[0.6875rem] font-medium uppercase tracking-widest text-primary mb-1">1/3 단계</p>
+                        <h2 class="text-xl font-bold">멤버십 플랜 확인</h2>
+                    </div>
+                    <button onclick="closePaymentModal()" class="p-2 hover:bg-surface-container-low rounded-full">
+                        <span class="material-symbols-outlined text-on-surface-variant">close</span>
+                    </button>
+                </header>
+
+                <div class="flex-1 px-8 overflow-y-auto">
+                    <div class="p-6 rounded-xl bg-surface-container-low border border-outline-variant/15">
+                        <p class="text-xs text-on-surface-variant mb-2">선택한 멤버십</p>
+                        <h3 id="selectedMembershipName" class="text-xl font-black mb-2">-</h3>
+                        <p id="selectedMembershipPrice" class="text-2xl font-black text-primary">-</p>
+                    </div>
+                </div>
+
+                <footer class="p-8 flex items-center justify-between border-t border-outline-variant/5">
+                    <button onclick="closePaymentModal()" class="text-sm font-medium text-on-surface-variant">
+                        취소
+                    </button>
+                    <button onclick="goPaymentStep(2)" class="px-10 py-3.5 rounded-lg bg-primary text-white font-bold text-sm">
+                        다음 단계로
+                    </button>
+                </footer>
+            </section>
+
+            <!-- Step 2: Start Date -->
+            <section id="paymentStep2" class="hidden flex-1 flex-col">
+                <header class="flex justify-between items-center px-8 py-6">
+                    <div>
+                        <p class="text-[0.6875rem] font-medium uppercase tracking-widest text-on-surface-variant mb-1">2/3 단계</p>
+                        <h2 class="text-xl font-bold">이용 시작일 선택</h2>
+                    </div>
+                    <button onclick="closePaymentModal()" class="p-2 hover:bg-surface-container-low rounded-full">
+                        <span class="material-symbols-outlined text-on-surface-variant">close</span>
+                    </button>
+                </header>
+
+                <div class="flex-1 px-8 overflow-y-auto">
+                    <div class="bg-primary/5 rounded-lg p-4 mb-6 flex gap-3 items-start border border-primary/10">
+                        <span class="material-symbols-outlined text-primary text-xl">info</span>
+                        <p class="text-sm text-on-surface-variant">
+                            혼잡 시간대 안내: <span class="font-semibold text-primary">18:00 - 21:00</span> 사이가 가장 붐비는 시간입니다.
+                        </p>
+                    </div>
+
+                    <label class="block text-sm font-bold mb-2">시작일</label>
+                    <input id="membershipStartDate"
+                           type="date"
+                           class="w-full rounded-lg border-outline-variant text-sm"
+                           onchange="setStartDate(this.value)"/>
+
+                    <div class="p-4 rounded-xl bg-surface-container-low mt-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-on-surface-variant">선택된 날짜</span>
+                            <span id="selectedStartDateText" class="text-sm font-bold text-primary">선택 전</span>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="p-8 flex gap-3">
+                    <button onclick="goPaymentStep(1)" class="flex-1 px-6 py-3.5 rounded-lg bg-surface-container-high text-on-surface-variant font-semibold">
+                        이전
+                    </button>
+                    <button onclick="goPaymentStep(3)" class="flex-[2] px-6 py-3.5 rounded-lg bg-primary text-white font-semibold">
+                        다음 단계로
+                    </button>
+                </footer>
+            </section>
+
+            <!-- Step 3: Payment -->
+            <section id="paymentStep3" class="hidden flex-1 flex-col">
+                <header class="flex justify-between items-center px-8 py-6">
+                    <div>
+                        <p class="text-[0.6875rem] font-medium uppercase tracking-widest text-on-surface-variant mb-1">3/3 단계</p>
+                        <h2 class="text-xl font-bold">최종 확인 및 결제</h2>
+                    </div>
+                    <button onclick="closePaymentModal()" class="p-2 hover:bg-surface-container-low rounded-full">
+                        <span class="material-symbols-outlined text-on-surface-variant">close</span>
+                    </button>
+                </header>
+
+                <div class="flex-1 px-8 overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-xl bg-surface-container-low">
+                                <p class="text-xs text-on-surface-variant">선택한 멤버십</p>
+                                <p id="finalMembershipName" class="text-sm font-bold">-</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-surface-container-low">
+                                <p class="text-xs text-on-surface-variant">이용 시작일</p>
+                                <p id="finalStartDate" class="text-sm font-bold">-</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-xl bg-slate-900 text-white shadow-lg">
+                            <p class="text-xs font-medium text-slate-400 mb-1">Billing Summary</p>
+
+                            <div class="flex items-baseline gap-1 mt-4">
+                                <span class="text-sm font-medium">₩</span>
+                                <span id="finalPrice" class="text-3xl font-black tracking-tight">0</span>
+                            </div>
+
+                            <div class="mt-6 space-y-2 pt-4 border-t border-white/10">
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>상품 금액</span>
+                                    <span id="basePrice">₩0</span>
+                                </div>
+                                <div class="flex justify-between text-base font-bold text-white mt-2 pt-2 border-t border-white/20">
+                                    <span>최종 결제 금액</span>
+                                    <span id="totalPrice" class="text-blue-400">₩0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <footer class="p-8 flex gap-3">
+                    <button onclick="goPaymentStep(2)" class="flex-1 px-6 py-3.5 rounded-lg bg-surface-container-high text-on-surface-variant font-semibold">
+                        이전
+                    </button>
+                    <button onclick="submitPayment()" class="flex-[2] px-6 py-3.5 rounded-lg bg-primary text-white font-semibold flex items-center justify-center gap-2">
+                        결제하기
+                        <span class="material-symbols-outlined text-lg">contactless</span>
+                    </button>
+                </footer>
+            </section>
+
+        </main>
+    </div>
+</div>
+<script>
+let selectedMembership = {
+    id: null,
+    type: null,
+    typeRep: null,
+    price: null,
+    startDate: null
+};
+
+function openPaymentModal(id, type, typeRep, price) {
+    selectedMembership.id = id;
+    selectedMembership.type = type;
+    selectedMembership.typeRep = typeRep;
+    selectedMembership.price = price;
+
+    let name = "";
+
+    if (type === "day") {
+        name = typeRep + "일 이용권";
+    } else if (type === "month") {
+        name = typeRep + "개월 이용권";
+    } else {
+        name = "멤버십 이용권";
+    }
+
+    document.getElementById("selectedMembershipName").innerText = name;
+    document.getElementById("selectedMembershipPrice").innerText = "₩" + Number(price).toLocaleString();
+
+    document.getElementById("finalMembershipName").innerText = name;
+    document.getElementById("finalPrice").innerText = Number(price).toLocaleString();
+    document.getElementById("basePrice").innerText = "₩" + Number(price).toLocaleString();
+    document.getElementById("totalPrice").innerText = "₩" + Number(price).toLocaleString();
+
+    document.getElementById("paymentModal").style.display = "flex";
+    goPaymentStep(1);
+}
+
+function closePaymentModal() {
+    document.getElementById("paymentModal").style.display = "none";
+}
+
+function goPaymentStep(step) {
+    document.getElementById("paymentStep1").classList.add("hidden");
+    document.getElementById("paymentStep2").classList.add("hidden");
+    document.getElementById("paymentStep3").classList.add("hidden");
+
+    document.getElementById("paymentStep" + step).classList.remove("hidden");
+
+    document.getElementById("stepNav1").className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400";
+    document.getElementById("stepNav2").className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400";
+    document.getElementById("stepNav3").className = "flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400";
+
+    document.getElementById("stepNav" + step).className =
+        "flex items-center gap-3 px-4 py-3 rounded-lg text-primary border-r-2 border-primary bg-primary/5 font-medium";
+}
+
+function setStartDate(date) {
+    selectedMembership.startDate = date;
+
+    document.getElementById("selectedStartDateText").innerText = date;
+    document.getElementById("finalStartDate").innerText = date;
+}
+
+function submitPayment() {
+    if (!selectedMembership.startDate) {
+        alert("이용 시작일을 선택하세요.");
+        goPaymentStep(2);
+        return;
+    }
+
+    location.href =
+        "${pageContext.request.contextPath}/payment/ready"
+        + "?membershipId=" + selectedMembership.id
+        + "&startDate=" + selectedMembership.startDate;
 }
 </script>
 </body>

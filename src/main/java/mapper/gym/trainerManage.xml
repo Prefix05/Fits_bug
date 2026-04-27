@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.trainerManage">
+
+	<!-- 트레이너 목록 조회 -->
+	<select id="selectTrainerList" parameterType="map"
+		resultType="dto.gym.TrainerList">
+		SELECT
+		t.id AS id,
+		t.user_id AS userId,
+		u.name AS name,
+		u.tel AS phoneNum,
+		u.profileImg AS profileImg,
+		t.trainer_type AS trainerType,
+		t.approval_status AS approvalStatus,
+		COUNT(DISTINCT p.client_id) AS memberCount
+		FROM TRAINER t
+		JOIN USER u
+		ON t.user_id = u.id
+		LEFT JOIN PT_PACKAGE p
+		ON t.id = p.trainer_id
+		AND (p.expires_at IS NULL OR p.expires_at >= NOW())
+		WHERE t.gym_id = #{gymId}
+		AND t.approval_status = 'APPROVED'
+		AND u.is_deleted = false
+
+		<if test="keyword != null and keyword != ''">
+			AND (
+			u.name LIKE CONCAT('%', #{keyword}, '%')
+			OR CAST(t.id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+			)
+		</if>
+
+		GROUP BY
+		t.id,
+		t.user_id,
+		u.name,
+		u.tel,
+		u.profileImg,
+		t.trainer_type,
+		t.approval_status
+
+		ORDER BY t.id DESC
+	</select>
+
+	<select id="selectTrainerAssignList" parameterType="int"
+		resultType="dto.gym.TrainerAssignView">
+		SELECT
+		tu.name AS trainerName,
+		mu.name AS memberName,
+		DATE_FORMAT(MIN(s.start_time), '%Y-%m-%d') AS assignedAt,
+		CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+		CONCAT((p.total_sessions - p.sessions_used), '회') AS remainingInfo,
+
+		CASE
+		WHEN p.expires_at IS NULL OR p.expires_at >= NOW() THEN '이용중'
+		ELSE '종료'
+		END AS status
+
+		FROM PT_PACKAGE p
+
+		JOIN TRAINER t
+		ON p.trainer_id = t.id
+
+		JOIN USER tu
+		ON t.user_id = tu.id
+
+		JOIN USER mu
+		ON p.client_id = mu.id
+
+		LEFT JOIN PT_SESSION s
+		ON p.id = s.package_id
+
+		WHERE p.gym_id = #{value}
+
+		GROUP BY
+		p.id,
+		tu.name,
+		mu.name,
+		p.total_sessions,
+		p.sessions_used,
+		p.expires_at
+
+		ORDER BY assignedAt DESC
+	</select>
+
+	<select id="selectCurrentTrainerMembers" parameterType="int"
+		resultType="dto.gym.TrainerMemberView">
+		SELECT
+		u.name AS memberName,
+		CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+		(p.total_sessions - p.sessions_used) AS remainingSession,
+		DATE_FORMAT(MIN(s.start_time), '%Y-%m-%d') AS startDate
+		FROM PT_PACKAGE p
+		JOIN USER u
+		ON p.client_id = u.id
+		LEFT JOIN PT_SESSION s
+		ON p.id = s.package_id
+		WHERE p.trainer_id = #{value}
+		AND (p.expires_at IS NULL OR p.expires_at >= NOW())
+		GROUP BY p.id, u.name, p.total_sessions, p.sessions_used
+	</select>
+
+	<select id="selectPastTrainerMembers" parameterType="int"
+		resultType="dto.gym.TrainerMemberView">
+		SELECT
+		u.name AS memberName,
+		CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+		(p.total_sessions - p.sessions_used) AS remainingSession,
+		DATE_FORMAT(MIN(s.start_time), '%Y-%m-%d') AS startDate
+		FROM PT_PACKAGE p
+		JOIN USER u
+		ON p.client_id = u.id
+		LEFT JOIN PT_SESSION s
+		ON p.id = s.package_id
+		WHERE p.trainer_id = #{value}
+		AND p.expires_at &lt; NOW()
+		GROUP BY p.id, u.name, p.total_sessions, p.sessions_used
+	</select>
+
+</mapper>

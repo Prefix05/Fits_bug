@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String contextPath = request.getContextPath();
+%>    
 <!DOCTYPE html>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -73,6 +78,74 @@
         },
       }
     </script>
+<script type="text/javascript">
+	function fn_search(){
+		const keyword = $("#searchKeyword").val();
+
+		$.ajax({
+            url: "${pageContext.request.contextPath}/admin/memberClient",
+            type: "POST",
+            data: { clientName: keyword },
+            dataType: "json",
+            success: function(data) {
+                let html = "";
+                
+                if(data.length === 0) {
+                    html = `<tr><td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+                            등록된 회원 정보가 없습니다.</td></tr>`;
+                } else {
+                    $.each(data, function(index, item) {
+                    	// 값이 없을 경우를 대비한 기본값 설정
+                        const name = item.clientName || '이름 없음';
+                        const tel = item.clientTel || '-';
+                        const date = item.regDate || '-';
+                        const ptTrainer = item.ptTrainer || 0;
+                        // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
+                        const payment = Number(item.payment || 0).toLocaleString();
+                        
+                        html += `
+                            <tr class="hover:bg-surface-container-low transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                            <span class="material-symbols-outlined">fitness_client</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-on-surface">\${name}</p>
+                                            <p class="text-xs text-on-surface-variant">\${tel}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-on-surface-variant">\${date}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">\${ptTrainer}</td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">₩\${payment}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+                                        <span class="material-symbols-outlined">chevron_right</span>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        });
+                }
+                // tbody에 결과 꽂아넣기
+                $("#memberTableBody").html(html);
+            },
+            error: function(err) {
+                console.log("검색 중 에러 발생:", err);
+            }
+        });
+    }
+	$(document).ready(function() {
+        // ID가 searchKeyword인 입력창에서 키보드가 눌렸을 때
+        $("#searchKeyword").on("keydown", function(e) {
+            // 눌린 키가 엔터(Enter, 코드 13)라면
+            if (e.keyCode === 13) {
+                e.preventDefault(); // 엔터 시 페이지 새로고침 방지 (보안용)
+                fn_search();        // 위에서 만든 검색 함수 실행
+            }
+        });
+    });
+</script>    
 <style>
       .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -88,9 +161,6 @@
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
 <!-- SideNavBar Shell -->
-<%
-    String contextPath = request.getContextPath();
-%>
 <div class="flex">
 	<jsp:include page="../member/sidebar.jsp"></jsp:include>
 </div>
@@ -107,9 +177,9 @@
 </div>
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-8 border-b border-outline-variant/20">
-<a href="<%= request.getContextPath() %>/admin/memberAuth"
+<a href="<%= contextPath %>/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= request.getContextPath() %>/admin/memberGym"
+<a href="<%= contextPath %>/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 <!-- Bento Filter Section -->
@@ -142,9 +212,16 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary te
 <!-- Table Section -->
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
 <div class="px-6 py-4 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
 <div class="relative w-72">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="회원명 검색..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
+search</span>
+<input id="searchKeyword" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
+placeholder="회원이름 검색" type="text"/>
+</div>
+<button id="searchBtn" type="button" onclick="fn_search()" class="px-4 py-2 bg-primary text-on-primary text-sm font-medium rounded-lg transition-all active:scale-95 active:bg-primary-dark shrink-0">
+검색
+</button>
 </div>
 </div>
 <table class="w-full text-left border-collapse">
@@ -152,177 +229,137 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary te
 <tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
 <th class="px-6 py-4 font-semibold">회원정보</th>
 <th class="px-6 py-4 font-semibold">가입일자</th>
-<th class="px-6 py-4 font-semibold">담당 트레이너</th>
-<th class="px-6 py-4 font-semibold">결제내역</th>
+<th class="px-6 py-4 font-semibold">담당트레이너</th><th class="px-6 py-4 font-semibold">결제내역</th>
 <th class="px-6 py-4 font-semibold text-right">상세보기</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/10">
-<!-- Row 1 -->
+<tbody id="memberTableBody" class="divide-y divide-outline-variant/10">
+<!-- Row  -->
+<c:forEach var="item" items="${clientList }">
 <tr class="hover:bg-surface-container-low transition-colors group">
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">fitness_client</span>
+</div>
 <div>
-<p class="text-sm font-bold text-on-surface">김지수</p>
-<p class="text-xs text-on-surface-variant">010-1234-5678</p>
+<p class="text-sm font-bold text-on-surface">${item.clientName }</p>
+<p class="text-xs text-on-surface-variant">${item.clientTel }</p>
 </div>
 </div>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.11.15</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span class="text-sm text-on-surface">데이비드 리</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩1,240,000</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">${item.regDate }</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">${item.ptTrainer }</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">
+₩<fmt:formatNumber value="${item.payment }" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
 <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>
 </button>
 </td>
 </tr>
-<!-- Row 2 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<div>
-<p class="text-sm font-bold text-on-surface">박민호</p>
-<p class="text-xs text-on-surface-variant">010-9876-5432</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2023.12.02</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-1.5">
-<span class="w-[18px]"></span>
-<span class="text-sm text-on-surface">사라 킴</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩450,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
+</c:forEach>
+<c:if test="${empty clientList }">
+<tr>
+<td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+등록된 회원 정보가 없습니다.
 </td>
 </tr>
-<!-- Row 3 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<div>
-<p class="text-sm font-bold text-on-surface">이지은</p>
-<p class="text-xs text-on-surface-variant">010-5555-4444</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2024.01.10</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span class="text-sm text-on-surface">마이클 한</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩220,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-4">
-<div>
-<p class="text-sm font-bold text-on-surface">최정윤</p>
-<p class="text-xs text-on-surface-variant">010-1111-2222</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">2024.01.25</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span class="text-sm text-on-surface">데이비드 리</span>
-</div>
-</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">₩380,000</td>
-<td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</td>
-</tr>
+</c:if>
 </tbody>
 </table>
 <!-- Pagination -->
 <div class="px-6 py-4 flex items-center justify-between bg-surface-container-low/30 border-t border-outline-variant/10">
-<p class="text-xs text-on-surface-variant">전체 1,248명 중 1-15 표시 중</p>
+<p class="text-xs text-on-surface-variant">
+전체 ${pageInfo.allPage }페이지 중 ${pageInfo.curPage }페이지 표시 중</p>
 <div class="flex items-center gap-1">
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<c:choose>
+<c:when test="${pageInfo.curPage>1 }">
+<a href="memberGym?page=${pageInfo.curPage-1}"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</a>
+</c:when>
+<c:otherwise>
+<button class="w-8 h-8 flex items-center justify-center rounded opacity-30 cursor-not allowed">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
 </button>
-<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs shadow-sm">1</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">2</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">3</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">...</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">12</button>
-<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+</c:otherwise>
+</c:choose>
+
+<c:forEach begin="${pageInfo.startPage }" end="${pageInfo.endPage }" var="page">
+<c:choose>
+<c:when test="${pageInfo.curPage == page }">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs shadow-sm">
+${page }
+</button>
+</c:when>
+<c:otherwise>
+<a href="memberGym?page=${page }"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">
+${page }
+</a>
+</c:otherwise>
+</c:choose>
+</c:forEach>
+
+<c:choose>
+<c:when test="${pageInfo.curPage < pageInfo.allPage}">
+<a href="memberGym?page=${pageInfo.curPage + 1}"
+class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</a>
+</c:when>
+<c:otherwise>
+<button class="w-8 h-8 flex items-center justify-center rounded opacity-30 cursor-not allowed">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
 </button>
+</c:otherwise>
+</c:choose>
 </div>
 </div>
 </div>
 <!-- Summary Section Metrics -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-<!-- Card 1: 전체회원 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="groups">groups</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">전체회원</p>
-<h3 class="text-xl font-bold text-on-surface">2,842명</h3>
+<!-- Card 1: Total Members -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="group">group</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">전체회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${totalCount }명</h3>
 </div>
-<!-- Card 2: 회원 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="person">person</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">회원</p>
-<h3 class="text-xl font-bold text-on-surface">1,520명</h3>
+<!-- Card 2: Gyms -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">헬스장</p>
+<h3 class="text-2xl font-bold text-on-surface">${gymCount }개</h3>
 </div>
-<!-- Card 3: 헬스장 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="fitness_center">fitness_center</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">헬스장</p>
-<h3 class="text-xl font-bold text-on-surface">128개</h3>
+<!-- Card 3: Trainers -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">트레이너</p>
+<h3 class="text-2xl font-bold text-on-surface">${trainerCount }명</h3>
 </div>
-<!-- Card 4: 트레이너 -->
-<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-2xl" data-icon="badge">badge</span>
-</div>
-<div>
-<p class="text-xs font-medium text-on-surface-variant mb-0.5">트레이너</p>
-<h3 class="text-xl font-bold text-on-surface">48명</h3>
+<!-- Card 4: Members -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="person">person</span>
 </div>
 </div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${clientCount }명</h3>
 </div>
 </div>
 </div>
