@@ -17,4 +17,9 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO login(String email, String password){
         return dao.login(email, password);
     }
+
+	@Override
+	public String getNickname(String email) {
+		return dao.getNicknameByEmail(email);
+	}
 }

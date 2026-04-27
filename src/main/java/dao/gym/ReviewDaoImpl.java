@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
+import dao.gym.main.ReviewDao;
 import dto.gym.Review;
 import util.MybatisSqlSessionFactory;
 

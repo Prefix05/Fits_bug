@@ -33,7 +33,7 @@ body { font-family: 'Public Sans', sans-serif; }
 <p class="text-sm mt-2">단계 3 / 3</p>
 </div>
 
-<form action="completeSignup" method="post">
+<form action="step3" method="post">
 
 <div class="p-6">
 

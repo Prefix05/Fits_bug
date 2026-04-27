@@ -106,7 +106,7 @@
 </aside>
 
 <!-- 🔹 우측 상단 아이콘 -->
-<div class="fixed top-4 right-6 flex items-center gap-4 z-50">
+<!-- <div class="fixed top-4 right-6 flex items-center gap-4 z-50">
 
     <button class="relative p-2 rounded-full bg-white shadow hover:bg-gray-100">
         <span class="material-symbols-outlined text-[22px]">notifications</span>
@@ -118,4 +118,17 @@
         <span class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-[10px] flex items-center justify-center rounded-full">5</span>
     </button>
 
+</div> -->
+<%-- <% if(loginUser != null){ %>
+<div class="flex justify-end gap-4 mb-4">
+
+    <div class="relative cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">notifications</span>
+    </div>
+
+    <div class="relative cursor-pointer">
+        <span class="material-symbols-outlined text-2xl">mail</span>
+    </div>
+
 </div>
+<% } %> --%>

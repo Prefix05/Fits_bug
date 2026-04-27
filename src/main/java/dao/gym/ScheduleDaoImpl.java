@@ -2,6 +2,7 @@ package dao.gym;
 
 import org.apache.ibatis.session.SqlSession;
 
+import dao.gym.main.ScheduleDao;
 import dto.gym.Schedule;
 import util.MybatisSqlSessionFactory;
 

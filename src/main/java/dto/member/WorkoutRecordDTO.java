@@ -1,5 +1,7 @@
 package dto.member;
 
+import java.time.LocalDateTime;
+
 public class WorkoutRecordDTO {
 	private int id;
     private String email;   
@@ -9,12 +11,15 @@ public class WorkoutRecordDTO {
     private int sets;       
     private String date;
     
+    private LocalDateTime workoutRecordTime;
+
 	public WorkoutRecordDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public WorkoutRecordDTO(int id, String email, String name, int weight, int reps, int sets, String date) {
+	public WorkoutRecordDTO(int id, String email, String name, int weight, int reps, int sets, String date,
+			LocalDateTime workoutRecordTime) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -23,6 +28,7 @@ public class WorkoutRecordDTO {
 		this.reps = reps;
 		this.sets = sets;
 		this.date = date;
+		this.workoutRecordTime = workoutRecordTime;
 	}
 
 	public int getId() {
@@ -79,7 +85,14 @@ public class WorkoutRecordDTO {
 
 	public void setDate(String date) {
 		this.date = date;
-	} 
-    
+	}
+
+	public LocalDateTime getWorkoutRecordTime() {
+		return workoutRecordTime;
+	}
+
+	public void setWorkoutRecordTime(LocalDateTime workoutRecordTime) {
+		this.workoutRecordTime = workoutRecordTime;
+	}
     
 }

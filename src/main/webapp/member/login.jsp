@@ -115,17 +115,37 @@ body {
     color: #4a7bdc;
     text-decoration: none;
 }
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* hover 효과 */
+.guest:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.guest a {
+    text-decoration: none;
+    color: #4a7bdc;
+    font-size: 14px;
+    font-weight: 500;
+}
 </style>
 
 </head>
 <body>
 
 <div class="container">
-    <div class="login-box">
-        <div class="logo">💙 핏츠버그</div>
+	<div class="wrapper">
+    	<div class="login-box">
+        	<div class="logo">💙 핏츠버그</div>
 
-        <div class="title">로그인</div>
-        <div class="subtitle">오늘도 완벽한 운동을 시작하세요 💪</div>
+       		<div class="title">로그인</div>
+        	<div class="subtitle">오늘도 완벽한 운동을 시작하세요 💪</div>
 
 <% if(request.getAttribute("error") != null){ %>
     <p style="color:red;">
@@ -157,9 +177,11 @@ body {
     		<a href="join.jsp">회원가입</a>
 		</div>
     </div>
+    
+    <div class="guest">
+       <a href="guest.jsp">로그인 없이 둘러보기</a>
+    </div>
 </div>
-<div class="guest">
-	로그인 없이 둘러보기<a href="guest.jsp"></a>
 </div>
 </body>
 </html>

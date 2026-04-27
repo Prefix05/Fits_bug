@@ -58,7 +58,9 @@ public class WorkoutRecordDAOImpl implements WorkoutRecordDAO {
                 dto.setWeight(rs.getInt("weight"));
                 dto.setReps(rs.getInt("reps"));
                 dto.setSets(rs.getInt("sets"));
-                dto.setDate(rs.getString("date"));
+                dto.setWorkoutRecordTime(
+                        rs.getTimestamp("date").toLocalDateTime()
+                    );
 
                 list.add(dto);
             }

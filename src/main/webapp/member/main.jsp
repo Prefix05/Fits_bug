@@ -33,6 +33,7 @@ body { font-family: 'Inter', sans-serif; }
 <!-- ✅ 메인 -->
 <div class="flex-1 ml-0 md:ml-72 p-8">
 
+
 <h1 class="text-xl font-bold mb-4">
     <%= loginUser.getNickname() %>님 환영합니다 👋
 </h1>
@@ -54,25 +55,18 @@ body { font-family: 'Inter', sans-serif; }
         <button onclick="loadChart('inbody')" class="px-3 py-1">인바디</button>
     </div>
 
-	<button onclick="loadFeedback()" class="border px-3 py-2 rounded">
-    피드백 보기
-	</button>
 </div>
 
 <canvas id="chart" height="100"></canvas>
 
-<div id="calendar" class="hidden mt-4"></div>
-
+<div class="mt-4 text-right">
+    <button onclick="loadFeedback()" 
+        class="border px-4 py-2 rounded hover:bg-gray-100">
+        피드백 보기
+    </button>
 </div>
 
-<!-- ========================= -->
-<!-- 피드백 리스트 -->
-<!-- ========================= -->
-<div id="feedbackBox" class="bg-white p-6 rounded-xl shadow mb-6 hidden">
-
-<h2 class="font-bold mb-4">트레이너 피드백</h2>
-
-<div id="feedbackList"></div>
+<div id="calendar" class="hidden mt-4"></div>
 
 </div>
 
@@ -170,16 +164,41 @@ body { font-family: 'Inter', sans-serif; }
 <!-- ========================= -->
 <!-- 우측 -->
 <!-- ========================= -->
-<!-- ========================= -->
-<!-- 우측 -->
-<!-- ========================= -->
 <div class="w-80 p-6 space-y-6">
+
+<!-- ✅ 상단 헤더 -->
+<div class="flex justify-end items-center gap-4 mb-6">
+    <% if(loginUser != null){ %>
+
+        <!-- 알림 -->
+        <div class="relative cursor-pointer" onclick="openNotification()">
+   			 <span class="material-symbols-outlined text-2xl">notifications</span>
+   			 <span id="notiCount"
+          	 		class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
+   			 </span>
+		</div>
+
+        <!-- 메시지 -->
+        <div class="relative cursor-pointer" onclick="openChatModal()">
+   			 <span class="material-symbols-outlined text-2xl">chat</span>
+    		 <span id="chatCount"
+          			class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-[10px] flex items-center justify-center rounded-full">
+    		 </span>
+		</div>
+
+    <% } %>
+</div>
 
 <!-- ✅ PT 일정 -->
 <div class="bg-white p-4 rounded-xl shadow">
 
 <div class="flex justify-between items-center mb-2">
     <h3 class="font-bold">나의 PT 일정</h3>
+    
+    <button onclick="openReviewModal()" 
+		class="mt-2 text-sm bg-blue-500 text-white px-3 py-1 rounded">
+		리뷰 작성
+	</button>
 
     <!-- 🔥 상세보기 -->
     <a href="trainerDetail?trainerId=1"
@@ -211,73 +230,29 @@ body { font-family: 'Inter', sans-serif; }
 
 </div>
 
-<!-- 나의 활동 -->
-<!-- ✅ 나의 활동 -->
-<div class="bg-white p-4 rounded-xl shadow">
+<!-- ========================= -->
+<!-- 헬스장 핫타임 -->
+<!-- ========================= -->
+<div class="bg-white p-6 rounded-xl shadow mb-6">
 
-    <!-- 상단 -->
-    <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold">나의 활동</h3>
+<h2 class="font-bold mb-4">🔥 헬스장 핫타임</h2>
 
-        <a href="community.jsp"
-           class="text-sm text-blue-500 hover:underline">
-            커뮤니티
-        </a>
-    </div>
+<!-- 안내 문구 -->
+<div id="hotMessage"
+     class="bg-red-400 text-white text-sm p-3 rounded mb-4">
+    데이터 분석 중...
+</div>
 
-    <!-- 🔥 게시글 영역 -->
-    <c:choose>
+<!-- 요일별 -->
+<h3 class="text-sm font-bold mb-2">요일별 이용자 수</h3>
+<canvas id="dayChart" height="100"></canvas>
 
-        <c:when test="${not empty myPost}">
-
-            <div class="border rounded p-3">
-
-                <!-- 이미지 -->
-                <c:choose>
-                    <c:when test="${not empty myPost.image}">
-                        <img src="${myPost.image}" 
-                             class="w-full h-32 object-cover rounded mb-2">
-                    </c:when>
-                    <c:otherwise>
-                        <div class="w-full h-32 bg-gray-100 rounded mb-2 flex items-center justify-center text-gray-400 text-xs">
-                            이미지 없음
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-
-                <!-- 제목 -->
-                <p class="font-bold text-sm">${myPost.title}</p>
-
-                <!-- 내용 -->
-                <p class="text-xs text-gray-500 mb-2">
-                    ${myPost.content}
-                </p>
-
-                <!-- 좋아요 + 댓글 -->
-                <div class="flex gap-3 text-xs text-gray-500">
-
-                    <div class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm">favorite</span>
-                        ${myPost.likeCount}
-                    </div>
-
-                    <div class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm">chat_bubble</span>
-                        ${myPost.commentCount}
-                    </div>
-                </div>
-
-            </div>
-
-        </c:when>
-
-        <c:otherwise>
-            <p class="text-sm text-gray-400">게시글 없음</p>
-        </c:otherwise>
-
-    </c:choose>
+<!-- 시간별 -->
+<h3 class="text-sm font-bold mt-6 mb-2">시간별 이용자 수</h3>
+<canvas id="timeChart" height="100"></canvas>
 
 </div>
+
 </div>
 
 </div>
@@ -324,24 +299,102 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 
 <!-- ========================= -->
-<!-- 피드백 상세 모달 -->
+<!-- 피드백 리스트 모달 -->
 <!-- ========================= -->
-<div id="feedbackModal"
+<div id="feedbackListModal"
+class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+
+<div class="bg-white w-[500px] max-h-[600px] overflow-y-auto rounded-xl p-6">
+
+    <!-- 헤더 -->
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-lg">트레이너 피드백</h3>
+        <button onclick="closeFeedbackListModal()" 
+            class="text-gray-500">✕</button>
+    </div>
+
+    <!-- 리스트 -->
+    <div id="feedbackListContainer"></div>
+
+</div>
+</div>
+
+<div id="notificationModal"
 class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
 
-<div class="bg-white p-6 rounded-xl w-[500px]">
+<div class="bg-white w-80 rounded-xl p-4">
 
-<h3 class="font-bold text-lg mb-3">피드백 상세</h3>
+    <h3 class="font-bold mb-2">알림</h3>
 
-<p id="fbDate" class="text-sm text-gray-500"></p>
-<p id="fbTrainer" class="font-bold mb-2"></p>
+    <div id="notificationList" class="max-h-80 overflow-y-auto"></div>
 
-<hr class="my-2">
+	<button onclick="readAllNotification()"
+		class="text-sm text-blue-500">
+		전체 읽음
+	</button>
 
-<p id="fbContent"></p>
+    <button onclick="closeNotification()" class="mt-2 w-full border">
+        닫기
+    </button>
 
-<button onclick="closeFeedbackModal()"
-class="mt-4 w-full border py-2">닫기</button>
+</div>
+</div>
+
+<div id="chatModal"
+class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+
+<div class="bg-white w-80 rounded-xl p-4">
+
+    <h3 class="font-bold mb-2">채팅 목록</h3>
+
+    <div id="chatList" class="max-h-80 overflow-y-auto"></div>
+
+    <button onclick="closeChatModal()" class="mt-2 w-full border">
+        닫기
+    </button>
+
+</div>
+</div>
+
+<!-- ========================= -->
+<!-- 리뷰 작성 모달 -->
+<!-- ========================= -->
+<div id="reviewModal"
+class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+
+<div class="bg-white p-6 rounded-xl w-[400px]">
+
+<h3 class="font-bold text-lg mb-4">트레이너 리뷰 작성</h3>
+
+<!-- 별점 -->
+<div class="mb-3">
+    <span class="mr-2">별점:</span>
+    <select id="rating" class="border p-1">
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="1">★☆☆☆☆</option>
+    </select>
+</div>
+
+<!-- 이미지 -->
+<input type="file" id="reviewImage" class="mb-3">
+
+<!-- 리뷰 내용 -->
+<textarea id="reviewContent"
+placeholder="리뷰를 작성해주세요 (최소 20자)"
+class="border w-full p-2 mb-3"></textarea>
+
+<button onclick="submitReview()"
+class="bg-blue-500 text-white w-full py-2 rounded">
+저장하기
+</button>
+
+<button onclick="closeReviewModal()"
+class="mt-2 w-full border py-2">
+닫기
+</button>
 
 </div>
 </div>
@@ -352,13 +405,6 @@ class="mt-4 w-full border py-2">닫기</button>
 <script>
 let chart;
 let currentData = [];
-
-/* =========================
-   페이지 로드
-========================= */
-window.onload = function(){
-    loadChart('workout');
-};
 
 /* =========================
    공통 로더
@@ -504,38 +550,52 @@ function drawInbodyChart(data){
 ========================= */
 function loadFeedback(){
 
-    fetch("feedback")
-    .then(res=>res.json())
-    .then(list=>{
+	fetch("feedback")
+    .then(res => res.json())
+    .then(list => {
 
-        list.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        const box = document.getElementById("feedbackBox");
-        const container = document.getElementById("feedbackList");
-
-        box.classList.remove("hidden");
+        const container = document.getElementById("feedbackListContainer");
         container.innerHTML = "";
 
-        list.forEach(f=>{
-            container.innerHTML += `
-                <div onclick="openFeedbackModal(
-                    '${f.date}',
-                    '${f.trainer}',
-                    '${f.content}'
-                )"
-                class="border p-3 mb-2 rounded cursor-pointer hover:bg-gray-50">
+        // 최신순 정렬
+        list.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
-                    <div class="flex justify-between">
-                        <span class="font-bold">${f.trainer}</span>
-                        <span class="text-xs text-gray-400">${f.date}</span>
-                    </div>
+        list.forEach(function(f){
 
-                    <p class="text-sm text-gray-600">
-                        ${f.summary}
-                    </p>
-                </div>
-            `;
+        	var img = f.trainerImg || "https://via.placeholder.com/40";
+
+            var summary = f.summary 
+                ? f.summary 
+                : (f.content ? f.content.substring(0, 30) + "..." : "내용 없음");
+
+            container.innerHTML +=
+                '<div onclick="openFeedbackModal(\'' + f.date + '\', \'' + f.trainer + '\', \'' + f.content + '\')" ' +
+                'class="flex items-center gap-3 p-3 border-b cursor-pointer hover:bg-gray-50">' +
+
+                    '<img src="' + img + '" class="w-10 h-10 rounded-full object-cover">' +
+
+                    '<div class="flex-1">' +
+
+                        '<div class="flex justify-between text-sm">' +
+                            '<span class="font-bold">' + f.trainer + '</span>' +
+                            '<span class="text-gray-400 text-xs">' + f.date + '</span>' +
+                        '</div>' +
+
+                        '<div class="text-sm text-gray-600 truncate">' +
+                            summary +
+                        '</div>' +
+
+                    '</div>' +
+
+                '</div>';
         });
+
+        document.getElementById("feedbackListModal")
+            .classList.remove("hidden");
+
+    })
+    .catch(err => {
+        console.error("피드백 불러오기 실패", err);
     });
 }
 
@@ -553,6 +613,225 @@ function openFeedbackByDate(date){
         }
     });
 }
+
+let dayChart;
+let timeChart;
+
+function loadHotTime(){
+
+    fetch("hotTime")
+    .then(res=>res.json())
+    .then(data=>{
+
+        drawDayChart(data.dayData);
+        drawTimeChart(data.timeData);
+
+        // 🔥 가장 붐비는 요일 찾기
+        let maxDay = data.dayData.reduce((a,b)=> a.count > b.count ? a : b);
+
+        document.getElementById("hotMessage").innerText =
+        "현재 가장 붐비는 요일은 " + maxDay.day + " 입니다. 혼잡 시간을 피하세요!";
+    });
+}
+
+/* =========================
+   요일별 그래프
+========================= */
+function drawDayChart(data){
+
+    const ctx = document.getElementById("dayChart");
+
+    if(dayChart) dayChart.destroy();
+
+    dayChart = new Chart(ctx, {
+        type:'bar',
+        data:{
+            labels: data.map(d=>d.day),
+            datasets:[{
+                label:'이용자 수',
+                data: data.map(d=>d.count)
+            }]
+        }
+    });
+}
+
+/* =========================
+   시간별 그래프
+========================= */
+function drawTimeChart(data){
+
+    const ctx = document.getElementById("timeChart");
+
+    if(timeChart) timeChart.destroy();
+
+    timeChart = new Chart(ctx, {
+        type:'line',
+        data:{
+            labels: data.map(d=>d.time),
+            datasets:[{
+                label:'이용자 수',
+                data: data.map(d=>d.count),
+                fill:true
+            }]
+        }
+    });
+}
+
+function loadNotification(){
+
+    fetch("notification")
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+
+    	var countEl = document.getElementById("notiCount");
+
+        // 🔥 뱃지 표시 / 숨김
+        if(data.count > 0){
+            countEl.style.display = "flex";
+            countEl.innerText = data.count;
+        }else{
+            countEl.style.display = "none";
+        }
+        
+        // 🔥 리스트 렌더
+        var box = document.getElementById("notificationList");
+        box.innerHTML = "";
+
+        data.list.forEach(function(n){
+
+            var html = "";
+
+            html += "<div onclick=\"readNotification("
+                 + n.id + ", '" + n.url + "')\" ";
+
+            html += "class='p-3 border-b cursor-pointer hover:bg-gray-50 ";
+            
+            if(!n.isRead){
+                html += "bg-blue-50"; // 🔥 안읽은 알림 강조
+            }
+
+            html += "'>";
+
+            html += "<div class='text-sm'>" + n.message + "</div>";
+            html += "<div class='text-xs text-gray-400'>" + n.createdAt + "</div>";
+
+            html += "</div>";
+
+            box.innerHTML += html;
+        });
+    });
+}
+
+function readNotification(id, url){
+
+    fetch("notification", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "action=readOne&id=" + id
+    })
+    .then(function(){
+
+        // 🔥 뱃지 감소
+        var countEl = document.getElementById("notiCount");
+        var count = parseInt(countEl.innerText);
+
+        if(count > 1){
+            countEl.innerText = count - 1;
+        }else{
+            countEl.style.display = "none";
+        }
+
+        // 🔥 이동
+        location.href = url;
+    });
+}
+
+function readAllNotification(){
+
+    fetch("notification", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "action=readAll"
+    })
+    .then(function(){
+        document.getElementById("notiCount").style.display = "none";
+        loadNotification();
+    });
+}
+
+function loadChatList(){
+
+    fetch("messageList")
+    .then(function(res){ return res.json(); })
+    .then(function(list){
+
+        var box = document.getElementById("chatList");
+        box.innerHTML = "";
+
+        list.forEach(function(c){
+
+            var html = "";
+
+            html += "<div onclick=\"enterChat('" + c.email + "')\" ";
+            html += "class='p-3 border-b cursor-pointer hover:bg-gray-50'>";
+
+            html += "<div class='font-bold'>" + c.nickname + "</div>";
+            html += "<div class='text-sm text-gray-500'>" + c.lastMessage + "</div>";
+
+            if(c.unreadCount > 0){
+                html += "<div class='text-xs text-red-500'>읽지않음 " + c.unreadCount + "</div>";
+            }
+
+            html += "</div>";
+
+            box.innerHTML += html;
+        });
+    });
+}
+
+function enterChat(email){
+
+    fetch("message", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded"
+        },
+        body:"action=readAll&receiver=" + email
+    })
+    .then(function(){
+        location.href = "chat.jsp?receiver=" + email;
+    });
+}
+
+function loadChatCount(){
+
+    fetch("chatCount")
+    .then(function(res){ return res.text(); })
+    .then(function(count){
+
+        var el = document.getElementById("chatCount");
+
+        if(parseInt(count) > 0){
+            el.style.display = "flex";
+            el.innerText = count;
+        }else{
+            el.style.display = "none";
+        }
+    });
+}
+
+/* =========================
+   페이지 로드시 실행
+========================= */
+window.onload = function(){
+    loadChart('workout');
+    loadHotTime(); 
+    loadChatCount();
+};
 
 /* =========================
    모달
@@ -577,6 +856,11 @@ function closeFeedbackModal(){
     document.getElementById("feedbackModal").classList.add("hidden");
 }
 
+function closeFeedbackListModal(){
+    document.getElementById("feedbackListModal")
+        .classList.add("hidden");
+}
+
 function openFeedbackByDate(date){
 
     fetch("feedback")
@@ -595,6 +879,32 @@ function openFeedbackByDate(date){
             alert("해당 날짜 피드백 없음");
         }
     });
+}
+
+function openReviewModal(){
+    document.getElementById("reviewModal").classList.remove("hidden");
+}
+
+function closeReviewModal(){
+    document.getElementById("reviewModal").classList.add("hidden");
+}
+
+function openNotification(){
+    document.getElementById("notificationModal").classList.remove("hidden");
+    loadNotification();
+}
+
+function closeNotification(){
+    document.getElementById("notificationModal").classList.add("hidden");
+}
+
+function openChatModal(){
+    document.getElementById("chatModal").classList.remove("hidden");
+    loadChatList();
+}
+
+function closeChatModal(){
+    document.getElementById("chatModal").classList.add("hidden");
 }
 
 /* =========================
@@ -630,6 +940,36 @@ function calcCalorie(){
     .then(data => {
         document.getElementById("result").innerText =
         "칼로리: " + data.calorie + " kcal";
+    });
+}
+
+function submitReview(){
+
+    const content = document.getElementById("reviewContent").value;
+
+    if(content.length < 20){
+        alert("리뷰는 20자 이상 작성해주세요");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("rating", document.getElementById("rating").value);
+    formData.append("content", content);
+    formData.append("trainerId", 1); // 👉 현재 트레이너 ID
+
+    const file = document.getElementById("reviewImage").files[0];
+    if(file){
+        formData.append("image", file);
+    }
+
+    fetch("review", {
+        method: "POST",
+        body: formData
+    })
+    .then(res=>res.text())
+    .then(msg=>{
+        alert(msg);
+        closeReviewModal();
     });
 }
 </script>
