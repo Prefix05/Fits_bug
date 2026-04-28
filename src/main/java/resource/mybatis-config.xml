@@ -10,8 +10,9 @@
 		<typeAlias type="dto.trainer.LessonDTO" alias="lesson"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 	</typeAliases>
-	
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC"/>
@@ -26,8 +27,8 @@
 				<property name="poolMaximumIdleConnections" value="500"/>
 			</dataSource>
 		</environment>
-	</environments>	
-	
+	</environments>
+
 	<mappers>
 		<mapper resource="mapper/admin/member.xml"/>
 		<mapper resource="mapper/admin/exercise.xml"/>
@@ -41,6 +42,7 @@
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
+		<mapper resource="mapper/trainer/meal.xml"/>
 
 	</mappers>
 </configuration>
