@@ -272,21 +272,21 @@
 
 <div class="lg:ml-64">
     <!-- TopAppBar -->
-<%--    <header class="fixed top-0 w-full lg:w-[calc(100%-16rem)] z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-6 h-16 border-b border-outline-variant/10">--%>
-<%--        <div class="flex items-center gap-4">--%>
-<%--            <button--%>
-<%--                    class="flex items-center gap-1 text-primary active:scale-95 transition-transform hover:opacity-80">--%>
-<%--                <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>--%>
-<%--                <span class="text-sm font-semibold">Back</span>--%>
-<%--            </button>--%>
-<%--            <h1--%>
-<%--                    class="text-on-surface font-headline text-lg font-bold tracking-tight border-l border-outline-variant/30 pl-4">--%>
-<%--                Diet Log</h1>--%>
-<%--        </div>--%>
-<%--        <button class="text-on-surface-variant hover:text-primary active:scale-95 transition-transform">--%>
-<%--            <span class="material-symbols-outlined" data-icon="tune">tune</span>--%>
-<%--        </button>--%>
-<%--    </header>--%>
+    <%--    <header class="fixed top-0 w-full lg:w-[calc(100%-16rem)] z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-6 h-16 border-b border-outline-variant/10">--%>
+    <%--        <div class="flex items-center gap-4">--%>
+    <%--            <button--%>
+    <%--                    class="flex items-center gap-1 text-primary active:scale-95 transition-transform hover:opacity-80">--%>
+    <%--                <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>--%>
+    <%--                <span class="text-sm font-semibold">Back</span>--%>
+    <%--            </button>--%>
+    <%--            <h1--%>
+    <%--                    class="text-on-surface font-headline text-lg font-bold tracking-tight border-l border-outline-variant/30 pl-4">--%>
+    <%--                Diet Log</h1>--%>
+    <%--        </div>--%>
+    <%--        <button class="text-on-surface-variant hover:text-primary active:scale-95 transition-transform">--%>
+    <%--            <span class="material-symbols-outlined" data-icon="tune">tune</span>--%>
+    <%--        </button>--%>
+    <%--    </header>--%>
 
     <header
             class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
@@ -300,58 +300,63 @@
     <main class="pt-4 pb-28 lg:pt-4 lg:pb-8 px-4 max-w-lg mx-auto space-y-6 md:max-w-4xl md:px-8">
 
         <!-- Summary Card: Bento Style -->
-        <section class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_24px_rgba(0,88,188,0.04)]">
+        <section class="bg-surface-container-lowest rounded-xl p-6 ...">
             <div class="flex items-end justify-between mb-2">
-                <p class="text-on-surface-variant font-label text-[10px] uppercase tracking-widest font-bold">Weekly Performance</p>
+                <p id="perfLabel"
+                   class="text-on-surface-variant font-label text-[10px] uppercase tracking-widest font-bold">
+                    Weekly Performance
+                </p>
+                <span id="perfDate" class="text-[10px] text-on-surface-variant font-medium"></span>
             </div>
             <div class="grid gap-4 pt-2 grid-cols-2 md:grid-cols-4">
                 <div class="space-y-1">
-                    <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Calories</span>
+                    <span id="labelCal"
+                          class="text-on-surface-variant font-label text-[10px] font-medium">Avg Calories</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgCal}</span>
+                        <span id="valCal" class="text-2xl font-bold text-on-surface tracking-tighter">${avgCal}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">kcal</span>
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Protein</span>
+                    <span id="labelProt"
+                          class="text-on-surface-variant font-label text-[10px] font-medium">Avg Protein</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgProt}</span>
+                        <span id="valProt" class="text-2xl font-bold text-on-surface tracking-tighter">${avgProt}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Carbs</span>
+                    <span id="labelCarbs"
+                          class="text-on-surface-variant font-label text-[10px] font-medium">Avg Carbs</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgCarbs}</span>
+                        <span id="valCarbs"
+                              class="text-2xl font-bold text-on-surface tracking-tighter">${avgCarbs}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Fats</span>
+                    <span id="labelFat"
+                          class="text-on-surface-variant font-label text-[10px] font-medium">Avg Fats</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgFat}</span>
+                        <span id="valFat" class="text-2xl font-bold text-on-surface tracking-tighter">${avgFat}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
             </div>
         </section>
-
         <!-- Trends Card (Bar Graph) -->
         <section class="bg-surface-container-lowest rounded-xl p-6 ...">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-on-surface font-semibold text-base">칼로리 섭취량</h3>
                 <!-- week nav -->
                 <div class="flex items-center gap-2">
-                    <a href="?weekOffset=${weekOffset - 1}"
-                       class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant">
+                    <button onclick="changeWeek(-1)" class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant">
                         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
-                    </a>
+                    </button>
                     <span class="text-[11px] font-medium text-on-surface-variant" id="weekLabel"></span>
-                    <a href="?weekOffset=${weekOffset + 1}"
-                       class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant
-                      ${weekOffset >= 0 ? 'pointer-events-none opacity-30' : ''}">
+                    <button id="btnNext" onclick="changeWeek(1)" class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant">
                         <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                    </a>
+                    </button>
                 </div>
             </div>
             <div>
@@ -360,10 +365,10 @@
         </section>
 
         <!-- Meal Log Section -->
-        <section class="space-y-6">
+        <section id="mealList" class="space-y-6">
             <div class="flex items-center justify-between px-1">
-                <h3 class="text-on-surface font-semibold text-base">Today's Meals</h3>
-                <span class="text-on-surface-variant text-[12px] font-medium">May 24, Friday</span>
+                <h3 class="text-on-surface font-semibold text-base">Meals</h3>
+                <span class="text-on-surface-variant text-[12px] font-medium">${selectedDate}</span>
             </div>
 
             <c:forEach var="meal" items="${meals}" varStatus="status">
@@ -462,62 +467,58 @@
         </section>
     </main>
 </div>
+
+<%-- Load Chart.js first, then our external file --%>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/clientMealLog.js"></script>
 <script>
-    // Compute Mon–Sun labels from weekOffset passed by servlet
-    const weekOffset = ${weekOffset};
+    // Variables that need server-side values — JSP handles these
+    let currentWeekOffset = ${weekOffset};
+    let currentSelectedDate = '';
+    const contextPath = '${pageContext.request.contextPath}';
 
-    function getMondayOfWeek(date) {
-        const d = new Date(date);
-        const day = d.getDay();
-        const diff = (day === 0 ? -6 : 1 - day);
-        d.setDate(d.getDate() + diff);
-        return d;
-    }
-
-    const today = new Date();
-    today.setDate(today.getDate() + weekOffset * 7);
-    const monday = getMondayOfWeek(today);
-    const sunday = new Date(monday);
-    sunday.setDate(sunday.getDate() + 6);
-
-    // Display "Apr 28 – May 4" label
-    const fmt = d => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-    document.getElementById('weekLabel').textContent = fmt(monday) + ' – ' + fmt(sunday);
-
-    // Build x-axis labels: "월 4/28", "화 4/29" ...
-    const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
-    const labels = Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(monday);
-        d.setDate(d.getDate() + i);
-        return dayNames[i] + ' ' + (d.getMonth()+1) + '/' + d.getDate();
-    });
-
-    // Pull real data from JSTL into JS
-    // Each entry: { date: "2026-04-28", calories: 2100 }
-    const mealData = {};
-    <c:forEach var="meal" items="${meals}">
-    if (!mealData['${meal.mealDate}']) mealData['${meal.mealDate}'] = 0;
-    mealData['${meal.mealDate}'] += ${meal.calories};
+    // Seed initial chart data from JSTL (avoids an extra AJAX call on first load)
+    const initialMealData = {};
+    <c:forEach var="meal" items="${weekMeals}">
+    if (!initialMealData['${meal.mealDate}']) initialMealData['${meal.mealDate}'] = 0;
+    initialMealData['${meal.mealDate}'] += ${meal.calories};
     </c:forEach>
 
-    // Map each day label to its calorie total (0 if no data)
-    const calData = Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(monday);
-        d.setDate(d.getDate() + i);
-        const key = d.toISOString().slice(0, 10); // "2026-04-28"
-        return mealData[key] || 0;
+    // Boot the chart
+    const initialBarDates = buildWeekDates(currentWeekOffset);
+    const initialCalData = initialBarDates.map(function(date) {
+        return initialMealData[date] || 0;
     });
 
-    new Chart(document.getElementById('myChart'), {
+    updateWeekLabel(currentWeekOffset);
+
+    const myChart = new Chart(document.getElementById('myChart'), {
         type: 'bar',
         data: {
-            labels: labels,
-            datasets: [{ label: 'kcal', data: calData, borderWidth: 1 }]
+            labels: buildLabels(initialBarDates),
+            datasets: [{
+                label: 'kcal',
+                data: initialCalData,
+                backgroundColor: 'rgba(0, 88, 188, 0.85)',
+                borderWidth: 0,
+                borderRadius: 4
+            }]
         },
-        options: { scales: { y: { beginAtZero: true } } }
+        options: {
+            scales: {y: {beginAtZero: true}},
+            onClick: function(event, elements) {
+                if (elements.length === 0) {
+                    loadData(currentWeekOffset, null);
+                } else {
+                    const clickedDate = myChart.data.datasets[0]._barDates[elements[0].index];
+                    loadData(currentWeekOffset, clickedDate);
+                }
+            },
+            onHover: function(event, elements) {
+                event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+            }
+        }
     });
+
+    myChart.data.datasets[0]._barDates = initialBarDates;
 </script>
-</body>
-</html>
