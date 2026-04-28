@@ -106,6 +106,7 @@
     		backdrop-filter: blur(12px);
 		}
 </style>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
 <body class="bg-background font-body text-on-surface">
 <jsp:include page="common/sidebar.jsp"></jsp:include>
@@ -308,7 +309,7 @@
 					<c:forEach var="m" items="${membershipList}">
 						<c:choose>
 							<c:when test="${m.type eq 'month' and m.typeRep == 3}">
-    							<div onclick="openPaymentModal('${m.id}', '${m.type}', '${m.typeRep}', '${m.price}')"
+    							<div onclick="openPaymentModal('${m.membershipNum}', '${m.type}', '${m.typeRep}', '${m.price}')"
          							 class="p-3 rounded-lg bg-primary text-white shadow-lg relative overflow-hidden cursor-pointer">
 
         							<div class="absolute top-0 right-0 bg-white text-primary text-[7px] font-black px-1.5 py-0.5 rounded-bl uppercase">
@@ -329,7 +330,7 @@
 							</c:when>
 							
 							<c:otherwise>
-								<div onclick="openPaymentModal('${m.id}', '${m.type}', '${m.typeRep}', '${m.price}')"
+								<div onclick="openPaymentModal('${m.membershipNum}', '${m.type}', '${m.typeRep}', '${m.price}')"
 									 class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/10 cursor-pointer">
 									<p class="text-[9px] font-bold text-on-surface-variant mb-1 uppercase tracking-widest">
 										<c:choose>
@@ -803,7 +804,7 @@ function deleteReview(id){
                     <button onclick="goPaymentStep(2)" class="flex-1 px-6 py-3.5 rounded-lg bg-surface-container-high text-on-surface-variant font-semibold">
                         이전
                     </button>
-                    <button onclick="submitPayment()" class="flex-[2] px-6 py-3.5 rounded-lg bg-primary text-white font-semibold flex items-center justify-center gap-2">
+                    <button type="button" onclick="submitPayment(event)" class="flex-[2] px-6 py-3.5 rounded-lg bg-primary text-white font-semibold flex items-center justify-center gap-2">
                         결제하기
                         <span class="material-symbols-outlined text-lg">contactless</span>
                     </button>
@@ -876,17 +877,44 @@ function setStartDate(date) {
     document.getElementById("finalStartDate").innerText = date;
 }
 
-function submitPayment() {
+function submitPayment(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     if (!selectedMembership.startDate) {
         alert("이용 시작일을 선택하세요.");
         goPaymentStep(2);
-        return;
+        return false;
     }
 
-    location.href =
-        "${pageContext.request.contextPath}/payment/ready"
-        + "?membershipId=" + selectedMembership.id
-        + "&startDate=" + selectedMembership.startDate;
+    const IMP = window.IMP;
+    IMP.init("imp77425055");
+
+    IMP.request_pay({
+        channelKey: "channel-key-d3e2f79b-28dd-4cc0-8687-d6e0dd457b31",
+        pay_method: "card",
+        merchant_uid: "gym_" + new Date().getTime(),
+        name: selectedMembership.typeRep + (selectedMembership.type === "month" ? "개월 이용권" : "일 이용권"),
+        amount: Number(selectedMembership.price),
+        buyer_email: "test@test.com",
+        buyer_name: "테스트회원",
+        buyer_tel: "010-0000-0000"
+    }, function (rsp) {
+        if (rsp.success) {
+            location.href =
+            	"${pageContext.request.contextPath}/gym/payment/complete"
+                + "?imp_uid=" + rsp.imp_uid
+                + "&merchant_uid=" + rsp.merchant_uid
+                + "&membershipId=" + selectedMembership.id
+                + "&startDate=" + selectedMembership.startDate;
+        } else {
+            alert("결제 실패: " + rsp.error_msg);
+        }
+    });
+
+    return false;
 }
 </script>
 </body>
