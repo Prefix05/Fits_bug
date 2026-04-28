@@ -336,10 +336,10 @@
                             class="px-8 py-2.5 text-sm font-semibold text-primary bg-surface-container-lowest rounded-xl shadow-sm transition-all">
                         Overview
                     </button>
-                    <button
-                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
-                        Diet
-                    </button>
+                    <a href="${pageContext.request.contextPath}/trainer/meals"
+                       class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                        Meals
+                    </a>
                     <button
                             class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
                         Workouts
