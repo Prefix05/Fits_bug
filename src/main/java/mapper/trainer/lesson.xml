@@ -6,7 +6,7 @@
 
     <resultMap id="lessonMap" type="lesson">
         <id property="lessonId" column="lesson_id"/>
-        <result property="lessonName" column="lesson_name"/>
+        <result property="goal" column="goal"/>
         <result property="memberName" column="member_name"/>
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
@@ -17,7 +17,7 @@
     <select id="findLessonsByDate" parameterType="string" resultMap="lessonMap">
         SELECT
             lesson_id,
-            lesson_name,
+            goal,
             member_name,
             DATE_FORMAT(start_time, '%H:%i') AS start_time,
             DATE_FORMAT(end_time, '%H:%i') AS end_time,
