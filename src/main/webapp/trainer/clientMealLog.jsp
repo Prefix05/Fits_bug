@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -355,141 +356,120 @@
 
         </section>
         <!-- Meal Log Section -->
-        <section class="space-y-8">
-            <div class="flex items-center justify-between px-2">
+<%--        <section class="space-y-8">--%>
+<%--            <div class="flex items-center justify-between px-2">--%>
+<%--                <h3 class="text-on-surface font-semibold text-base">Today's Meals</h3>--%>
+<%--                <span class="text-on-surface-variant text-[12px] font-medium">May 24, Friday</span>--%>
+<%--            </div>--%>
+<%--            <p>Meals size: ${meals.size()}</p>--%>
+<%--            <c:forEach var="meal" items="${meals}">--%>
+<%--                <div class="bg-surface-container-lowest rounded-xl overflow-hidden flex">--%>
+
+<%--                    <div class="w-28 h-32">--%>
+<%--                        <img src="${meal.imageUrl}" class="w-full h-full object-cover"/>--%>
+<%--                    </div>--%>
+
+<%--                    <div class="p-4 flex-grow">--%>
+<%--                        <div class="flex justify-between">--%>
+<%--                            <h4>${meal.mealName}</h4>--%>
+<%--                            <span>${meal.mealTime}</span>--%>
+<%--                        </div>--%>
+
+<%--                        <p>${meal.description}</p>--%>
+
+<%--                        <div>--%>
+<%--                            <span>${meal.calories} kcal</span>--%>
+<%--                            <span>${meal.protein} Protein</span>--%>
+<%--                            <span>${meal.carbs} Carbs</span>--%>
+<%--                            <span>${meal.fat} Fat</span>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </c:forEach>--%>
+<%--        </section>--%>
+
+        <!-- Meal Log Section -->
+        <section class="space-y-6">
+            <div class="flex items-center justify-between px-1">
                 <h3 class="text-on-surface font-semibold text-base">Today's Meals</h3>
                 <span class="text-on-surface-variant text-[12px] font-medium">May 24, Friday</span>
             </div>
-            <!-- Breakfast Section -->
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                        <span
-                                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">Breakfast</span>
-                    <div class="h-[1px] bg-outline-variant/30 w-full"></div>
-                </div>
-                <div
-                        class="bg-surface-container-lowest rounded-xl overflow-hidden flex shadow-[0_4px_24px_rgba(0,88,188,0.04)]">
-                    <div class="w-28 h-32 flex-shrink-0">
-                        <img alt="Protein Shake with Berries" class="w-full h-full object-cover"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2yQxJQoJzJkpzua4HBJXZ4KUE-WLY5Mb0F4HY5UbbFUt7xET7CJDnLwJJXDW6_aBOataNPe045hqRHH9PMP1wNag-BrVJzfRLHTNur7ZK3T13nWqvXAk4LBrn7Nd33uXaqM7oG4uZPjPYLE7FCp1okg5Sok3uorOgkPZ2kNUJ6Qzc-vsWh7upQYgDztHTkMoAiP3JnYHYg25eIMvEc_AWYxSBBINM5bajQ6kS45s5AnstiegDzjNxEctBT1C45Tq_esjwkAbVR9SU"/>
+
+            <c:forEach var="meal" items="${meals}" varStatus="status">
+
+                <%-- Meal type divider label --%>
+                <c:if test="${status.index == 0}">
+                    <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">
+                    아침
+                </span>
+                        <div class="h-px bg-outline-variant/30 flex-1"></div>
                     </div>
-                    <div class="p-4 flex-grow flex flex-col justify-between">
+                </c:if>
+                <c:if test="${status.index == 1}">
+                    <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">
+                    점심
+                </span>
+                        <div class="h-px bg-outline-variant/30 flex-1"></div>
+                    </div>
+                </c:if>
+                <c:if test="${status.index == 2}">
+                    <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">
+                    저녁
+                </span>
+                        <div class="h-px bg-outline-variant/30 flex-1"></div>
+                    </div>
+                </c:if>
+
+                <%-- Meal Card --%>
+                <div class="bg-surface-container-lowest rounded-2xl overflow-hidden flex shadow-[0_4px_24px_rgba(0,88,188,0.06)] border border-outline-variant/10 hover:shadow-[0_8px_32px_rgba(0,88,188,0.10)] transition-shadow">
+
+                        <%-- Food image --%>
+                    <div class="w-28 h-32 flex-shrink-0">
+                        <img src="${meal.imageUrl}" alt="${meal.mealName}"
+                             class="w-full h-full object-cover"/>
+                    </div>
+
+                        <%-- Content --%>
+                    <div class="p-4 flex-grow flex flex-col justify-between min-w-0">
+
+                            <%-- Top row: name + time --%>
                         <div>
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-on-surface text-sm">Protein Shake</h4>
-                                <span class="text-[10px] font-medium text-on-surface-variant">08:00 AM</span>
+                            <div class="flex justify-between items-start gap-2">
+                                <h4 class="font-bold text-on-surface text-sm leading-snug truncate">${meal.mealName}</h4>
+                                <span class="text-[10px] font-medium text-on-surface-variant whitespace-nowrap shrink-0">${meal.mealTime}</span>
                             </div>
-                            <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">"Post-workout
-                                recovery."</p>
+                            <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">${meal.description}</p>
                         </div>
-                        <div class="flex flex-wrap gap-x-3 gap-y-1">
+
+                            <%-- Bottom row: macros --%>
+                        <div class="flex flex-wrap gap-x-3 gap-y-1 mt-2">
                             <div class="flex items-center gap-1">
-                                <span class="text-xs font-bold text-on-surface">180</span>
+                                <span class="text-xs font-bold text-on-surface">${meal.calories}</span>
                                 <span class="text-[10px] text-on-surface-variant">kcal</span>
                             </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-primary">25</span>
-                                <span class="text-[10px] text-on-surface-variant">Protein</span>
+                            <div class="flex items-center gap-1 border-l border-outline-variant/30 pl-3">
+                                <span class="text-xs font-bold text-primary">${meal.protein}</span>
+                                <span class="text-[10px] text-on-surface-variant">단백질</span>
                             </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-orange-600">12</span>
-                                <span class="text-[10px] text-on-surface-variant">Carbs</span>
+                            <div class="flex items-center gap-1 border-l border-outline-variant/30 pl-3">
+                                <span class="text-xs font-bold text-orange-500">${meal.carbs}</span>
+                                <span class="text-[10px] text-on-surface-variant">탄수화물</span>
                             </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-amber-600">4</span>
-                                <span class="text-[10px] text-on-surface-variant">Fat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Lunch Section -->
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                        <span
-                                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">Lunch</span>
-                    <div class="h-[1px] bg-outline-variant/30 w-full"></div>
-                </div>
-                <div
-                        class="bg-surface-container-lowest rounded-xl overflow-hidden flex shadow-[0_4px_24px_rgba(0,88,188,0.04)]">
-                    <div class="w-28 h-32 flex-shrink-0">
-                        <img alt="Korean Kimchi Stew" class="w-full h-full object-cover"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbolKXgMoW1TTeT6TpRfa4o3zS1UGvhju0vsppFqWtZSxgR5K-P1K_L361JpQOaOwtWl9BLAopHyfncDlNC36NBfnp1vG6HJam--8zjdzQEX2WlfjcLmMx1BvHkaA21XsvjrYtN4Pocb57lwgiBVXDHyMIRnaqGHPPqwwkEg3hOmsinP19NcNASbVBNBI9bQWLqbDp6nNBQDQPhfvfbFm8Cpdmx4RMG3eS8IvrXqc8DMVm6v-CZP6eQN3V7LCG4kx-PFBeVQlcszKz"/>
-                    </div>
-                    <div class="p-4 flex-grow flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-on-surface text-sm">Kimchi Stew (김치찌개)</h4>
-                                <span class="text-[10px] font-medium text-on-surface-variant">12:30 PM</span>
-                            </div>
-                            <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">"Added extra tofu for
-                                protein as requested."</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex items-center gap-1">
-                                <span class="text-xs font-bold text-on-surface">540</span>
-                                <span class="text-[10px] text-on-surface-variant">kcal</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-primary">28</span>
-                                <span class="text-[10px] text-on-surface-variant">Protein</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-orange-600">45</span>
-                                <span class="text-[10px] text-on-surface-variant">Carbs</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-amber-600">18</span>
-                                <span class="text-[10px] text-on-surface-variant">Fat</span>
+                            <div class="flex items-center gap-1 border-l border-outline-variant/30 pl-3">
+                                <span class="text-xs font-bold text-amber-500">${meal.fat}</span>
+                                <span class="text-[10px] text-on-surface-variant">지방</span>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </div>
-            <!-- Dinner Section -->
-            <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                        <span
-                                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">Dinner</span>
-                    <div class="h-[1px] bg-outline-variant/30 w-full"></div>
-                </div>
-                <div
-                        class="bg-surface-container-lowest rounded-xl overflow-hidden flex shadow-[0_4px_24px_rgba(0,88,188,0.04)]">
-                    <div class="w-28 h-32 flex-shrink-0">
-                        <img alt="Healthy Bibimbap" class="w-full h-full object-cover"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiay_D27hQ57kyCu5OfuQjdJWzPknPLdxFdBAjwOAKlMgJ9vdGQ72m25mUuCCRjtR_FQ8qNhcAW5ignmypPncD84VEV5TK3MBo-LgJCCoyIGh5IBOzC5bHiDT2wTM9tQWhqzJ-xRyjLseRUkeF6TUxWKDbyP4FBRHFWzgiZnIxPL33WorKPAOaCeRz36W8XVICYmr7wbFvwKnrCR5WCYQd2zYlwu8qTYfCQFGMD9y7e3DMLdFkNlwbz4LKhmEDzRS_9TbjGP2b_Y3M"/>
-                    </div>
-                    <div class="p-4 flex-grow flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-on-surface text-sm">Bibimbap (비빔밥)</h4>
-                                <span class="text-[10px] font-medium text-on-surface-variant">07:15 PM</span>
-                            </div>
-                            <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">"Brown rice used, light
-                                gochujang sauce."</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex items-center gap-1">
-                                <span class="text-xs font-bold text-on-surface">620</span>
-                                <span class="text-[10px] text-on-surface-variant">kcal</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-primary">34</span>
-                                <span class="text-[10px] text-on-surface-variant">Protein</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-orange-600">75</span>
-                                <span class="text-[10px] text-on-surface-variant">Carbs</span>
-                            </div>
-                            <div class="flex items-center gap-1 border-l border-surface-container-highest pl-3">
-                                <span class="text-xs font-bold text-amber-600">12</span>
-                                <span class="text-[10px] text-on-surface-variant">Fat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+            </c:forEach>
         </section>
+
         <!-- Daily Trainer Comment Card -->
         <section
                 class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_24px_rgba(0,88,188,0.04)] space-y-4">
