@@ -7,6 +7,8 @@
 	<typeAliases>
 		<typeAlias type="dto.admin.MemberDTO" alias="member"/>
 		<typeAlias type="dto.admin.ExerciseDTO" alias="exercise"/>
+		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
+		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
 		<typeAlias type="dto.trainer.LessonDTO" alias="lesson"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
@@ -31,6 +33,8 @@
 	<mappers>
 		<mapper resource="mapper/admin/member.xml"/>
 		<mapper resource="mapper/admin/exercise.xml"/>
+		<mapper resource="mapper/admin/report.xml"/>
+		<mapper resource="mapper/admin/inquiry.xml"/>
 		<mapper resource="mapper/gym/gymMain.xml"/>
 		<mapper resource="mapper/gym/gymNotice.xml"/>
 		<mapper resource="mapper/gym/gymTrainerView.xml"/>
