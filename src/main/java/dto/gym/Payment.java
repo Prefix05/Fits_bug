@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 public class Payment {
 	private Integer paymentNum;
-    private Integer userNum;
+    private String userEmail;
     private Integer membershipNum;
     private Integer mrNum;
     private Timestamp paymentDate;
@@ -17,11 +17,11 @@ public class Payment {
 	public Payment() {
 		super();
 	}
-	public Payment(Integer paymentNum, Integer userNum, Integer membershipNum, Integer mrNum, Timestamp paymentDate,
+	public Payment(Integer paymentNum, String userEmail, Integer membershipNum, Integer mrNum, Timestamp paymentDate,
 			BigDecimal paymentPrice, BigDecimal paymentFee, String method, String status, Timestamp createdAt) {
 		super();
 		this.paymentNum = paymentNum;
-		this.userNum = userNum;
+		this.userEmail = userEmail;
 		this.membershipNum = membershipNum;
 		this.mrNum = mrNum;
 		this.paymentDate = paymentDate;
@@ -37,11 +37,11 @@ public class Payment {
 	public void setPaymentNum(Integer paymentNum) {
 		this.paymentNum = paymentNum;
 	}
-	public Integer getUserNum() {
-		return userNum;
+	public String getUserEmail() {
+		return userEmail;
 	}
-	public void setUserNum(Integer userNum) {
-		this.userNum = userNum;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 	public Integer getMembershipNum() {
 		return membershipNum;
@@ -93,7 +93,7 @@ public class Payment {
 	}
 	@Override
 	public String toString() {
-		return "Payment [paymentNum=" + paymentNum + ", userNum=" + userNum + ", membershipNum=" + membershipNum
+		return "Payment [paymentNum=" + paymentNum + ", userEmail=" + userEmail + ", membershipNum=" + membershipNum
 				+ ", mrNum=" + mrNum + ", method=" + method + ", status=" + status + "]";
 	}
 	

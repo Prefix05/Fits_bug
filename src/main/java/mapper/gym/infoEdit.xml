@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mapper.infoEdit">
+  	<!-- 1. 정보수정 페이지 조회: GYM + USER JOIN -->
+    <select id="selectGymMypage" parameterType="int" resultType="dto.gym.Gym">
+        SELECT
+            g.id,
+            g.user_id AS userId,
+            g.name,
+            g.phone_num AS phoneNum,
+            g.description,
+            g.address,
+            g.address_detail AS addressDetail,
+            g.postcode,
+            g.latitude,
+            g.longitude,
+            g.file,
+            g.facility,
+            g.background_img AS backgroundImg,
+            g.br_file AS brFile,
+
+            u.email_id AS emailId,
+            u.name AS userName,
+            u.tel,
+            u.profileImg AS profileImg
+        FROM gym g
+        JOIN user u ON g.user_id = u.id
+        WHERE g.id = #{gymId}
+    </select>
+
+    <!-- 2. GYM 정보 수정 -->
+    <update id="updateGym" parameterType="dto.gym.Gym">
+        UPDATE gym
+        SET
+            name = #{name},
+            phone_num = #{phoneNum},
+            description = #{description},
+            address = #{address},
+            address_detail = #{addressDetail},
+            postcode = #{postcode},
+            latitude = #{latitude},
+            longitude = #{longitude},
+            facility = #{facility},
+            file = #{file},
+            background_img = #{backgroundImg},
+            br_file = #{brFile}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 3. USER 정보 수정 -->
+    <update id="updateGymUser" parameterType="dto.gym.Gym">
+        UPDATE user
+        SET
+            email_id = #{emailId},
+            name = #{userName},
+            tel = #{tel},
+            profileImg = #{profileImg}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 4. 비밀번호 변경 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE user
+        SET password = #{password}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 5. 이메일 중복 확인 -->
+    <select id="countEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM user
+        WHERE email_id = #{emailId}
+    </select>
+
+    <!-- 6. 운영시간 조회 -->
+    <select id="selectSchedule" parameterType="int" resultType="dto.gym.Schedule">
+        SELECT
+            gs_num AS gsNum,
+            gym_num AS gymNum,
+            available_weekday_start AS availableWeekdayStart,
+            available_weekday_end AS availableWeekdayEnd,
+            available_weekend_start AS availableWeekendStart,
+            available_weekend_end AS availableWeekendEnd
+        FROM gym_schedule
+        WHERE gym_num = #{gymId}
+    </select>
+
+    <!-- 7. 운영시간 수정 -->
+    <update id="updateSchedule" parameterType="dto.gym.Schedule">
+        UPDATE gym_schedule
+        SET
+            available_weekday_start = #{availableWeekdayStart},
+            available_weekday_end = #{availableWeekdayEnd},
+            available_weekend_start = #{availableWeekendStart},
+            available_weekend_end = #{availableWeekendEnd}
+        WHERE gym_num = #{gymNum}
+    </update>
+
+    <!-- 8. 이용권 목록 조회 -->
+    <select id="selectMembershipList" parameterType="int" resultType="dto.gym.Membership">
+        SELECT
+            membership_num AS membershipNum,
+            gym_num AS gymNum,
+            type,
+            type_rep AS typeRep,
+            price
+        FROM membership
+        WHERE gym_num = #{gymId}
+        ORDER BY membership_num
+    </select>
+
+    <!-- 9. 이용권 수정 -->
+    <update id="updateMembership" parameterType="dto.gym.Membership">
+        UPDATE membership
+        SET
+            type = #{type},
+            type_rep = #{typeRep},
+            price = #{price}
+        WHERE membership_num = #{membershipNum}
+    </update>
+
+    <!-- 10. 이용권 추가 -->
+    <insert id="insertMembership" parameterType="dto.gym.Membership">
+        INSERT INTO membership (
+            gym_num,
+            type,
+            type_rep,
+            price
+        ) VALUES (
+            #{gymNum},
+            #{type},
+            #{typeRep},
+            #{price}
+        )
+    </insert>
+
+    <!-- 11. 이용권 삭제 -->
+    <delete id="deleteMembership" parameterType="int">
+        DELETE FROM membership
+        WHERE membership_num = #{membershipNum}
+    </delete>
+
+    <!-- 12. 혼잡 시간대 목록 조회 -->
+    <select id="selectPeakTimeList" parameterType="int" resultType="dto.gym.GymPeakTime">
+        SELECT
+            id,
+            gym_id AS gymId,
+            day_of_week AS dayOfWeek,
+            start_time AS startTime,
+            end_time AS endTime
+        FROM gym_peak_time
+        WHERE gym_id = #{gymId}
+        ORDER BY id
+    </select>
+
+    <!-- 13. 혼잡 시간대 전체 삭제 후 재등록 방식 추천 -->
+    <delete id="deletePeakTimeByGymId" parameterType="int">
+        DELETE FROM gym_peak_time
+        WHERE gym_id = #{gymId}
+    </delete>
+
+    <insert id="insertPeakTime" parameterType="dto.gym.GymPeakTime">
+        INSERT INTO gym_peak_time (
+            gym_id,
+            day_of_week,
+            start_time,
+            end_time
+        ) VALUES (
+            #{gymId},
+            #{dayOfWeek},
+            #{startTime},
+            #{endTime}
+        )
+    </insert>
+
+</mapper>
+  
+  
