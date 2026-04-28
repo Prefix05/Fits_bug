@@ -7,6 +7,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dao.member.WorkoutPlanDAO;
+import dao.member.WorkoutPlanDAOImpl;
+import dto.member.MemberDTO;
+import dto.member.WorkoutPlanDTO;
 
 @WebServlet("/step3")
 public class Step3Controller extends HttpServlet {
@@ -14,11 +22,45 @@ public class Step3Controller extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // step2 값 저장
-        request.getSession().setAttribute("height", request.getParameter("height"));
-        request.getSession().setAttribute("weight", request.getParameter("weight"));
-        request.getSession().setAttribute("diet", request.getParameter("diet"));
+    	HttpSession session = request.getSession();
 
-        request.getRequestDispatcher("step3.jsp").forward(request, response);
+        // 🔥 기존 step1 데이터
+        String username = (String) session.getAttribute("username");
+        String password = (String) session.getAttribute("password");
+        String nickname = (String) session.getAttribute("nickname");
+        String name = (String) session.getAttribute("name");
+        String phone = (String) session.getAttribute("phone");
+        String role = (String) session.getAttribute("role");
+
+        // 🔥 step2 데이터
+        String height = request.getParameter("height");
+        String weight = request.getParameter("weight");
+        String diet = request.getParameter("diet");
+
+        // 🔥 DB 저장
+        MemberDTO user = new MemberDTO();
+        user.setEmail(username);
+        user.setPassword(password);
+        user.setNickname(nickname);
+        user.setname(name);
+        user.setPhone(phone);
+        
+        WorkoutPlanDTO plan = new WorkoutPlanDTO();
+        plan.setEmail(username);
+        plan.setHeight(Integer.parseInt(height));
+        plan.setWeight(Integer.parseInt(weight));
+        plan.setDiet(diet);
+        
+        MemberDAO memberDao = new MemberDAOImpl();
+        memberDao.insertMember(user); // 👉 DB 저장
+        
+        WorkoutPlanDAO planDao = new WorkoutPlanDAOImpl();
+        planDao.savePlan(plan);
+
+        // 🔥 ⭐ 로그인 처리 (핵심)
+        session.setAttribute("loginUser", user);
+
+        // 🔥 main으로 이동
+        response.sendRedirect("main.jsp");
     }
 }

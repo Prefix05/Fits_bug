@@ -158,4 +158,26 @@ public class MemberDAOImpl implements MemberDAO {
 
         return user;
 	}
+
+	@Override
+	public String getNicknameByEmail(String email) {
+
+	    String sql = "SELECT nickname FROM member WHERE email=?";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setString(1, email);
+
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            return rs.getString("nickname");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return null;
+	}
 }

@@ -21,4 +21,7 @@ public interface MemberDAO {
     // 회원 조회
     MemberDTO findByEmail(String email);
     
+    // 이메일로 닉네임 조회
+    String getNicknameByEmail(String email);
+    
 }

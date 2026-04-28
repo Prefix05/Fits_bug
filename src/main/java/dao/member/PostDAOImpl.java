@@ -75,4 +75,26 @@ public class PostDAOImpl implements PostDAO {
 
         return list;
     }
+
+    @Override
+    public String getWriterEmail(int postId) {
+
+        String sql = "SELECT email FROM post WHERE id = ?";
+
+        try(Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setInt(1, postId);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                return rs.getString("email");
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
