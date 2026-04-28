@@ -1,8 +1,6 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
+import java.sql.*;
 import dto.member.ReportDTO;
 import util.DBUtil;
 

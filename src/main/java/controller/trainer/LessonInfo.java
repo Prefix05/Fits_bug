@@ -49,7 +49,7 @@ public class LessonInfo extends HttpServlet {
 
         String json = "{" +
                 "\"lessonId\":" + selected.getLessonId() + "," +
-                "\"lessonName\":\"" + escapeJson(selected.getLessonName()) + "\"," +
+                "\"goal\":\"" + escapeJson(selected.getGoal()) + "\"," +
                 "\"memberName\":\"" + escapeJson(selected.getMemberName()) + "\"," +
                 "\"startTime\":\"" + escapeJson(selected.getStartTime()) + "\"," +
                 "\"endTime\":\"" + escapeJson(selected.getEndTime()) + "\"," +

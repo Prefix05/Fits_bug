@@ -158,7 +158,22 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 
 <div class="comment-box hidden bg-gray-50 p-5">
-    테스트 댓글입니다
+
+    <!-- 댓글 목록 -->
+    <div id="commentList-${post.id}"></div>
+
+    <!-- 입력 -->
+    <div class="flex mt-3 gap-2">
+        <input id="commentInput-${post.id}"
+               class="border p-2 flex-1 text-sm"
+               placeholder="댓글 작성">
+
+        <button onclick="writeComment(${post.id})"
+                class="bg-blue-500 text-white px-3 rounded text-sm">
+            작성
+        </button>
+    </div>
+
 </div>
 
 </article>
@@ -323,7 +338,7 @@ body { font-family: 'Inter', sans-serif; }
 
     <!-- 댓글 -->
     <div class="flex mt-4 text-sm text-gray-600 items-center">
-        <button onclick="toggleComment(this)" class="ml-auto flex items-center gap-1">
+        <button onclick="toggleComment(this, ${post.id})" class="ml-auto flex items-center gap-1">
             <span class="material-symbols-outlined text-sm">chat</span> 댓글
         </button>
     </div>
@@ -397,9 +412,63 @@ function filterPost(type, el){
 }
 
 // 댓글
-function toggleComment(btn){
+/* function toggleComment(btn){
     const box = btn.closest("article").querySelector(".comment-box");
     box.classList.toggle("hidden");
+} */
+
+function writeComment(postId){
+    const input = document.getElementById("commentInput-" + postId);
+    const content = input.value;
+
+    fetch("comment", {
+        method: "POST",
+        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+        body: "postId=" + postId +
+              "&nickname=" + "<%=session.getAttribute("loginUser") != null ? ((dto.member.MemberDTO)session.getAttribute("loginUser")).getNickname() : ""%>" +
+              "&content=" + content
+    })
+    .then(res => res.text())
+    .then(result => {
+
+        if(result === "ok"){
+            input.value = "";
+            loadComments(postId);
+        }
+    });
+}
+
+function loadComments(postId) {
+    fetch("commentList?postId=" + postId)
+        .then(function(res) {
+            return res.json();
+        })
+        .then(function(list) {
+            var box = document.getElementById("commentList-" + postId);
+            var html = "";
+
+            for (var i = 0; i < list.length; i++) {
+                var c = list[i];
+                html += '<div class="text-sm mb-1">' +
+                        '<b>' + c.userEmail + '</b> : ' + c.content +
+                        '</div>';
+            }
+
+            box.innerHTML = html;
+        })
+        .catch(function(err) {
+            console.error("댓글 로드 실패:", err);
+        });
+}
+
+// 댓글 열 때 자동 로딩
+function toggleComment(btn){
+    const article = btn.closest("article");
+    const box = article.querySelector(".comment-box");
+
+    box.classList.toggle("hidden");
+
+    loadComments(postId);
 }
 
 // 신고 모달

@@ -1,9 +1,6 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.*;
 import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
 import util.DBUtil;

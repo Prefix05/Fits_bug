@@ -1,5 +1,8 @@
 package controller.member;
 
+import dto.member.MemberDTO;
+import service.member.MemberService;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;

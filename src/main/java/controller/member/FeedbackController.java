@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.member.FeedbackDTO;
+import dto.member.FoodRecordDTO;
+import dto.member.MemberDTO;
+import service.member.FoodRecordServiceImpl;
 
 @WebServlet("/feedback")
 public class FeedbackController extends HttpServlet {

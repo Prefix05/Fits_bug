@@ -1,9 +1,6 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.*;
 import dto.member.WorkoutPlanDTO;
 import util.DBUtil;
 
@@ -77,5 +74,29 @@ public class WorkoutPlanDAOImpl implements WorkoutPlanDAO {
         }
 
         return 0;
+    }
+
+    @Override
+    public boolean update(WorkoutPlanDTO dto) {
+
+        String sql = "UPDATE workout_plan SET goal=?, level=?, height=?, weight=?, diet=? WHERE member_email=?";
+
+        try(Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setString(1, dto.getGoal());
+            ps.setString(2, dto.getLevel());
+            ps.setInt(3, dto.getHeight());
+            ps.setInt(4, dto.getWeight());
+            ps.setString(5, dto.getDiet());
+            ps.setString(6, dto.getEmail());
+
+            return ps.executeUpdate() > 0;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

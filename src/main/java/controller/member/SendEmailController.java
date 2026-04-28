@@ -1,5 +1,6 @@
 package controller.member;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -13,21 +14,36 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 @WebServlet("/sendEmailCode")
 public class SendEmailController extends HttpServlet {
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		    throws IOException {
 
-		        String email = req.getParameter("email");
+				StringBuilder sb = new StringBuilder();
+				BufferedReader br = req.getReader();
 
-		     // 인증코드 생성
+				String line;
+				while ((line = br.readLine()) != null) {
+					sb.append(line);
+				}
+
+				String email = new JSONObject(sb.toString()).getString("email");
+
+		        // 인증코드 생성
 		        String code = String.valueOf((int)(Math.random()*900000)+100000);
 
-		        req.getSession().setAttribute("authCode", code);
+		        HttpSession session = req.getSession();
+		        session.setAttribute("authCode", code);
+		        session.setAttribute("authTime", System.currentTimeMillis());
+		        session.setAttribute("authEmail", email);
 
-		        final String username = "your_email@gmail.com";
-		        final String password = "앱비밀번호";
+		        try {
+		        final String username = "qustmdhyun@gmail.com";
+		        final String password = "rrfinnopkspbrzai";
 
 		        Properties prop = new Properties();
 		        prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -35,15 +51,14 @@ public class SendEmailController extends HttpServlet {
 		        prop.put("mail.smtp.auth", "true");
 		        prop.put("mail.smtp.starttls.enable", "true");
 
-		        Session session = Session.getInstance(prop,
+		        Session mailSession = Session.getInstance(prop,
 		            new javax.mail.Authenticator() {
 		                protected PasswordAuthentication getPasswordAuthentication() {
 		                    return new PasswordAuthentication(username, password);
 		                }
 		            });
 
-		        try {
-		            Message message = new MimeMessage(session);
+		        	Message message = new MimeMessage(mailSession);
 		            message.setFrom(new InternetAddress(username));
 		            message.setRecipients(Message.RecipientType.TO,
 		                    InternetAddress.parse(email));
@@ -52,11 +67,12 @@ public class SendEmailController extends HttpServlet {
 
 		            Transport.send(message);
 
-		            resp.getWriter().write("success");
+		            resp.setContentType("application/json; charset=UTF-8");
+		            resp.getWriter().write("{\"success\":true}");
 
 		        } catch (Exception e) {
 		            e.printStackTrace();
-		            resp.getWriter().write("fail");
+		            resp.getWriter().write("{\"success\":false}");
 		}
 	}
 }

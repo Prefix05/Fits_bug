@@ -2,7 +2,7 @@ package dto.trainer;
 
 public class LessonDTO {
     private int lessonId;
-    private String lessonName;
+    private String goal;
     private String memberName;
     private String startTime;
     private String endTime;
@@ -12,9 +12,9 @@ public class LessonDTO {
     public LessonDTO() {
     }
 
-    public LessonDTO(int lessonId, String lessonName, String memberName, String startTime, String endTime, int durationMinutes, String status) {
+    public LessonDTO(int lessonId, String goal, String memberName, String startTime, String endTime, int durationMinutes, String status) {
         this.lessonId = lessonId;
-        this.lessonName = lessonName;
+        this.goal = goal;
         this.memberName = memberName;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -30,12 +30,12 @@ public class LessonDTO {
         this.lessonId = lessonId;
     }
 
-    public String getLessonName() {
-        return lessonName;
+    public String getGoal() {
+        return goal;
     }
 
-    public void setLessonName(String lessonName) {
-        this.lessonName = lessonName;
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 
     public String getMemberName() {

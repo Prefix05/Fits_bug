@@ -11,14 +11,14 @@
             useGeneratedKeys="true"
             keyProperty="mrNum">
         INSERT INTO MEMBERSHIP_REGISTRATION (
-            member_num,
+            email_id,
             membership_num,
             register_date,
             start_date,
             end_date,
             status
         ) VALUES (
-            #{memberNum},
+            #{memberEmail},
             #{membershipNum},
             CURDATE(),
             #{startDate},
@@ -33,7 +33,7 @@
             useGeneratedKeys="true"
             keyProperty="paymentNum">
         INSERT INTO PAYMENT (
-            user_num,
+            email_id,
             membership_num,
             mr_num,
             payment_date,
@@ -43,7 +43,7 @@
             status,
             created_at
         ) VALUES (
-            #{userNum},
+            #{userEmail},
             #{membershipNum},
             #{mrNum},
             NOW(),

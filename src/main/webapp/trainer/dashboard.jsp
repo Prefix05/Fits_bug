@@ -317,7 +317,7 @@
                                 <div>
                                     <h2 id="lesson-member-name" class="text-2xl md:text-3xl font-bold tracking-tight whitespace-nowrap">${selectedLesson.memberName}</h2>
                                     <div class="flex items-center gap-2">
-                                        <p id="lesson-name" class="whitespace-nowrap text-blue-100/70 text-sm md:text-lg">${selectedLesson.lessonName}</p>
+                                        <p id="lesson-name" class="whitespace-nowrap text-blue-100/70 text-sm md:text-lg">${selectedLesson.goal}</p>
                                         <span class="h-1 w-1 rounded-full bg-blue-100/30 shrink-0"></span>
                                         <p id="lesson-duration" class="whitespace-nowrap text-blue-100/50 text-xs md:text-sm font-medium">
                                             <c:choose>
@@ -419,7 +419,7 @@
                                             <div>
                                                 <p class="text-lg text-on-surface font-semibold">${lesson.memberName}</p>
                                                 <div class="flex items-center gap-2">
-                                                    <span class="text-[10px] font-bold text-slate-500 uppercase">${lesson.lessonName}</span>
+                                                    <span class="text-[10px] font-bold text-slate-500 uppercase">${lesson.goal}</span>
                                                 </div>
                                             </div>
                                         </div>

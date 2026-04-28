@@ -4,17 +4,17 @@ import java.sql.Date;
 
 public class MembershipRegistration {
 	private Integer mrNum;
-    private Integer memberNum;
+    private String memberEmail;
     private Integer membershipNum;
     private Date registerDate;
     private Date startDate;
     private Date endDate;
     private String status;
-	public MembershipRegistration(Integer mrNum, Integer memberNum, Integer membershipNum, Date registerDate,
+	public MembershipRegistration(Integer mrNum, String memberEmail, Integer membershipNum, Date registerDate,
 			Date startDate, Date endDate, String status) {
 		super();
 		this.mrNum = mrNum;
-		this.memberNum = memberNum;
+		this.memberEmail = memberEmail;
 		this.membershipNum = membershipNum;
 		this.registerDate = registerDate;
 		this.startDate = startDate;
@@ -30,11 +30,11 @@ public class MembershipRegistration {
 	public void setMrNum(Integer mrNum) {
 		this.mrNum = mrNum;
 	}
-	public Integer getMemberNum() {
-		return memberNum;
+	public String getMemberEmail() {
+		return memberEmail;
 	}
-	public void setMemberNum(Integer memberNum) {
-		this.memberNum = memberNum;
+	public void setMemberEmail(String memberEmail) {
+		this.memberEmail = memberEmail;
 	}
 	public Integer getMembershipNum() {
 		return membershipNum;
@@ -68,7 +68,7 @@ public class MembershipRegistration {
 	}
 	@Override
 	public String toString() {
-		return "MembershipRegistration [mrNum=" + mrNum + ", memberNum=" + memberNum + ", membershipNum="
+		return "MembershipRegistration [mrNum=" + mrNum + ", memberEmail=" + memberEmail + ", membershipNum="
 				+ membershipNum + ", registerDate=" + registerDate + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", status=" + status + "]";
 	}

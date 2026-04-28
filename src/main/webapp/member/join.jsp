@@ -53,7 +53,7 @@ body { font-family: 'Public Sans', sans-serif; }
 <form action="join" method="post" class="space-y-5 max-w-md">
 
 <input type="hidden" name="role" id="role" value="member">
-<input type="hidden" name="verified" value="true">
+<input type="hidden" name="verified" id="verified" value="false">
 
 <!-- 이메일 (아이디) -->
 <div>
@@ -208,7 +208,7 @@ function checkEmail(){
         return;
     }
 
-    fetch("checkEmail?email=" + email)
+    fetch("<%=request.getContextPath()%>/checkEmail?email=" + email)
     .then(res => res.json())
     .then(res => {
 
@@ -241,10 +241,12 @@ function sendCode(){
 
     const email = document.getElementById("username").value;
 
-    fetch("sendEmailCode", {
+    fetch("<%=request.getContextPath()%>/sendEmailCode", {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({email})
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
     });
 
     document.getElementById("codeBox").classList.remove("hidden");
@@ -263,13 +265,16 @@ function startTimer(){
         const sec = timeLeft % 60;
 
         document.getElementById("timer").innerText =
-            `남은 시간: ${min}:${sec.toString().padStart(2,'0')}`;
+            "남은 시간: " + min + ":" + (sec < 10 ? "0" + sec : sec);
 
         timeLeft--;
 
         if(timeLeft < 0){
             clearInterval(timerInterval);
-            document.getElementById("timer").innerText = "인증 시간 만료";
+            document.getElementById("timer").innerText = "⛔인증 시간 만료";
+            
+            document.getElementById("verifyBtn").disabled = true;
+            document.getElementById("confirmBtn").disabled = true;
         }
     }, 1000);
 }
@@ -281,17 +286,17 @@ function verifyCode(){
     const email = document.getElementById("username").value;
     const code = document.getElementById("code").value;
 
-    fetch("verifyEmailCode", {
+    fetch("<%=request.getContextPath()%>/verifyCode", {
         method: "POST",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify({email, code})
     })
-    .then(res => res.json())
-    .then(res => {
+    .then(res => res.text())
+    .then(result => {
 
-        if(res.success){
+    	if(result === "success"){
             successVerify();
-        }else{
+        } else {
             document.getElementById("codeMsg").innerText = "코드가 올바르지 않습니다.";
             document.getElementById("codeMsg").className = "text-red-500 text-sm";
         }

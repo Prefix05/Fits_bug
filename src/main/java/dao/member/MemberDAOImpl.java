@@ -1,9 +1,6 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.*;
 import dto.member.MemberDTO;
 import util.DBUtil;
 
@@ -179,5 +176,26 @@ public class MemberDAOImpl implements MemberDAO {
 	    }
 
 	    return null;
+	}
+
+	@Override
+	public boolean update(MemberDTO dto) {
+
+	    String sql = "UPDATE member SET nickname=?, password=? WHERE email=?";
+
+	    try(Connection conn = DBUtil.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)){
+
+	        ps.setString(1, dto.getNickname());
+	        ps.setString(2, dto.getPassword());
+	        ps.setString(3, dto.getEmail());
+
+	        return ps.executeUpdate() > 0;
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return false;
 	}
 }
