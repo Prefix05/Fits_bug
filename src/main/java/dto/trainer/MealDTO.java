@@ -4,53 +4,132 @@ import java.time.LocalTime;
 
 public class MealDTO {
 
-    private String day;          // "MON", "TUE" (DB-friendly)
-    private String name;
-    private int kcal;
+    private int id;
+    private int userId;
+
+    private String mealType;
+    private String mealName;
+    private String mealTime;
+    private String description;
+    private String imageUrl;
+
+    private int calories;
     private int protein;
     private int carbs;
     private int fat;
 
-    private LocalTime time;      // better than String
-    private String mealType;     // BREAKFAST, LUNCH, DINNER
+    private String mealDate;
 
     public MealDTO() {}
 
-    public MealDTO(String day, String name, int kcal, int protein, int carbs, int fat,
-                   LocalTime time, String mealType) {
-        this.day = day;
-        this.name = name;
-        this.kcal = kcal;
+    public MealDTO(int id, int userId, String mealType, String mealName, String mealTime, String description, String imageUrl, int calories, int protein, int carbs, int fat, String mealDate) {
+        this.id = id;
+        this.userId = userId;
+        this.mealType = mealType;
+        this.mealName = mealName;
+        this.mealTime = mealTime;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.calories = calories;
         this.protein = protein;
         this.carbs = carbs;
         this.fat = fat;
-        this.time = time;
+        this.mealDate = mealDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
         this.mealType = mealType;
     }
 
-    // getters / setters
+    public String getMealName() {
+        return mealName;
+    }
 
-    public String getDay() { return day; }
-    public void setDay(String day) { this.day = day; }
+    public void setMealName(String mealName) {
+        this.mealName = mealName;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getMealTime() {
+        return mealTime;
+    }
 
-    public int getKcal() { return kcal; }
-    public void setKcal(int kcal) { this.kcal = kcal; }
+    public void setMealTime(String mealTime) {
+        this.mealTime = mealTime;
+    }
 
-    public int getProtein() { return protein; }
-    public void setProtein(int protein) { this.protein = protein; }
+    public String getDescription() {
+        return description;
+    }
 
-    public int getCarbs() { return carbs; }
-    public void setCarbs(int carbs) { this.carbs = carbs; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public int getFat() { return fat; }
-    public void setFat(int fat) { this.fat = fat; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public LocalTime getTime() { return time; }
-    public void setTime(LocalTime time) { this.time = time; }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-    public String getMealType() { return mealType; }
-    public void setMealType(String mealType) { this.mealType = mealType; }
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public int getProtein() {
+        return protein;
+    }
+
+    public void setProtein(int protein) {
+        this.protein = protein;
+    }
+
+    public int getCarbs() {
+        return carbs;
+    }
+
+    public void setCarbs(int carbs) {
+        this.carbs = carbs;
+    }
+
+    public int getFat() {
+        return fat;
+    }
+
+    public void setFat(int fat) {
+        this.fat = fat;
+    }
+
+    public String getMealDate() {
+        return mealDate;
+    }
+
+    public void setMealDate(String mealDate) {
+        this.mealDate = mealDate;
+    }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.trainer.meal">
+    <select id="selectMealsByDay" parameterType="map" resultType="meal">
+        SELECT
+            id,
+            user_id AS userId,
+            meal_type AS mealType,
+            meal_name AS mealName,
+            meal_time AS mealTime,
+            description,
+            image_url AS imageUrl,
+            calories,
+            protein,
+            carbs,
+            fat,
+            meal_date AS mealDate
+        FROM meals
+        WHERE user_id = #{userId}
+          AND meal_date = #{date}
+    </select>
+
+</mapper>
