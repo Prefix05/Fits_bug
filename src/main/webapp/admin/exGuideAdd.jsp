@@ -76,7 +76,7 @@
           },
         },
       }
-    </script>
+</script>
 <style>
       .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -89,6 +89,12 @@
         background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
       }
       .hangul-lh { line-height: 1.7; }
+      .preview-content{
+      	width: 100%;
+    	height: 100%;
+   		object-fit: cover; /* 영역에 꽉 차게 */
+    	border-radius: 0.75rem; /* rounded-xl */
+      }
     </style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
@@ -121,46 +127,67 @@ class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex i
 <div class="w-10 h-10 bg-primary-fixed flex items-center justify-center rounded-lg text-primary">
 <span class="material-symbols-outlined">add_circle</span>
 </div>
-<h3 class="text-xl font-bold tracking-tight">신규 가이드 등록</h3>
+<h3 class="text-xl font-bold tracking-tight">
+    ${empty guide ? "신규 가이드 등록" : "가이드 수정"}
+</h3>
 </div>
-<form class="space-y-6">
+
+<form action="<%= contextPath %>/admin/exGuideAdd" class="space-y-6" method="post" enctype="multipart/form-data">
+<input type="hidden" name="egNum" value="${guide.egNum}">
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">가이드 제목</label>
-<input class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-base px-0 py-3 transition-all placeholder:text-outline-variant" placeholder="예: 초보자를 위한 하체 스쿼트의 정석" type="text"/>
+<input name="title" value="${guide.title }" class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-base px-0 py-3 transition-all placeholder:text-outline-variant" placeholder="예: 초보자를 위한 하체 스쿼트의 정석" type="text"/>
 </div>
 <div class="grid grid-cols-2 gap-6">
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">운동 타입</label>
-<select class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 transition-all">
-<option>근력</option>
-<option>유산소</option>
+<select name="type" class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 transition-all">
+	<option ${guide.type == '근력' ? 'selected' : ''}>근력</option>
+    <option ${guide.type == '유산소' ? 'selected' : ''}>유산소</option>
 </select>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">난이도</label>
-<div class="flex gap-2 pt-2"><span class="px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">초급</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">중급</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">고급</span></div>
+<div><span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all difficulty-item">
+초급</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all difficulty-item">
+중급</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all difficulty-item">
+고급</span>
+<input type="hidden" name="difficulty" id="difficultyInput" value="">
 </div>
-</div><div class="space-y-2 pt-4"><label class="text-xs font-bold text-outline uppercase tracking-wider">운동 부위</label><div class="flex flex-wrap gap-2 pt-2"><span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">가슴</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">등</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">하체</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">팔</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">어깨</span>
-<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all">전신</span></div></div>
+</div>
+</div><div class="space-y-2 pt-4"><label class="text-xs font-bold text-outline uppercase tracking-wider">운동 부위</label><div class="flex flex-wrap gap-2 pt-2"><span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+가슴</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+등</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+하체</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+팔</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+어깨</span>
+<span class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold cursor-pointer border border-transparent hover:border-primary transition-all muscle-item">
+전신</span>
+<input type="hidden" name="targetMuscle" id="muscleInput" value="">
+</div></div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">상세 설명</label>
-<textarea class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-4 py-3 rounded-lg transition-all hangul-lh min-h-[200px]" placeholder="운동 방법, 주의사항, 호흡법 등을 상세히 기록해 주세요." rows="6"></textarea>
+<textarea name="description" class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-4 py-3 rounded-lg transition-all hangul-lh min-h-[200px]" 
+placeholder="운동 방법, 주의사항, 호흡법 등을 상세히 기록해 주세요." rows="6">${guide.description}</textarea>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">핵심자세포인트</label>
-<textarea class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-4 py-3 rounded-lg transition-all hangul-lh min-h-[200px]" placeholder="운동 시 반드시 지켜야 할 자세의 핵심 포인트를 입력해 주세요." rows="6"></textarea>
+<textarea name="keyPoint" class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-4 py-3 rounded-lg transition-all hangul-lh min-h-[200px]" 
+placeholder="운동 시 반드시 지켜야 할 자세의 핵심 포인트를 입력해 주세요." rows="6">${guide.keyPoint}</textarea>
 </div>
 <div class="pt-4">
-<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 rounded-xl font-bold text-base transition-all scale-100 active:scale-[0.98] shadow-lg shadow-primary/20" type="submit">
-                                가이드 등록하기
-                            </button>
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 rounded-xl font-bold text-base transition-all scale-100 active:scale-[0.98] shadow-lg shadow-primary/20" 
+type="submit"> ${empty guide ? "가이드 등록하기" : "수정 완료하기"}
+</button>
 </div>
+ <input type="file" name="imageFile" id="imageFile" hidden onchange="previewMedia(this, 'imgPreview')"> 
+ <input type="file" name="videoFile" id="videoFile" hidden onchange="previewMedia(this, 'videoPreview')">
 </form>
 </section>
 </div>
@@ -169,24 +196,109 @@ class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex i
 <div class="space-y-4">
 <label class="text-xs font-bold text-outline uppercase tracking-wider">미디어 업로드</label>
 <div class="flex flex-col gap-4">
-<div class="border-2 border-dashed border-outline-variant/50 rounded-xl p-10 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer group h-64">
-<span class="material-symbols-outlined text-outline group-hover:text-primary mb-3 text-4xl">image</span>
-<p class="text-sm font-medium text-on-surface-variant">이미지 업로드</p>
-<p class="text-xs text-outline mt-1">PNG, JPG (최대 10MB)</p>
+    <div class="relative group h-64">
+        <div id="imgPreview" onclick="document.getElementById('imageFile').click()" 
+             class="w-full h-full border-2 border-dashed border-outline-variant/50 rounded-xl p-10 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer overflow-hidden">
+            <span class="material-symbols-outlined text-outline group-hover:text-primary mb-3 text-4xl">image</span>
+            <p class="text-sm font-medium text-on-surface-variant">이미지 업로드</p>
+            <p class="text-xs text-outline mt-1">PNG, JPG (최대 10MB)</p>
+        </div>
+       
+    </div>
+
+    <div class="relative group h-64">
+        <div id="videoPreview" onclick="document.getElementById('videoFile').click()" 
+             class="w-full h-full border-2 border-dashed border-outline-variant/50 rounded-xl p-10 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer overflow-hidden">
+            <span class="material-symbols-outlined text-outline group-hover:text-primary mb-3 text-4xl">movie</span>
+            <p class="text-sm font-medium text-on-surface-variant">영상 업로드</p>
+            <p class="text-xs text-outline mt-1">MP4, MOV (최대 100MB)</p>
+        </div>
+       
+    </div>
 </div>
-<div class="border-2 border-dashed border-outline-variant/50 rounded-xl p-10 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer group h-64">
-<span class="material-symbols-outlined text-outline group-hover:text-primary mb-3 text-4xl">movie</span>
-<p class="text-sm font-medium text-on-surface-variant">영상 업로드</p>
-<p class="text-xs text-outline mt-1">MP4, MOV (최대 100MB)</p>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div>
+
 </main>
 <!-- Floating Action Button -->
 <button class="fixed bottom-8 right-8 w-14 h-14 bg-on-surface text-surface rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-50">
 <span class="material-symbols-outlined">help_outline</span>
 </button>
+<script>
+// 1. 하이라이트 기능
+function setupSelection(selector, inputId) {
+    document.querySelectorAll(selector).forEach(item => {
+        item.addEventListener('click', function() {
+            // 초기화
+            document.querySelectorAll(selector).forEach(i => {
+                i.classList.remove('bg-primary', 'text-white');
+                i.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+            });
+            // 하이라이트
+            this.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            this.classList.add('bg-primary', 'text-white');
+            // 값 세팅
+            document.getElementById(inputId).value = this.innerText;
+        });
+    });
+}
+
+// 2. 미디어 미리보기 기능
+function previewMedia(input, previewId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        const container = document.getElementById(previewId);
+        
+        reader.onload = function(e) {
+            // 기존 내용을 비우고 새로 넣음
+            container.innerHTML = ''; 
+            
+            if(input.id === 'imageFile') {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-content'; // 위에서 정의한 CSS 클래스
+                container.appendChild(img);
+            } else {
+                const video = document.createElement('video');
+                video.src = e.target.result;
+                video.className = 'preview-content';
+                video.controls = true;
+                container.appendChild(video);
+            }
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+// 초기 실행
+setupSelection('.difficulty-item', 'difficultyInput');
+setupSelection('.muscle-item', 'muscleInput');
+//페이지 로드 시 기존 값 세팅 (수정 모드일 때)
+window.onload = function() {
+    const existingDifficulty = "${guide.difficulty}";
+    const existingMuscle = "${guide.targetMuscle}";
+
+    if(existingDifficulty) {
+        document.querySelectorAll('.difficulty-item').forEach(item => {
+            if(item.innerText.trim() === existingDifficulty) item.click();
+        });
+    }
+    if(existingMuscle) {
+        document.querySelectorAll('.muscle-item').forEach(item => {
+            if(item.innerText.trim() === existingMuscle) item.click();
+        });
+    }
+    
+    // 수정 시 이미지/비디오가 있다면 미리보기에 표시
+    if("${guide.image}") {
+        const imgCont = document.getElementById('imgPreview');
+        imgCont.innerHTML = `<img src="<%=contextPath%>/resources/upload/${guide.image}" class="preview-content">`;
+    }
+    if("${guide.video}") {
+        const videoCont = document.getElementById('videoPreview');
+        videoCont.innerHTML = `<video src="<%=contextPath%>/resources/upload/${guide.video}" class="preview-content" controls></video>`;
+    }
+};
+</script>
 </body></html>

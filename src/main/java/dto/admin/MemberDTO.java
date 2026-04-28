@@ -1,6 +1,6 @@
 package dto.admin;
 
-public class Member {
+public class MemberDTO {
 	//공통
 	private String regDate;
 	
@@ -22,12 +22,12 @@ public class Member {
 	private String ptTrainer;
 	private long payment;
 	
-	public Member() {
+	public MemberDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Member(String regDate, String gymName, String gymTel, int gymClientCount, long gymCal, String trainerName,
+	public MemberDTO(String regDate, String gymName, String gymTel, int gymClientCount, long gymCal, String trainerName,
 			String trainerTel, int trainerClientCount, long trainerCal, String clientName, String clientTel,
 			String ptTrainer, long payment) {
 		super();

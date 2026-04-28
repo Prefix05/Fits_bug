@@ -1,0 +1,13 @@
+package dao.admin;
+
+import java.util.List;
+
+import dto.admin.ExerciseDTO;
+
+public interface ExerciseDAO {
+	void insertGuide(ExerciseDTO dto) throws Exception;
+	List<ExerciseDTO> selectAllGuide(String targetMuscle) throws Exception;
+	ExerciseDTO selectGuideById(int egNum) throws Exception;
+	int updateExerciseGuide(ExerciseDTO dto) throws Exception;
+	int deleteGuide(int egNum) throws Exception;
+}

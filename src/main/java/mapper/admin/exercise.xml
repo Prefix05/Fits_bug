@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mapper.admin.mapper">
+<mapper namespace="mapper.admin.exercise">
 	<select id="selectExDetail" parameterType="int" resultType="map">
 		select
 			e.exercise_num, e.name, e.difficulty, e.target_muscle, e.type,
@@ -12,4 +12,62 @@
 		left join exercise_guide g on(e.exercise_num = g.exercise_num)
 		where e.exercise_num = #{exNum}
 	</select>
+	
+	<insert id="insertGuide" parameterType="exercise">
+    	INSERT INTO EXERCISE_GUIDE (
+        	title, difficulty, targetMuscle, type, 
+        	description, keyPoint, image, video
+    	) VALUES (
+        	#{title}, #{difficulty}, #{targetMuscle}, #{type}, 
+        	#{description}, #{keyPoint}, #{image}, #{video}
+    	)
+	</insert>
+	
+	<select id="selectAllGuide" resultType="exercise">
+    SELECT 
+        eg_num as egNum, 
+        title, 
+        difficulty, 
+        targetMuscle,
+        type, 
+        description, 
+        keyPoint,
+        image, 
+        video,
+        reg_date as regDate
+    FROM EXERCISE_GUIDE
+    <where>
+        <if test="value != null and value != ''">
+            AND targetMuscle = #{value}
+        </if>
+    </where>
+    ORDER BY reg_date DESC
+    </select>
+    
+    <select id="selectGuideById" parameterType="int" resultType="exercise">
+    	SELECT 
+        	eg_num as egNum, title, difficulty, targetMuscle,
+        	type, description, keyPoint, image, video, reg_date as regDate
+    	FROM EXERCISE_GUIDE
+    	WHERE eg_num = #{egNum}
+	</select>
+
+	<update id="updateExerciseGuide" parameterType="exercise">
+    	UPDATE EXERCISE_GUIDE
+    	SET 
+        	title = #{title},
+        	difficulty = #{difficulty},
+        	targetMuscle = #{targetMuscle},
+        	type = #{type},
+        	description = #{description},
+        	keyPoint = #{keyPoint}
+        	<if test="image != null">, image = #{image}</if>
+        	<if test="video != null">, video = #{video}</if>
+    	WHERE eg_num = #{egNum}
+	</update>
+
+	<delete id="deleteGuide" parameterType="int">
+    	DELETE FROM EXERCISE_GUIDE WHERE eg_num = #{egNum}
+	</delete>
+
 </mapper>

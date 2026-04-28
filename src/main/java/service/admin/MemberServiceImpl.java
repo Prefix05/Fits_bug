@@ -6,7 +6,7 @@ import java.util.Map;
 
 import dao.admin.MemberDAO;
 import dao.admin.MemberDAOImpl;
-import dto.admin.Member;
+import dto.admin.MemberDTO;
 import util.PageInfo;
 
 public class MemberServiceImpl implements MemberService {
@@ -17,22 +17,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<Member> getGymlist() throws Exception {
+	public List<MemberDTO> getGymlist() throws Exception {
 		return memberDAO.selectAllGym();
 	}
 
 	@Override
-	public List<Member> getTrainerlist() throws Exception {
+	public List<MemberDTO> getTrainerlist() throws Exception {
 		return memberDAO.selectAllTrainer();
 	}
 
 	@Override
-	public List<Member> getClientlist() throws Exception {
+	public List<MemberDTO> getClientlist() throws Exception {
 		return memberDAO.selectAllClient();
 	}
 
 	@Override
-	public List<Member> gymList(Map<String, Object> paramMap) throws Exception {
+	public List<MemberDTO> gymList(Map<String, Object> paramMap) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
 		
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<Member> trainerList(PageInfo pageInfo, String trainerName) throws Exception {
+	public List<MemberDTO> trainerList(PageInfo pageInfo, String trainerName) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
 		Integer trainerCnt = memberDAO.selectTrainerCnt(); // db에 등록된 전체 헬스장 수
@@ -90,7 +90,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<Member> clientList(PageInfo pageInfo, String clientName) throws Exception {
+	public List<MemberDTO> clientList(PageInfo pageInfo, String clientName) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
 		Integer clientCnt = memberDAO.selectClientCnt(); // db에 등록된 전체 헬스장 수
