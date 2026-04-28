@@ -10,7 +10,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-@WebServlet("/dashboard")
+@WebServlet("/trainer/dashboard")
 public class Dashboard extends HttpServlet {
 
     private final DashboardService dashboardService = new DashboardServiceImpl();

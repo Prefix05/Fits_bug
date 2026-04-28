@@ -298,95 +298,66 @@
         </div>
     </header>
     <main class="pt-4 pb-28 lg:pt-4 lg:pb-8 px-4 max-w-lg mx-auto space-y-6 md:max-w-4xl md:px-8">
+
         <!-- Summary Card: Bento Style -->
         <section class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_24px_rgba(0,88,188,0.04)]">
             <div class="flex items-end justify-between mb-2">
-                <p class="text-on-surface-variant font-label text-[10px] uppercase tracking-widest font-bold">Weekly
-                    Performance</p>
+                <p class="text-on-surface-variant font-label text-[10px] uppercase tracking-widest font-bold">Weekly Performance</p>
             </div>
             <div class="grid gap-4 pt-2 grid-cols-2 md:grid-cols-4">
                 <div class="space-y-1">
                     <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Calories</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">2,100</span>
+                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgCal}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">kcal</span>
                     </div>
                 </div>
                 <div class="space-y-1">
                     <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Protein</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">135</span>
+                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgProt}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
                 <div class="space-y-1">
                     <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Carbs</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">220</span>
+                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgCarbs}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
                 <div class="space-y-1">
                     <span class="text-on-surface-variant font-label text-[10px] font-medium">Avg Fats</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-bold text-on-surface tracking-tighter">70</span>
+                        <span class="text-2xl font-bold text-on-surface tracking-tighter">${avgFat}</span>
                         <span class="text-[10px] text-on-surface-variant font-medium">g</span>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- Trends Card -->
-        <section
-                class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_24px_rgba(0,88,188,0.04)] overflow-hidden">
+
+        <!-- Trends Card (Bar Graph) -->
+        <section class="bg-surface-container-lowest rounded-xl p-6 ...">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-on-surface font-semibold text-base">칼로리 섭취량</h3>
-                <div class="bg-surface-container-low p-1 rounded-lg flex gap-1">
-                    <button
-                            class="px-3 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-primary">일
-                    </button>
-                    <button
-                            class="px-3 py-1 text-[10px] font-bold rounded-md text-on-surface-variant">주
-                    </button>
+                <!-- week nav -->
+                <div class="flex items-center gap-2">
+                    <a href="?weekOffset=${weekOffset - 1}"
+                       class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                    </a>
+                    <span class="text-[11px] font-medium text-on-surface-variant" id="weekLabel"></span>
+                    <a href="?weekOffset=${weekOffset + 1}"
+                       class="p-1 rounded-lg hover:bg-slate-100 text-on-surface-variant
+                      ${weekOffset >= 0 ? 'pointer-events-none opacity-30' : ''}">
+                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                    </a>
                 </div>
             </div>
-                <%-- chart --%>
-                <div>
-                    <canvas id="myChart"></canvas>
-                </div>
-
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
         </section>
-        <!-- Meal Log Section -->
-<%--        <section class="space-y-8">--%>
-<%--            <div class="flex items-center justify-between px-2">--%>
-<%--                <h3 class="text-on-surface font-semibold text-base">Today's Meals</h3>--%>
-<%--                <span class="text-on-surface-variant text-[12px] font-medium">May 24, Friday</span>--%>
-<%--            </div>--%>
-<%--            <p>Meals size: ${meals.size()}</p>--%>
-<%--            <c:forEach var="meal" items="${meals}">--%>
-<%--                <div class="bg-surface-container-lowest rounded-xl overflow-hidden flex">--%>
-
-<%--                    <div class="w-28 h-32">--%>
-<%--                        <img src="${meal.imageUrl}" class="w-full h-full object-cover"/>--%>
-<%--                    </div>--%>
-
-<%--                    <div class="p-4 flex-grow">--%>
-<%--                        <div class="flex justify-between">--%>
-<%--                            <h4>${meal.mealName}</h4>--%>
-<%--                            <span>${meal.mealTime}</span>--%>
-<%--                        </div>--%>
-
-<%--                        <p>${meal.description}</p>--%>
-
-<%--                        <div>--%>
-<%--                            <span>${meal.calories} kcal</span>--%>
-<%--                            <span>${meal.protein} Protein</span>--%>
-<%--                            <span>${meal.carbs} Carbs</span>--%>
-<%--                            <span>${meal.fat} Fat</span>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </c:forEach>--%>
-<%--        </section>--%>
 
         <!-- Meal Log Section -->
         <section class="space-y-6">
@@ -492,26 +463,60 @@
     </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('myChart');
+    // Compute Mon–Sun labels from weekOffset passed by servlet
+    const weekOffset = ${weekOffset};
 
-    new Chart(ctx, {
+    function getMondayOfWeek(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = (day === 0 ? -6 : 1 - day);
+        d.setDate(d.getDate() + diff);
+        return d;
+    }
+
+    const today = new Date();
+    today.setDate(today.getDate() + weekOffset * 7);
+    const monday = getMondayOfWeek(today);
+    const sunday = new Date(monday);
+    sunday.setDate(sunday.getDate() + 6);
+
+    // Display "Apr 28 – May 4" label
+    const fmt = d => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    document.getElementById('weekLabel').textContent = fmt(monday) + ' – ' + fmt(sunday);
+
+    // Build x-axis labels: "월 4/28", "화 4/29" ...
+    const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+    const labels = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(monday);
+        d.setDate(d.getDate() + i);
+        return dayNames[i] + ' ' + (d.getMonth()+1) + '/' + d.getDate();
+    });
+
+    // Pull real data from JSTL into JS
+    // Each entry: { date: "2026-04-28", calories: 2100 }
+    const mealData = {};
+    <c:forEach var="meal" items="${meals}">
+    if (!mealData['${meal.mealDate}']) mealData['${meal.mealDate}'] = 0;
+    mealData['${meal.mealDate}'] += ${meal.calories};
+    </c:forEach>
+
+    // Map each day label to its calorie total (0 if no data)
+    const calData = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(monday);
+        d.setDate(d.getDate() + i);
+        const key = d.toISOString().slice(0, 10); // "2026-04-28"
+        return mealData[key] || 0;
+    });
+
+    new Chart(document.getElementById('myChart'), {
         type: 'bar',
         data: {
-            labels: ['월', '화', '수', '목', '금', '토', '일'],
-            datasets: [{
-                label: 'kcal',
-                data: [2200, 1900, 2000, 1950, 1800, 2040, 2000],
-                borderWidth: 1
-            }]
+            labels: labels,
+            datasets: [{ label: 'kcal', data: calData, borderWidth: 1 }]
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
+        options: { scales: { y: { beginAtZero: true } } }
     });
 </script>
 </body>

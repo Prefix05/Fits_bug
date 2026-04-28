@@ -4,11 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.trainer.meal">
+
+    <!-- Fetch Single Day -->
     <select id="selectMealsByDay" parameterType="map" resultType="meal">
         SELECT
-            id,
+            meal_id as id,
             user_id AS userId,
-            meal_type AS mealType,
             meal_name AS mealName,
             meal_time AS mealTime,
             description,
@@ -21,6 +22,26 @@
         FROM meals
         WHERE user_id = #{userId}
           AND meal_date = #{date}
+    </select>
+
+    <!-- Fetch Range (Monday - Sunday) -->
+    <select id="selectMealsByWeek" parameterType="map" resultType="meal">
+        SELECT
+            meal_id as id,
+            user_id AS userId,
+            meal_name AS mealName,
+            meal_time AS mealTime,
+            description,
+            image_url AS imageUrl,
+            calories,
+            protein,
+            carbs,
+            fat,
+            meal_date AS mealDate
+        FROM meals
+        WHERE user_id = #{userId}
+          AND meal_date BETWEEN #{monday} AND #{sunday}
+        ORDER BY meal_date
     </select>
 
 </mapper>
