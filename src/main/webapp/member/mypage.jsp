@@ -116,7 +116,7 @@ body { font-family: 'Inter', sans-serif; }
 
 <div class="flex justify-between mb-4">
     <h2 class="font-bold">개인정보 관리</h2>
-    <button class="text-blue-500 text-sm">수정하기</button>
+    <button onclick="openProfileModal()" class="text-blue-500 text-sm">수정하기</button>
 </div>
 
 <div class="flex gap-6">
@@ -157,6 +157,51 @@ class="w-28 h-28 rounded-full object-cover border">
 </div>
 </div>
 
+<!-- 🔥 개인정보 수정 모달 -->
+<div id="profileModal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center">
+    <div class="bg-white p-6 rounded-xl w-96 shadow-lg relative">
+
+        <button onclick="closeProfileModal()" class="absolute top-2 right-2">✖</button>
+
+        <h2 class="font-bold text-lg mb-4">개인정보 수정</h2>
+
+        <input id="editNickname" 
+               class="border w-full p-2 mb-2" 
+               placeholder="닉네임"
+               value="<%= user.getNickname() %>">
+
+        <input id="editPassword" 
+               type="password"
+               class="border w-full p-2 mb-2" 
+               placeholder="비밀번호">
+
+        <button onclick="updateProfile()" 
+                class="bg-blue-500 text-white w-full py-2 rounded">
+            저장
+        </button>
+    </div>
+</div>
+
+<!-- 🔥 운동 계획 수정 모달 -->
+<div id="planModal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center">
+    <div class="bg-white p-6 rounded-xl w-96 shadow-lg relative">
+
+        <button onclick="closePlanModal()" class="absolute top-2 right-2">✖</button>
+
+        <h2 class="font-bold text-lg mb-4">운동 계획 수정</h2>
+
+        <input id="goal" class="border w-full p-2 mb-2" placeholder="목표" value="<%= plan.getGoal() %>">
+        <input id="level" class="border w-full p-2 mb-2" placeholder="레벨" value="<%= plan.getLevel() %>">
+        <input id="height" class="border w-full p-2 mb-2" placeholder="키" value="<%= plan.getHeight() %>">
+        <input id="weight" class="border w-full p-2 mb-2" placeholder="몸무게" value="<%= plan.getWeight() %>">
+        <input id="diet" class="border w-full p-2 mb-2" placeholder="식단" value="<%= plan.getDiet() %>">
+
+        <button onclick="updatePlan()" class="bg-blue-500 text-white w-full py-2 rounded">
+            저장
+        </button>
+    </div>
+</div>
+
 <!-- ========================= -->
 <!-- 🔥 운동 계획 -->
 <!-- ========================= -->
@@ -164,7 +209,7 @@ class="w-28 h-28 rounded-full object-cover border">
 
 <div class="flex justify-between mb-4">
     <h2 class="font-bold">맞춤형 운동 계획 정보</h2>
-    <button class="text-blue-500 text-sm">수정하기</button>
+    <button onclick="openPlanModal()" class="text-blue-500 text-sm">수정하기</button>
 </div>
 
 <div class="grid grid-cols-2 gap-4">
@@ -397,6 +442,12 @@ window.onload = function() {
 	
 	loadData("workout");
 	loadCommunityData();
+	
+	const tab = "<%= request.getAttribute("tab") %>";
+
+    if (tab && tab !== "null") {
+        openTab(tab);
+    }
 }
 
 /* =========================
@@ -432,6 +483,47 @@ function showTab(tabId, e){
     if(tabId === "feedbackTab"){
     	loadRecentFeedback();
     }
+}
+
+function openTab(tabName){
+
+    // 모든 탭 숨김
+    document.querySelectorAll(".tab").forEach(t=>{
+        t.classList.remove("active");
+    });
+
+    // 버튼 초기화
+    document.querySelectorAll(".tab-btn").forEach(btn=>{
+        btn.classList.remove("bg-gray-100");
+    });
+
+    // 🔥 tabName → 실제 id 매핑
+    let targetId = "";
+
+    if(tabName === "profile") targetId = "profileTab";
+    if(tabName === "record") targetId = "recordTab";
+    if(tabName === "payment") targetId = "paymentTab";
+    if(tabName === "feedback") targetId = "feedbackTab";
+    if(tabName === "community") targetId = "communityTab";
+
+    // 탭 열기
+    const target = document.getElementById(targetId);
+    if(target){
+        target.classList.add("active");
+    }
+
+    // 버튼도 같이 활성화
+    document.querySelectorAll(".tab-btn").forEach(btn=>{
+        if(btn.getAttribute("onclick")?.includes(targetId)){
+            btn.classList.add("bg-gray-100");
+        }
+    });
+
+    // 🔥 필요한 데이터 로드
+    if(targetId === "recordTab") loadData(currentView);
+    if(targetId === "paymentTab") loadPaymentData();
+    if(targetId === "communityTab") loadCommunityData();
+    if(targetId === "feedbackTab") loadRecentFeedback();
 }
 
 /* =========================
@@ -1166,6 +1258,69 @@ function openModal(date){
 
 function closeModal(){
  document.getElementById("foodModal").classList.add("hidden");
+}
+
+function openProfileModal(){
+    document.getElementById("profileModal").classList.remove("hidden");
+    document.getElementById("profileModal").classList.add("flex");
+}
+
+function closeProfileModal(){
+    document.getElementById("profileModal").classList.add("hidden");
+}
+
+function updateProfile(){
+
+    const nickname = document.getElementById("editNickname").value;
+    const password = document.getElementById("editPassword").value;
+
+    fetch("updateProfile", {
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:`nickname=${nickname}&password=${password}`
+    })
+    .then(res=>res.text())
+    .then(result=>{
+        if(result === "ok"){
+            alert("수정 완료");
+            location.reload();
+        }else{
+            alert("수정 실패");
+        }
+    });
+}
+
+function openPlanModal(){
+    document.getElementById("planModal").classList.remove("hidden");
+    document.getElementById("planModal").classList.add("flex");
+}
+
+function closePlanModal(){
+    document.getElementById("planModal").classList.add("hidden");
+}
+
+function updatePlan(){
+
+    const goal = document.getElementById("goal").value;
+    const level = document.getElementById("level").value;
+    const height = document.getElementById("height").value;
+    const weight = document.getElementById("weight").value;
+    const diet = document.getElementById("diet").value;
+
+    fetch("updatePlan", {
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:`goal=${goal}&level=${level}&height=${height}&weight=${weight}&diet=${diet}`
+    })
+    .then(res=>res.text())
+    .then(result=>{
+        if(result === "ok"){
+            alert("수정 완료");
+            location.reload();
+        }else{
+            alert("수정 실패");
+        }
+    });
 }
 
 </script>

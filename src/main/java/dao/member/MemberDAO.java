@@ -24,4 +24,6 @@ public interface MemberDAO {
     // 이메일로 닉네임 조회
     String getNicknameByEmail(String email);
     
+    boolean update(MemberDTO dto);
+    
 }

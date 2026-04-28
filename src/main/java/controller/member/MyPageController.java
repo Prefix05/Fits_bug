@@ -1,13 +1,9 @@
 package controller.member;
 
 import java.io.IOException;
-
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
 import dto.member.MemberDTO;
 import dto.member.MyPageDTO;
@@ -17,7 +13,6 @@ import service.member.MyPageServiceImpl;
 
 @WebServlet("/mypage")
 public class MyPageController extends HttpServlet {
-
     private MyPageService service = new MyPageServiceImpl();
 
     /**
@@ -32,9 +27,12 @@ public class MyPageController extends HttpServlet {
 
         // 로그인 체크
         if (loginUser == null) {
-            response.sendRedirect("login.jsp");
+        	response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        String tab = request.getParameter("tab");
+        request.setAttribute("tab", tab);
         
         // 통합 조회
         MyPageDTO dto = service.getMyPage(loginUser.getEmail());

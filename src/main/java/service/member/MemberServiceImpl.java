@@ -22,4 +22,14 @@ public class MemberServiceImpl implements MemberService {
 	public String getNickname(String email) {
 		return dao.getNicknameByEmail(email);
 	}
+
+	@Override
+    public boolean isEmailExists(String email) {
+
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        return dao.isEmailExists(email);
+    }
 }
