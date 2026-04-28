@@ -183,7 +183,7 @@
     </a>
 </nav>
 
-<!-- Refactored SideNavBar -->
+<!-- SideNavBar -->
 <aside
         class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
     <a href="" class="flex items-center gap-3 mb-10">
