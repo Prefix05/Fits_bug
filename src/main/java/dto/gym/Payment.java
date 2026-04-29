@@ -14,11 +14,17 @@ public class Payment {
     private String method;
     private String status;
     private Timestamp createdAt;
+    private String memberName;
+    private String membershipName;
+    private String reason;
+    private Timestamp canceledAt;
 	public Payment() {
 		super();
 	}
+	
 	public Payment(Integer paymentNum, String userEmail, Integer membershipNum, Integer mrNum, Timestamp paymentDate,
-			BigDecimal paymentPrice, BigDecimal paymentFee, String method, String status, Timestamp createdAt) {
+			BigDecimal paymentPrice, BigDecimal paymentFee, String method, String status, Timestamp createdAt,
+			String memberName, String membershipName, String reason, Timestamp canceledAt) {
 		super();
 		this.paymentNum = paymentNum;
 		this.userEmail = userEmail;
@@ -30,7 +36,12 @@ public class Payment {
 		this.method = method;
 		this.status = status;
 		this.createdAt = createdAt;
+		this.memberName = memberName;
+		this.membershipName = membershipName;
+		this.reason = reason;
+		this.canceledAt = canceledAt;
 	}
+
 	public Integer getPaymentNum() {
 		return paymentNum;
 	}
@@ -91,10 +102,39 @@ public class Payment {
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
-	@Override
-	public String toString() {
-		return "Payment [paymentNum=" + paymentNum + ", userEmail=" + userEmail + ", membershipNum=" + membershipNum
-				+ ", mrNum=" + mrNum + ", method=" + method + ", status=" + status + "]";
+	
+	public String getMemberName() {
+		return memberName;
 	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMembershipName() {
+		return membershipName;
+	}
+
+	public void setMembershipName(String membershipName) {
+		this.membershipName = membershipName;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public Timestamp getCanceledAt() {
+		return canceledAt;
+	}
+
+	public void setCanceledAt(Timestamp canceledAt) {
+		this.canceledAt = canceledAt;
+	}
+
+	
 	
 }

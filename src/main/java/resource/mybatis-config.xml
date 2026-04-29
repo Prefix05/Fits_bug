@@ -41,6 +41,7 @@
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
+		<mapper resource="mapper/payment.xml"/>
 
 	</mappers>
 </configuration>
