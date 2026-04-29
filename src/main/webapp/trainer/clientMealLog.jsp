@@ -108,7 +108,7 @@
 </head>
 
 <body class="bg-surface text-on-surface">
-
+<input type="hidden" id="clientId" value="${clientId}">
 <!-- Mobile Top Bar -->
 <header
         class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">

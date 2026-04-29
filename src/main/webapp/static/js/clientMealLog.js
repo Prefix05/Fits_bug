@@ -47,8 +47,11 @@ function changeWeek(direction) {
 }
 
 function loadData(offset, selectedDate) {
+    // 1. Get the clientId from the hidden input field
+    const clientId = document.getElementById('clientId').value;
+
     currentSelectedDate = selectedDate || '';
-    let url = contextPath + '/trainer/meals?weekOffset=' + offset;
+    let url = contextPath + '/trainer/meals?clientId=' + clientId + '&weekOffset=' + offset;
     if (selectedDate) url += '&selectedDate=' + selectedDate;
 
     fetch(url, {headers: {'Accept': 'application/json'}})

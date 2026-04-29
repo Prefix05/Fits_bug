@@ -58,6 +58,13 @@ public class ClientDAOImpl implements ClientDAO {
         }
     }
 
+    @Override
+    public ClientDTO getClientDetail(int clientId) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            return session.selectOne("dao.ClientMapper.getClientDetail", clientId);
+        }
+    }
+
     // ID로 단건 조회
     public ClientDTO selectClientById(int clientId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
