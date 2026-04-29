@@ -28,18 +28,14 @@ public class DashboardServiceImpl implements DashboardService {
 
     /**
      * 대시보드에 필요한 모든 데이터를 조합해서 반환한다.
-     *
-     * @param userId   현재 로그인한 트레이너의 ID
-     * @param lessonId URL 파라미터로 넘어온 선택된 수업 ID (없으면 null)
-     * @return DashboardData - 오늘 수업 목록, 선택된 수업, 알림 목록을 담은 객체
      */
     @Override
-    public DashboardData getDashboardData(String userId, Integer lessonId) {
+    public DashboardData getDashboardData(Integer lessonId, int trainerId) {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
 
         // ── 1. 오늘 날짜의 수업 목록을 DB에서 가져온다 ──────────────────
-        List<LessonDTO> lessons = lessonDAO.findLessonsByDate(today);
+        List<LessonDTO> lessons = lessonDAO.findLessonsByDate(today, trainerId);
 
         // ── 2. 수업 목록을 시작 시간 기준으로 오름차순 정렬 ──────────────
         lessons.sort(Comparator.comparing(this::safeStartTime));
@@ -110,8 +106,12 @@ public class DashboardServiceImpl implements DashboardService {
             String selectedMemberName =
                     selectedLesson != null ? selectedLesson.getMemberName() : null;
 
+            String clientUserId = selectedLesson != null
+                    ? String.valueOf(selectedLesson.getClientId())  // LessonDTO에 clientId 있어야 함
+                    : null;
+
             notifications = notificationDAO.findRecentByUserAndMember(
-                    userId,
+                    clientUserId,
                     selectedMemberName,
                     20,
                     today

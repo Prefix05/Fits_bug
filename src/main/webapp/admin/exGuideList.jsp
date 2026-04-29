@@ -153,10 +153,10 @@ function searchGuide(keyword) {
                             <div class="relative aspect-video">
                                 <c:choose>
                                     <c:when test="${not empty guide.image}">
-                                        <img src="C:/Fitbull/upload/${guide.image}" class="w-full h-full object-cover" alt="${guide.title}"/>
+                                        <img src="<%= contextPath %>/resources/upload/${guide.image}" class="w-full h-full object-cover" alt="${guide.title}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="C:/Fitbull/upload//default_exercise.png" class="w-full h-full object-cover" alt="기본이미지"/>
+                                        <img src="<%= contextPath %>/resources/upload/default_exercise.png" class="w-full h-full object-cover" alt="기본이미지"/>
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="absolute top-2 left-2 bg-primary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">${guide.targetMuscle}</div>

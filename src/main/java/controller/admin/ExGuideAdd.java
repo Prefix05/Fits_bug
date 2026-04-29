@@ -65,7 +65,7 @@ public class ExGuideAdd extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         // 2. 서버 내 물리적 저장 경로 설정 (프로젝트 내 webapp/resources/upload 폴더 기준)
-        String uploadPath = "C:/Fitbull/upload/";
+        String uploadPath = request.getServletContext().getRealPath("/resources/upload");
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
 

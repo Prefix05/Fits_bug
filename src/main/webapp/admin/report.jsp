@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 
 <html lang="ko"><head>
@@ -83,7 +85,16 @@
             vertical-align: middle;
         }
         body { font-family: 'Inter', sans-serif; }
-    </style>
+        
+        .selected-card {
+        background-color: #f0f4ff !important;
+        border-color: #0058be !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    	}
+    	/* 스크롤바 디자인 */
+    	.overflow-y-auto::-webkit-scrollbar { width: 4px; }
+    	.overflow-y-auto::-webkit-scrollbar-thumb { background-color: #e5e7eb; border-radius: 10px; }
+</style>
 </head>
 <body class="bg-surface text-on-surface">
 <!-- SideNavBar Shell -->
@@ -102,136 +113,150 @@
 </button>
 <!-- Tab Navigation -->
 <div class="flex space-x-8 border-b border-outline-variant/10">
-<button class="pb-4 text-sm font-bold text-primary border-b-2 border-primary">신고내역</button>
-<button class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">문의내역</button>
+<button onclick="location.href='${pageContext.request.contextPath}/admin/reportList'" class="pb-4 text-sm font-bold text-primary border-b-2 border-primary">
+신고내역</button>
+<button onclick="location.href='${pageContext.request.contextPath}/admin/inquiryList'" class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">
+문의내역</button>
 </div>
 </section>
 <!-- Main Workspace: Asymmetric Layout -->
-<div class="grid grid-cols-12 gap-8">
-<!-- Left: List Panel -->
-<div class="col-span-5 bg-surface-container-low rounded-xl flex flex-col h-[700px] overflow-hidden">
-<div class="p-6 bg-surface-container-low">
-<div class="flex justify-between items-center mb-4">
-<h3 class="text-lg font-semibold">신고 목록</h3>
-<div class="flex bg-surface-container-high rounded-lg p-1">
-<button class="px-4 py-1.5 text-xs font-semibold bg-surface-container-lowest rounded-md shadow-sm">미처리</button>
-<button class="px-4 py-1.5 text-xs font-semibold text-on-surface-variant">처리완료</button>
+<div class="grid grid-cols-12 gap-8 items-start">
+    
+    <div class="col-span-5 bg-white rounded-xl shadow-sm flex flex-col h-[750px] overflow-hidden border border-gray-100">
+        <div class="p-6 border-b border-gray-50">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">신고 목록</h3>
+                <div class="flex bg-gray-100 rounded-lg p-1">
+                    <button onclick="filterStatus('WAIT')" class="px-4 py-1.5 text-xs font-semibold ${currentStatus == 'WAIT' ? 'bg-white shadow-sm rounded-md' : ''}">미처리</button>
+                    <button onclick="filterStatus('DONE')" class="px-4 py-1.5 text-xs font-semibold ${currentStatus == 'DONE' ? 'bg-white shadow-sm rounded-md' : ''}">처리완료</button>
+                </div>
+            </div>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input id="searchInput" onkeyup="searchList(event)" class="w-full bg-gray-50 border-none rounded-lg py-2 pl-10 text-sm focus:ring-1 focus:ring-primary/20" 
+                placeholder="목록 내 검색" type="text" value="${param.keyword}"/>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 bg-surface-container-low">
+    		<c:forEach var="r" items="${reportList}">
+        	<div onclick="loadDetail(${r.reportId}, this)" class="report-item p-4 bg-white rounded-lg cursor-pointer hover:shadow-md transition-all border border-transparent">
+            	<div class="flex justify-between mb-1">
+                	<span class="text-xs font-bold text-error">${r.category}</span>
+                	<span class="text-xs text-gray-400"><fmt:formatDate value="${r.regDate}" pattern="MM.dd HH:mm"/></span>
+            	</div>
+            	<h4 class="text-sm font-semibold mb-1 truncate">${r.title}</h4>
+            	<p class="text-[11px] text-primary font-medium mt-2">
+                	<span class="material-symbols-outlined text-[12px]">person</span>
+                	신고자: ${r.reporterName} (${r.reporterId})
+            	</p>
+        	</div>
+    		</c:forEach>
+		</div>
+    </div>
+
+    <div class="col-span-7 h-[750px] sticky top-24">
+        
+        <div id="emptyDetail" class="w-full h-full bg-white rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 space-y-4 shadow-sm">
+            <span class="material-symbols-outlined text-6xl">Article</span>
+            <p class="text-lg font-medium">신고 내역을 선택하면 상세 정보를 볼 수 있습니다.</p>
+        </div>
+
+        <div id="detailPanel" class="hidden w-full h-full bg-white rounded-xl p-8 shadow-md flex flex-col overflow-hidden border border-gray-100">
+            <div class="flex justify-between items-start mb-8 border-b border-gray-50 pb-6">
+                <div>
+                    <div class="flex items-center space-x-3 mb-2">
+                        <span id="detStatusBadge" class="px-2 py-1 rounded text-[10px] font-bold"></span>
+                        <span id="detNo" class="text-xs text-gray-400 font-mono"></span>
+                    </div>
+                    <h3 id="detTitle" class="text-2xl font-bold text-gray-900 leading-tight"></h3>
+                    <p id="detCategory" class="text-sm text-error font-semibold mt-1"></p>
+                </div>
+                <div id="actionButtons" class="flex space-x-2">
+                    <button onclick="openProcessModal('REJECT')" class="px-5 py-2.5 text-sm font-bold border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">반려</button>
+                    <button onclick="openProcessModal('HIDE')" class="px-5 py-2.5 text-sm font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 shadow-sm transition-all">숨김처리</button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-8 pr-2">
+                <div class="grid grid-cols-2 gap-y-6 gap-x-12">
+                    <div>
+            			<p class="text-xs text-gray-400 mb-1">신고자 이름 (ID)</p>
+            			<p id="detReporter" class="font-bold text-gray-700"></p>
+        			</div>
+        			<div>
+            			<p class="text-xs text-gray-400 mb-1">신고 일시</p>
+            			<p id="detDate" class="font-bold text-gray-700"></p>
+        			</div>
+        			<div>
+            			<p class="text-xs text-gray-400 mb-1">피신고자 이름 (ID)</p>
+            			<p id="detPostNum" class="font-bold text-gray-800"></p>
+        			</div>
+        			<div id="procDateArea">
+            			<p class="text-xs text-gray-400 mb-1">처리 일시</p>
+            			<p id="detProcDate" class="font-bold text-gray-700"></p>
+        			</div>
+                </div>
+                
+                <div class="space-y-2">
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">상세 신고내용</p>
+                    <div id="detContent" class="bg-gray-50 p-6 rounded-xl text-sm leading-relaxed text-gray-600 min-h-[200px]"></div>
+                </div>
+
+                <div id="resultArea" class="hidden p-6 bg-blue-50 rounded-xl border border-blue-100">
+                    <p class="text-xs text-primary font-black mb-2">관리자 처리결과</p>
+                    <div id="detResult" class="text-sm text-gray-700 leading-relaxed"></div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                <button id="movePostBtn" class="flex items-center space-x-2 text-primary font-bold text-sm hover:scale-105 transition-transform">
+                    <span>해당 게시물로 이동</span>
+                    <span class="material-symbols-outlined text-sm">open_in_new</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<div id="processModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-[480px] overflow-hidden">
+    
+    	<input type="hidden" id="modalTargetId" value="">
+		<input type="hidden" id="modalStatus" value="">
+    
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 id="modalTitle" class="text-xl font-bold text-gray-800">게시물 숨김 처리</h3>
+            <button onclick="closeModal()" class="material-symbols-outlined text-gray-400 hover:text-gray-600">close</button>
+        </div>
+        <div class="p-8 space-y-6">
+            <div class="bg-gray-50 p-4 rounded-xl space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">대상 작성자</span>
+                    <span id="modalTargetUser" class="font-bold"> </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">신고 유형</span>
+                    <span id="modalTargetCategory" class="text-error font-bold"> </span>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-700">상세 처리 사유 입력</label>
+                <textarea id="modalResultText" 
+                    class="w-full border-gray-200 rounded-xl text-sm h-32 focus:ring-primary focus:border-primary p-4" 
+                    placeholder="사용자에게 전달될 구체적인 사유를 입력하세요..."></textarea>
+                <p class="text-[11px] text-gray-400">* 입력된 사유는 작성자에게 알림으로 전송됩니다.</p>
+            </div>
+        </div>
+        <div class="p-6 bg-gray-50 flex space-x-3">
+            <button onclick="closeModal()" class="flex-1 py-3 border border-gray-300 bg-white rounded-xl font-bold text-gray-600 hover:bg-gray-50">취소</button>
+            <button onclick="submitProcess()" id="modalSubmitBtn" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700">처리</button>
+        </div>
+    </div>
 </div>
-<!-- Search Bar within List Panel Header -->
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-<input class="w-full bg-surface-container-lowest border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary/20 placeholder:text-outline" placeholder="목록 내 검색" type="text"/>
-</div>
-</div>
-<div class="flex-1 overflow-y-auto px-4 pb-6 space-y-2">
-<!-- Report Item 1 -->
-<div class="p-4 bg-surface-container-lowest rounded-lg border-l-4 border-error cursor-pointer hover:bg-surface transition-colors">
-<div class="flex justify-between mb-1">
-<span class="text-xs font-bold text-error">부적절한 홍보 및 광고</span>
-<span class="text-xs text-on-surface-variant">10분 전</span>
-</div>
-<h4 class="text-sm font-semibold mb-1 truncate">부적절한 게시물 광고 의심</h4>
-<p class="text-xs text-on-surface-variant truncate">운동 정보 게시판에 불법 도박 사이트 홍보...</p>
-<div class="mt-3 flex items-center text-[10px] text-outline">
-<span class="material-symbols-outlined text-xs mr-1">person</span> 김철수(user_01)
-                            </div>
-</div>
-<!-- Report Item 2 -->
-<div class="p-4 bg-surface rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
-<div class="flex justify-between mb-1">
-<span class="text-xs font-bold text-tertiary">욕설, 비하, 비방 등 혐오 표현</span>
-<span class="text-xs text-on-surface-variant">2시간 전</span>
-</div>
-<h4 class="text-sm font-semibold mb-1 truncate">욕설 및 비방 게시글</h4>
-<p class="text-xs text-on-surface-variant truncate">댓글 섹션에서 특정 회원을 향한 인신공격성...</p>
-<div class="mt-3 flex items-center text-[10px] text-outline">
-<span class="material-symbols-outlined text-xs mr-1">person</span> 이영희(fitness_pro)
-                            </div>
-</div>
-<!-- Report Item 3 -->
-<div class="p-4 bg-surface rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
-<div class="flex justify-between mb-1">
-<span class="text-xs font-bold text-error">음란물 또는 청소년에게 부적합한 내용</span>
-<span class="text-xs text-on-surface-variant">5시간 전</span>
-</div>
-<h4 class="text-sm font-semibold mb-1 truncate">잘못된 운동 지식 전파</h4>
-<p class="text-xs text-on-surface-variant truncate">부상 위험이 매우 높은 동작을 전문적인 방법인 것 처럼...</p>
-<div class="mt-3 flex items-center text-[10px] text-outline">
-<span class="material-symbols-outlined text-xs mr-1">person</span> 박민호(minho_p)
-                            </div>
-</div>
-<!-- Report Item 4 -->
-<div class="p-4 bg-surface rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
-<div class="flex justify-between mb-1">
-<span class="text-xs font-bold text-secondary">기타</span>
-<span class="text-xs text-on-surface-variant">어제</span>
-</div>
-<h4 class="text-sm font-semibold mb-1 truncate">도배성 게시물 신고</h4>
-<p class="text-xs text-on-surface-variant truncate">의미 없는 문자열을 반복적으로 게시하여 게시판 이용 방해...</p>
-<div class="mt-3 flex items-center text-[10px] text-outline">
-<span class="material-symbols-outlined text-xs mr-1">person</span> 최지우(jiwoo_choi)
-                            </div>
-</div>
-</div>
-</div>
-<!-- Right: Detail Panel -->
-<div class="col-span-7 space-y-6">
-<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm h-full flex flex-col">
-<!-- Action Header -->
-<div class="flex justify-between items-start mb-8">
-<div>
-<div class="flex items-center space-x-2 mb-2">
-<span class="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold">미처리</span>
-<span class="text-xs text-on-surface-variant">No. 2024-00152</span>
-</div>
-<h3 class="text-xl font-bold">부적절한 게시물 광고 의심</h3>
-<p class="text-sm text-error font-medium mt-1">신고유형 : 부적절한 홍보 및 광고</p>
-</div>
-<div class="flex space-x-2">
-<button class="px-5 py-2 text-sm font-semibold border border-outline-variant/20 rounded-lg hover:bg-surface transition-colors">반려</button>
-<button class="px-5 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity bg-red-600">숨김처리</button>
-</div>
-</div>
-<!-- Content Info -->
-<div class="flex-1 space-y-8">
-<div class="grid grid-cols-2 gap-8">
-<div class="space-y-1">
-<p class="text-xs text-outline font-medium">신고자</p>
-<p class="text-sm font-semibold">김철수 (ID: user_01)</p>
-</div>
-<div class="space-y-1">
-<p class="text-xs text-outline font-medium">신고 일시</p>
-<p class="text-sm font-semibold">2024.05.20 14:32:11</p>
-</div>
-<div class="space-y-1">
-<p class="text-xs text-outline font-medium">대상 작성자</p>
-<p class="text-sm font-semibold">광고봇99 (ID: ad_bot_99)</p>
-</div>
-</div>
-<div class="space-y-2">
-<p class="text-xs text-outline font-medium">상세 신고 내용</p>
-<div class="bg-surface p-4 rounded-lg text-sm leading-relaxed text-on-surface-variant">
-                                    자유게시판에 '단기간 고수익 보장' 이라는 제목으로 사행성 게임 사이트를 홍보하는 글을 지속적으로 올리고 있습니다. 이전에도 여러 번 신고했으나 아이디를 바꿔가며 활동하는 것으로 보입니다. 빠른 조치 부탁드립니다.
-                                </div>
-</div>
-<div class="space-y-2">
-<p class="text-xs text-outline font-medium">증거 이미지</p>
-<div class="flex space-x-4">
-<img alt="Report Evidence" class="w-32 h-32 object-cover rounded-lg border border-outline-variant/10" data-alt="screenshot of a forum post with gambling website links and colorful banners, red circles highlighting the illegal content" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWRIQ_o2ubICCrxH2W7C0Pg5PUB65LTyWvi4JiphH28pDrJUvAONnICzZ4Yzwo1eoA6SgPweWGLTO_26pSl7uYEvNvg4mF4pSH9l5XTtUsz1bUDRnhCQ4Qj5Oflno60uGfHUcF0A_XL9goM1xRDd8e2w_Q6q7F6JelKruDfSq2cE6QKTzIDgiYM0g9RNt56PHrGY66NrxMDnq7RC5iBFvAm56u9XCA3B69PpxgXStDQdPtgZQGZjm6sZw6rG4OT6uPJB1flhBck8Y"/>
-</div>
-</div>
-</div>
-<!-- Link to Post -->
-<div class="mt-auto pt-8 border-t border-outline-variant/10 flex justify-end">
-<button class="flex items-center space-x-2 text-primary font-bold text-sm hover:underline">
-<span>해당 게시물로 이동</span>
-<span class="material-symbols-outlined text-sm">open_in_new</span>
-</button>
-</div>
-</div>
-</div>
-</div>
+
 <!-- Summary Indicators -->
 <section class="grid grid-cols-4 gap-6">
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
@@ -247,10 +272,170 @@
 <p class="text-2xl font-bold">12 <span class="text-sm font-normal text-outline">건</span></p>
 </div>
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-<p class="text-xs text-on-surface-variant mb-1 font-medium">처리 완료 (금일)</p>
+<p class="text-xs text-on-surface-variant mb-1 font-medium">처리 완료</p>
 <p class="text-2xl font-bold text-primary">41 <span class="text-sm font-normal text-outline">건</span></p>
 </div>
 </section>
 </div>
+<script>
+    // 상태 필터링
+    function filterStatus(status) {
+        location.href = '${pageContext.request.contextPath}/admin/reportList?status=' + status;
+    }
+
+    // 목록 검색 (엔터 키)
+    function searchList(e) {
+        if(e.key === 'Enter') {
+            const keyword = e.target.value;
+            location.href = '${pageContext.request.contextPath}/admin/reportList?status=${currentStatus}&keyword=' + keyword;
+        }
+    }
+
+    // 상세 정보 AJAX 로드
+    function loadDetail(id, element) {
+    // UI 강조 로직
+    document.querySelectorAll('.report-item').forEach(el => el.classList.remove('selected-card'));
+    element.classList.add('selected-card');
+
+    fetch('${pageContext.request.contextPath}/admin/reportList?action=detail&id=' + id)
+        .then(res => res.json())
+        .then(data => {
+        	
+        	console.log("받은 데이터:", data); // 크롬 콘솔에서 데이터가 오는지 확인용
+            document.getElementById('emptyDetail').classList.add('hidden');
+            document.getElementById('detailPanel').classList.remove('hidden');
+            
+            // [중요] DTO 필드명과 100% 일치시켜야 함 (카멜케이스 주의)
+            document.getElementById('detNo').innerText = 'No. ' + data.reportId;
+            document.getElementById('detTitle').innerText = data.title;
+            document.getElementById('detCategory').innerText = '신고유형 : ' + data.category;
+            document.getElementById('detReporter').innerText = data.reporterName + ' (' + data.reporterId + ')';
+            document.getElementById('detPostNum').innerHTML = '<span class="text-red-500">' + data.targetName + ' (' + data.targetId + ')</span>';
+            document.getElementById('detContent').innerText = data.content;
+
+            // [핵심] 모달에 넘겨줄 데이터 미리 심어두기
+            document.getElementById('modalTargetId').value = data.reportId; 
+            document.getElementById('modalTargetUser').innerText = data.targetName + ' (' + data.targetId + ')';
+            document.getElementById('modalTargetCategory').innerText = data.category;
+
+            // 날짜 처리
+            if (data.regDate && data.regDate !== "") {
+    		// 문자열에 .0 (Timestamp 특유의 소수점)이 붙어올 경우 제거
+    			let dateStr = data.regDate.split('.')[0]; 
+   				let date = new Date(dateStr);
+    			document.getElementById('detDate').innerText = isNaN(date) ? data.regDate : date.toLocaleString();
+			}
+         	// status가 DONE(숨김/반려 등)일 때만 처리일시 노출
+            if (data.status !== 'WAIT') {
+                document.getElementById('procDateArea').style.display = 'block';
+                if (data.processDate && data.processDate !== "" && data.processDate !== "기록 없음") {
+                    let pDateStr = data.processDate.split('.')[0]; // .0 제거
+                    let pDate = new Date(pDateStr);
+                    
+                    // 날짜 변환 성공 시 toLocaleString() 적용, 실패 시 원본 표시
+                    document.getElementById('detProcDate').innerText = isNaN(pDate) ? data.processDate : pDate.toLocaleString();
+                } else {
+                    document.getElementById('detProcDate').innerText = '기록 없음';
+                }
+            } else {
+                document.getElementById('procDateArea').style.display = 'none';
+            }
+
+            // 상태 배지 처리
+            const badge = document.getElementById('detStatusBadge');
+            if(data.status !== 'WAIT') {
+                document.getElementById('actionButtons').classList.add('hidden');
+                document.getElementById('resultArea').classList.remove('hidden');
+                document.getElementById('detResult').innerText = data.result;
+                badge.className = 'px-2 py-1 rounded text-[10px] font-bold bg-gray-200 text-gray-500';
+                badge.innerText = (data.status === 'REJECT' ? '반려됨' : '숨김처리됨');
+            } else {
+                document.getElementById('actionButtons').classList.remove('hidden');
+                document.getElementById('resultArea').classList.add('hidden');
+                badge.className = 'px-2 py-1 rounded text-[10px] font-bold bg-error text-white';
+                badge.innerText = '미처리';
+            }
+            
+            // 해당 게시물로 이동 처리
+			const moveBtn = document.getElementById('movePostBtn');
+            
+            // 1. 게시글 번호가 있는지 확인 (image_5964dd.png 참고)
+            if (data.postNum && data.postNum !== 0) {
+                moveBtn.onclick = function() {
+                    // 팀원분의 게시글 상세 페이지 URL 규칙에 맞게 아래 경로만 수정하세요.
+                    // 예: /community/view?postNo=51
+                    location.href = '${pageContext.request.contextPath}/member/community/postDetail?postNo=' + data.postNum;
+                };
+                moveBtn.style.opacity = "1";
+                moveBtn.style.cursor = "pointer";
+            } else {
+                // 게시글이 삭제되었거나 번호가 없는 경우 처리
+                moveBtn.onclick = function() { alert('해당 게시물을 찾을 수 없습니다.'); };
+                moveBtn.style.opacity = "0.3";
+                moveBtn.style.cursor = "not-allowed";
+            }
+        });
+	}
+    
+
+    // 모달 제어
+    function openProcessModal(status) {
+    	// 1. 상태값 저장 및 제목 변경 (기존 로직)
+    	document.getElementById('modalStatus').value = status;
+    	document.getElementById('modalTitle').innerText = (status === 'REJECT' ? '신고 반려 사유 입력' : '게시물 숨김 사유 입력');
+    
+    	// 2. [전술 추가] 버튼 객체 가져오기
+    	const submitBtn = document.getElementById('modalSubmitBtn');
+    
+    	// 3. [전술 추가] 상태에 따른 버튼 텍스트 및 색상 변경
+    	if (status === 'HIDE') {
+        	submitBtn.innerText = '숨김 처리';
+        	// 숨김은 경고 의미로 빨간색 유지
+        	submitBtn.className = 'flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors';
+    	} else {
+        	submitBtn.innerText = '반려 처리';
+        	// 반려(취소)는 조금 더 차분한 어두운 회색이나 파란색 계열 추천
+        	submitBtn.className = 'flex-1 py-3 bg-gray-700 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors';
+    	}    
+    	// 4. 사유 입력창 초기화 (이전 입력값이 남아있지 않게)
+    	document.getElementById('modalResultText').value = '';
+    
+    	// 5. 모달 표시
+    	document.getElementById('processModal').classList.remove('hidden');
+	}
+
+    function closeModal() {
+        document.getElementById('processModal').classList.add('hidden');
+    }
+
+    // 최종 처리 제출 (POST AJAX)
+    function submitProcess() {
+    	const reportId = document.getElementById('modalTargetId').value; // 이 값이 비어있는지 확인!
+    	const status = document.getElementById('modalStatus').value;
+    	const result = document.getElementById('modalResultText').value;
+
+    	if(!result) { alert('사유를 입력해주세요.'); return; }
+
+    	const params = new URLSearchParams();
+    	params.append('reportId', reportId); // 서블릿의 request.getParameter("reportId")와 맞춰야 함
+    	params.append('status', status);
+    	params.append('result', result);
+
+    fetch('${pageContext.request.contextPath}/admin/reportList', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) { // 서버에서 { "success": true } 라고 줘야 함
+            alert('처리가 완료되었습니다.');
+            location.reload();
+        } else {
+            alert('처리 중 오류가 발생했습니다: ' + (data.message || ''));
+        }
+    });
+    }
+</script>
 </main>
 </body></html>

@@ -8,11 +8,13 @@ public class LessonDTO {
     private String endTime;
     private int durationMinutes;
     private String status;
+    private int clientId;
+
 
     public LessonDTO() {
     }
 
-    public LessonDTO(int lessonId, String goal, String memberName, String startTime, String endTime, int durationMinutes, String status) {
+    public LessonDTO(int lessonId, String goal, String memberName, String startTime, String endTime, int durationMinutes, String status, int clientId) {
         this.lessonId = lessonId;
         this.goal = goal;
         this.memberName = memberName;
@@ -20,6 +22,7 @@ public class LessonDTO {
         this.endTime = endTime;
         this.durationMinutes = durationMinutes;
         this.status = status;
+        this.clientId = clientId;
     }
 
     public int getLessonId() {
@@ -76,5 +79,13 @@ public class LessonDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 }

@@ -14,7 +14,7 @@ import dao.trainer.NotificationDAOImpl;
 import dao.trainer.NotificationDAO;
 import dto.trainer.NotificationDTO;
 
-public class NotificationApi extends HttpServlet {
+public class NotificationApiServlet extends HttpServlet {
     private final NotificationDAO notificationDAO = new NotificationDAOImpl();
 
     @Override
