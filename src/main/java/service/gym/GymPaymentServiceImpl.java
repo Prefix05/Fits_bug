@@ -1,6 +1,6 @@
 package service.gym;
 
-import dao.gym.payment.GymPaymentDao;
+import dao.gym.GymPaymentDao;
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.gym.Payment;

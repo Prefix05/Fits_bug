@@ -16,11 +16,16 @@ public class ClientDAOImpl implements ClientDAO {
     // 페이지네이션 + 필터 조회
     public List<ClientDTO> selectClients(int offset, int limit, String filter) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
+
             Map<String, Object> params = new HashMap<>();
             params.put("offset", offset);
             params.put("limit", limit);
             params.put("filter", filter);
-            return session.selectList("dao.ClientMapper.selectClients", params);
+
+            return session.selectList(
+                    "dao.ClientMapper.selectClients",
+                    params
+            );
         }
     }
 

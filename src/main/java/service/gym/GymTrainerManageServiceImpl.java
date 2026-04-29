@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.trainerManage.TrainerManageDao;
-import dao.gym.trainerManage.TrainerManageDaoImpl;
+import dao.gym.TrainerManageDao;
+import dao.gym.TrainerManageDaoImpl;
 import dto.gym.TrainerAssign;
 import dto.gym.TrainerList;
 import dto.gym.TrainerMemberView;

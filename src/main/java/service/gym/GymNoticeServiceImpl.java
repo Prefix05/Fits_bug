@@ -3,8 +3,8 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.notice.GymNoticeDao;
-import dao.gym.notice.GymNoticeDaoImpl;
+import dao.gym.GymNoticeDao;
+import dao.gym.GymNoticeDaoImpl;
 import dto.gym.GymNotice;
 import dto.gym.NoticeImages;
 
