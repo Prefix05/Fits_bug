@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class InquiryDTO {
 	private int inquiryId;
     private int userId;
+    private String userName;
     private String category; // ENUM 매칭
     private String title;
     private String content;
@@ -19,11 +20,12 @@ public class InquiryDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public InquiryDTO(int inquiryId, int userId, String category, String title, String content, String file,
+	public InquiryDTO(int inquiryId, int userId, String userName, String category, String title, String content, String file,
 			String result, String status, Timestamp regDate, Timestamp processDate) {
 		super();
 		this.inquiryId = inquiryId;
 		this.userId = userId;
+		this.userName = userName;
 		this.category = category;
 		this.title = title;
 		this.content = content;
@@ -48,6 +50,14 @@ public class InquiryDTO {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getCategory() {
