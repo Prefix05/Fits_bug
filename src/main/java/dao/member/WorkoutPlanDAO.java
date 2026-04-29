@@ -8,4 +8,6 @@ public interface WorkoutPlanDAO {
 
     // 저장 (insert or update)
     int savePlan(WorkoutPlanDTO plan);
+    
+    boolean update(WorkoutPlanDTO dto);
 }

@@ -192,23 +192,27 @@ body { font-family: 'Inter', sans-serif; }
 <!-- ✅ PT 일정 -->
 <div class="bg-white p-4 rounded-xl shadow">
 
-<div class="flex justify-between items-center mb-2">
-    <h3 class="font-bold">나의 PT 일정</h3>
-    
-    <button onclick="openReviewModal()" 
-		class="mt-2 text-sm bg-blue-500 text-white px-3 py-1 rounded">
-		리뷰 작성
-	</button>
+    <!-- 1줄: 제목 + 상세보기 -->
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="font-bold">나의 PT 일정</h3>
 
-    <!-- 🔥 상세보기 -->
-    <a href="trainerDetail?trainerId=1"
-       class="text-sm text-blue-500 hover:underline">
-        상세보기
-    </a>
-</div>
+        <a href="trainerDetail?trainerId=1"
+           class="text-sm text-blue-500 hover:underline">
+            상세보기
+        </a>
+    </div>
 
-<p class="text-sm">김태훈 트레이너</p>
-<p class="text-sm text-gray-500">4월 9일 12:00</p>
+    <!-- 2줄: 이름 + 리뷰 버튼 -->
+    <div class="flex justify-between items-center">
+        <p class="text-sm">김태훈 트레이너</p>
+
+        <button onclick="openReviewModal()" 
+            class="text-sm bg-blue-500 text-white px-3 py-1 rounded">
+            리뷰 작성
+        </button>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-1">4월 9일 12:00</p>
 
 </div>
 

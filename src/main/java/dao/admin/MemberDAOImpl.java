@@ -5,15 +5,15 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.admin.Member;
+import dto.admin.MemberDTO;
 import util.MybatisSqlSessionFactory;
 
 public class MemberDAOImpl implements MemberDAO {
 
 	@Override
-	public List<Member> selectAllGym() throws Exception {
+	public List<MemberDTO> selectAllGym() throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> list = null;
+		List<MemberDTO> list = null;
 		try {
 			list = sqlSession.selectList("mapper.admin.member.selectAllGym");
 		}catch(Exception e) {
@@ -26,9 +26,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectAllTrainer() throws Exception {
+	public List<MemberDTO> selectAllTrainer() throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> list = null;
+		List<MemberDTO> list = null;
 		try {
 			list = sqlSession.selectList("mapper.admin.member.selectAllTrainer");
 		}catch(Exception e) {
@@ -41,9 +41,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectAllClient() throws Exception {
+	public List<MemberDTO> selectAllClient() throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> list = null;
+		List<MemberDTO> list = null;
 		try {
 			list = sqlSession.selectList("mapper.admin.member.selectAllClient");
 		}catch(Exception e) {
@@ -102,9 +102,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectGymList(Map<String, Object> paramMap) throws Exception {
+	public List<MemberDTO> selectGymList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> gymList = null;
+		List<MemberDTO> gymList = null;
 		try {
 			gymList = sqlSession.selectList("mapper.admin.member.selectGymList", paramMap);
 		}catch(Exception e) {
@@ -117,9 +117,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectTrainerList(Map<String, Object> paramMap) throws Exception {
+	public List<MemberDTO> selectTrainerList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> trainerList = null;
+		List<MemberDTO> trainerList = null;
 		try {
 			trainerList = sqlSession.selectList("mapper.admin.member.selectTrainerList", paramMap);
 		}catch(Exception e) {
@@ -132,9 +132,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public List<Member> selectClientList(Map<String, Object> paramMap) throws Exception {
+	public List<MemberDTO> selectClientList(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		List<Member> clientList = null;
+		List<MemberDTO> clientList = null;
 		try {
 			clientList = sqlSession.selectList("mapper.admin.member.selectClientList", paramMap);
 		}catch(Exception e) {
