@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sales">
+
+    <!-- 매출 목록 -->
+    <select id="selectSalesList" parameterType="map" resultType="dto.gym.SalesDto">
+        SELECT
+            u.name AS memberName,
+            LOWER(m.type) AS membershipType,
+            m.type_rep AS typeRep,
+            tu.name AS trainerName,
+            p.payment_date AS paymentDate,
+            p.payment_price AS paymentPrice,
+            p.payment_fee AS paymentFee,
+            (p.payment_price - p.payment_fee) AS netPrice,
+            UPPER(p.status) AS status
+        FROM payment p
+        JOIN membership m
+          ON p.membership_num = m.membership_num
+        JOIN `user` u
+          ON p.user_num = u.id
+        LEFT JOIN trainer t
+          ON m.trainer_num = t.id
+        LEFT JOIN `user` tu
+          ON t.user_id = tu.id
+        WHERE m.gym_num = #{gymNum}
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        <if test="membershipType != null and membershipType != ''">
+            AND LOWER(m.type) = #{membershipType}
+        </if>
+
+        <if test="trainerId != null and trainerId != ''">
+            AND t.id = #{trainerId}
+        </if>
+
+        <if test="status != null and status != ''">
+            AND UPPER(p.status) = UPPER(#{status})
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND u.name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+
+        ORDER BY p.payment_date DESC
+        LIMIT #{startRow}, #{pageSize}
+    </select>
+
+
+    <!-- 매출 목록 개수 -->
+    <select id="selectSalesCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM payment p
+        JOIN membership m
+          ON p.membership_num = m.membership_num
+        JOIN `user` u
+          ON p.user_num = u.id
+        LEFT JOIN trainer t
+          ON m.trainer_num = t.id
+        WHERE m.gym_num = #{gymNum}
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        <if test="membershipType != null and membershipType != ''">
+            AND LOWER(m.type) = #{membershipType}
+        </if>
+
+        <if test="trainerId != null and trainerId != ''">
+            AND t.id = #{trainerId}
+        </if>
+
+        <if test="status != null and status != ''">
+            AND UPPER(p.status) = UPPER(#{status})
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND u.name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </select>
+
+
+    <!-- 상단 매출 요약 -->
+    <select id="selectSalesSummary" parameterType="map" resultType="dto.gym.SalesSummaryDto">
+        SELECT
+            IFNULL(SUM(p.payment_price), 0) AS totalSales,
+            IFNULL(SUM(CASE WHEN LOWER(m.type) IN ('day', 'month')
+                            THEN p.payment_price ELSE 0 END), 0) AS gymSales,
+            IFNULL(SUM(CASE WHEN LOWER(m.type) = 'pt'
+                            THEN p.payment_price ELSE 0 END), 0) AS ptSales,
+            IFNULL(SUM(p.payment_fee), 0) AS totalFee,
+            IFNULL(SUM(p.payment_price - p.payment_fee), 0) AS netSales,
+            0 AS growthRate
+        FROM payment p
+        JOIN membership m
+          ON p.membership_num = m.membership_num
+        WHERE m.gym_num = #{gymNum}
+          AND UPPER(p.status) = 'PAID'
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        <if test="membershipType != null and membershipType != ''">
+            AND LOWER(m.type) = #{membershipType}
+        </if>
+
+        <if test="trainerId != null and trainerId != ''">
+            AND m.trainer_num = #{trainerId}
+        </if>
+    </select>
+
+
+    <!-- 차트용 일자별 매출 -->
+    <select id="selectSalesChartList" parameterType="map" resultType="dto.gym.SalesChartDto">
+        SELECT
+            DATE_FORMAT(p.payment_date, '%m/%d') AS label,
+            IFNULL(SUM(p.payment_price), 0) AS sales,
+            0 AS percent
+        FROM payment p
+        JOIN membership m
+          ON p.membership_num = m.membership_num
+        WHERE m.gym_num = #{gymNum}
+          AND UPPER(p.status) = 'PAID'
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        <if test="membershipType != null and membershipType != ''">
+            AND LOWER(m.type) = #{membershipType}
+        </if>
+
+        GROUP BY DATE(p.payment_date), DATE_FORMAT(p.payment_date, '%m/%d')
+        ORDER BY DATE(p.payment_date)
+    </select>
+
+
+    <!-- 최고 매출 트레이너 순위 -->
+    <select id="selectTopTrainerList" parameterType="map" resultType="dto.gym.TopTrainerDto">
+        SELECT
+            t.id AS trainerId,
+            tu.name AS trainerName,
+            tu.profileImg AS profileImg,
+            IFNULL(SUM(p.payment_price), 0) AS totalSales,
+            COUNT(ps.id) AS sessionCount
+        FROM payment p
+        JOIN membership m
+          ON p.membership_num = m.membership_num
+        JOIN trainer t
+          ON m.trainer_num = t.id
+        JOIN `user` tu
+          ON t.user_id = tu.id
+        LEFT JOIN pt_session ps
+          ON ps.trainer_id = t.id
+        WHERE m.gym_num = #{gymNum}
+          AND LOWER(m.type) = 'pt'
+          AND UPPER(p.status) = 'PAID'
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        GROUP BY t.id, tu.name, tu.profileImg
+        ORDER BY totalSales DESC
+        LIMIT 5
+    </select>
+
+
+    <!-- 필터용 트레이너 목록 -->
+    <select id="selectTrainerList" parameterType="int" resultType="dto.gym.TrainerChoose">
+        SELECT
+            t.id AS trainerId,
+            u.name AS trainerName
+        FROM trainer t
+        JOIN `user` u
+          ON t.user_id = u.id
+        WHERE t.gym_id = #{value}
+        ORDER BY u.name
+    </select>
+
+</mapper>

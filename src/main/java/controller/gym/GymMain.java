@@ -11,13 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.gym.Gym;
-import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
-import service.gym.GymService;
-import service.gym.GymServiceImpl;
+import service.gym.GymMainService;
+import service.gym.GymMainServiceImpl;
 
 /**
  * Servlet implementation class GymMain
@@ -38,7 +37,7 @@ public class GymMain extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			GymService service = new GymServiceImpl();
+			GymMainService service = new GymMainServiceImpl();
 
 			try {
 //				String gymIdStr = request.getParameter("gymId");

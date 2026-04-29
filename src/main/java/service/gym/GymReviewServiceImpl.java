@@ -1,7 +1,7 @@
 package service.gym;
 
-import dao.gym.review.GymReviewDao;
-import dao.gym.review.GymReviewDaoImpl;
+import dao.gym.GymReviewDao;
+import dao.gym.GymReviewDaoImpl;
 import dto.gym.Review;
 
 public class GymReviewServiceImpl implements GymReviewService {
