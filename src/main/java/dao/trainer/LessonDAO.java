@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface LessonDAO {
-    List<LessonDTO> findLessonsByDate(LocalDate date);
+    List<LessonDTO> findLessonsByDate(LocalDate date, int trainerId);
 }

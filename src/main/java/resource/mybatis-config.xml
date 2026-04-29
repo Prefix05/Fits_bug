@@ -47,6 +47,8 @@
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
 		<mapper resource="mapper/trainer/meal.xml"/>
+		<mapper resource="mapper/trainer/payment.xml"/>
+		<mapper resource="mapper/trainer/trainer.xml"/>
 
 	</mappers>
 </configuration>

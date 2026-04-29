@@ -14,18 +14,17 @@ public class ClientDAOImpl implements ClientDAO {
     private final SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
 
     // 페이지네이션 + 필터 조회
-    public List<ClientDTO> selectClients(int offset, int limit, String filter) {
+    public List<ClientDTO> selectClients(int offset, int limit, String filter, int trainerId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
 
             Map<String, Object> params = new HashMap<>();
             params.put("offset", offset);
             params.put("limit", limit);
             params.put("filter", filter);
+            params.put("trainerId", trainerId);
 
-            return session.selectList(
-                    "dao.ClientMapper.selectClients",
-                    params
-            );
+            return session.selectList("dao.ClientMapper.selectClients", params);
+
         }
     }
 
@@ -44,10 +43,11 @@ public class ClientDAOImpl implements ClientDAO {
 
 
     // 전체 개수
-    public int countClients(String filter) {
+    public int countClients(String filter, int trainerId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Map<String, Object> params = new HashMap<>();
             params.put("filter", filter);
+            params.put("trainerId", trainerId);
             return session.selectOne("dao.ClientMapper.countClients", params);
         }
     }

@@ -16,13 +16,16 @@
         <result property="weight" column="weight"/>
         <result property="lastSession" column="last_session"/>
         <result property="status" column="status"/>
+        <result property="trainerId" column="trainer_id"/>
+
     </resultMap>
 
     <select id="selectClients" resultMap="clientResultMap">
         SELECT * FROM clients
         <where>
+            trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
-                status = #{filter}
+                AND status = #{filter}
             </if>
         </where>
         LIMIT #{limit} OFFSET #{offset}
@@ -31,8 +34,9 @@
     <select id="countClients" resultType="int">
         SELECT COUNT(*) FROM clients
         <where>
+            trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
-                status = #{filter}
+                AND status = #{filter}
             </if>
         </where>
     </select>

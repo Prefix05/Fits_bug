@@ -12,6 +12,7 @@ public class ClientDTO {
     private Integer height;
     private Integer weight;
     private Integer totalLessons;
+    private int trainerId;
 
     // ──────────────────────────────
     // Getters & Setters
@@ -102,5 +103,33 @@ public class ClientDTO {
 
     public void setTotalLessons(int totalLessons) {
         this.totalLessons = totalLessons;
+    }
+
+    public void setLessonCount(Integer lessonCount) {
+        this.lessonCount = lessonCount;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public void setTotalLessons(Integer totalLessons) {
+        this.totalLessons = totalLessons;
+    }
+
+    public int getTrainerId() {
+        return trainerId;
+    }
+
+    public void setTrainerId(int trainerId) {
+        this.trainerId = trainerId;
     }
 }

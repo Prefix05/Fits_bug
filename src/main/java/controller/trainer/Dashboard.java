@@ -2,6 +2,7 @@ package controller.trainer;
 
 import dao.trainer.ClientDAOImpl;
 import dto.trainer.ClientDTO;
+import dto.trainer.TrainerDTO;
 import service.trainer.DashboardData;
 import service.trainer.DashboardService;
 import service.trainer.DashboardServiceImpl;
@@ -19,11 +20,15 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String userId = resolveUserId(request);
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loginTrainer") == null) {
+            response.sendRedirect(request.getContextPath() + "/trainer/login");
+            return;
+        }
         Integer lessonId = parseLessonId(request.getParameter("lessonId"));
 
-        DashboardData data = dashboardService.getDashboardData(userId, lessonId);
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
+        DashboardData data = dashboardService.getDashboardData(lessonId, trainer.getTrainerId());
 
         request.setAttribute("todayDate", data.getTodayDate());
         request.setAttribute("todayLessons", data.getLessons());
@@ -37,18 +42,6 @@ public class Dashboard extends HttpServlet {
         request.getRequestDispatcher("/trainer/dashboard.jsp").forward(request, response);
     }
 
-    //    Helper Functions
-    private String resolveUserId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Object id = session.getAttribute("id");
-            if (id != null && !String.valueOf(id).trim().isEmpty()) {
-                return String.valueOf(id).trim();
-            }
-        }
-        return "demo-user";
-    }
-
     private Integer parseLessonId(String rawLessonId) {
         if (rawLessonId == null || rawLessonId.trim().isEmpty()) {
             return null;
@@ -59,6 +52,5 @@ public class Dashboard extends HttpServlet {
             return null;
         }
     }
-
 }
 

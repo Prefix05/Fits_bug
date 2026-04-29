@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="trainer">
+
+    <insert id="insertTrainer" parameterType="dto.trainer.TrainerDTO">
+        INSERT INTO trainers (name, email, password)
+        VALUES (#{name}, #{email}, #{password})
+    </insert>
+
+    <select id="getTrainerByEmail" parameterType="String" resultType="dto.trainer.TrainerDTO">
+        SELECT
+            trainer_id  AS trainerId,
+            name,
+            email,
+            password,
+            created_at  AS createdAt
+        FROM trainers
+        WHERE email = #{email}
+    </select>
+
+</mapper>
