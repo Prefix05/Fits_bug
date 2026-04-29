@@ -1,8 +1,7 @@
 package dao.member;
 
-import java.util.List;
-
 import dto.member.SupportDTO;
+import java.util.List;
 
 public interface SupportDAO {
     void insertSupport(SupportDTO dto);

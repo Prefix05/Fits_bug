@@ -1,7 +1,6 @@
 package dao.member;
 
 import java.util.List;
-
 import dto.member.PostDTO;
 
 public interface PostDAO {

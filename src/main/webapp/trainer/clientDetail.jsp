@@ -295,12 +295,14 @@
                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRaM7aJPJccG2VqzuEQFnWzaty4vFhjpL-5fNEreSZkXZaMJ5w2gbFP2X82eqKZUp0SOMGtYAZojFrVr0Fign3C2EZQ-Ec48g_8roHzucGiFw1AckjjTTYJNp5qK9bmHgBJwxzMFtj-LYouo4jaW5KBk-O7YS7IA72oZGHvXpT1GY54kq_npmXyHJ9h_eHtm0lcLdvDeE_9iVYH5EgNO1uECszkkpo6Xp2mWrdBHkpWNljrH0kMSPmRZM5Ztg3yD7t-YfJnvIWXQw5"/>
                 </div>
                 <div class="flex-1 space-y-2">
-                    <h2 class="text-4xl font-bold tracking-tighter text-on-surface">김민수</h2>
-                    <p class="text-on-surface-variant text-lg font-medium">Age 29 • 175cm / 78kg</p>
+                    <h2 class="text-4xl font-bold tracking-tighter text-on-surface">${client.name}</h2>
+                    <p class="text-on-surface-variant text-lg font-medium">
+                        Age ${client.age} • ${client.height}cm / ${client.weight}kg
+                    </p>
                     <div class="flex flex-wrap gap-3 mt-4">
                         <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-surface-container-low rounded-full border border-outline-variant/20">
                             <span class="material-symbols-outlined text-[16px] text-tertiary">track_changes</span>
-                            <span class="text-xs font-semibold text-on-surface-variant">체지방 감량</span>
+                            <span class="text-xs font-semibold text-on-surface-variant">${client.goals}</span>
                         </div>
                     </div>
                 </div>
@@ -309,7 +311,7 @@
                         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">
                             Current Weight</p>
                         <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-3xl font-bold text-primary">78</span>
+                            <span class="text-3xl font-bold text-primary">${client.weight}</span>
                             <span class="text-sm font-medium text-on-surface-variant">kg</span>
                         </div>
                     </div>
@@ -319,8 +321,8 @@
                         <div>Remaining</div>
                         <p></p>
                         <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-3xl font-bold text-on-surface">12</span>
-                            <span class="text-sm font-medium text-on-surface-variant">/ 20</span>
+                            <span class="text-3xl font-bold text-on-surface">${client.lessonCount}</span>
+                            <span class="text-sm font-medium text-on-surface-variant">/ ${client.totalLessons}</span>
                         </div>
                     </div>
                 </div>
@@ -336,8 +338,7 @@
                             class="px-8 py-2.5 text-sm font-semibold text-primary bg-surface-container-lowest rounded-xl shadow-sm transition-all">
                         Overview
                     </button>
-                    <a href="${pageContext.request.contextPath}/trainer/meals"
-                       class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                    <a href="${pageContext.request.contextPath}/trainer/meals?clientId=${client.clientId}" class="btn-primary px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
                         Meals
                     </a>
                     <button

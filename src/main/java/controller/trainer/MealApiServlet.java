@@ -20,12 +20,21 @@ public class MealApiServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             // 1. Parse params
+            String clientIdParam = request.getParameter("clientId");
             String offsetParam = request.getParameter("weekOffset");
-            int weekOffset = (offsetParam != null) ? Integer.parseInt(offsetParam) : 0;
             String selectedDate = request.getParameter("selectedDate");
 
+            // Basic validation - default to a 400 error if no ID is provided
+            if (clientIdParam == null || clientIdParam.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing Client ID");
+                return;
+            }
+
+            int clientId = Integer.parseInt(clientIdParam);
+            int weekOffset = (offsetParam != null) ? Integer.parseInt(offsetParam) : 0;
+
             // 2. Delegate all logic to service
-            WeekResult result = mealService.getMealData(1, weekOffset, selectedDate);
+            WeekResult result = mealService.getMealData(clientId, weekOffset, selectedDate);
 
             // 3a. AJAX → write JSON
             String accept = request.getHeader("Accept");
@@ -36,19 +45,21 @@ public class MealApiServlet extends HttpServlet {
             }
 
             // 3b. Normal load → set attributes and forward
-            request.setAttribute("weekMeals",    result.weekMeals);
-            request.setAttribute("meals",        result.dayMeals);
-            request.setAttribute("weekOffset",   weekOffset);
+            // IMPORTANT: Add attributes so the JSP can use it for pagination links
+            request.setAttribute("clientId", clientId);
+            request.setAttribute("weekMeals", result.weekMeals);
+            request.setAttribute("meals", result.dayMeals);
+            request.setAttribute("weekOffset", weekOffset);
             request.setAttribute("selectedDate", result.selectedDate);
-            request.setAttribute("isDailyView",  result.isDailyView);
-            request.setAttribute("avgCal",       result.avgCal);
-            request.setAttribute("avgProt",      result.avgProt);
-            request.setAttribute("avgCarbs",     result.avgCarbs);
-            request.setAttribute("avgFat",       result.avgFat);
-            request.setAttribute("dayCal",       result.dayCal);
-            request.setAttribute("dayProt",      result.dayProt);
-            request.setAttribute("dayCarbs",     result.dayCarbs);
-            request.setAttribute("dayFat",       result.dayFat);
+            request.setAttribute("isDailyView", result.isDailyView);
+            request.setAttribute("avgCal", result.avgCal);
+            request.setAttribute("avgProt", result.avgProt);
+            request.setAttribute("avgCarbs", result.avgCarbs);
+            request.setAttribute("avgFat", result.avgFat);
+            request.setAttribute("dayCal", result.dayCal);
+            request.setAttribute("dayProt", result.dayProt);
+            request.setAttribute("dayCarbs", result.dayCarbs);
+            request.setAttribute("dayFat", result.dayFat);
             request.getRequestDispatcher("/trainer/clientMealLog.jsp").forward(request, response);
 
         } catch (Exception e) {
