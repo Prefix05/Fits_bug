@@ -33,11 +33,12 @@ String contextPath = request.getContextPath();
 		<!-- 메뉴 -->
 		<nav class="flex flex-col gap-2">
 
-			<a href="<%=contextPath%>/main.jsp"
-				class="flex items-center gap-3 px-4 py-2 rounded-xl text-blue-600 bg-white shadow-sm">
-				<span class="material-symbols-outlined">home</span> <span
-				class="text-sm font-semibold">홈</span>
-			</a> <a href="<%=contextPath%>/guide.jsp"
+			<a href="<%=contextPath%>/gym/main"
+   					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+						<span class="material-symbols-outlined">home</span>
+    					<span class="text-sm">홈</span>
+			</a>
+			 	<a href="<%=contextPath%>/guide.jsp"
 				class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 				<span class="material-symbols-outlined">fitness_center</span> <span
 				class="text-sm">운동가이드</span>
@@ -74,17 +75,18 @@ String contextPath = request.getContextPath();
 				<!-- 드롭다운 메뉴 -->
 				<div id="menu" class="hidden flex flex-col mt-2 ml-6 gap-1">
 
-					<a href="#"
-						class="px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
-						대시보드 
-					</a> 
+					<a href="<%=contextPath%>/gym/dashboard"
+   					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+
+    					<span class="text-sm">대시보드</span>
+					</a>
 					<a href="<%=contextPath%>/gym/schedule"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 
     					<span class="text-sm">스케줄</span>
 					</a> 
 					
-					<a href="<%=contextPath%>/gym/member"
+					<a href="<%=contextPath%>/gym/memberManage"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 
     					<span class="text-sm">회원</span>

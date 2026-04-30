@@ -148,6 +148,32 @@ public class GymMemberManage extends HttpServlet {
 			p3.setPaymentDate(Timestamp.valueOf("2026-04-15 16:10:00"));
 			paymentList.add(p3);
 			
+			List<Payment> cancelPaymentList = new ArrayList<>();
+
+			Payment c1 = new Payment();
+			c1.setPaymentNum(201);
+			c1.setUserEmail("cancel1@test.com");
+			c1.setPaymentPrice(new java.math.BigDecimal(120000));
+			c1.setReason("결제 후 바로 취소 요청");
+			c1.setMemberName("최유리");
+			c1.setMembershipName("헬스장 3개월 이용권");
+			c1.setStatus("취소요청");
+			c1.setPaymentDate(Timestamp.valueOf("2026-04-25 10:15:00"));
+			cancelPaymentList.add(c1);
+
+			Payment c2 = new Payment();
+			c2.setPaymentNum(202);
+			c2.setUserEmail("cancel2@test.com");
+			c2.setPaymentPrice(new java.math.BigDecimal(50000));
+			c2.setReason("상품 선택 실수");
+			c2.setMemberName("강하늘");
+			c2.setMembershipName("1개월 이용권");
+			c2.setStatus("취소요청");
+			c2.setPaymentDate(Timestamp.valueOf("2026-04-26 13:40:00"));
+			cancelPaymentList.add(c2);
+
+			int pendingCancelCount = cancelPaymentList.size();
+			
 			List<MemberManage> filteredList = new java.util.ArrayList<>();
 
 			for (MemberManage m : memberList) {
@@ -157,7 +183,7 @@ public class GymMemberManage extends HttpServlet {
 			    // 🔍 검색
 			    if (keyword != null && !keyword.trim().isEmpty()) {
 			        String kw = keyword.trim();
-			        if (!(m.getMemberName().contains(kw) || m.getTel().contains(kw))) {
+			        if (!(m.getMemberName().contains(kw) || (m.getTel() != null && m.getTel().contains(kw)))) {
 			            match = false;
 			        }
 			    }
@@ -273,6 +299,30 @@ public class GymMemberManage extends HttpServlet {
 			    paymentList = new java.util.ArrayList<>();
 			}
 			
+			int cancelPage = 1;
+			int cancelPageSize = 5;
+
+			if (request.getParameter("cancelPage") != null) {
+			    cancelPage = Integer.parseInt(request.getParameter("cancelPage"));
+			}
+
+			int cancelStart = (cancelPage - 1) * cancelPageSize;
+			int cancelEnd = Math.min(cancelStart + cancelPageSize, cancelPaymentList.size());
+
+			if (cancelStart < cancelPaymentList.size()) {
+			    cancelPaymentList = cancelPaymentList.subList(cancelStart, cancelEnd);
+			} else {
+			    cancelPaymentList = new ArrayList<>();
+			}
+
+//			List<Payment> cancelPaymentList =
+//			        paymentService.selectCancelRequestList(gymId, cancelStartRow, cancelPageSize);
+//
+//			int pendingCancelCount = paymentService.countCancelRequest(gymId);
+
+			int cancelTotalPage =
+			        (int) Math.ceil((double) pendingCancelCount / cancelPageSize);
+			
 			// 파라미터 묶기
 			Map<String, Object> param = new HashMap<>();
 			param.put("gymId", gymId);
@@ -301,11 +351,13 @@ public class GymMemberManage extends HttpServlet {
 			request.setAttribute("totalPage", totalPage);
 			request.setAttribute("paymentList", paymentList);
 			request.setAttribute("pendingRefundCount", pendingRefundCount);
-			request.setAttribute("paymentList", paymentList);
-			request.setAttribute("pendingRefundCount", refundTotalCount);
 			request.setAttribute("refundPage", refundPage);
 			request.setAttribute("refundPageSize", refundPageSize);
 			request.setAttribute("refundTotalPage", refundTotalPage);
+			request.setAttribute("cancelPaymentList", cancelPaymentList);
+			request.setAttribute("pendingCancelCount", pendingCancelCount);
+			request.setAttribute("cancelPage", cancelPage);
+			request.setAttribute("cancelTotalPage", cancelTotalPage);
 
 			// 페이지 이동
 			request.getRequestDispatcher("/gym/gym_memberManage.jsp").forward(request, response);

@@ -1,6 +1,8 @@
 package controller.gym;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -8,15 +10,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import dto.gym.Gym;
 import dto.gym.GymTrainerView;
+import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
-import service.gym.GymMainService;
-import service.gym.GymMainServiceImpl;
 
 /**
  * Servlet implementation class GymMain
@@ -24,20 +24,22 @@ import service.gym.GymMainServiceImpl;
 @WebServlet("/gym/main")
 public class GymMain extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GymMain() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public GymMain() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			GymMainService service = new GymMainServiceImpl();
+//			GymMainService service = new GymMainServiceImpl();
+//			GymReviewService reviewService = new GymReviewServiceImpl();
+			
 
 			try {
 //				String gymIdStr = request.getParameter("gymId");
@@ -62,6 +64,8 @@ public class GymMain extends HttpServlet {
 
 		        // 리뷰
 		        List<Review> reviewList = new java.util.ArrayList<>();
+		        List<Review> allReviewList = new ArrayList<>();
+
 
 		        Review r1 = new Review();
 		        r1.setReviewNum(1);
@@ -85,6 +89,31 @@ public class GymMain extends HttpServlet {
 		        r2.setComment("기구가 많고 좋아요.");
 		        r2.setCreatedAt(new java.util.Date());
 		        reviewList.add(r2);
+		        
+		        for(int i = 1; i <= 4; i++){
+		            Review r = new Review();
+		            r.setReviewNum(i);
+		            r.setClientId(1);
+		            r.setClientName("회원" + i);
+		            r.setStar((i % 5) + 1);
+		            r.setComment("최근 리뷰 내용입니다 " + i);
+		            r.setCreatedAt(new Date());
+
+		            reviewList.add(r);
+		        }
+
+		        // 전체 리뷰 10개
+		        for(int i = 1; i <= 10; i++){
+		            Review r = new Review();
+		            r.setReviewNum(i);
+		            r.setClientId(1);
+		            r.setClientName("회원" + i);
+		            r.setStar((i % 5) + 1);
+		            r.setComment("전체 리뷰 내용입니다 " + i);
+		            r.setCreatedAt(new Date());
+		        
+		            allReviewList.add(r);
+		        }
 
 		        // 이용권
 		        List<Membership> membershipList = new java.util.ArrayList<>();
@@ -125,6 +154,11 @@ public class GymMain extends HttpServlet {
 		        t1.setAdvList(adv1);
 
 		        trainerList.add(t1);
+		        
+		        HotTime todayHotTime = new HotTime();
+		        todayHotTime.setHour(18); // 피크 시간
+		        todayHotTime.setVisitCount(40);
+		        todayHotTime.setHeightPercent(100);
 
 		        // =========================
 		        // 더미 데이터 끝
@@ -138,14 +172,19 @@ public class GymMain extends HttpServlet {
 //				Schedule schedule = service.getSchedule(gymId);
 //				List<GymTrainerView> trainerList = service.getGymTrainerViewList(gymId);
 				
-				HttpSession session = request.getSession(false);
-				Object loginUserId = null;
-				Object loginGym = null;
+//				HttpSession session = request.getSession(false);
+//				Object loginUserId = null;
+//				Object loginGym = null;
+//				
+//				if(session != null) {
+//					loginUserId = session.getAttribute("loginUserId");
+//					loginGym = session.getAttribute("loginGym");
+//				}
+//				
+//				HotTime todayHotTime = service.getTodayHotTime(gymId);
+		        
+//		        List<Review> allReviewList = reviewService.getReviewListByGymId(gymId);
 				
-				if(session != null) {
-					loginUserId = session.getAttribute("loginUserId");
-					loginGym = session.getAttribute("loginGym");
-				}
 
 				// 🔹 request에 담기
 				request.setAttribute("gym", gym);
@@ -155,11 +194,14 @@ public class GymMain extends HttpServlet {
 				request.setAttribute("schedule", schedule);
 				request.setAttribute("trainerList", trainerList);
 				request.setAttribute("trainerCount", trainerList.size());
-				request.setAttribute("loginUserId", loginUserId);
-				request.setAttribute("loginGym", loginGym);
+//				request.setAttribute("loginUserId", loginUserId);
+//				request.setAttribute("loginGym", loginGym);
+				request.setAttribute("todayHotTime", todayHotTime);
+				request.setAttribute("allReviewList", allReviewList);
 
 				// 🔹 JSP 이동
 				request.getRequestDispatcher("/gym/gym_main.jsp").forward(request, response);
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -168,5 +210,3 @@ public class GymMain extends HttpServlet {
 		}
 			
 	}
-
-

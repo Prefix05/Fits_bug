@@ -6,7 +6,7 @@
 <mapper namespace="mapper.sales">
 
     <!-- 매출 목록 -->
-    <select id="selectSalesList" parameterType="map" resultType="dto.gym.SalesDto">
+    <select id="selectSalesList" parameterType="map" resultType="dto.gym.Sales">
         SELECT
             u.name AS memberName,
             LOWER(m.type) AS membershipType,
@@ -16,15 +16,17 @@
             p.payment_price AS paymentPrice,
             p.payment_fee AS paymentFee,
             (p.payment_price - p.payment_fee) AS netPrice,
-            UPPER(p.status) AS status
-        FROM payment p
-        JOIN membership m
+            p.status AS status,
+            p.canceled_at AS canceledAt,
+			p.reason AS reason
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m
           ON p.membership_num = m.membership_num
-        JOIN `user` u
+        JOIN `USER` u
           ON p.user_num = u.id
-        LEFT JOIN trainer t
+        LEFT JOIN TRAINER t
           ON m.trainer_num = t.id
-        LEFT JOIN `user` tu
+        LEFT JOIN `USER` tu
           ON t.user_id = tu.id
         WHERE m.gym_num = #{gymNum}
 
@@ -45,7 +47,7 @@
         </if>
 
         <if test="status != null and status != ''">
-            AND UPPER(p.status) = UPPER(#{status})
+            AND p.status = #{status}
         </if>
 
         <if test="keyword != null and keyword != ''">
@@ -60,12 +62,12 @@
     <!-- 매출 목록 개수 -->
     <select id="selectSalesCount" parameterType="map" resultType="int">
         SELECT COUNT(*)
-        FROM payment p
-        JOIN membership m
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m
           ON p.membership_num = m.membership_num
-        JOIN `user` u
+        JOIN `USER` u
           ON p.user_num = u.id
-        LEFT JOIN trainer t
+        LEFT JOIN TRAINER t
           ON m.trainer_num = t.id
         WHERE m.gym_num = #{gymNum}
 
@@ -86,7 +88,7 @@
         </if>
 
         <if test="status != null and status != ''">
-            AND UPPER(p.status) = UPPER(#{status})
+            AND p.status = #{status}
         </if>
 
         <if test="keyword != null and keyword != ''">
@@ -96,7 +98,7 @@
 
 
     <!-- 상단 매출 요약 -->
-    <select id="selectSalesSummary" parameterType="map" resultType="dto.gym.SalesSummaryDto">
+    <select id="selectSalesSummary" parameterType="map" resultType="dto.gym.SalesSummary">
         SELECT
             IFNULL(SUM(p.payment_price), 0) AS totalSales,
             IFNULL(SUM(CASE WHEN LOWER(m.type) IN ('day', 'month')
@@ -106,11 +108,11 @@
             IFNULL(SUM(p.payment_fee), 0) AS totalFee,
             IFNULL(SUM(p.payment_price - p.payment_fee), 0) AS netSales,
             0 AS growthRate
-        FROM payment p
-        JOIN membership m
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m
           ON p.membership_num = m.membership_num
         WHERE m.gym_num = #{gymNum}
-          AND UPPER(p.status) = 'PAID'
+          AND p.status = '결제완료'
 
         <if test="startDate != null and startDate != ''">
             AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
@@ -131,16 +133,16 @@
 
 
     <!-- 차트용 일자별 매출 -->
-    <select id="selectSalesChartList" parameterType="map" resultType="dto.gym.SalesChartDto">
+    <select id="selectSalesChartList" parameterType="map" resultType="dto.gym.SalesChart">
         SELECT
             DATE_FORMAT(p.payment_date, '%m/%d') AS label,
             IFNULL(SUM(p.payment_price), 0) AS sales,
             0 AS percent
-        FROM payment p
-        JOIN membership m
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m
           ON p.membership_num = m.membership_num
         WHERE m.gym_num = #{gymNum}
-          AND UPPER(p.status) = 'PAID'
+          AND p.status = '결제완료'
 
         <if test="startDate != null and startDate != ''">
             AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
@@ -160,25 +162,25 @@
 
 
     <!-- 최고 매출 트레이너 순위 -->
-    <select id="selectTopTrainerList" parameterType="map" resultType="dto.gym.TopTrainerDto">
+    <select id="selectTopTrainerList" parameterType="map" resultType="dto.gym.TopTrainer">
         SELECT
             t.id AS trainerId,
             tu.name AS trainerName,
             tu.profileImg AS profileImg,
             IFNULL(SUM(p.payment_price), 0) AS totalSales,
             COUNT(ps.id) AS sessionCount
-        FROM payment p
-        JOIN membership m
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m
           ON p.membership_num = m.membership_num
-        JOIN trainer t
+        JOIN TRAINER t
           ON m.trainer_num = t.id
-        JOIN `user` tu
+        JOIN `USER` tu
           ON t.user_id = tu.id
-        LEFT JOIN pt_session ps
+        LEFT JOIN PT_SESSION ps
           ON ps.trainer_id = t.id
         WHERE m.gym_num = #{gymNum}
           AND LOWER(m.type) = 'pt'
-          AND UPPER(p.status) = 'PAID'
+          AND p.status = '결제완료'
 
         <if test="startDate != null and startDate != ''">
             AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
@@ -199,11 +201,13 @@
         SELECT
             t.id AS trainerId,
             u.name AS trainerName
-        FROM trainer t
-        JOIN `user` u
+        FROM TRAINER t
+        JOIN `USER` u
           ON t.user_id = u.id
         WHERE t.gym_id = #{value}
         ORDER BY u.name
     </select>
+    
+    
 
 </mapper>

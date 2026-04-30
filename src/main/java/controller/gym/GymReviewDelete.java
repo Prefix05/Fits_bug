@@ -50,7 +50,7 @@ public class GymReviewDelete extends HttpServlet {
 			
 			service.deleteReview(reviewNum, loginUserId);
 			
-			response.sendRedirect(request.getContextPath() + "main?gymId=" + gymId);
+			response.sendRedirect(request.getContextPath() + "/main?gymId=" + gymId);
 			
 		}catch(Exception e) {
 			e.printStackTrace();

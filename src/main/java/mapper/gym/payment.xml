@@ -40,8 +40,7 @@
             payment_price,
             payment_fee,
             method,
-            status,
-            created_at
+            status
         ) VALUES (
             #{userEmail},
             #{membershipNum},
@@ -50,8 +49,7 @@
             #{paymentPrice},
             #{paymentFee},
             #{method},
-            #{status},
-            NOW()
+            #{status}
         )
     </insert>
 
@@ -77,15 +75,14 @@
             resultType="dto.gym.Payment">
         SELECT
             payment_num AS paymentNum,
-            user_num AS userNum,
+            email_id AS userEmail,
             membership_num AS membershipNum,
             mr_num AS mrNum,
             payment_date AS paymentDate,
             payment_price AS paymentPrice,
             payment_fee AS paymentFee,
             method,
-            status,
-            created_at AS createdAt
+            status
         FROM PAYMENT
         WHERE payment_num = #{paymentNum}
     </select>
@@ -114,6 +111,7 @@
         	p.method AS method,
         	p.status AS status,
         	p.reason AS reason,
+        	p.payment_date AS paymentDate,
         	p.canceled_at AS canceledAt,
         	u.name AS memberName,
         	CONCAT(
@@ -138,7 +136,7 @@
       		ON p.membership_num = m.membership_num
     	WHERE m.gym_num = #{gymId}
       		AND p.status = '환불요청'
-    	ORDER BY p.created_at DESC
+    	ORDER BY p.payment_date DESC
 	</select>
 
 	<!-- 미처리 환불 요청 개수 -->
@@ -154,9 +152,77 @@
 	<!-- 환불 승인 처리 -->
 	<update id="approveRefund" parameterType="int">
     	UPDATE PAYMENT
-    	SET status = '환불완료'
+    	SET status = '환불완료',
     		canceled_at = NOW()
     	WHERE payment_num = #{paymentNum}
 	</update>
+	
+	<!-- 결제 취소 요청 목록 -->
+	<select id="selectCancelRequestList" parameterType="map" resultType="dto.gym.Payment">
+    SELECT
+        p.payment_num AS paymentNum,
+        p.email_id AS userEmail,
+        p.membership_num AS membershipNum,
+        p.payment_price AS paymentPrice,
+        p.payment_fee AS paymentFee,
+        p.method AS method,
+        p.status AS status,
+        p.reason AS reason,
+        p.payment_date AS paymentDate,
+        p.canceled_at AS canceledAt,
+        u.name AS memberName,
+        CONCAT(
+            CASE
+                WHEN m.type = 'pt' THEN 'PT '
+                WHEN m.type = 'day' THEN '1일 '
+                WHEN m.type = 'month' THEN '헬스장 '
+                ELSE ''
+            END,
+            m.type_rep,
+            CASE
+                WHEN m.type = 'pt' THEN '회권'
+                WHEN m.type = 'month' THEN '개월 이용권'
+                WHEN m.type = 'day' THEN '이용권'
+                ELSE ''
+            END
+        ) AS membershipName
+    FROM PAYMENT p
+    JOIN USER u
+      ON p.email_id = u.email_id
+    JOIN MEMBERSHIP m
+      ON p.membership_num = m.membership_num
+    WHERE m.gym_num = #{gymId}
+      AND p.status = '취소요청'
+    ORDER BY p.payment_date DESC
+    LIMIT #{startRow}, #{pageSize}
+</select>
+	
+	<!-- 결제 취소 요청 개수 -->
+	<select id="countCancelRequest" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+    FROM PAYMENT p
+    JOIN MEMBERSHIP m
+      ON p.membership_num = m.membership_num
+    WHERE m.gym_num = #{gymId}
+      AND p.status = '취소요청'
+</select>
+	
+	<!-- 결제 취소 승인 -->
+	<update id="updateCancelApprove" parameterType="int">
+    UPDATE PAYMENT
+    SET status = '취소완료',
+        canceled_at = NOW()
+    WHERE payment_num = #{paymentNum}
+</update>
 
+<update id="cancelPtSessionByPayment" parameterType="int">
+        UPDATE PT_SESSION ps
+        JOIN PT_PACKAGE pp
+          ON ps.package_id = pp.id
+        JOIN PAYMENT p
+          ON pp.mr_num = p.mr_num
+        SET ps.status = '취소'
+        WHERE p.payment_num = #{paymentNum}
+          AND ps.status = '예약완료'
+    </update>
 </mapper>

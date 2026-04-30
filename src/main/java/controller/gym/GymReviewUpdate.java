@@ -58,9 +58,9 @@ public class GymReviewUpdate extends HttpServlet {
 			review.setFile(origin.getFile());
 			
 			
-			service.updateReview(review, reviewNum);
+			service.updateReview(review, loginUserId);
 			
-			response.sendRedirect(request.getContextPath() + "main?gymId=" + origin.getGymId());
+			response.sendRedirect(request.getContextPath() + "/main?gymId=" + origin.getGymId());
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new ServletException("리뷰 수정 중 오류", e);

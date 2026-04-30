@@ -56,7 +56,7 @@ public class GymReviewWrite extends HttpServlet {
 			GymReviewService service = new GymReviewServiceImpl();
 			service.writeReview(review);
 			
-			response.sendRedirect(request.getContextPath() + "main?gymId=" + gymId);
+			response.sendRedirect(request.getContextPath() + "/main?gymId=" + gymId);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new ServletException("리뷰 작성 중 오류", e);

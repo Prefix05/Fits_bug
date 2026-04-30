@@ -16,7 +16,7 @@ import dto.gym.TrainerChoose;
 public class GymScheduleServiceImpl implements GymScheduleService {
 	private GymScheduleDao dao = new GymScheduleDaoImpl();
 	@Override
-	public Map<String, Object> getSchedulePageData(int gymId) throws Exception {
+	public Map<String, Object> getSchedulePageData(int gymId, int weekOffset) throws Exception {
 
 		LocalDate today = LocalDate.now();
 

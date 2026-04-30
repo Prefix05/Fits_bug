@@ -189,7 +189,7 @@
 </div>
 
 <!-- Reviews -->
-<section id="reviewSection" class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col h-[420px]">
+<section id="reviewSection" class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col min-h-[420px]">
 	<div class="flex justify-between items-center mb-4 flex-shrink-0">
 		<h3 class="text-sm font-bold tracking-tight">리뷰 및 평점</h3>
 		<div class="flex items-center space-x-2">
@@ -240,63 +240,104 @@
         	</div>
     	</div>
 	</c:if>
-	<div id="reviewList" class="grid grid-cols-2 gap-4">
-	<c:choose>
-		<c:when test="${not empty reviewList}">
-			<c:forEach var="review" items="${reviewList}">
-				<div class="bg-surface-container-low p-4 rounded-lg">
-					<div class="flex justify-between items-start mb-2">
-						<div class="flex items-center space-x-2">
-							<span class="material-symbols-outlined text-outline-variant text-2xl">account_circle</span>
-							<div>
-								<div class="text-[11px] font-bold">${review.clientName}</div>
-								<div class="text-[9px] text-outline">${review.createdAt}</div>
-							</div>
-						</div>
-						
-						<div class="flex items-center">
-							<div class="flex text-yellow-400 scale-75 origin-right mr-1">
-								<c:forEach begin="1" end="${review.star}">
-									<span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
-								</c:forEach>
-								<c:forEach begin="${review.star + 1}" end="5">
-									<span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
-								</c:forEach>
-							</div>
-							
-							<c:if test="${not empty sessionScope.loginUser or not empty sessionScope.loginGym}"> 
-								<div class="flex items-center space-x-1.5 ml-2">
-									<button class="text-outline hover:text-error transition-colors" title="신고하기" onclick="reportReview('${review.reviewNum}')">
-										<span class="material-symbols-outlined text-sm">report</span>
-									</button>
-								</div>
-							</c:if>
-							
-							<c:if test="${sessionScope.loginUser.id == review.clientId}">
-    							<div class="flex items-center space-x-1.5 ml-2">
-        							<button onclick="editReview(${review.reviewNum})">
-            							<span class="material-symbols-outlined text-sm">edit</span>
-        							</button>
-        							<button onclick="deleteReview(${review.reviewNum})">
-            							<span class="material-symbols-outlined text-sm">delete</span>
-        							</button>
-    							</div>
-							</c:if>
-						</div>
-					</div>
-					<p class="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed">${review.comment}</p>
-				</div>
-			</c:forEach>
-		</c:when>
-		
-		<c:otherwise>
-			<div class="col-span-2 text-xs text-outline p-4 text-center">
-                    등록된 리뷰가 없습니다.
-           </div>
-		</c:otherwise>
-	</c:choose>
+<div id="reviewList" class="grid grid-cols-2 gap-4">
+    <c:choose>
+        <c:when test="${not empty reviewList}">
+            <c:forEach var="review" items="${reviewList}">
+                <div class="bg-surface-container-low p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="material-symbols-outlined text-outline-variant text-2xl">account_circle</span>
+                            <div>
+                                <div class="text-[11px] font-bold">${review.clientName}</div>
+                                <div class="text-[9px] text-outline">${review.createdAt}</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400 scale-75 origin-right mr-1">
+                                <c:forEach begin="1" end="${review.star}">
+                                    <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
+                                </c:forEach>
+                                <c:forEach begin="${review.star + 1}" end="5">
+                                    <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
+                                </c:forEach>
+                            </div>
+
+                            <!-- 신고 버튼 -->
+                            <c:if test="${not empty sessionScope.loginUser or not empty sessionScope.loginGym}">
+                                <button class="text-outline hover:text-error ml-2"
+                                        onclick="reportReview('${review.reviewNum}')">
+                                    <span class="material-symbols-outlined text-sm">report</span>
+                                </button>
+                            </c:if>
+
+                            <!-- 본인 리뷰 -->
+                            <c:if test="${sessionScope.loginUser.id == review.clientId}">
+                                <button onclick="editReview(${review.reviewNum})" class="ml-2">
+                                    <span class="material-symbols-outlined text-sm">edit</span>
+                                </button>
+                                <button onclick="deleteReview(${review.reviewNum})">
+                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                </button>
+                            </c:if>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed">
+                        ${review.comment}
+                    </p>
+                </div>
+            </c:forEach>
+        </c:when>
+
+        <c:otherwise>
+            <div class="col-span-2 text-xs text-outline p-4 text-center">
+                등록된 리뷰가 없습니다.
+            </div>
+        </c:otherwise>
+    </c:choose>
+</div>	
+<button id="reviewMoreBtn"
+        onclick="toggleAllReviews()"
+        class="w-full mt-4 py-1.5 text-[10px] font-bold text-primary hover:bg-primary/5 rounded">
+    리뷰 ${gym.reviewCount}개 모두 보기
+</button>
+<div id="allReviewBox" class="hidden mt-4 max-h-none overflow-y-auto space-y-3 custom-scrollbar">
+    <c:choose>
+        <c:when test="${not empty allReviewList}">
+            <c:forEach var="review" items="${allReviewList}">
+                <div class="bg-surface-container-low p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="text-[11px] font-bold">${review.clientName}</div>
+                            <div class="text-[9px] text-outline">${review.createdAt}</div>
+                        </div>
+
+                        <div class="flex text-yellow-400 scale-75 origin-right">
+                            <c:forEach begin="1" end="${review.star}">
+                                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
+                            </c:forEach>
+                            <c:forEach begin="${review.star + 1}" end="5">
+                                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
+                            </c:forEach>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                        ${review.comment}
+                    </p>
+                </div>
+            </c:forEach>
+        </c:when>
+
+        <c:otherwise>
+            <div class="text-xs text-outline p-4 text-center">
+                등록된 리뷰가 없습니다.
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
-<button id="reviewMoreBtn" onclick="location.href='${pageContext.request.contextPath}/review/list?gymId=${gym.id}'" class="w-full mt-4 py-1.5 text-[10px] font-bold text-primary hover:bg-primary/5 rounded">리뷰 ${gym.reviewCount}개 모두 보기</button>
 </section>
 
 <!-- Membership -->
@@ -614,7 +655,16 @@ let selectedStar = 0;
 
 function setStar(star){
     selectedStar = star;
-    alert("별점 선택: " + star);
+
+    const stars = document.querySelectorAll("#reviewSection .material-symbols-outlined");
+
+    stars.forEach((el, index) => {
+        if(index < star){
+            el.style.fontVariationSettings = "'FILL' 1";
+        }else{
+            el.style.fontVariationSettings = "'FILL' 0";
+        }
+    });
 }
 
 function submitReview(){
@@ -629,7 +679,7 @@ function submitReview(){
         return;
     }
 
-    location.href = "/review/write?star=" + selectedStar + "&content=" + content;
+    location.href = "${pageContext.request.contextPath}/review/write?gymId=${gym.id}&star=" + selectedStar + "&comment=" + content;
 }
 
 function editReview(id){
@@ -722,8 +772,19 @@ function deleteReview(id){
                     <div class="bg-primary/5 rounded-lg p-4 mb-6 flex gap-3 items-start border border-primary/10">
                         <span class="material-symbols-outlined text-primary text-xl">info</span>
                         <p class="text-sm text-on-surface-variant">
-                            혼잡 시간대 안내: <span class="font-semibold text-primary">18:00 - 21:00</span> 사이가 가장 붐비는 시간입니다.
-                        </p>
+    						혼잡 시간대 안내:
+    						<c:choose>
+        						<c:when test="${not empty todayHotTime}">
+            						<span class="font-semibold text-primary">
+                						${todayHotTime.hour}:00 - ${todayHotTime.hour + 1}:00
+            						</span>
+            						사이가 가장 붐비는 시간입니다.
+        						</c:when>
+        						<c:otherwise>
+            						<span class="font-semibold text-primary">혼잡 데이터가 없습니다.</span>
+        						</c:otherwise>
+    						</c:choose>
+						</p>
                     </div>
 
                     <label class="block text-sm font-bold mb-2">시작일</label>
@@ -915,6 +976,21 @@ function submitPayment(event) {
     });
 
     return false;
+}
+</script>
+
+<script>
+function toggleAllReviews() {
+    const box = document.getElementById("allReviewBox");
+    const btn = document.getElementById("reviewMoreBtn");
+
+    box.classList.toggle("hidden");
+
+    if (box.classList.contains("hidden")) {
+        btn.innerText = "리뷰 ${gym.reviewCount}개 모두 보기";
+    } else {
+        btn.innerText = "리뷰 접기";
+    }
 }
 </script>
 </body>
