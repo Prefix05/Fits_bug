@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
 import dao.member.WorkoutPlanDAO;
 import dao.member.WorkoutPlanDAOImpl;
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.WorkoutPlanDTO;
 
 @WebServlet("/step3")
@@ -38,7 +38,7 @@ public class Step3Controller extends HttpServlet {
         String diet = request.getParameter("diet");
 
         // 🔥 DB 저장
-        MemberDTO user = new MemberDTO();
+        LoginDTO user = new LoginDTO();
         user.setEmail(username);
         user.setPassword(password);
         user.setNickname(nickname);
@@ -51,7 +51,7 @@ public class Step3Controller extends HttpServlet {
         plan.setWeight(Integer.parseInt(weight));
         plan.setDiet(diet);
         
-        MemberDAO memberDao = new MemberDAOImpl();
+        LoginDAO memberDao = new LoginDAOImpl();
         memberDao.insertMember(user); // 👉 DB 저장
         
         WorkoutPlanDAO planDao = new WorkoutPlanDAOImpl();

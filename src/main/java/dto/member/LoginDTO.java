@@ -1,6 +1,6 @@
 package dto.member;
 
-public class MemberDTO {
+public class LoginDTO {
 	private String email;
     private String password;
     private String nickname;
@@ -12,12 +12,12 @@ public class MemberDTO {
     //카카오용
     private String socialType;	//Kakao
     
-	public MemberDTO() {
+	public LoginDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MemberDTO(String email, String password, String nickname, String name, String phone, String profileImage,
+	public LoginDTO(String email, String password, String nickname, String name, String phone, String profileImage,
 			boolean emailVerified, String socialType) {
 		super();
 		this.email = email;

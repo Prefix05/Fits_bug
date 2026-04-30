@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dto.member.MemberDTO;
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
+import dto.member.LoginDTO;
 
 @WebServlet("/updateProfile")
 @MultipartConfig(
@@ -29,7 +29,7 @@ public class UpdateProfileController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         String nickname = req.getParameter("nickname");
         String password = req.getParameter("password");
@@ -60,7 +60,7 @@ public class UpdateProfileController extends HttpServlet {
             loginUser.setPassword(password);
         }
 
-        MemberDAO dao = new MemberDAOImpl();
+        LoginDAO dao = new LoginDAOImpl();
         boolean result = dao.update(loginUser);
 
         if(result){

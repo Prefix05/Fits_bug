@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.member.WorkoutPlanDAO;
 import dao.member.WorkoutPlanDAOImpl;
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.WorkoutPlanDTO;
 
 @WebServlet("/updatePlan")
@@ -20,7 +20,7 @@ public class UpdatePlanController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
 
         WorkoutPlanDTO dto = new WorkoutPlanDTO();
 

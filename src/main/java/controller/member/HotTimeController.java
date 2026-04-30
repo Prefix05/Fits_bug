@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import service.member.HotTimeService;
 import service.member.HotTimeServiceImpl;
 
@@ -23,7 +23,7 @@ public class HotTimeController extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
 
         HttpSession session = req.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         if(loginUser == null){
             resp.getWriter().write("{}");

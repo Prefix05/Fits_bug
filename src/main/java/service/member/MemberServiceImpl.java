@@ -1,20 +1,20 @@
 package service.member;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dto.member.MemberDTO;
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
+import dto.member.LoginDTO;
 
 public class MemberServiceImpl implements MemberService {
 
-    private MemberDAO dao = new MemberDAOImpl(); // ⭐ 핵심 수정
+    private LoginDAO dao = new LoginDAOImpl(); // ⭐ 핵심 수정
 
     @Override
-    public int join(MemberDTO m){
+    public int join(LoginDTO m){
         return dao.insertMember(m);
     }
 
     @Override
-    public MemberDTO login(String email, String password){
+    public LoginDTO login(String email, String password){
         return dao.login(email, password);
     }
 

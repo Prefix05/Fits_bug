@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import service.member.MyPageServiceImpl;
 
 @WebServlet("/uploadProfile")
@@ -29,7 +29,7 @@ public class UploadController extends HttpServlet {
         filePart.write(path + fileName);
 
         HttpSession session = request.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
 
         user.setProfileImage(fileName);
 

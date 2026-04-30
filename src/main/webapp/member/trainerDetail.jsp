@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.LoginDTO"%>
 <%@ page import="dto.member.TrainerDTO" %>
 
 <%
-TrainerDTO trainer = (TrainerDTO) request.getAttribute("trainer");
+TrainerDTO t = (TrainerDTO) request.getAttribute("trainer");
 %>
+
 <% String contextPath = request.getContextPath(); %>
 
 <!DOCTYPE html>
@@ -40,7 +41,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
            style="width:110px;height:110px;border-radius:50%;border:4px solid white;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.2);" alt="트레이너">
       <div>
         <div style="font-size:13px;color:rgba(255,255,255,0.8);font-weight:600;margin-bottom:6px;">전문 트레이너</div>
-        <h1 id="trainerName" style="font-size:32px;font-weight:900;color:white;margin-bottom:8px;"><%= trainer.getName() %> 트레이너</h1>
+        <h1 id="trainerName" style="font-size:32px;font-weight:900;color:white;margin-bottom:8px;"><%= t.getName() %> 트레이너</h1>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,0.3);padding:5px 14px;border-radius:99px;font-size:13px;font-weight:700;color:white;">💪 근력 강화</span>
           <span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,0.3);padding:5px 14px;border-radius:99px;font-size:13px;font-weight:700;color:white;">🏋️ 체형 교정</span>
@@ -186,31 +187,43 @@ fetch("review?trainerId=" + trainerId)
   .then(list => {
     const box = document.getElementById("reviewList");
     if(!list || !list.length){ box.innerHTML = "<p style='color:#9DA8C0;font-size:14px;text-align:center;padding:20px;'>아직 리뷰가 없어요.</p>"; return; }
-    box.innerHTML = list.slice(0,4).map(rv => `
-      <div class="review-card">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${rv.userId}" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #E8EDF5;" alt="리뷰어">
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:13px;color:#1A1F36;">${rv.userId}</div>
-            <div style="font-size:12px;color:#9DA8C0;">${rv.createdAt||''}</div>
-          </div>
-          <div style="color:#FFD166;font-size:14px;font-weight:700;">${'★'.repeat(rv.rating||5)}</div>
-        </div>
-        ${rv.image ? `<img src="${rv.image}" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;" alt="리뷰 이미지">` : ''}
-        <p style="font-size:13px;color:#5A6480;line-height:1.6;">${rv.content}</p>
-      </div>
-    `).join("");
+    box.innerHTML = list.slice(0,4).map(function(rv) {
+    	  return ''
+    	    + '<div class="review-card">'
+    	    +   '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
+    	    +     '<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=' + rv.userId + '" '
+    	    +          'style="width:36px;height:36px;border-radius:50%;border:1.5px solid #E8EDF5;" alt="리뷰어">'
+    	    +     '<div style="flex:1;">'
+    	    +       '<div style="font-weight:700;font-size:13px;color:#1A1F36;">' + rv.userId + '</div>'
+    	    +       '<div style="font-size:12px;color:#9DA8C0;">' + (rv.createdAt || '') + '</div>'
+    	    +     '</div>'
+    	    +     '<div style="color:#FFD166;font-size:14px;font-weight:700;">' + '★'.repeat(rv.rating || 5) + '</div>'
+    	    +   '</div>'
+
+    	    + (rv.image
+    	        ? '<img src="' + rv.image + '" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;" alt="리뷰 이미지">'
+    	        : '')
+
+    	    +   '<p style="font-size:13px;color:#5A6480;line-height:1.6;">' + rv.content + '</p>'
+    	    + '</div>';
+    	}).join("");
   }).catch(() => {
     // 더미 리뷰
-    document.getElementById("reviewList").innerHTML = `
-      <div class="review-card">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=u1" style="width:36px;height:36px;border-radius:50%;border:1.5px solid #E8EDF5;">
-          <div><div style="font-weight:700;font-size:13px;color:#1A1F36;">근육왕철수</div><div style="font-size:12px;color:#9DA8C0;">2026.04.20</div></div>
-          <div style="margin-left:auto;color:#FFD166;font-size:14px;">★★★★★</div>
-        </div>
-        <p style="font-size:13px;color:#5A6480;line-height:1.6;">자세 교정을 정말 꼼꼼하게 해주셔서 부상 없이 중량을 올릴 수 있었어요! 강력 추천합니다 💪</p>
-      </div>`;
+	  document.getElementById("reviewList").innerHTML =
+		  '<div class="review-card">'
+		+   '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
+		+     '<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=u1" '
+		+          'style="width:36px;height:36px;border-radius:50%;border:1.5px solid #E8EDF5;">'
+		+     '<div>'
+		+       '<div style="font-weight:700;font-size:13px;color:#1A1F36;">근육왕철수</div>'
+		+       '<div style="font-size:12px;color:#9DA8C0;">2026.04.20</div>'
+		+     '</div>'
+		+     '<div style="margin-left:auto;color:#FFD166;font-size:14px;">★★★★★</div>'
+		+   '</div>'
+		+   '<p style="font-size:13px;color:#5A6480;line-height:1.6;">'
+		+     '자세 교정을 정말 꼼꼼하게 해주셔서 부상 없이 중량을 올릴 수 있었어요! 강력 추천합니다 💪'
+		+   '</p>'
+		+ '</div>';
   });
 
 // 패키지 선택 시 요약 업데이트

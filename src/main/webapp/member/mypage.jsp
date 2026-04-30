@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.LoginDTO"%>
 <%@ page import="dto.member.WorkoutPlanDTO"%>
 <%
-MemberDTO user = (MemberDTO) request.getAttribute("member");
+LoginDTO user = (LoginDTO) request.getAttribute("member");
 WorkoutPlanDTO plan = (WorkoutPlanDTO) request.getAttribute("plan");
 if (user == null) { response.sendRedirect("login.jsp"); return; }
 if (plan == null) { plan = new WorkoutPlanDTO(); }

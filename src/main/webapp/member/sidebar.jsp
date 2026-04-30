@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.LoginDTO"%>
 <%
-    String contextPath = request.getContextPath();
-    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+String contextPath = request.getContextPath();
+    LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 %>
 
 <!-- 핏불 사이드바 -->
@@ -16,7 +16,7 @@
 ">
 
   <!-- 로고 -->
-  <a href="<%=contextPath%>/main" style="
+  <a href="<%=contextPath%>/member/main" style="
     display:flex;align-items:center;gap:10px;
     margin-bottom:22px;padding:0 6px;text-decoration:none;
   ">
@@ -59,22 +59,22 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/main" class="sb-link">
+    <a href="<%=contextPath%>/member/main.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
-    <a href="<%=request.getContextPath()%>/guideList">
+    <a href="<%=request.getContextPath()%>/member/guideList.jsp">
       <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
     </a>
-    <a href="<%=request.getContextPath()%>/trainerList">
+    <a href="<%=request.getContextPath()%>/member/trainerList.jsp">
       <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
     </a>
-    <a href="<%=request.getContextPath()%>/gymList">
+    <a href="<%=request.getContextPath()%>/member/gymList.jsp">
       <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
     </a>
-    <a href="<%=contextPath%>/community.jsp" class="sb-link">
+    <a href="<%=contextPath%>/member/community.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
-    <a href="<%=contextPath%>/mypage" class="sb-link">
+    <a href="<%=contextPath%>/member/mypage" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>마이페이지</span>
     </a>
 
@@ -82,15 +82,15 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/support.jsp" class="sb-link">
+    <a href="<%=contextPath%>/member/support.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/logout'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
     </button>
     <% } else { %>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/login.jsp'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인
     </button>
     <% } %>

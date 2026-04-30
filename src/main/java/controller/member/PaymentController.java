@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.PaymentDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
@@ -23,7 +23,7 @@ public class PaymentController extends HttpServlet {
             throws IOException {
 
         HttpSession session = req.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
 
         resp.setContentType("application/json;charset=UTF-8");
 

@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dto.member.MemberDTO" %>
+<%@ page import="dto.member.LoginDTO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-  MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
   String nickname = (loginUser != null) ? loginUser.getNickname() : "";
 %>
 <!DOCTYPE html>

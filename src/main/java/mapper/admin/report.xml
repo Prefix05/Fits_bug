@@ -5,11 +5,11 @@
 <mapper namespace="mapper.admin.report">
 	<select id="selectReportList" parameterType="map" resultType="report">
         SELECT 
-			r.report_id as reportId,
+			r.id as reportId,
         	r.reporter_id as reporterId,
         	u1.name as reporterName,
         	r.target_id as targetId,
-        	r.post_num as postNum,
+        	r.post_id as postNum,
         	r.category, r.title, r.content, r.file, r.result, r.status,
         	r.reg_date as regDate,
         	r.process_date as processDate 
@@ -26,19 +26,19 @@
 
     <select id="selectReportDetail" parameterType="int" resultType="report">
         SELECT 
-        	r.report_id as reportId,
+        	r.id as reportId,
         	r.reporter_id as reporterId,
         	u1.name as reporterName,
         	r.target_id as targetId,
         	u2.name as targetName,
-        	r.post_num as postNum,
+        	r.post_id as postNum,
         	r.category, r.title, r.content, r.file, r.result, r.status,
         	r.reg_date as regDate,
         	r.process_date as processDate 
         FROM REPORT r
         LEFT JOIN USER u1 on(r.reporter_id=u1.id)
         LEFT JOIN USER u2 on(r.target_id=u2.id)
-        WHERE r.report_id = #{reportId}
+        WHERE r.id = #{reportId}
     </select>
 
     <update id="updateReportStatus" parameterType="report">
@@ -46,6 +46,6 @@
         SET status = #{status}, 
             result = #{result}, 
             process_date = NOW()
-        WHERE report_id = #{reportId}
+        WHERE id = #{reportId}
     </update>
 </mapper>

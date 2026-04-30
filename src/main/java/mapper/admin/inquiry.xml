@@ -5,29 +5,30 @@
 <mapper namespace="mapper.admin.inquiry">
 	<select id="selectInquiryList" parameterType="map" resultType="inquiry">
         SELECT 
-        	i.inquiry_id as inquiryId,
-        	i.user_id as userId,
-        	u.name as userName,
-        	i.category,
-        	i.title,
-        	i.content,
-        	i.file,
-        	i.result,
-        	i.status,
-        	i.reg_date as regDate,
-        	i.process_date as processDate 
+            i.id as inquiryId,
+            i.user_id as userId,
+            u.name as userName,
+            i.category,
+            i.title,
+            i.content,
+            i.file,
+            i.result,
+            i.status,
+            i.reg_date as regDate,
+            i.process_date as processDate 
         FROM INQUIRY i
-        LEFT JOIN USER u ON (i.user_id = u.id)
+        LEFT JOIN USER u ON (i.user_id = u.id)  <!-- 수정됨: i.id -> i.user_id -->
         WHERE i.status = #{status}
         <if test="keyword != null and keyword != ''">
-            AND (i.title LIKE '%' || #{keyword} || '%' OR u.user_name LIKE '%' || #{keyword} || '%')
+            <!-- MySQL/MariaDB 기준 CONCAT으로 수정 -->
+            AND (i.title LIKE CONCAT('%', #{keyword}, '%') OR u.name LIKE CONCAT('%', #{keyword}, '%'))
         </if>
         ORDER BY i.reg_date DESC
     </select>
 
     <select id="selectInquiryDetail" parameterType="int" resultType="inquiry">
         SELECT 
-			i.inquiry_id as inquiryId,
+			i.id as inquiryId,
         	i.user_id as userId,
         	u.name as userName,
         	i.category,
@@ -40,7 +41,7 @@
         	i.process_date as processDate
         FROM INQUIRY i
         LEFT JOIN USER u ON (i.user_id = u.id)
-        WHERE i.inquiry_id = #{inquiryId}
+        WHERE i.id = #{inquiryId}
     </select>
 
     <update id="updateInquiryReply" parameterType="inquiry">
@@ -48,6 +49,6 @@
         SET result = #{result}, 
             status = 'COMPLETE', 
             process_date = NOW()
-        WHERE inquiry_id = #{inquiryId}
+        WHERE id = #{inquiryId}
     </update>
 </mapper>

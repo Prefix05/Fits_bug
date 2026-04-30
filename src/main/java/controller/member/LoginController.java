@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import service.member.MemberService;
 import service.member.MemberServiceImpl;
 
-@WebServlet("/login") // ⭐ login으로 매핑 (폼 action이랑 맞춰야함)
-public class MemberController extends HttpServlet {
+@WebServlet("/member/login") // ⭐ login으로 매핑 (폼 action이랑 맞춰야함)
+public class LoginController extends HttpServlet {
 
     private MemberService memberService = new MemberServiceImpl();
 
@@ -34,7 +34,7 @@ public class MemberController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        MemberDTO loginUser = memberService.login(email, password);
+        LoginDTO loginUser = memberService.login(email, password);
 
         if (loginUser != null) {
             HttpSession session = request.getSession();
