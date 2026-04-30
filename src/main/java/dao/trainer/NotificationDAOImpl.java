@@ -32,7 +32,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         params.put("today", today.toString()); // "2026-04-23"
 
         try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sqlSession.selectList("dao.NotificationMapper.findRecentByUserAndMember", params);
+            return sqlSession.selectList("notification.findRecentByUserAndMember", params);
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();

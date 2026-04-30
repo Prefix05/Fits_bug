@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.admin.Member;
+import dto.admin.MemberDTO;
 import service.admin.MemberService;
 import service.admin.MemberServiceImpl;
 import util.PageInfo;
@@ -40,7 +40,7 @@ public class MemberTrainer extends HttpServlet {
 			
 			try {
 				MemberService service = new MemberServiceImpl();
-				List<Member> list = service.trainerList(pageInfo, trainerName);
+				List<MemberDTO> list = service.trainerList(pageInfo, trainerName);
 				
 				response.setContentType("application/json;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -48,7 +48,7 @@ public class MemberTrainer extends HttpServlet {
 				StringBuilder json = new StringBuilder();
 				json.append("[");
 				for (int i = 0; i < list.size(); i++) {
-	                Member m = list.get(i);
+	                MemberDTO m = list.get(i);
 	                json.append("{");
 	                json.append("\"trainerName\":\"" + m.getTrainerName() + "\",");
 	                json.append("\"trainerTel\":\"" + m.getTrainerTel() + "\",");
@@ -79,7 +79,7 @@ public class MemberTrainer extends HttpServlet {
 		
 		try {
 			MemberService service = new MemberServiceImpl();
-			List<Member> trainerList = service.trainerList(pageInfo, null);
+			List<MemberDTO> trainerList = service.trainerList(pageInfo, null);
 			int totalCount = service.totalCnt();
 			int gymCount = service.gymCnt();
 			int trainerCount = service.trainerCnt();

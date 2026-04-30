@@ -3,8 +3,8 @@ package service.gym;
 import java.util.List;
 import java.util.Map;
 
-import dao.gym.infoEdit.InfoEditDao;
-import dao.gym.infoEdit.InfoEditDaoImpl;
+import dao.gym.InfoEditDao;
+import dao.gym.InfoEditDaoImpl;
 import dto.gym.Gym;
 import dto.gym.GymPeakTime;
 import dto.gym.Membership;

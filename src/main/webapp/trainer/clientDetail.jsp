@@ -8,15 +8,71 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
     <link
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-            rel="stylesheet" />
+            rel="stylesheet"/>
     <script
-            id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "secondary-fixed": "#d8e2ff", "tertiary-container": "#c64f00", "on-secondary": "#ffffff", "on-tertiary": "#ffffff", background: "#f9f9fe", secondary: "#405e96", "on-background": "#1a1c1f", "surface-dim": "#d9dade", "secondary-container": "#a1befd", "primary-fixed": "#d8e2ff", tertiary: "#9e3d00", "on-tertiary-container": "#fffbff", "primary-fixed-dim": "#adc6ff", "surface-container-high": "#e8e8ed", "on-secondary-fixed-variant": "#26467d", "surface-container-low": "#f3f3f8", "on-surface-variant": "#414755", "secondary-fixed-dim": "#adc6ff", "tertiary-fixed-dim": "#ffb595", "on-primary-container": "#fefcff", "error-container": "#ffdad6", "inverse-on-surface": "#f0f0f5", "on-secondary-container": "#2d4c83", "surface-container-highest": "#e2e2e7", "surface-bright": "#f9f9fe", surface: "#f9f9fe", "on-surface": "#1a1c1f", primary: "#0058bc", "on-tertiary-fixed-variant": "#7c2e00", "outline-variant": "#c1c6d7", "primary-container": "#0070eb", outline: "#717786", "on-error-container": "#93000a", "inverse-surface": "#2e3034", "surface-tint": "#005bc1", "on-primary-fixed-variant": "#004493", "surface-container": "#ededf2", "on-error": "#ffffff", "inverse-primary": "#adc6ff", error: "#ba1a1a", "on-tertiary-fixed": "#351000", "surface-variant": "#e2e2e7", "tertiary-fixed": "#ffdbcc", "on-secondary-fixed": "#001a41", "on-primary-fixed": "#001a41" }, fontFamily: { headline: ["Inter"], body: ["Inter"], label: ["Inter"], display: "Inter" }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" } } } };</script>
+            id="tailwind-config">tailwind.config = {
+        darkMode: "class", theme: {
+            extend: {
+                colors: {
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#d8e2ff",
+                    "tertiary-container": "#c64f00",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    background: "#f9f9fe",
+                    secondary: "#405e96",
+                    "on-background": "#1a1c1f",
+                    "surface-dim": "#d9dade",
+                    "secondary-container": "#a1befd",
+                    "primary-fixed": "#d8e2ff",
+                    tertiary: "#9e3d00",
+                    "on-tertiary-container": "#fffbff",
+                    "primary-fixed-dim": "#adc6ff",
+                    "surface-container-high": "#e8e8ed",
+                    "on-secondary-fixed-variant": "#26467d",
+                    "surface-container-low": "#f3f3f8",
+                    "on-surface-variant": "#414755",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "tertiary-fixed-dim": "#ffb595",
+                    "on-primary-container": "#fefcff",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f0f0f5",
+                    "on-secondary-container": "#2d4c83",
+                    "surface-container-highest": "#e2e2e7",
+                    "surface-bright": "#f9f9fe",
+                    surface: "#f9f9fe",
+                    "on-surface": "#1a1c1f",
+                    primary: "#0058bc",
+                    "on-tertiary-fixed-variant": "#7c2e00",
+                    "outline-variant": "#c1c6d7",
+                    "primary-container": "#0070eb",
+                    outline: "#717786",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#2e3034",
+                    "surface-tint": "#005bc1",
+                    "on-primary-fixed-variant": "#004493",
+                    "surface-container": "#ededf2",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#adc6ff",
+                    error: "#ba1a1a",
+                    "on-tertiary-fixed": "#351000",
+                    "surface-variant": "#e2e2e7",
+                    "tertiary-fixed": "#ffdbcc",
+                    "on-secondary-fixed": "#001a41",
+                    "on-primary-fixed": "#001a41"
+                },
+                fontFamily: {headline: ["Inter"], body: ["Inter"], label: ["Inter"], display: "Inter"},
+                borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}
+            }
+        }
+    };</script>
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -34,12 +90,84 @@
         body {
             min-height: 100vh;
         }
+
+        .metric-selected {
+            @apply ring-2;
+        }
+
+        .ring-weight {
+            --tw-ring-color: #0058bc;
+        }
+
+        .ring-muscle {
+            --tw-ring-color: #22c55e;
+        }
+
+        .ring-bodyFat {
+            --tw-ring-color: #f97316;
+        }
+
     </style>
 </head>
 <body class="bg-background text-on-background font-body antialiased" data-mode="connect">
-<!-- Persistent Sidebar Navigation (Desktop) -->
+
+<!-- Mobile Top Bar -->
+<header
+        class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-[#007AFF] rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-lg">exercise</span>
+        </div>
+        <h1 class="text-lg font-bold text-on-surface">Fitsbug</h1>
+    </div>
+    <div class="flex items-center gap-1">
+        <button class="p-2 rounded-lg hover:bg-slate-200">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+            <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
+        </a>
+    </div>
+</header>
+
+<!-- Mobile Bottom Nav -->
+<nav
+        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
+    <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">distance</span>
+        <span class="text-[10px] font-medium">내주변</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/dashboard"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
+        <span class="text-[10px] font-medium">대시보드</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
+        <span class="material-symbols-outlined text-[22px]">group</span>
+        <span class="text-[10px] font-bold text-blue-700">화원관리</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+        <span class="text-[10px] font-medium">일정</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">chat</span>
+        <span class="text-[10px] font-medium">메시지</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">payments</span>
+        <span class="text-[10px] font-medium">수익</span>
+    </a>
+</nav>
+
+<!-- SideNavBar -->
 <aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex flex-col p-6">
+        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
     <a href="" class="flex items-center gap-3 mb-10">
         <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
             <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
@@ -49,14 +177,15 @@
     <nav class="flex-1 space-y-1" id="main-nav">
 
         <!-- 공통 nav item -->
+
         <!-- 내주변 -->
         <div class="relative">
             <!-- Parent toggle -->
             <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
                onclick="
-                                this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                                this.querySelector('.chevron').classList.toggle('rotate-180');
-                            " href="#">
+                            this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
+                            this.querySelector('.chevron').classList.toggle('rotate-180');
+                        " href="#">
                 <span class="material-symbols-outlined">distance</span>
                 내주변
                 <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
@@ -84,29 +213,38 @@
 
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/dashboard.html" style=""><span class="material-symbols-outlined" data-icon=""
-                                                 style="">dashboard</span>
-            대시보드</a>
+           href="${pageContext.request.contextPath}/dashboard" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드
+        </a>
 
         <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200"
-           href="/clients.html" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원관리
+        </a>
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/calendar.html" style=""><span class="material-symbols-outlined" data-icon=""
-                                                style="">calendar_today</span> 일정</a>
+           href="/calendar.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정
+        </a>
 
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
+           href="/messages.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">chat</span>
+            메시지
+        </a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
+           href="earnings.html" style="">
+            <span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익
+        </a>
     </nav>
 
     <!-- 공통 nav item -->
@@ -126,7 +264,7 @@
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
         <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
-             style="" />
+             style=""/>
         <div class="overflow-hidden">
             <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
             <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
@@ -134,7 +272,7 @@
     </a>
 </aside>
 
-<div class="md:ml-64 min-h-screen flex flex-col">
+<div class="lg:ml-64 min-h-screen flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0">
     <!-- Top Navigation -->
     <header
             class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
@@ -146,44 +284,45 @@
         </div>
     </header>
 
-    <main class="flex-1 p-8 max-w-6xl mx-auto w-full space-y-8">
+    <main class="flex-1 p-4 md:p-6 lg:p-8 max-w-6xl mx-auto w-full space-y-6 lg:space-y-8">
         <!-- Client Overview Section -->
-        <section class="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-outline-variant/10">
-            <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
+        <section
+                class="bg-surface-container-lowest p-4 md:p-8 rounded-2xl md:rounded-3xl shadow-sm border border-outline-variant/10">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
                 <div class="relative">
-                    <img alt="Profile of Kim Min-su" class="w-32 h-32 rounded-3xl object-cover shadow-lg"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRaM7aJPJccG2VqzuEQFnWzaty4vFhjpL-5fNEreSZkXZaMJ5w2gbFP2X82eqKZUp0SOMGtYAZojFrVr0Fign3C2EZQ-Ec48g_8roHzucGiFw1AckjjTTYJNp5qK9bmHgBJwxzMFtj-LYouo4jaW5KBk-O7YS7IA72oZGHvXpT1GY54kq_npmXyHJ9h_eHtm0lcLdvDeE_9iVYH5EgNO1uECszkkpo6Xp2mWrdBHkpWNljrH0kMSPmRZM5Ztg3yD7t-YfJnvIWXQw5" />
+                    <img alt="Profile of Kim Min-su"
+                         class="w-20 h-20 md:w-32 md:h-32 rounded-3xl object-cover shadow-lg"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRaM7aJPJccG2VqzuEQFnWzaty4vFhjpL-5fNEreSZkXZaMJ5w2gbFP2X82eqKZUp0SOMGtYAZojFrVr0Fign3C2EZQ-Ec48g_8roHzucGiFw1AckjjTTYJNp5qK9bmHgBJwxzMFtj-LYouo4jaW5KBk-O7YS7IA72oZGHvXpT1GY54kq_npmXyHJ9h_eHtm0lcLdvDeE_9iVYH5EgNO1uECszkkpo6Xp2mWrdBHkpWNljrH0kMSPmRZM5Ztg3yD7t-YfJnvIWXQw5"/>
                 </div>
                 <div class="flex-1 space-y-2">
-                    <h2 class="text-4xl font-bold tracking-tighter text-on-surface">김민수</h2>
-                    <p class="text-on-surface-variant text-lg font-medium">Age 29 • 175cm / 78kg</p>
+                    <h2 class="text-4xl font-bold tracking-tighter text-on-surface">${client.name}</h2>
+                    <p class="text-on-surface-variant text-lg font-medium">
+                        Age ${client.age} • ${client.height}cm / ${client.weight}kg
+                    </p>
                     <div class="flex flex-wrap gap-3 mt-4">
-                        <div
-                                class="inline-flex items-center gap-2 px-4 py-1.5 bg-surface-container-low rounded-full border border-outline-variant/20">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-surface-container-low rounded-full border border-outline-variant/20">
                             <span class="material-symbols-outlined text-[16px] text-tertiary">track_changes</span>
-                            <span class="text-xs font-semibold text-on-surface-variant">체지방 감량</span>
+                            <span class="text-xs font-semibold text-on-surface-variant">${client.goals}</span>
                         </div>
                     </div>
                 </div>
                 <div class="flex gap-4 w-full md:w-auto">
-                    <div
-                            class="bg-surface-container-low px-6 py-4 rounded-2xl flex-1 md:flex-initial text-center border border-outline-variant/10">
+                    <div class="bg-surface-container-low px-4 py-3 md:px-6 md:py-4 rounded-2xl flex-1 md:flex-initial text-center border border-outline-variant/10">
                         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">
                             Current Weight</p>
                         <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-3xl font-bold text-primary">78</span>
+                            <span class="text-3xl font-bold text-primary">${client.weight}</span>
                             <span class="text-sm font-medium text-on-surface-variant">kg</span>
                         </div>
                     </div>
-                    <div
-                            class="bg-surface-container-low px-6 py-4 rounded-2xl flex-1 md:flex-initial text-center border border-outline-variant/10">
+                    <div class="bg-surface-container-low px-4 py-3 md:px-6 md:py-4 rounded-2xl flex-1 md:flex-initial text-center border border-outline-variant/10">
                         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">
                             Sessions</p>
                         <div>Remaining</div>
                         <p></p>
                         <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-3xl font-bold text-on-surface">12</span>
-                            <span class="text-sm font-medium text-on-surface-variant">/ 20</span>
+                            <span class="text-3xl font-bold text-on-surface">${client.lessonCount}</span>
+                            <span class="text-sm font-medium text-on-surface-variant">/ ${client.totalLessons}</span>
                         </div>
                     </div>
                 </div>
@@ -194,15 +333,22 @@
             <!-- Left Column: Overview & Stats -->
             <div class="lg:col-span-8 space-y-8">
                 <!-- Segmented Control -->
-                <nav class="flex gap-1 p-1.5 bg-surface-container-low rounded-2xl w-max">
+                <nav class="flex gap-1 p-1.5 bg-surface-container-low rounded-2xl w-max max-w-full overflow-x-auto no-scrollbar">
                     <button
-                            class="px-8 py-2.5 text-sm font-semibold text-primary bg-surface-container-lowest rounded-xl shadow-sm transition-all">Overview</button>
+                            class="px-8 py-2.5 text-sm font-semibold text-primary bg-surface-container-lowest rounded-xl shadow-sm transition-all">
+                        Overview
+                    </button>
+                    <a href="${pageContext.request.contextPath}/trainer/meals?clientId=${client.clientId}" class="btn-primary px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                        Meals
+                    </a>
                     <button
-                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Diet</button>
+                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                        Workouts
+                    </button>
                     <button
-                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Workouts</button>
-                    <button
-                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">InBody</button>
+                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                        InBody
+                    </button>
                 </nav>
                 <!-- Body Composition Trends -->
                 <section class="space-y-4">
@@ -212,15 +358,13 @@
                             <p class="text-sm text-on-surface-variant font-medium">Track weight, muscle mass, and
                                 body fat over time</p>
                         </div>
-                        <span
-                                class="text-primary text-xs font-bold flex items-center gap-1 cursor-pointer hover:underline">VIEW
-                                ALL <span class="material-symbols-outlined text-xs">arrow_forward</span></span>
                     </div>
                     <div
                             class="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/10 space-y-8">
                         <!-- Summary Stats Cards -->
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                            <div data-metric="weight" onclick="showMetric('weight', this)"
+                                 class="metric-card ring-2 ring-primary p-4 rounded-2xl bg-primary/5 border border-primary/10">
                                 <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Weight
                                 </p>
                                 <div class="flex items-baseline gap-2">
@@ -231,7 +375,8 @@
                                             7.2kg</span>
                                 </div>
                             </div>
-                            <div class="p-4 rounded-2xl bg-green-50 border border-green-100">
+                            <div data-metric="weight" onclick="showMetric('muscle', this)"
+                                 class="metric-card p-4 rounded-2xl bg-green-50 border border-green-100">
                                 <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">
                                     Muscle Mass</p>
                                 <div class="flex items-baseline gap-2">
@@ -243,7 +388,8 @@
                                             1.5kg</span>
                                 </div>
                             </div>
-                            <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                            <div data-metric="weight" onclick="showMetric('bodyFat', this)"
+                                 class="metric-card p-4 rounded-2xl bg-orange-50 border border-orange-100">
                                 <p class="text-[10px] font-bold text-tertiary uppercase tracking-widest mb-1">Body
                                     Fat</p>
                                 <div class="flex items-baseline gap-2">
@@ -257,65 +403,8 @@
                             </div>
                         </div>
                         <!-- Multi-Line Graph Area -->
-                        <div class="space-y-4">
-                            <!-- Legend -->
-                            <div class="flex justify-center gap-6">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-primary"></span>
-                                    <span
-                                            class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Weight</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-green-600"></span>
-                                    <span
-                                            class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Muscle
-                                            Mass</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                                    <span
-                                            class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Body
-                                            Fat %</span>
-                                </div>
-                            </div>
-                            <div class="h-64 w-full relative">
-                                <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 200">
-                                    <!-- Weight Line (Primary Blue) -->
-                                    <path d="M0,160 Q100,150 200,120 T400,80" fill="none" stroke="#0058bc"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
-                                    <circle cx="0" cy="160" fill="#0058bc" r="3" stroke="white" stroke-width="1.5">
-                                    </circle>
-                                    <circle cx="200" cy="120" fill="#0058bc" r="3" stroke="white"
-                                            stroke-width="1.5"></circle>
-                                    <circle cx="400" cy="80" fill="#0058bc" r="3" stroke="white" stroke-width="1.5">
-                                    </circle>
-                                    <!-- Muscle Mass Line (Green Tone) -->
-                                    <path d="M0,180 Q100,175 200,170 T400,160" fill="none" stroke="#16a34a"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
-                                    <circle cx="0" cy="180" fill="#16a34a" r="3" stroke="white" stroke-width="1.5">
-                                    </circle>
-                                    <circle cx="200" cy="170" fill="#16a34a" r="3" stroke="white"
-                                            stroke-width="1.5"></circle>
-                                    <circle cx="400" cy="160" fill="#16a34a" r="3" stroke="white"
-                                            stroke-width="1.5"></circle>
-                                    <!-- Body Fat Line (Orange Tone) -->
-                                    <path d="M0,100 Q100,110 200,130 T400,140" fill="none" stroke="#f97316"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
-                                    <circle cx="0" cy="100" fill="#f97316" r="3" stroke="white" stroke-width="1.5">
-                                    </circle>
-                                    <circle cx="200" cy="130" fill="#f97316" r="3" stroke="white"
-                                            stroke-width="1.5"></circle>
-                                    <circle cx="400" cy="140" fill="#f97316" r="3" stroke="white"
-                                            stroke-width="1.5"></circle>
-                                    <!-- Grid Lines (Subtle) -->
-                                    <line stroke="#e2e2e7" stroke-dasharray="4" stroke-width="1" x1="0" x2="400"
-                                          y1="40" y2="40"></line>
-                                    <line stroke="#e2e2e7" stroke-dasharray="4" stroke-width="1" x1="0" x2="400"
-                                          y1="100" y2="100"></line>
-                                    <line stroke="#e2e2e7" stroke-dasharray="4" stroke-width="1" x1="0" x2="400"
-                                          y1="160" y2="160"></line>
-                                </svg>
-                            </div>
+                        <div>
+                            <canvas id="myChart"></canvas>
                         </div>
                     </div>
                 </section>
@@ -329,7 +418,7 @@
                             class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 space-y-6">
                         <div class="flex gap-6 items-center">
                             <img alt="Healthy meal bowl" class="w-24 h-24 rounded-2xl object-cover shadow-sm"
-                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtRTiOLbN7PHNXM5m46FGSACydTKXN7WG79apaHKenSPf-udoC2aL1sO9ZC74iyl4sRBwwJNqKKYap4fRLJQ7j2p745sHXcEd55MdUBqB7dbdB-QtVpntZNDqK18rchXW7pq4j9qumUI3R1svaIy9D8Ofg7PwkJneIYKx-CkB_KbSNqvQjyVqHnXYMw4AKJV5We-xGPU88_MQpu4REWdyGynLoTh797ltu_1kXZd1SE8hFbJQdEepCuNz9d-9c-xGnZDh1zdsVbO0y" />
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtRTiOLbN7PHNXM5m46FGSACydTKXN7WG79apaHKenSPf-udoC2aL1sO9ZC74iyl4sRBwwJNqKKYap4fRLJQ7j2p745sHXcEd55MdUBqB7dbdB-QtVpntZNDqK18rchXW7pq4j9qumUI3R1svaIy9D8Ofg7PwkJneIYKx-CkB_KbSNqvQjyVqHnXYMw4AKJV5We-xGPU88_MQpu4REWdyGynLoTh797ltu_1kXZd1SE8hFbJQdEepCuNz9d-9c-xGnZDh1zdsVbO0y"/>
                             <div class="flex-1">
                                 <p class="text-xl font-bold text-on-surface">Chicken Salad &amp; Avocado</p>
                                 <p class="text-on-surface-variant font-medium">High Protein • 420 kcal</p>
@@ -466,5 +555,104 @@
         </div>
     </main>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+
+    const chartData = {
+        weight: [
+            {x: '2026-04-20', y: 78},
+            {x: '2026-04-21', y: 77.5},
+            {x: '2026-04-23', y: 77}
+        ],
+        bodyFat: [
+            {x: '2026-04-20', y: 22},
+            {x: '2026-04-21', y: 21.8},
+            {x: '2026-04-23', y: 21.5}
+        ],
+        muscle: [
+            {x: '2026-04-20', y: 33},
+            {x: '2026-04-21', y: 33.2},
+            {x: '2026-04-23', y: 33.4}
+        ]
+    };
+
+    const myChart = new Chart(document.getElementById('myChart'), {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Weight (kg)',
+                data: chartData.weight,
+                borderColor: '#0058bc',
+                backgroundColor: '#0058bc',
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {unit: 'day'}
+                }
+            }
+        }
+    });
+
+    function setActiveCard(type, element) {
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.classList.remove('ring-2', 'ring-weight', 'ring-muscle', 'ring-bodyFat');
+        });
+
+        element.classList.add('ring-2');
+
+        if (type === 'weight') element.classList.add('ring-weight');
+        if (type === 'muscle') element.classList.add('ring-muscle');
+        if (type === 'bodyFat') element.classList.add('ring-bodyFat');
+    }
+
+    function showMetric(type, element) {
+
+        let dataset;
+
+        if (type === 'weight') {
+            dataset = {
+                label: 'Weight (kg)',
+                data: chartData.weight,
+                borderColor: '#0058bc',
+                backgroundColor: '#0058bc',
+            };
+        }
+
+        if (type === 'bodyFat') {
+            dataset = {
+                label: 'Body Fat (%)',
+                data: chartData.bodyFat,
+                borderColor: '#f97316',
+                backgroundColor: '#f97316',
+
+            };
+        }
+
+        if (type === 'muscle') {
+            dataset = {
+                label: 'Muscle Mass (kg)',
+                data: chartData.muscle,
+                borderColor: '#22c55e',
+                backgroundColor: '#22c55e',
+            };
+        }
+
+        myChart.data.datasets = [dataset];
+        myChart.update();
+
+        setActiveCard(type, element);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const defaultCard = document.querySelector('[data-metric="weight"]');
+            if (defaultCard) {
+                showMetric('weight', defaultCard);
+            }
+        });
+    }
+</script>
 </body>
 </html>

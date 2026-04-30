@@ -3,17 +3,17 @@ package dao.admin;
 import java.util.List;
 import java.util.Map;
 
-import dto.admin.Member;
+import dto.admin.MemberDTO;
 
 public interface MemberDAO {
 	
-	List<Member> selectAllGym() throws Exception;
-	List<Member> selectAllTrainer() throws Exception;
-	List<Member> selectAllClient() throws Exception;
+	List<MemberDTO> selectAllGym() throws Exception;
+	List<MemberDTO> selectAllTrainer() throws Exception;
+	List<MemberDTO> selectAllClient() throws Exception;
 	
-	List<Member> selectGymList(Map<String, Object> paramMap) throws Exception;
-	List<Member> selectTrainerList(Map<String, Object> paramMap) throws Exception;
-	List<Member> selectClientList(Map<String, Object> pagramMap) throws Exception;
+	List<MemberDTO> selectGymList(Map<String, Object> paramMap) throws Exception;
+	List<MemberDTO> selectTrainerList(Map<String, Object> paramMap) throws Exception;
+	List<MemberDTO> selectClientList(Map<String, Object> pagramMap) throws Exception;
  	
 	Integer selectGymCnt() throws Exception;
 	Integer selectTrainerCnt() throws Exception;

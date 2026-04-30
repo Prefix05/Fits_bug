@@ -12,19 +12,23 @@
         <result property="endTime" column="end_time"/>
         <result property="durationMinutes" column="duration_minutes"/>
         <result property="status" column="status"/>
+        <result property="clientId" column="client_id"/>
     </resultMap>
 
-    <select id="findLessonsByDate" parameterType="string" resultMap="lessonMap">
+    <select id="findLessonsByDate" parameterType="map" resultMap="lessonMap">
         SELECT
-            lesson_id,
-            goal,
-            member_name,
-            DATE_FORMAT(start_time, '%H:%i') AS start_time,
-            DATE_FORMAT(end_time, '%H:%i') AS end_time,
-            TIMESTAMPDIFF(MINUTE, start_time, end_time) AS duration_minutes,
-            COALESCE(status, 'Booked') AS status
-        FROM lesson
-        WHERE lesson_date = #{date}
-        ORDER BY start_time ASC
+            l.lesson_id,
+            l.goal,
+            l.member_name,
+            l.client_id,
+            l.status,
+            DATE_FORMAT(l.start_time, '%H:%i') AS start_time,
+            DATE_FORMAT(l.end_time, '%H:%i') AS end_time,
+            TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes
+        FROM lesson l
+                 JOIN clients c ON l.client_id = c.client_id
+        WHERE l.lesson_date = #{date}
+          AND c.trainer_id = #{trainerId}
+        ORDER BY l.start_time ASC
     </select>
 </mapper>

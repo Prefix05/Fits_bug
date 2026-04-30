@@ -11,12 +11,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.trainer.ClientDAOImpl;
 import dao.trainer.LessonDAO;
 import dao.trainer.LessonDAOImpl;
 import dto.trainer.ClientDTO;
 import dto.trainer.LessonDTO;
+import dto.trainer.TrainerDTO;
 
 public class LessonInfo extends HttpServlet {
     private final LessonDAO lessonDAO = new LessonDAOImpl();
@@ -25,13 +27,24 @@ public class LessonInfo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // 세션 체크
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loginTrainer") == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        // trainerId 가져오기
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
+        int trainerId = trainer.getTrainerId();
+
         Integer lessonId = parseLessonId(request.getParameter("lessonId"));
         if (lessonId == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "lessonId is required");
             return;
         }
 
-        List<LessonDTO> todayLessons = lessonDAO.findLessonsByDate(LocalDate.now());
+        List<LessonDTO> todayLessons = lessonDAO.findLessonsByDate(LocalDate.now(), trainerId);
         todayLessons.sort(Comparator.comparing(this::safeStartTime));
         applyDynamicStatuses(todayLessons, LocalTime.now());
 
