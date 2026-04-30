@@ -137,7 +137,7 @@
             <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
             <span class="text-[10px] font-bold text-blue-700">대시보드</span>
         </a>
-        <a href="/clients.html"
+        <a href="${pageContext.request.contextPath}/trainer/clients"
            class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
             <span class="material-symbols-outlined text-[22px]">group</span>
             <span class="text-[10px] font-medium">회원관리</span>
@@ -206,7 +206,7 @@
 
             <!-- 회원관리 -->
             <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200"
-               href="/clients.html" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
+               href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
                 회원
                 관리</a>
 
