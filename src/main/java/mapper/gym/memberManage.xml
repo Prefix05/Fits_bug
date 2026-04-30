@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mapper.memberManage">
+
+    <!-- 회원 목록 -->
+    <select id="selectMemberList" parameterType="map" resultType="dto.gym.MemberManage">
+
+        SELECT
+            m.id AS memberId,
+            u.name AS memberName,
+            u.tel AS tel,
+
+            ms.membership_num AS membershipNum,
+            ms.type AS membershipType,
+            ms.type_rep AS typeRep,
+
+            -- 날짜는 문자열로 변환
+            DATE_FORMAT(mr.start_date, '%Y.%m.%d') AS startDate,
+            DATE_FORMAT(mr.end_date, '%Y.%m.%d') AS endDate,
+
+            -- 상태 계산
+            CASE
+                WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
+                WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
+                ELSE 'active'
+            END AS status,
+
+            -- 사용된 PT 횟수
+            IFNULL(pp.sessions_used, 0) AS usedPtCount,
+
+
+            -- 남은 PT 횟수
+            CASE
+    			WHEN ms.type = 'pt' THEN IFNULL(pp.total_sessions, 0) - IFNULL(pp.sessions_used, 0)
+    			ELSE 0
+			END AS remainPtCount
+
+        FROM member m
+        JOIN user u
+          ON m.user_id = u.id
+
+        JOIN membership_registration mr
+          ON mr.member_num = m.id
+
+        JOIN membership ms
+          ON mr.membership_num = ms.membership_num
+
+       	LEFT JOIN pt_package pp
+  		  ON pp.client_id = m.id
+ 		 AND pp.trainer_id = m.trainer_id
+
+        WHERE m.gym_id = #{gymId}
+          AND u.is_deleted = false
+
+        <!-- 검색 -->
+        <if test="keyword != null and keyword != ''">
+            AND (
+                u.name LIKE CONCAT('%', #{keyword}, '%')
+                OR u.tel LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+
+        <!-- 이용권 타입 필터 -->
+        <if test="type != null and type != ''">
+    		<choose>
+        		<when test="type == 'pt'">
+            		AND ms.type = 'pt'
+        		</when>
+        		<when test="type == 'health'">
+            		AND ms.type != 'pt'
+        		</when>
+    		</choose>
+		</if>
+
+        <!-- 상태 필터 -->
+        <if test="status != null and status != ''">
+            AND (
+                CASE
+                    WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
+                    WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
+                    ELSE 'active'
+                END
+            ) = #{status}
+        </if>
+
+        GROUP BY mr.mr_num
+
+        ORDER BY mr.end_date ASC
+        
+        LIMIT #{start}, #{pageSize}
+
+    </select>
+
+
+    <!-- 전체 회원 수 -->
+    <select id="countMember"
+            parameterType="int"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM member m
+        JOIN user u ON m.user_id = u.id
+        WHERE m.gym_id = #{value}
+          AND u.is_deleted = false
+
+    </select>
+
+
+    <!-- 이번 달 신규 -->
+    <select id="countNewMember"
+            parameterType="int"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM member m
+        JOIN user u ON m.user_id = u.id
+        WHERE m.gym_id = #{value}
+          AND u.is_deleted = false
+          AND DATE_FORMAT(u.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+
+    </select>
+    
+    <select id="countMemberList" parameterType="map" resultType="int">
+    	SELECT COUNT(*)
+    	FROM membership_registration mr
+    	JOIN member m ON mr.member_num = m.id
+    	JOIN user u ON m.user_id = u.id
+    	JOIN membership ms ON mr.membership_num = ms.membership_num
+    	WHERE m.gym_id = #{gymId}
+      		AND u.is_deleted = false
+
+    	<if test="keyword != null and keyword != ''">
+        	AND (
+            	u.name LIKE CONCAT('%', #{keyword}, '%')
+            	OR u.tel LIKE CONCAT('%', #{keyword}, '%')
+        	)
+    	</if>
+
+    	<if test="type != null and type != ''">
+        	<choose>
+            	<when test="type == 'pt'">
+                	AND ms.type = 'pt'
+            	</when>
+            	<when test="type == 'health'">
+                	AND ms.type != 'pt'
+            	</when>
+        	</choose>
+    	</if>
+
+    	<if test="status != null and status != ''">
+        	AND (
+            	CASE
+                	WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
+                	WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
+                	ELSE 'active'
+            	END
+        	) = #{status}
+    	</if>
+	</select>
+
+</mapper>

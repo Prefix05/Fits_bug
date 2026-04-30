@@ -148,7 +148,7 @@
             <span class="material-symbols-outlined">notifications</span>
         </button>
         <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
-            <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
+            <img alt="${sessionScope.loginTrainer.name}" class="w-8 h-8 rounded-full object-cover"
                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
         </a>
     </div>
@@ -277,7 +277,7 @@
              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
              style=""/>
         <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
+            <p class="text-sm font-bold text-on-surface truncate" style="">${sessionScope.loginTrainer.name}</p>
             <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
         </div>
     </a>
@@ -510,12 +510,5 @@
         </div>
     </div>
 </main>
-
-<%--dashboard.js--%>
-<script>
-    var contextPath = '${pageContext.request.contextPath}'; // JSP 값만 여기서 주입
-</script>
-<script src="${pageContext.request.contextPath}/js/dashboard.js"></script>
-
 </body>
 </html>

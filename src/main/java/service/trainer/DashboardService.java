@@ -1,5 +1,5 @@
 package service.trainer;
 
 public interface DashboardService {
-    DashboardData getDashboardData(String userId, Integer lessonId);
+    DashboardData getDashboardData(Integer lessonId, int trainerId);
 }

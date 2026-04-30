@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
+import dto.trainer.TrainerDTO;
 
 @WebServlet("/clients")
 public class Clients extends HttpServlet {
@@ -18,11 +19,20 @@ public class Clients extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // 1. 세션 체크
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loginTrainer") == null) {
+            response.sendRedirect(request.getContextPath() + "/trainer/login");
+            return;
+        }
+
+        // 2. 세션에서 trainerId 가져오기
+        TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
+        int trainerId = trainer.getTrainerId();
 
         int currentPage = 1;
 
         try {
-            // 1. page parameter
             String pageParam = request.getParameter("page");
             if (pageParam != null) {
                 try {
@@ -32,45 +42,30 @@ public class Clients extends HttpServlet {
                 }
             }
 
-            // 2. filter parameter
             String filter = request.getParameter("filter");
             if (filter == null || filter.isEmpty()) filter = "all";
 
-            // 3. DAO calls (this is the risky part)
-            int totalClients = clientDAO.countClients(filter);
+            // 3. trainerId 넘기기
+            int totalClients = clientDAO.countClients(filter, trainerId);
             int totalPages = (int) Math.ceil((double) totalClients / DEFAULT_PAGE_SIZE);
 
             if (currentPage < 1) currentPage = 1;
             if (totalPages > 0 && currentPage > totalPages) currentPage = totalPages;
 
             int offset = (currentPage - 1) * DEFAULT_PAGE_SIZE;
-            List<ClientDTO> clients =
-                    clientDAO.selectClients(offset, DEFAULT_PAGE_SIZE, filter);
+            List<ClientDTO> clients = clientDAO.selectClients(offset, DEFAULT_PAGE_SIZE, filter, trainerId);
 
-            // 4. forward data to JSP
             request.setAttribute("clients", clients);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentFilter", filter);
 
-            request.getRequestDispatcher("/trainer/clients.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher("/trainer/clients.jsp").forward(request, response);
 
         } catch (Exception e) {
-            // LOG (don’t just print in real apps)
             e.printStackTrace();
-
-            // user-friendly message
             request.setAttribute("err", "클라이언트 목록을 불러오는 중 오류가 발생했습니다.");
-
-            request.getRequestDispatcher("/error.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
     }
 }

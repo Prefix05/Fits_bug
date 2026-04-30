@@ -1,5 +1,7 @@
 package dao.gym;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Membership;
@@ -58,6 +60,37 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 	    try {
 	        return session.selectOne("mapper.payment.selectMembership", membershipNum);
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	@Override
+	public List<Payment> selectRefundRequestList(int gymId) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        return session.selectList("mapper.payment.selectRefundRequestList", gymId);
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	@Override
+	public int countRefundRequest(int gymId) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        return session.selectOne("mapper.payment.countRefundRequest", gymId);
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	@Override
+	public void approveRefund(int paymentNum) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        session.update("mapper.payment.approveRefund", paymentNum);
+	        session.commit();
 	    } finally {
 	        session.close();
 	    }
