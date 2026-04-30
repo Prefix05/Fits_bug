@@ -35,11 +35,10 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
     <div style="padding:20px 24px;border-bottom:1.5px solid #E8EDF5;display:flex;align-items:center;gap:14px;background:white;">
       <div style="position:relative;">
         <img id="trainerHeaderImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=trainer" style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;" alt="트레이너">
-        <div style="position:absolute;bottom:0;right:0;width:12px;height:12px;background:#00BFA5;border-radius:50%;border:2px solid white;"></div>
       </div>
       <div style="flex:1;">
         <div id="trainerHeaderName" style="font-weight:800;font-size:16px;color:#1A1F36;">트레이너</div>
-        <div style="font-size:12px;color:#00BFA5;font-weight:600;">🟢 온라인</div>
+        <!-- <div style="font-size:12px;color:#00BFA5;font-weight:600;">🟢 온라인</div> -->
       </div>
       <button onclick="goFeedback()" style="
         padding:8px 18px;border-radius:99px;border:1.5px solid #E8EDF5;
@@ -87,7 +86,6 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
     <div style="padding:28px 22px;text-align:center;border-bottom:1.5px solid #E8EDF5;background:linear-gradient(180deg,#FFF3EE,white);">
       <div style="position:relative;display:inline-block;margin-bottom:14px;">
         <img id="trainerImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=trainer" style="width:80px;height:80px;border-radius:50%;border:3px solid #FF6B35;object-fit:cover;" alt="트레이너">
-        <div style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;background:#00BFA5;border-radius:50%;border:2.5px solid white;"></div>
       </div>
       <h3 id="trainerName" style="font-size:17px;font-weight:900;color:#1A1F36;margin-bottom:4px;">트레이너 정보 로딩 중...</h3>
       <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;background:#E8F8F6;color:#00897B;font-size:12px;font-weight:700;">
