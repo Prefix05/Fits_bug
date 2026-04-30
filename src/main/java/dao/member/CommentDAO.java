@@ -1,7 +1,8 @@
 package dao.member;
 
-import dto.member.CommentDTO;
 import java.util.List;
+
+import dto.member.CommentDTO;
 
 public interface CommentDAO {
     void insert(CommentDTO dto);

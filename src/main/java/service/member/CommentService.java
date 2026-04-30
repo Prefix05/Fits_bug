@@ -1,7 +1,8 @@
 package service.member;
 
-import dto.member.CommentDTO;
 import java.util.List;
+
+import dto.member.CommentDTO;
 
 public interface CommentService {
     void write(CommentDTO dto);

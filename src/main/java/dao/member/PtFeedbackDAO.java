@@ -1,6 +1,7 @@
 package dao.member;
 
 import java.util.List;
+
 import dto.member.PtFeedbackDTO;
 
 public interface PtFeedbackDAO {

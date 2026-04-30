@@ -3,327 +3,262 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>핏츠버그 회원가입</title>
-
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet"/>
-
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        headline: ["Public Sans"],
-        body: ["Public Sans"],
-        label: ["Public Sans"]
-      }
-    }
-  }
-}
-</script>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>핏츠버그 - 회원가입</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Public Sans', sans-serif; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-height:100vh;display:flex;}
 
-.active-role {
-    background-color: #2563EB !important;
-    color: white !important;
-    ring: 1px solid #2563EB;
-}
+/* 왼쪽 폼 */
+.form-side{width:52%;display:flex;flex-direction:column;justify-content:center;padding:60px 56px;overflow-y:auto;}
+/* 오른쪽 브랜드 */
+.brand-side{flex:1;background:linear-gradient(145deg,#FF6B35 0%,#FF8C5A 40%,#00BFA5 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 48px;position:relative;overflow:hidden;}
+.brand-side::before{content:'';position:absolute;width:460px;height:460px;border-radius:50%;background:rgba(255,255,255,0.07);top:-100px;left:-80px;}
+.brand-side::after{content:'';position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.05);bottom:-60px;right:-60px;}
+
+/* 역할 버튼 */
+.role-btn{padding:10px 22px;border-radius:99px;border:2px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;}
+.role-btn.active{background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;border-color:transparent;box-shadow:0 4px 14px rgba(255,107,53,0.3);}
+
+/* 입력 */
+.fb-inp{width:100%;padding:13px 18px;border-radius:14px;border:2px solid #E8EDF5;background:#F7F9FC;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1A1F36;outline:none;transition:all 0.2s;}
+.fb-inp:focus{border-color:#FF6B35;box-shadow:0 0 0 3px rgba(255,107,53,0.12);background:white;}
+.fb-inp::placeholder{color:#C4CEDE;}
+.fb-label{font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;}
+
+/* 버튼 */
+.btn-main{width:100%;padding:14px;border:none;border-radius:99px;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:800;box-shadow:0 6px 20px rgba(255,107,53,0.35);transition:all 0.2s;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,53,0.45);}
+.btn-sm{padding:10px 16px;border-radius:12px;border:none;cursor:pointer;background:#F7F9FC;border:1.5px solid #E8EDF5;color:#5A6480;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;white-space:nowrap;transition:all 0.2s;}
+.btn-sm:hover{border-color:#FF6B35;color:#FF6B35;}
+.btn-sm:disabled{opacity:0.45;cursor:not-allowed;}
+.btn-sm.verified{background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;border-color:transparent;}
+
+@media(max-width:768px){.brand-side{display:none;}.form-side{width:100%;padding:40px 28px;}}
 </style>
 </head>
+<body>
 
-<body class="bg-white min-h-screen flex items-center justify-center text-slate-900">
+<!-- ══ 왼쪽: 폼 ══ -->
+<div class="form-side">
 
-<div class="w-full min-h-screen flex">
+  <!-- 로고 -->
+  <a href="login.jsp" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:36px;">
+    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6B35,#00BFA5);display:flex;align-items:center;justify-content:center;font-size:20px;">🐾</div>
+    <span style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;background:linear-gradient(135deg,#FF6B35,#00BFA5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">핏츠버그</span>
+  </a>
 
-<!-- LEFT -->
-<div class="w-full md:w-1/2 flex flex-col justify-center px-12 py-12">
+  <h1 style="font-size:28px;font-weight:900;color:#1A1F36;margin-bottom:6px;">회원가입 🎉</h1>
+  <p style="font-size:14px;color:#9DA8C0;margin-bottom:28px;">핏불 가족이 되어 건강한 여정을 시작해봐요!</p>
 
-<h1 class="text-3xl font-bold mb-8">회원가입</h1>
+  <!-- 역할 선택 -->
+  <div style="display:flex;gap:8px;margin-bottom:28px;">
+    <button type="button" class="role-btn active" data-role="member">🏃 일반 회원</button>
+    <button type="button" class="role-btn" data-role="trainer" onclick="location.href='trainerJoin.jsp'">🏋️ 트레이너</button>
+    <button type="button" class="role-btn" data-role="gym" onclick="location.href='gymJoin.jsp'">🏢 헬스장</button>
+  </div>
 
-<!-- 역할 선택 -->
-<div class="flex gap-2 mb-8">
-<button type="button" class="role-btn active-role px-5 py-2 rounded-full" data-role="member">회원</button>
-<button type="button" class="role-btn px-5 py-2 rounded-full bg-gray-200" data-role="trainer">트레이너</button>
-<button type="button" class="role-btn px-5 py-2 rounded-full bg-gray-200" data-role="gym">헬스장</button>
-</div>
+  <form action="join" method="post" style="display:flex;flex-direction:column;gap:18px;max-width:440px;">
+    <input type="hidden" name="role" id="role" value="member">
+    <input type="hidden" name="verified" id="verified" value="false">
 
-<form action="join" method="post" class="space-y-5 max-w-md">
+    <!-- 이메일 -->
+    <div>
+      <label class="fb-label">아이디 (이메일)</label>
+      <div style="display:flex;gap:10px;">
+        <input name="username" id="username" class="fb-inp" placeholder="example@email.com" autocomplete="email">
+        <button type="button" onclick="checkEmail()" class="btn-sm">중복 확인</button>
+      </div>
+      <div id="emailMsg" style="font-size:13px;margin-top:6px;min-height:18px;"></div>
+    </div>
 
-<input type="hidden" name="role" id="role" value="member">
-<input type="hidden" name="verified" id="verified" value="false">
+    <!-- 이메일 인증 -->
+    <div>
+      <label class="fb-label">이메일 인증</label>
+      <div style="display:flex;gap:10px;">
+        <input type="text" id="emailDisplay" readonly class="fb-inp" style="background:#F0F0F0;cursor:not-allowed;" placeholder="이메일 중복 확인 후 인증 가능">
+        <button type="button" id="verifyBtn" onclick="sendCode()" class="btn-sm" disabled>본인 인증</button>
+      </div>
+      <!-- 코드 입력 -->
+      <div id="codeBox" style="display:none;margin-top:10px;">
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="code" class="fb-inp" placeholder="인증 코드 6자리 입력">
+          <button type="button" id="confirmBtn" onclick="verifyCode()" class="btn-sm">확인</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;">
+          <div id="codeMsg" style="font-size:13px;"></div>
+          <div id="timer" style="font-size:12px;color:#FF4D4D;font-weight:700;"></div>
+        </div>
+      </div>
+    </div>
 
-<!-- 이메일 (아이디) -->
-<div>
-<label class="block mb-1 font-semibold">아이디 (이메일)</label>
+    <!-- 비밀번호 -->
+    <div>
+      <label class="fb-label">비밀번호</label>
+      <input type="password" name="password" class="fb-inp" placeholder="비밀번호 (8자 이상)" autocomplete="new-password">
+    </div>
 
-<div class="flex gap-2">
-<input name="username" id="username" required
-class="flex-1 p-3 border rounded"
-placeholder="example@email.com">
+    <!-- 닉네임 -->
+    <div>
+      <label class="fb-label">닉네임</label>
+      <input name="nickname" class="fb-inp" placeholder="핏불에서 사용할 닉네임">
+    </div>
 
-<button type="button" onclick="checkEmail()"
-class="px-4 bg-gray-200 rounded whitespace-nowrap">중복확인</button>
-</div>
+    <!-- 이름 -->
+    <div>
+      <label class="fb-label">이름</label>
+      <input name="name" class="fb-inp" placeholder="실명을 입력하세요">
+    </div>
 
-<!-- 메시지 -->
-<div id="emailMsg" class="text-sm mt-1"></div>
-</div>
+    <!-- 연락처 -->
+    <div>
+      <label class="fb-label">연락처</label>
+      <input name="phone" class="fb-inp" placeholder="010-0000-0000">
+    </div>
 
-<!-- 인증 영역 -->
-<div>
+    <button type="submit" class="btn-main" style="margin-top:6px;">🚀 가입 완료하기</button>
 
-<div class="flex gap-2 mt-2">
-<input type="text" id="emailDisplay" readonly
-class="flex-1 p-3 border rounded bg-gray-100"
-placeholder="발급된 인증 코드를 입력해주세요">
-
-<button type="button" id="verifyBtn" onclick="sendCode()"
-class="px-4 bg-gray-200 rounded whitespace-nowrap" disabled>
-본인인증
-</button>
-</div>
-
-<!-- 코드 입력 -->
-<div id="codeBox" class="hidden mt-3">
-
-<div class="flex gap-2">
-<input type="text" id="code"
-class="w-full p-3 border rounded"
-placeholder="인증 코드 입력">
-
-<button type="button" id="confirmBtn" onclick="verifyCode()"
-class="px-4 bg-gray-200 rounded">확인</button>
-</div>
-
-<div id="codeMsg" class="text-sm mt-1"></div>
-<div id="timer" class="text-xs text-red-500"></div>
-
-</div>
-
-</div>
-
-<!-- 비밀번호 -->
-<div>
-<label class="block mb-1 font-semibold">비밀번호</label>
-<input type="password" name="password" required
-class="w-full p-3 border rounded">
-</div>
-
-<!-- 닉네임 -->
-<div>
-<label class="block mb-1 font-semibold">닉네임</label>
-<input name="nickname" required
-class="w-full p-3 border rounded">
-</div>
-
-<!-- 이름 -->
-<div>
-<label class="block mb-1 font-semibold">이름</label>
-<input name="name" required
-class="w-full p-3 border rounded">
-</div>
-
-<!-- 연락처 -->
-<div>
-<label class="block mb-1 font-semibold">연락처</label>
-<input name="phone" required
-class="w-full p-3 border rounded">
-</div>
-
-<button class="w-full bg-blue-600 text-white py-3 rounded font-bold">
-회원가입
-</button>
-
-</form>
-</div>
-
-<!-- RIGHT -->
-<div class="hidden md:block md:w-1/2 relative bg-slate-900">
-
-<div class="absolute inset-0 bg-cover bg-center"
-style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuB4xtK3O5GT-5y9CJWlerii7aPWu5pK2KpFABJoNUPBmWVpOM3ZZw3eo9Zc3rfDLQ3UTyTLxFoHlUv9ic3PlfPMyPDCTKay-OSiqBMOHkAwVlrFbXlWvZ9TewuneJr5SA5Nkuwf7HnGThq2pRv8mE6kPaJv6-Sz7BkpA2lhNxSXxyKjuLSBS8p2aA3B55XeCzp55qSCtGXTyRq13GNepQFUW97RODytT8ZVvM7pDLH_HYb6_cf460V4VvsX80AVIspKkLoiqazqgu4')">
-</div>
-
-<div class="absolute inset-0 bg-gradient-to-t from-black/80"></div>
-
-<div class="absolute bottom-16 left-16 right-16 text-white">
-<blockquote class="text-2xl mb-6">
-"최고의 트레이닝은 완벽한 환경에서 시작됩니다."
-</blockquote>
-
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-full overflow-hidden">
-<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZH_DaK1hIp-0yJ7yo3Uh_us8thyfxrvb8Wdsxu2PAUJy2spSNxjEEY2QHlKbk-_wcXcYkAFsNPYwDJp9rg8xuUCvpMtaWXzQU2-dG06jHTCbEDIfsycoPPjjuHuIGm58xm_5OzY5c4bS5gLV6I0LexkvW_I2N9fTN1xjKzbxcNzwjj4bO8ld3NH2oOAW2dfG5hlACfYJCzIA_nvyh7QFPG8Qm-y5pcEch0FZ593uyHxRTHPbNc2_UHqmvRYJv-qLoHn-1IOdSRCA"/>
-</div>
-<div>
-<div class="font-bold">Sarah Jenkins</div>
-<div class="text-sm text-slate-300">Lead Trainer</div>
-</div>
-</div>
-
-</div>
-</div>
+    <p style="text-align:center;font-size:14px;color:#9DA8C0;">
+      이미 계정이 있으신가요? <a href="login.jsp" style="color:#FF6B35;font-weight:700;text-decoration:none;">로그인하기 →</a>
+    </p>
+  </form>
 
 </div>
 
-<!-- JS -->
+<!-- ══ 오른쪽: 브랜드 ══ -->
+<div class="brand-side">
+  <!-- 핏불 마스코트 -->
+  <div style="position:relative;z-index:1;text-align:center;margin-bottom:32px;">
+    <div style="width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 12px 40px rgba(0,0,0,0.15);animation:fb_float 4s ease-in-out infinite;">
+      <svg width="130" height="130" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="85" r="44" fill="rgba(255,255,255,0.9)"/>
+        <circle cx="76" cy="60" r="15" fill="rgba(255,255,255,0.9)"/><circle cx="124" cy="60" r="15" fill="rgba(255,255,255,0.9)"/>
+        <circle cx="76" cy="60" r="9" fill="#F4A0A0"/><circle cx="124" cy="60" r="9" fill="#F4A0A0"/>
+        <ellipse cx="100" cy="90" rx="28" ry="22" fill="#E8E8F0"/>
+        <path d="M58 70 Q100 55 142 70" stroke="#FFD166" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="87" cy="80" r="6" fill="#1A1F36"/><circle cx="113" cy="80" r="6" fill="#1A1F36"/>
+        <circle cx="88.5" cy="78.5" r="2" fill="white"/><circle cx="114.5" cy="78.5" r="2" fill="white"/>
+        <ellipse cx="100" cy="93" rx="7" ry="5" fill="#1A1F36"/>
+        <path d="M87 103 Q100 115 113 103" stroke="#FF6B35" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="80" cy="97" rx="8" ry="5" fill="#FFB4A2" opacity="0.8"/>
+        <ellipse cx="120" cy="97" rx="8" ry="5" fill="#FFB4A2" opacity="0.8"/>
+        <ellipse cx="100" cy="152" rx="50" ry="36" fill="rgba(255,255,255,0.85)"/>
+      </svg>
+    </div>
+    <div style="font-family:'Nunito',sans-serif;font-size:36px;font-weight:900;color:white;letter-spacing:-1px;">핏츠버그</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.85);margin-top:8px;">🐾 핏불과 함께하는 피트니스 여정</div>
+  </div>
+
+  <!-- 혜택 카드들 -->
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;">
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.25);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+      <div style="font-size:28px;">💪</div>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:white;">맞춤형 운동 플랜</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.75);">AI가 내 수준에 맞는 운동을 추천해요</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.25);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+      <div style="font-size:28px;">🏋️</div>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:white;">전문 트레이너 매칭</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.75);">500+ 인증 트레이너와 연결돼요</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.25);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+      <div style="font-size:28px;">🏆</div>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:white;">오운완 커뮤니티</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.75);">핏불 멤버들과 동기부여를 나눠요</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes fb_float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+</style>
+
 <script>
-
-// ================= 역할 선택 =================
 const roleBtns = document.querySelectorAll(".role-btn");
-const roleInput = document.getElementById("role");
-
 roleBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-
-        const role = btn.dataset.role;
-
-        if(role === "trainer"){
-            location.href = "trainerJoin.jsp";
-            return;
-        }
-        if(role === "gym"){
-            location.href = "gymJoin.jsp";
-            return;
-        }
-
-        roleBtns.forEach(b => b.classList.remove("active-role"));
-        btn.classList.add("active-role");
-
-        roleInput.value = role;
-    });
+  btn.addEventListener("click", () => {
+    const role = btn.dataset.role;
+    if(role === "trainer"){ location.href="trainerJoin.jsp"; return; }
+    if(role === "gym"){     location.href="gymJoin.jsp";     return; }
+    roleBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("role").value = role;
+  });
 });
 
-
-// ================= 이메일 중복확인 =================
 function checkEmail(){
-
-    const email = document.getElementById("username").value;
-
-    if(!email.includes("@")){
-        showEmailMsg("이메일 형식이 아닙니다.", "red");
-        return;
-    }
-
-    fetch("<%=request.getContextPath()%>/checkEmail?email=" + email)
-    .then(res => res.json())
-    .then(res => {
-
-        if(res.exists){
-            showEmailMsg("이미 사용중인 아이디입니다.", "red");
-            document.getElementById("verifyBtn").disabled = true;
-        }else{
-            showEmailMsg("사용 가능한 이메일입니다.", "green");
-
-            document.getElementById("emailDisplay").value = email;
-            document.getElementById("verifyBtn").disabled = false;
-        }
-
+  const email = document.getElementById("username").value;
+  if(!email.includes("@")){ showMsg("emailMsg","이메일 형식이 아닙니다.","#FF4D4D"); return; }
+  fetch("<%=request.getContextPath()%>/checkEmail?email="+encodeURIComponent(email))
+    .then(r=>r.json()).then(res=>{
+      if(res.exists){
+        showMsg("emailMsg","이미 사용 중인 이메일입니다.","#FF4D4D");
+        document.getElementById("verifyBtn").disabled = true;
+      } else {
+        showMsg("emailMsg","✔ 사용 가능한 이메일입니다.","#00897B");
+        document.getElementById("emailDisplay").value = email;
+        document.getElementById("verifyBtn").disabled = false;
+      }
     });
 }
 
-function showEmailMsg(msg, color){
-    const el = document.getElementById("emailMsg");
-    el.innerText = msg;
-    el.className = "text-" + color + "-500 text-sm mt-1";
+function showMsg(id, msg, color){
+  const el = document.getElementById(id);
+  el.innerText = msg; el.style.color = color; el.style.fontWeight = "700";
 }
 
+let timerInterval, timeLeft = 180;
 
-// ================= 인증 =================
-let timerInterval;
-let timeLeft = 180;
-
-// 인증 코드 요청
 function sendCode(){
-
-    const email = document.getElementById("username").value;
-
-    fetch("<%=request.getContextPath()%>/sendEmailCode", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email })
-    });
-
-    document.getElementById("codeBox").classList.remove("hidden");
-    document.getElementById("codeMsg").innerText = "인증 코드가 전송되었습니다.";
-
-    startTimer();
+  const email = document.getElementById("username").value;
+  fetch("<%=request.getContextPath()%>/sendEmailCode",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});
+  document.getElementById("codeBox").style.display = "block";
+  showMsg("codeMsg","📧 인증 코드가 전송되었습니다.","#00897B");
+  startTimer();
 }
 
-// 타이머
 function startTimer(){
-    clearInterval(timerInterval);
-    timeLeft = 180;
-
-    timerInterval = setInterval(() => {
-        const min = Math.floor(timeLeft / 60);
-        const sec = timeLeft % 60;
-
-        document.getElementById("timer").innerText =
-            "남은 시간: " + min + ":" + (sec < 10 ? "0" + sec : sec);
-
-        timeLeft--;
-
-        if(timeLeft < 0){
-            clearInterval(timerInterval);
-            document.getElementById("timer").innerText = "⛔인증 시간 만료";
-            
-            document.getElementById("verifyBtn").disabled = true;
-            document.getElementById("confirmBtn").disabled = true;
-        }
-    }, 1000);
+  clearInterval(timerInterval); timeLeft = 180;
+  timerInterval = setInterval(()=>{
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    document.getElementById("timer").innerText = "남은 시간 "+m+":"+(s<10?"0"+s:s);
+    timeLeft--;
+    if(timeLeft < 0){
+      clearInterval(timerInterval);
+      document.getElementById("timer").innerText = "⛔ 인증 시간 만료";
+      document.getElementById("verifyBtn").disabled = true;
+      document.getElementById("confirmBtn").disabled = true;
+    }
+  },1000);
 }
 
-
-// 인증 코드 확인
 function verifyCode(){
-
-    const email = document.getElementById("username").value;
-    const code = document.getElementById("code").value;
-
-    fetch("<%=request.getContextPath()%>/verifyCode", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({email, code})
-    })
-    .then(res => res.text())
-    .then(result => {
-
-    	if(result === "success"){
-            successVerify();
-        } else {
-            document.getElementById("codeMsg").innerText = "코드가 올바르지 않습니다.";
-            document.getElementById("codeMsg").className = "text-red-500 text-sm";
-        }
-
+  const email = document.getElementById("username").value;
+  const code  = document.getElementById("code").value;
+  fetch("<%=request.getContextPath()%>/verifyCode",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,code})})
+    .then(r=>r.text()).then(result=>{
+      if(result==="success") successVerify();
+      else showMsg("codeMsg","코드가 올바르지 않습니다.","#FF4D4D");
     });
 }
 
-
-// 인증 성공
 function successVerify(){
-
-    clearInterval(timerInterval);
-
-    document.getElementById("verifyBtn").innerText = "✔ 인증완료";
-    document.getElementById("verifyBtn").classList.add("bg-green-500","text-white");
-    document.getElementById("verifyBtn").disabled = true;
-
-    document.getElementById("codeMsg").innerText = "인증 완료";
-    document.getElementById("codeMsg").className = "text-green-500 text-sm";
-
-    document.getElementById("code").readOnly = true;
-    document.getElementById("confirmBtn").disabled = true;
-
-    document.getElementById("verified").value = "true";
+  clearInterval(timerInterval);
+  const btn = document.getElementById("verifyBtn");
+  btn.innerText = "✔ 인증 완료"; btn.classList.add("verified"); btn.disabled = true;
+  document.getElementById("confirmBtn").disabled = true;
+  document.getElementById("code").readOnly = true;
+  document.getElementById("timer").innerText = "";
+  showMsg("codeMsg","✔ 인증이 완료되었습니다!","#00897B");
+  document.getElementById("verified").value = "true";
 }
-
 </script>
-
 </body>
 </html>

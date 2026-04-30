@@ -4,7 +4,7 @@ import dao.member.PostDAO;
 import dao.member.PostDAOImpl;
 import dao.member.PostReactionDAO;
 import dao.member.PostReactionDAOImpl;
-//import dto.member.NotificationDTO;
+import dto.member.NotificationDTO;
 
 public class PostReactionServiceImpl implements PostReactionService {
 
@@ -14,7 +14,7 @@ public class PostReactionServiceImpl implements PostReactionService {
     private PostDAO postDAO = new PostDAOImpl();
 
     // 🔥 알림
-//    private NotificationService notificationService = new NotificationServiceImpl();
+    private NotificationService notificationService = new NotificationServiceImpl();
 
     @Override
     public int addReaction(int postId, String userEmail, String type) {
@@ -30,13 +30,13 @@ public class PostReactionServiceImpl implements PostReactionService {
             // 🔥 자기 글이면 알림 안보냄
             if (!writerEmail.equals(userEmail)) {
 
-//                NotificationDTO n = new NotificationDTO();
-//                n.setEmail(writerEmail);
-//                n.setType("like");
-//                n.setMessage("회원님의 게시글에 좋아요가 눌렸습니다");
-//                n.setUrl("communityDetail.jsp?id=" + postId);
-//
-//                notificationService.create(n);
+                NotificationDTO n = new NotificationDTO();
+                n.setEmail(writerEmail);
+                n.setType("like");
+                n.setMessage("회원님의 게시글에 좋아요가 눌렸습니다");
+                n.setUrl("communityDetail.jsp?id=" + postId);
+
+                notificationService.create(n);
             }
         }
 

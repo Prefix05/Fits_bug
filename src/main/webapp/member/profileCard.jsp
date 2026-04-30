@@ -1,43 +1,74 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO, dto.member.WorkoutPlanDTO" %>
+<%@ page import="dto.member.MemberDTO, dto.member.WorkoutPlanDTO"%>
 <%
-    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
-    WorkoutPlanDTO plan = (WorkoutPlanDTO) request.getAttribute("plan");
-
-    if(loginUser == null){
-        return; // 로그인 안하면 카드 안보임
-    }
+  MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+  WorkoutPlanDTO plan  = (WorkoutPlanDTO) request.getAttribute("plan");
+  if (loginUser == null) return;
+  String imgSrc = (loginUser.getProfileImage() != null)
+    ? request.getContextPath() + "/upload/" + loginUser.getProfileImage()
+    : "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname();
 %>
 
-<div style="position:fixed; top:90px; left:20px; z-index:999;">
-    <div class="bg-white w-[260px] rounded-xl shadow-lg border p-4">
+<!-- ── 핏불 프로필 카드 (고정 사이드) ── -->
+<div style="
+  position:fixed; top:88px; left:20px; z-index:999;
+  width:240px; background:white;
+  border-radius:20px; border:1.5px solid #E8EDF5;
+  box-shadow:0 4px 20px rgba(0,0,0,0.10);
+  font-family:'Noto Sans KR','Nunito',sans-serif;
+  overflow:hidden;
+">
+  <!-- 상단 그라디언트 배너 -->
+  <div style="height:54px;background:linear-gradient(135deg,#FF6B35,#FF8C5A,#00BFA5);position:relative;"></div>
 
-        <!-- 프로필 이미지 -->
-        <div class="flex flex-col items-center">
-            <img src="<%= (loginUser.getProfileImage() != null) ? request.getContextPath()+"/upload/"+loginUser.getProfileImage() : "https://via.placeholder.com/100" %>"
-                 class="w-20 h-20 rounded-full object-cover mb-3"/>
-
-            <!-- 닉네임 -->
-            <div class="text-lg font-bold">
-                <%= loginUser.getNickname() %>
-            </div>
-
-            <!-- 이메일 -->
-            <div class="text-sm text-gray-500">
-                <%= loginUser.getEmail() %>
-            </div>
-        </div>
-
-        <!-- 구분선 -->
-        <div class="border-t my-3"></div>
-
-        <!-- 운동 목표 (간략 표시) -->
-        <div class="text-sm">
-            <span class="text-gray-400">운동 목표</span>
-            <div class="font-semibold text-blue-500 mt-1">
-                <%= (plan != null) ? plan.getGoal() : "미설정" %>
-            </div>
-        </div>
-
+  <!-- 프로필 이미지 (배너 위 오버랩) -->
+  <div style="display:flex;flex-direction:column;align-items:center;margin-top:-32px;padding:0 16px 16px;">
+    <div style="position:relative;">
+      <img src="<%= imgSrc %>"
+           onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=fallback'"
+           style="width:64px;height:64px;border-radius:50%;border:3px solid white;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.12);"
+           alt="프로필">
+      <div style="position:absolute;bottom:1px;right:1px;width:13px;height:13px;background:#00BFA5;border-radius:50%;border:2px solid white;"></div>
     </div>
+
+    <!-- 닉네임 / 이메일 -->
+    <div style="margin-top:10px;text-align:center;">
+      <div style="font-size:15px;font-weight:800;color:#1A1F36;"><%= loginUser.getNickname() %></div>
+      <div style="font-size:11px;color:#9DA8C0;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">
+        <%= loginUser.getEmail() %>
+      </div>
+    </div>
+
+    <!-- 운동 목표 뱃지 -->
+    <div style="margin-top:10px;padding:5px 14px;border-radius:99px;background:linear-gradient(135deg,#FFF3EE,#FFEEE5);border:1.5px solid rgba(255,107,53,0.2);font-size:12px;font-weight:700;color:#FF6B35;text-align:center;">
+      🎯 <%= (plan != null && plan.getGoal() != null) ? plan.getGoal() : "목표 미설정" %>
+    </div>
+
+    <div style="width:100%;height:1.5px;background:#E8EDF5;margin:14px 0;"></div>
+
+    <!-- 간단 스탯 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+      <div style="text-align:center;padding:10px 6px;background:#F7F9FC;border-radius:12px;border:1.5px solid #E8EDF5;">
+        <div style="font-size:16px;font-weight:900;color:#FF6B35;">5일</div>
+        <div style="font-size:10px;color:#9DA8C0;font-weight:600;margin-top:1px;">스트릭 🔥</div>
+      </div>
+      <div style="text-align:center;padding:10px 6px;background:#F7F9FC;border-radius:12px;border:1.5px solid #E8EDF5;">
+        <div style="font-size:16px;font-weight:900;color:#00BFA5;">
+          <%= (plan != null && plan.getLevel() != null) ? plan.getLevel() : "-" %>
+        </div>
+        <div style="font-size:10px;color:#9DA8C0;font-weight:600;margin-top:1px;">운동 레벨</div>
+      </div>
+    </div>
+
+    <!-- 마이페이지 버튼 -->
+    <a href="<%= request.getContextPath() %>/mypage" style="
+      display:block;width:100%;margin-top:12px;padding:10px;border-radius:12px;text-align:center;
+      background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;text-decoration:none;
+      font-size:13px;font-weight:800;box-shadow:0 4px 12px rgba(255,107,53,0.28);
+      transition:all 0.2s;
+    " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+      마이페이지 →
+    </a>
+
+  </div>
 </div>

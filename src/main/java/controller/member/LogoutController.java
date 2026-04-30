@@ -1,14 +1,12 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
-import service.member.MemberService;
-import service.member.MemberServiceImpl;
-import util.KakaoUtil;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/logout")
 public class LogoutController extends HttpServlet {
