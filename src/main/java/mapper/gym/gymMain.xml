@@ -27,5 +27,24 @@
         WHERE g.id = #{value}
         GROUP BY g.id, g.name, g.phone_num, g.description, g.address, g.file
     </select>
+    
+    <!-- 오늘 최고 혼잡 시간대 -->
+<select id="selectTodayHotTime"
+        parameterType="map"
+        resultType="dto.gym.HotTime">
+
+    SELECT
+        HOUR(start_time) AS hour,
+        COUNT(*) AS visitCount,
+        100 AS heightPercent
+    FROM WORKOUT_LOG
+    WHERE gym_id = #{gymId}
+      AND date = CURDATE()
+    GROUP BY HOUR(start_time)
+    ORDER BY visitCount DESC
+    LIMIT 1
+
+</select>
+
 
 </mapper>

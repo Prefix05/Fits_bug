@@ -1,6 +1,7 @@
 package dao.gym;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -94,6 +95,49 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 	    } finally {
 	        session.close();
 	    }
+	}
+
+	@Override
+	public List<Payment> selectCancelRequestList(Map<String, Object> param) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        return session.selectList("mapper.payment.selectCancelRequestList", param);
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	@Override
+	public int countCancelRequest(int gymId) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        return session.selectOne("mapper.payment.countCancelRequest", gymId);
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	@Override
+	public void updateCancelApprove(int paymentNum) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+	    try {
+	        session.update("mapper.payment.updateCancelApprove", paymentNum);
+	        session.commit();
+	    } finally {
+	        session.close();
+	    }
+	}
+	
+	@Override
+	public void cancelPtSessionByPayment(int paymentNum) {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			session.update("mapper.payment.cancelPtSessionByPayment", paymentNum);
+			session.commit();
+		}finally {
+			session.close();
+		}
+		
 	}
 
 }

@@ -103,7 +103,7 @@ public class GymSales extends HttpServlet {
             s1.setTypeRep(20);
             s1.setTrainerName("강민호");
             s1.setPaymentDate(new Date());
-            s1.setStatus("PAID");
+            s1.setStatus("결제완료");
             s1.setPaymentPrice(1200000);
             s1.setPaymentFee(30000);
             s1.setNetPrice(1170000);
@@ -115,11 +115,25 @@ public class GymSales extends HttpServlet {
             s2.setTypeRep(6);
             s2.setTrainerName(null);
             s2.setPaymentDate(new Date());
-            s2.setStatus("PAID");
+            s2.setStatus("결제완료");
             s2.setPaymentPrice(480000);
             s2.setPaymentFee(10000);
             s2.setNetPrice(470000);
             salesList.add(s2);
+            
+            Sales s3 = new Sales();
+            s3.setMemberName("김철수");
+            s3.setMembershipType("pt");
+            s3.setTypeRep(10);
+            s3.setTrainerName("이서연");
+            s3.setPaymentDate(new Date());
+            s3.setStatus("환불요청");
+            s3.setPaymentPrice(600000);
+            s3.setPaymentFee(15000);
+            s3.setNetPrice(585000);
+            s3.setCanceledAt(new Date());
+            s3.setReason("개인 사정");
+            salesList.add(s3);
 
             SalesSummary salesSummary = new SalesSummary();
             salesSummary.setTotalSales(1680000);

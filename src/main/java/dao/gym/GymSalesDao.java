@@ -16,4 +16,5 @@ public interface GymSalesDao {
     List<SalesChart> selectSalesChartList(Map<String, Object> param) throws Exception;
     List<SalesTopTrainer> selectTopTrainerList(Map<String, Object> param) throws Exception;
     List<TrainerChoose> selectTrainerList(int gymNum) throws Exception;
+    
 }

@@ -8,19 +8,21 @@ public class Sales {
 	    private int typeRep;           // 개월 / 횟수 / 일수
 	    private String trainerName;
 	    private Date paymentDate;
-
 	    private int paymentPrice;
 	    private int paymentFee;
 	    private int netPrice; // 계산값
-
 	    private String status;
+	    private Date canceledAt;
+	    private String reason;
 
 		public Sales() {
 			super();
 		}
 
+		
+
 		public Sales(String memberName, String membershipType, int typeRep, String trainerName, Date paymentDate,
-				int paymentPrice, int paymentFee, int netPrice, String status) {
+				int paymentPrice, int paymentFee, int netPrice, String status, Date canceledAt, String reason) {
 			super();
 			this.memberName = memberName;
 			this.membershipType = membershipType;
@@ -31,7 +33,11 @@ public class Sales {
 			this.paymentFee = paymentFee;
 			this.netPrice = netPrice;
 			this.status = status;
+			this.canceledAt = canceledAt;
+			this.reason = reason;
 		}
+
+
 
 		public String getMemberName() {
 			return memberName;
@@ -103,6 +109,30 @@ public class Sales {
 
 		public void setStatus(String status) {
 			this.status = status;
+		}
+
+
+
+		public Date getCanceledAt() {
+			return canceledAt;
+		}
+
+
+
+		public void setCanceledAt(Date canceledAt) {
+			this.canceledAt = canceledAt;
+		}
+
+
+
+		public String getReason() {
+			return reason;
+		}
+
+
+
+		public void setReason(String reason) {
+			this.reason = reason;
 		}
 	    
 }

@@ -42,6 +42,7 @@
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
+		<mapper resource="mapper/gym/payment.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>

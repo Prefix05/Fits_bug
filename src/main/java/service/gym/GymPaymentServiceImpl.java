@@ -1,6 +1,8 @@
 package service.gym;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dao.gym.GymPaymentDao;
 import dao.gym.GymPaymentDaoImpl;
@@ -47,6 +49,27 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	@Override
 	public void approveRefund(int paymentNum) throws Exception {
 		dao.approveRefund(paymentNum);
+	}
+
+	@Override
+	public List<Payment> selectCancelRequestList(int gymId, int startRow, int pageSize) throws Exception {
+		 Map<String, Object> param = new HashMap<>();
+		    param.put("gymId", gymId);
+		    param.put("startRow", startRow);
+		    param.put("pageSize", pageSize);
+
+		    return dao.selectCancelRequestList(param);
+	}
+
+	@Override
+	public int countCancelRequest(int gymId) throws Exception {
+		 return dao.countCancelRequest(gymId);
+	}
+
+	@Override
+	public void approveCancel(int paymentNum) throws Exception {
+		dao.updateCancelApprove(paymentNum);
+		dao.cancelPtSessionByPayment(paymentNum);
 	}
 
 }

@@ -1,6 +1,7 @@
 package dao.gym;
 
 import java.util.List;
+import java.util.Map;
 
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
@@ -15,4 +16,8 @@ public interface GymPaymentDao {
     List<Payment> selectRefundRequestList(int gymId) throws Exception;
     int countRefundRequest(int gymId) throws Exception;
     void approveRefund(int paymentNum) throws Exception;
+    List<Payment> selectCancelRequestList(Map<String, Object> param) throws Exception;
+    int countCancelRequest(int gymId) throws Exception;
+    void updateCancelApprove(int paymentNum) throws Exception;
+    void cancelPtSessionByPayment(int paymentNum);
 }

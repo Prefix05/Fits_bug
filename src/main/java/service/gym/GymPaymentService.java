@@ -14,4 +14,7 @@ public interface GymPaymentService {
     List<Payment> selectRefundRequestList(int gymId) throws Exception;
     int countRefundRequest(int gymId) throws Exception;
     void approveRefund(int paymentNum) throws Exception;
+    List<Payment> selectCancelRequestList(int gymId, int startRow, int pageSize) throws Exception;
+    int countCancelRequest(int gymId) throws Exception;
+    void approveCancel(int paymentNum) throws Exception;
 }

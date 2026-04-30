@@ -13,7 +13,6 @@ public class Payment {
     private BigDecimal paymentFee;
     private String method;
     private String status;
-    private Timestamp createdAt;
     private String memberName;
     private String membershipName;
     private String reason;
@@ -23,7 +22,7 @@ public class Payment {
 	}
 	
 	public Payment(Integer paymentNum, String userEmail, Integer membershipNum, Integer mrNum, Timestamp paymentDate,
-			BigDecimal paymentPrice, BigDecimal paymentFee, String method, String status, Timestamp createdAt,
+			BigDecimal paymentPrice, BigDecimal paymentFee, String method, String status, 
 			String memberName, String membershipName, String reason, Timestamp canceledAt) {
 		super();
 		this.paymentNum = paymentNum;
@@ -35,7 +34,6 @@ public class Payment {
 		this.paymentFee = paymentFee;
 		this.method = method;
 		this.status = status;
-		this.createdAt = createdAt;
 		this.memberName = memberName;
 		this.membershipName = membershipName;
 		this.reason = reason;
@@ -96,12 +94,7 @@ public class Payment {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
-	}
+	
 	
 	public String getMemberName() {
 		return memberName;

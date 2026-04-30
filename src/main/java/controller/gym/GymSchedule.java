@@ -43,7 +43,7 @@ public class GymSchedule extends HttpServlet {
 //                return;
 //            }
 
-//            Map<String, Object> data = service.getSchedulePageData(gymId);
+
 //
 //            request.setAttribute("trainerList", data.get("trainerList"));
 //            request.setAttribute("dayList", data.get("dayList"));
@@ -62,6 +62,8 @@ public class GymSchedule extends HttpServlet {
 
             LocalDate weekStart = today.with(DayOfWeek.MONDAY);
             LocalDate weekEnd = weekStart.plusDays(7);
+            
+//          Map<String, Object> data = service.getSchedulePageData(gymId, weekOffset);
             
             //더미 데이터
             List<dto.gym.TrainerChoose> trainerList = new java.util.ArrayList<>();
@@ -110,6 +112,8 @@ public class GymSchedule extends HttpServlet {
             request.setAttribute("dayList", dayList);
             request.setAttribute("hourList", hourList);
             request.setAttribute("scheduleMap", scheduleMap);
+            request.setAttribute("weekOffset", weekOffset);
+            
             LocalDate weekLastDay = weekStart.plusDays(6);
 
             String weekRangeText =

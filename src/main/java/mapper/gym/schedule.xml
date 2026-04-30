@@ -24,4 +24,28 @@
         FROM GYM_SCHEDULE
         WHERE gym_num = #{value}
   	</select>
+  	
+  	<select id="selectPtSessionListByGymAndWeek" parameterType="map" resultType="dto.gym.PtSessionView">
+    	SELECT
+        	ps.id AS id,
+        	ps.trainer_id AS trainerId,
+        	tu.name AS trainerName,
+        	cu.name AS clientName,
+        	DATE_FORMAT(ps.start_time, '%H:%i') AS startTime,
+        	HOUR(ps.start_time) AS startHour,
+        	WEEKDAY(ps.start_time) + 1 AS dayOfWeek,
+        	ps.status AS status
+    	FROM PT_SESSION ps
+    	JOIN TRAINER t
+      		ON ps.trainer_id = t.id
+    	JOIN USER tu
+      		ON t.user_id = tu.id
+    	JOIN USER cu
+      		ON ps.client_id = cu.id
+    	WHERE t.gym_id = #{gymId}
+      		AND ps.start_time >= #{weekStart}
+      		AND ps.start_time <![CDATA[<]]> #{weekEnd}
+      		AND ps.status != '취소'
+    	ORDER BY ps.start_time
+</select>
   </mapper>

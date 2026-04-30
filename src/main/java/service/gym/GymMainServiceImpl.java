@@ -1,6 +1,8 @@
 package service.gym;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dao.gym.GymMainDao;
 import dao.gym.GymMainDaoImpl;
@@ -17,6 +19,7 @@ import dao.gym.GymMainTrainerViewDaoImpl;
 import dto.gym.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
+import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
@@ -59,5 +62,13 @@ public class GymMainServiceImpl implements GymMainService {
     public List<GymTrainerView> getGymTrainerViewList(int gymId) throws Exception {
         return trainerViewDao.selectGymTrainerViewByGym(gymId);
     }
+
+	@Override
+	public HotTime getTodayHotTime(int gymId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+	    param.put("gymId", gymId);
+
+	    return gymMainDao.selectTodayHotTime(param);
+	}
 
 }
