@@ -59,19 +59,19 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/main" class="sb-link">
+    <a href="<%=contextPath%>/main.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
-    <a href="<%=request.getContextPath()%>/guideList">
+    <a href="<%=contextPath%>/guide" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
     </a>
-    <a href="<%=request.getContextPath()%>/trainerList">
+    <a href="<%=contextPath%>/trainerList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
     </a>
-    <a href="<%=request.getContextPath()%>/gymList">
+   <a href="<%=contextPath%>/gymList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
     </a>
-    <a href="<%=contextPath%>/community.jsp" class="sb-link">
+    <a href="<%=contextPath%>/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
     <a href="<%=contextPath%>/mypage" class="sb-link">
@@ -82,7 +82,7 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/support.jsp" class="sb-link">
+    <a href="<%=contextPath%>/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
