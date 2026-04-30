@@ -96,7 +96,7 @@
 
         <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/clients.html"><span class="material-symbols-outlined">group</span> 회원 관리</a>
+           href="${pageContext.request.contextPath}/trainer/clients"><span class="material-symbols-outlined">group</span> 회원 관리</a>
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"

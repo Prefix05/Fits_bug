@@ -12,7 +12,7 @@ import dto.trainer.TrainerDTO;
 import service.trainer.ClientService;
 import service.trainer.ClientServiceImpl;
 
-@WebServlet("/clients")
+@WebServlet({"/trainer/clients", "/clients", "/clients.html"})
 public class Clients extends HttpServlet {
 
     private static final int DEFAULT_PAGE_SIZE = 5;
