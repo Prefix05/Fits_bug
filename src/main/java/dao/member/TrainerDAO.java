@@ -1,9 +1,9 @@
 package dao.member;
 
+import dto.trainer.TrainerDTO;
+
 import java.sql.Connection;
 import java.util.List;
-
-import dto.member.TrainerDTO;
 
 public interface TrainerDAO {
     // 기존 기능 (회원가입/트레이너 등록)

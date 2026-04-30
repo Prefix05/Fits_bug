@@ -3,9 +3,7 @@ package controller.trainer;
 import dao.trainer.ClientDAOImpl;
 import dto.trainer.ClientDTO;
 import dto.trainer.TrainerDTO;
-import service.trainer.DashboardData;
-import service.trainer.DashboardService;
-import service.trainer.DashboardServiceImpl;
+import service.trainer.*;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +13,7 @@ import java.io.IOException;
 public class Dashboard extends HttpServlet {
 
     private final DashboardService dashboardService = new DashboardServiceImpl();
-    private final ClientDAOImpl clientDAO = new ClientDAOImpl();
+    private final ClientService clientService = new ClientServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,7 +32,8 @@ public class Dashboard extends HttpServlet {
         request.setAttribute("todayLessons", data.getLessons());
         request.setAttribute("selectedLesson", data.getSelectedLesson());
         if (data.getSelectedLesson() != null) {
-            ClientDTO client = clientDAO.selectClientByName(data.getSelectedLesson().getMemberName());
+            ClientDTO client = clientService.getClientById(data.getSelectedLesson().getClientId());
+
             request.setAttribute("client", client);
         }
         request.setAttribute("notifications", data.getNotifications());

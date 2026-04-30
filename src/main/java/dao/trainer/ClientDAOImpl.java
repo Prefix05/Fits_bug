@@ -11,64 +11,36 @@ import java.util.Map;
 
 public class ClientDAOImpl implements ClientDAO {
 
-    private final SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
+    @Override
+    public List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, int trainerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("offset", offset);
+        params.put("limit", limit);
+        params.put("filter", filter);
+        params.put("trainerId", trainerId);
 
-    // 페이지네이션 + 필터 조회
-    public List<ClientDTO> selectClients(int offset, int limit, String filter, int trainerId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("offset", offset);
-            params.put("limit", limit);
-            params.put("filter", filter);
-            params.put("trainerId", trainerId);
-
-            return session.selectList("dao.ClientMapper.selectClients", params);
-
-        }
-    }
-
-    private static ClientDTO make(int id, String name, String goals,
-                                  String next, int count, String last, String status) {
-        ClientDTO c = new ClientDTO();
-        c.setClientId(id);
-        c.setName(name);
-        c.setGoals(goals);
-        c.setNextSession(next);
-        c.setLessonCount(count);
-        c.setLastSession(last);
-        c.setStatus(status);
-        return c;
-    }
-
-
-    // 전체 개수
-    public int countClients(String filter, int trainerId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("filter", filter);
-            params.put("trainerId", trainerId);
-            return session.selectOne("dao.ClientMapper.countClients", params);
-        }
-    }
-
-    public ClientDTO selectClientByName(String name) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            return session.selectOne("dao.ClientMapper.selectClientByName", name);
-        }
+        return session.selectList("dao.ClientMapper.selectClients", params);
     }
 
     @Override
-    public ClientDTO getClientDetail(int clientId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
+    public int selectClientCount(SqlSession session, String filter, int trainerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("filter", filter);
+        params.put("trainerId", trainerId);
+
+        return session.selectOne("dao.ClientMapper.countClients", params);
+    }
+
+    @Override
+    public ClientDTO selectClientDetail(SqlSession session, int clientId) {
             return session.selectOne("dao.ClientMapper.getClientDetail", clientId);
-        }
     }
 
     // ID로 단건 조회
-    public ClientDTO selectClientById(int clientId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
+    public ClientDTO selectClientById(SqlSession session, int clientId) {
             return session.selectOne("dao.ClientMapper.selectClientById", clientId);
-        }
     }
 }
+
+//DAO     → select / insert / update (SQL language)
+//Service → get / create / update   (business language)

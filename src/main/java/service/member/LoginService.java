@@ -8,8 +8,8 @@
  */
 package service.member;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 
 public interface LoginService {
-    MemberDTO login(String email, String password);
+    LoginDTO login(String email, String password);
 }

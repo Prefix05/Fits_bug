@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.LoginDTO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 if(loginUser == null){
     response.sendRedirect("login.jsp");
     return;

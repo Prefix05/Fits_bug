@@ -51,7 +51,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.WorkoutRecordDTO;
 import service.member.WorkoutRecordService;
 import service.member.WorkoutRecordServiceImpl;
@@ -65,7 +65,7 @@ public class WorkoutRecordController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         List<WorkoutRecordDTO> list = service.getRecords(user.getEmail());
 
@@ -98,7 +98,7 @@ public class WorkoutRecordController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         WorkoutRecordDTO dto = new WorkoutRecordDTO();
 

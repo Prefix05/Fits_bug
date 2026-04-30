@@ -9,6 +9,8 @@ public class PaymentDTO {
     private String method;       // 카드, 가상계좌 등
     private String approvedAt;   // 승인 시각 (Toss 응답값)
     private int clientId;        // FK: 결제한 회원 번호
+    private int trainerId;
+
 
     // Getters & Setters
     public int getPaymentId() {
@@ -73,5 +75,13 @@ public class PaymentDTO {
 
     public void setClientId(int clientId) {
         this.clientId = clientId;
+    }
+
+    public int getTrainerId() {
+        return trainerId;
+    }
+
+    public void setTrainerId(int trainerId) {
+        this.trainerId = trainerId;
     }
 }

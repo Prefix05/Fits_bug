@@ -15,6 +15,8 @@
 <p id="paymentKey"></p>
 <p id="orderId"></p>
 <p id="amount"></p>
+<button onclick="cancelPayment(paymentKey)">환불하기</button>
+
 
 <script>
     // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
@@ -60,6 +62,24 @@
     orderIdElement.textContent = "주문번호: " + orderId;
     amountElement.textContent = "결제 금액: " + amount;
     paymentKeyElement.textContent = "paymentKey: " + paymentKey;
+
+    async function cancelPayment(paymentKey) {
+        const response = await fetch("${pageContext.request.contextPath}/payment/cancel", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                paymentKey: paymentKey,
+                cancelReason: "고객 요청 환불"
+            })
+        });
+
+        const json = await response.json();
+        if (response.ok) {
+            alert("환불이 완료됐습니다.");
+        } else {
+            alert("환불 실패: " + json.message);
+        }
+    }
 </script>
 </body>
 </html>

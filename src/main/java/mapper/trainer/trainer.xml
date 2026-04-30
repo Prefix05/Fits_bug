@@ -6,18 +6,18 @@
 <mapper namespace="trainer">
 
     <insert id="insertTrainer" parameterType="dto.trainer.TrainerDTO">
-        INSERT INTO trainers (name, email, password)
+        INSERT INTO trainer (name, email, password)
         VALUES (#{name}, #{email}, #{password})
     </insert>
 
     <select id="getTrainerByEmail" parameterType="String" resultType="dto.trainer.TrainerDTO">
         SELECT
-            trainer_id  AS trainerId,
+            id  AS trainerId,
             name,
             email,
             password,
             created_at  AS createdAt
-        FROM trainers
+        FROM trainer
         WHERE email = #{email}
     </select>
 

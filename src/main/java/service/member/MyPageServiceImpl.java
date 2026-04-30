@@ -2,7 +2,7 @@ package service.member;
 
 import dao.member.MyPageDAO;
 import dao.member.MyPageDAOImpl;
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.MyPageDTO;
 import dto.member.WorkoutPlanDTO;
 
@@ -13,7 +13,7 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public MyPageDTO getMyPage(String email) {
 
-        MemberDTO member = dao.selectMember(email);
+        LoginDTO member = dao.selectMember(email);
         WorkoutPlanDTO plan = dao.selectWorkoutPlan(email);
 
         MyPageDTO dto = new MyPageDTO();
@@ -24,14 +24,14 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public void updateMyPage(MemberDTO member, WorkoutPlanDTO plan) {
+    public void updateMyPage(LoginDTO member, WorkoutPlanDTO plan) {
 
         dao.updateMember(member);
         dao.updateWorkoutPlan(plan);
     }
 
     @Override
-    public void updateProfileImg(MemberDTO member) {
+    public void updateProfileImg(LoginDTO member) {
         dao.updateProfileImg(member);
     }
 }

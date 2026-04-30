@@ -18,143 +18,80 @@ import dao.trainer.LessonDAO;
 import dao.trainer.LessonDAOImpl;
 import dto.trainer.ClientDTO;
 import dto.trainer.LessonDTO;
+import dto.trainer.LessonInfoResponse;
 import dto.trainer.TrainerDTO;
+import service.trainer.ClientService;
+import service.trainer.ClientServiceImpl;
+import service.trainer.LessonService;
+import service.trainer.LessonServiceImpl;
 
 public class LessonInfo extends HttpServlet {
-    private final LessonDAO lessonDAO = new LessonDAOImpl();
-    private final ClientDAOImpl clientDAO = new ClientDAOImpl(); // 추가
+    private final LessonService lessonService = new LessonServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 세션 체크
+
+        // 1. Session check
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        // trainerId 가져오기
+        // 2. Get trainerId
         TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         int trainerId = trainer.getTrainerId();
 
+        // 3. Parse lessonId
         Integer lessonId = parseLessonId(request.getParameter("lessonId"));
         if (lessonId == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "lessonId is required");
             return;
         }
 
-        List<LessonDTO> todayLessons = lessonDAO.findLessonsByDate(LocalDate.now(), trainerId);
-        todayLessons.sort(Comparator.comparing(this::safeStartTime));
-        applyDynamicStatuses(todayLessons, LocalTime.now());
-
-        LessonDTO selected = findById(todayLessons, lessonId);
-        if (selected == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Lesson not found");
-            return;
-        }
-
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=UTF-8");
-
-        ClientDTO client = clientDAO.selectClientByName(selected.getMemberName());
-        int lessonCount = (client != null) ? client.getLessonCount() : 0;
-
-        String json = "{" +
-                "\"lessonId\":" + selected.getLessonId() + "," +
-                "\"goal\":\"" + escapeJson(selected.getGoal()) + "\"," +
-                "\"memberName\":\"" + escapeJson(selected.getMemberName()) + "\"," +
-                "\"startTime\":\"" + escapeJson(selected.getStartTime()) + "\"," +
-                "\"endTime\":\"" + escapeJson(selected.getEndTime()) + "\"," +
-                "\"durationMinutes\":" + selected.getDurationMinutes() + "," +
-                "\"status\":\"" + escapeJson(selected.getStatus()) + "\"," +
-                "\"lessonCount\":" + lessonCount +
-                "}";
-
-        response.getWriter().write(json);
-    }
-
-    private void applyDynamicStatuses(List<LessonDTO> lessons, LocalTime now) {
-        int nowIndex = -1;
-        for (int i = 0; i < lessons.size(); i++) {
-            LessonDTO lesson = lessons.get(i);
-            lesson.setStatus("Booked");
-            if (isInLessonRange(now, lesson.getStartTime(), lesson.getEndTime())) {
-                nowIndex = i;
-            }
-        }
-
-        if (nowIndex != -1) {
-            lessons.get(nowIndex).setStatus("Now");
-            if (nowIndex + 1 < lessons.size()) {
-                lessons.get(nowIndex + 1).setStatus("Up Next");
-            }
-            return;
-        }
-
-        int upNextIndex = findFirstUpcomingIndex(lessons, now);
-        if (upNextIndex != -1) {
-            lessons.get(upNextIndex).setStatus("Up Next");
-        }
-    }
-
-    private boolean isInLessonRange(LocalTime now, String startTime, String endTime) {
         try {
-            LocalTime start = LocalTime.parse(startTime);
-            LocalTime end = LocalTime.parse(endTime);
-            return !now.isBefore(start) && now.isBefore(end);
-        } catch (DateTimeParseException e) {
-            return false;
+            // ✅ 4. CALL SERVICE (this replaces everything you had before)
+            LessonInfoResponse result =
+                    lessonService.getLessonInfo(trainerId, lessonId);
+
+            if (result == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Lesson not found");
+                return;
+            }
+
+            // ✅ 5. Return JSON (temporary manual version)
+            response.setContentType("application/json;charset=UTF-8");
+
+            String json = "{" +
+                    "\"lessonId\":" + result.getLessonId() + "," +
+                    "\"goal\":\"" + escapeJson(result.getGoal()) + "\"," +
+                    "\"memberName\":\"" + escapeJson(result.getMemberName()) + "\"," +
+                    "\"startTime\":\"" + escapeJson(result.getStartTime()) + "\"," +
+                    "\"endTime\":\"" + escapeJson(result.getEndTime()) + "\"," +
+                    "\"durationMinutes\":" + result.getDurationMinutes() + "," +
+                    "\"status\":\"" + escapeJson(result.getStatus()) + "\"," +
+                    "\"lessonCount\":" + result.getLessonCount() +
+                    "}";
+
+            response.getWriter().write(json);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
-    private LocalTime parseTime(String value) {
+    private Integer parseLessonId(String raw) {
         try {
-            return LocalTime.parse(value);
-        } catch (DateTimeParseException e) {
+            return raw == null ? null : Integer.parseInt(raw);
+        } catch (Exception e) {
             return null;
         }
-    }
-
-    private LocalTime safeStartTime(LessonDTO lesson) {
-        LocalTime start = parseTime(lesson.getStartTime());
-        return start != null ? start : LocalTime.MAX;
-    }
-
-    private int findFirstUpcomingIndex(List<LessonDTO> lessons, LocalTime now) {
-        for (int i = 0; i < lessons.size(); i++) {
-            LocalTime start = parseTime(lessons.get(i).getStartTime());
-            if (start != null && start.isAfter(now)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private Integer parseLessonId(String rawLessonId) {
-        if (rawLessonId == null || rawLessonId.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return Integer.parseInt(rawLessonId);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    private LessonDTO findById(List<LessonDTO> lessons, Integer lessonId) {
-        for (LessonDTO lesson : lessons) {
-            if (lesson.getLessonId() == lessonId) {
-                return lesson;
-            }
-        }
-        return null;
     }
 
     private String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
+        if (value == null) return "";
         return value
                 .replace("\\", "\\\\")
                 .replace("\"", "\\\"")

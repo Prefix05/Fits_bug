@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.MessageRoomDTO;
 import service.member.MessageService;
 import service.member.MessageServiceImpl;
@@ -23,7 +23,7 @@ public class MessageListController extends HttpServlet {
             throws IOException {
 
         HttpSession session = req.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
 
         List<MessageRoomDTO> list = service.getMessageRoomList(user.getEmail());
 
