@@ -635,35 +635,85 @@ function nextMonth() { currentDate.setMonth(currentDate.getMonth()+1); drawCalen
 
 // ── 결제 데이터 ──
 function loadPaymentData() {
-  const active = {name:"PT 20회권 VIP",remain:8,total:20,startDate:"2026-04-01",endDate:"2026-05-31"};
+
+  // ✅ 테스트용 상태 변경 가능
+  const active = {
+    orderId: "ORD1234",
+    productName: "PT 20회권 VIP",
+    remain: 8,
+    total: 20,
+    used: true,          // 🔥 true = 환불 버튼 / false = 취소 버튼
+    status: "DONE",      // 🔥 여기 바꿔가면서 테스트
+    startDate: "2026-04-01",
+    endDate: "2026-05-31"
+  };
+
   const history = [
     {date:"2026-04-01",name:"PT 20회권 VIP",trainer:"김태훈",price:600000},
     {date:"2026-03-01",name:"헬스 1개월",trainer:"",price:80000}
   ];
+
   drawMembership(active);
   drawPaymentTable(history);
 }
 
 function drawMembership(data) {
-  const box = document.getElementById("activeMembership");
-  if (!data) { box.innerHTML = ""; return; }
-  const pct = Math.max(0,(data.remain/data.total)*100);
-  const diff = Math.ceil((new Date(data.endDate)-new Date())/(1000*60*60*24));
-  const dday = diff>0?"D-"+diff:diff===0?"D-DAY":"만료됨";
-  
-  box.innerHTML =
-	  '<div style="background:linear-gradient(135deg,#FF6B35,#FF8C5A);border-radius:20px;padding:28px 30px;">' +
-	    '<div>' +
-	      '<div style="font-size:12px;color:white;">이용 중인 회원권</div>' +
-	      '<div style="font-size:22px;font-weight:900;color:white;">🎫 ' + data.name + '</div>' +
-	      '<div style="font-size:12px;color:white;">등록일: ' + data.startDate + ' · 만료일: ' + data.endDate + '</div>' +
+	  const box = document.getElementById("activeMembership");
+	  const percent = Math.round((data.remain / data.total) * 100);
+	  if (!data) { box.innerHTML = ""; return; }
+
+	  let actionBtn = "";
+	  let overlay   = "";
+	  let titleStyle = "";
+
+	  // 상태 분기
+	  switch(data.status){
+
+	    case "READY":
+	      actionBtn = '<button onclick="cancelPayment(\''+data.orderId+'\')">❌ 결제 취소</button>';
+	      break;
+
+	    case "DONE":
+	    case "USING":
+	      if(data.used){
+	        actionBtn = '<button onclick="refundPayment(\''+data.orderId+'\')">💸 환불하기</button>';
+	      }else{
+	        actionBtn = '<button onclick="cancelPayment(\''+data.orderId+'\')">❌ 취소하기</button>';
+	      }
+	      break;
+
+	    case "CANCEL_REQ":
+	    case "REFUND_REQ":
+	      overlay = '<div style="position:absolute;top:10px;right:10px;color:#FF6B35;font-weight:900;">처리 진행중</div>';
+	      titleStyle = "text-decoration:line-through;";
+	      break;
+
+	    case "CANCEL_DONE":
+	      overlay = '<div style="position:absolute;top:10px;right:10px;color:#9DA8C0;">취소 완료</div>';
+	      titleStyle = "text-decoration:line-through;";
+	      break;
+
+	    case "REFUND_DONE":
+	      overlay = '<div style="position:absolute;top:10px;right:10px;color:#00BFA5;">환불 완료</div>';
+	      titleStyle = "text-decoration:line-through;";
+	      break;
+	  }
+
+	  box.innerHTML =
+	    '<div style="position:relative;background:linear-gradient(135deg,#FF6B35,#FF8C5A);border-radius:20px;padding:28px;">'
+	    + overlay +
+	    '<div style="'+titleStyle+'">' +
+	      '<div style="color:white;">이용 중인 회원권</div>' +
+	      '<div style="font-size:22px;font-weight:900;color:white;">🎫 '+data.productName+'</div>' +
 	    '</div>' +
-	    '<div>' +
-	      '<div>' + data.remain + ' / ' + data.total + '회 남음</div>' +
-	      '<div style="width:' + pct + '%;height:10px;background:white;"></div>' +
+	    '<div style="margin-top:16px;">' +
+	    '<div style="color:white;font-size:13px;">남은 횟수 ' + data.remain + ' / ' + data.total + '</div>' +
+	    '<div style="height:10px;background:rgba(255,255,255,0.3);border-radius:99px;margin-top:6px;overflow:hidden;">' +
+	      '<div style="width:' + percent + '%;height:100%;background:white;border-radius:99px;"></div>' +
 	    '</div>' +
-	  '</div>';
-}
+	    '<div style="margin-top:12px;">' + actionBtn + '</div>' +
+	    '</div>';
+	}
 
 function drawPaymentTable(list) {
   const tbody = document.getElementById("paymentTable");
@@ -676,6 +726,30 @@ function drawPaymentTable(list) {
 	  '</tr>';
 	}).join("");
 }
+
+function cancelPayment(orderId){
+	  if(!confirm("정말 취소하시겠습니까?")) return;
+
+	  fetch("paymentAction",{
+	    method:"POST",
+	    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+	    body:"orderId="+orderId+"&action=cancel"
+	  })
+	  .then(res=>res.text())
+	  .then(()=>location.reload());
+	}
+
+	function refundPayment(orderId){
+	  if(!confirm("환불 요청하시겠습니까?")) return;
+
+	  fetch("paymentAction",{
+	    method:"POST",
+	    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+	    body:"orderId="+orderId+"&action=refund"
+	  })
+	  .then(res=>res.text())
+	  .then(()=>location.reload());
+	}
 
 // ── 피드백 ──
 function loadRecentFeedback() {

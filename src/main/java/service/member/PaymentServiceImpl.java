@@ -54,4 +54,19 @@ public class PaymentServiceImpl implements PaymentService {
 
         notificationService.create(n);
     }
+
+    @Override
+    public PaymentDTO getActivePayment(String email) {
+        return dao.findActiveByEmail(email);
+    }
+
+    @Override
+    public void requestCancel(String orderId) {
+        dao.updateStatus(orderId, "CANCEL_REQ");
+    }
+
+    @Override
+    public void requestRefund(String orderId) {
+        dao.updateStatus(orderId, "REFUND_REQ");
+    }
 }

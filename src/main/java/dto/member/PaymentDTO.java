@@ -5,20 +5,23 @@ public class PaymentDTO {
 	    private String email;
 	    private int amount;
 	    private String productName;
-	    private String status; // READY, DONE
+	    
+	    private String status;   // READY, DONE, USING, CANCEL_REQ, REFUND_REQ, CANCEL_DONE, REFUND_DONE
+	    private boolean used;    // 이용 여부 (true = 사용함)
 	    
 		public PaymentDTO() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
 
-		public PaymentDTO(String orderId, String email, int amount, String productName, String status) {
+		public PaymentDTO(String orderId, String email, int amount, String productName, String status, boolean used) {
 			super();
 			this.orderId = orderId;
 			this.email = email;
 			this.amount = amount;
 			this.productName = productName;
 			this.status = status;
+			this.used = used;
 		}
 
 		public String getOrderId() {
@@ -59,6 +62,14 @@ public class PaymentDTO {
 
 		public void setStatus(String status) {
 			this.status = status;
+		}
+
+		public boolean isUsed() {
+			return used;
+		}
+
+		public void setUsed(boolean used) {
+			this.used = used;
 		}
 	    
 }
