@@ -19,13 +19,14 @@ public class LessonDAOImpl implements LessonDAO {
     private final SqlSessionFactory sqlSessionFactory = MybatisSqlSessionFactory.getSqlSessionFactory();
 
     @Override
-    public List<LessonDTO> findLessonsByDate(LocalDate date, int trainerId) {
-
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            Map<String, Object> params = new HashMap<>();
+    public List<LessonDTO> selectLessonsByDate(SqlSession session, LocalDate date, int trainerId) {
+        Map<String, Object> params = new HashMap<>();
             params.put("date", date.toString());
             params.put("trainerId", trainerId);
+
             return session.selectList("lesson.findLessonsByDate", params);
-        }
     }
 }
+
+//DAO     → select / insert / update (SQL language)
+//Service → get / create / update   (business language)

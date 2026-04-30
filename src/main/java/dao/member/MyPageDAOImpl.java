@@ -1,7 +1,10 @@
 package dao.member;
 
-import java.sql.*;
-import dto.member.MemberDTO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import dto.member.LoginDTO;
 import dto.member.WorkoutPlanDTO;
 import util.DBUtil;
 
@@ -9,9 +12,9 @@ public class MyPageDAOImpl implements MyPageDAO {
 
     // 회원 조회
     @Override
-    public MemberDTO selectMember(String email) {
+    public LoginDTO selectMember(String email) {
 
-        MemberDTO dto = null;
+        LoginDTO dto = null;
 
         try (Connection conn = DBUtil.getConnection()) {
 
@@ -22,7 +25,7 @@ public class MyPageDAOImpl implements MyPageDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                dto = new MemberDTO();
+                dto = new LoginDTO();
                 dto.setEmail(rs.getString("email"));
                 dto.setPassword(rs.getString("password"));
                 dto.setNickname(rs.getString("nickname"));
@@ -73,7 +76,7 @@ public class MyPageDAOImpl implements MyPageDAO {
 
     // 회원 수정
     @Override
-    public void updateMember(MemberDTO dto) {
+    public void updateMember(LoginDTO dto) {
 
         try (Connection conn = DBUtil.getConnection()) {
 
@@ -117,7 +120,7 @@ public class MyPageDAOImpl implements MyPageDAO {
 
     // 프로필 이미지 수정
     @Override
-    public void updateProfileImg(MemberDTO dto) {
+    public void updateProfileImg(LoginDTO dto) {
 
         try (Connection conn = DBUtil.getConnection()) {
 

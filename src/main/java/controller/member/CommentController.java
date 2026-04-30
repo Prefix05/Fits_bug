@@ -1,13 +1,16 @@
 package controller.member;
 
-import dto.member.CommentDTO;
-import service.member.CommentService;
-import service.member.CommentServiceImpl;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.IOException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dto.member.CommentDTO;
+import service.member.CommentService;
+import service.member.CommentServiceImpl;
 
 @WebServlet("/comment")
 public class CommentController extends HttpServlet {

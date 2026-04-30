@@ -203,6 +203,15 @@
                     <div id="detContent" class="bg-gray-50 p-6 rounded-xl text-sm leading-relaxed text-gray-600 min-h-[200px]"></div>
                 </div>
 
+				<div id="detFileArea" class="mt-6 space-y-2 hidden">
+    				<p class="text-xs text-gray-400 font-bold uppercase tracking-wider">신고 증빙 자료</p>
+    				<div class="flex gap-4">
+        			<div class="relative group cursor-pointer overflow-hidden rounded-xl border border-gray-100 w-48 h-32 bg-gray-50">
+            		<img id="detFileImg" onclick="zoomImage(this.src)" src="" alt="신고 증빙 사진" class="w-full h-full object-cover transition-transform group-hover:scale-105">
+        			</div>
+    				</div>
+				</div>
+	
                 <div id="resultArea" class="hidden p-6 bg-blue-50 rounded-xl border border-blue-100">
                     <p class="text-xs text-primary font-black mb-2">관리자 처리결과</p>
                     <div id="detResult" class="text-sm text-gray-700 leading-relaxed"></div>
@@ -256,7 +265,11 @@
         </div>
     </div>
 </div>
-
+<div id="imageModal" onclick="closeImageModal()" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center cursor-zoom-out backdrop-blur-sm">
+    <div class="max-w-[90%] max-h-[90%] overflow-hidden rounded-lg shadow-2xl">
+        <img id="modalFullImage" src="" class="w-full h-full object-contain" alt="확대 이미지">
+    </div>
+</div>
 <!-- Summary Indicators -->
 <section class="grid grid-cols-4 gap-6">
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
@@ -341,6 +354,18 @@
                 document.getElementById('procDateArea').style.display = 'none';
             }
 
+         	// --- 신고 증빙 파일 제어 로직 ---
+            const fileArea = document.getElementById('detFileArea');
+            const fileImg = document.getElementById('detFileImg');
+            // data.file은 DB의 신고 테이블에 저장된 파일명입니다.
+            if(data.file && data.file.trim() !== "") {
+                fileArea.classList.remove('hidden');
+                // 저장 경로는 문의내역과 동일하게 설정 (팀원간 합의된 경로)
+                fileImg.src = '${pageContext.request.contextPath}/resources/upload/' + data.file;
+            } else {
+                fileArea.classList.add('hidden');
+            }
+         	
             // 상태 배지 처리
             const badge = document.getElementById('detStatusBadge');
             if(data.status !== 'WAIT') {
@@ -375,6 +400,7 @@
                 moveBtn.style.cursor = "not-allowed";
             }
         });
+    console.log(data);
 	}
     
 
@@ -435,6 +461,26 @@
             alert('처리 중 오류가 발생했습니다: ' + (data.message || ''));
         }
     });
+    }
+ 	// 이미지 확대 함수
+    function zoomImage(imgSrc) {
+        if(!imgSrc || imgSrc.includes('undefined')) return;
+        
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalFullImage');
+        
+        modalImg.src = imgSrc;
+        modal.classList.remove('hidden');
+        // 스크롤 방지 (필요 시)
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 이미지 모달 닫기 함수
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        // 스크롤 복구
+        document.body.style.overflow = 'auto';
     }
 </script>
 </main>

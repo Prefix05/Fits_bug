@@ -5,7 +5,7 @@
 <mapper namespace="dao.ClientMapper">
 
     <resultMap id="clientResultMap" type="dto.trainer.ClientDTO">
-        <id property="clientId" column="client_id"/>
+        <id property="clientId" column="id"/>
         <result property="name" column="name"/>
         <result property="age" column="age"/>
         <result property="goals" column="goals"/>
@@ -21,7 +21,7 @@
     </resultMap>
 
     <select id="selectClients" resultMap="clientResultMap">
-        SELECT * FROM clients
+        SELECT * FROM member
         <where>
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
@@ -32,8 +32,7 @@
     </select>
 
     <select id="countClients" resultType="int">
-        SELECT COUNT(*) FROM clients
-        <where>
+        SELECT COUNT(*) FROM member    <where>
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
@@ -43,19 +42,19 @@
 
     <select id="selectClientById" resultMap="clientResultMap">
         SELECT *
-        FROM clients
-        WHERE client_id = #{clientId}
+        FROM member
+        WHERE id = #{clientId}
     </select>
 
     <select id="selectClientByName" resultMap="clientResultMap">
         SELECT *
-        FROM clients
+        FROM member
         WHERE name = #{name}
     </select>
 
     <select id="getClientDetail" parameterType="int" resultMap="clientResultMap">
         SELECT
-            client_id,
+            id,
             name,
             age,
             goals,
@@ -64,9 +63,10 @@
             total_lessons,
             height,
             weight,
-            status
-        FROM clients
-        WHERE client_id = #{clientId}
+            status,
+            trainer_id
+        FROM member
+        WHERE id = #{clientId}
     </select>
 
 </mapper>

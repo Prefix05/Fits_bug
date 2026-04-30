@@ -3,8 +3,8 @@ package dto.admin;
 import java.sql.Timestamp;
 
 public class InquiryDTO {
-	private int inquiryId;
-    private int userId;
+	private Integer inquiryId;
+    private Integer userId;
     private String userName;
     private String category; // ENUM 매칭
     private String title;
@@ -20,7 +20,7 @@ public class InquiryDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public InquiryDTO(int inquiryId, int userId, String userName, String category, String title, String content, String file,
+	public InquiryDTO(Integer inquiryId, Integer userId, String userName, String category, String title, String content, String file,
 			String result, String status, Timestamp regDate, Timestamp processDate) {
 		super();
 		this.inquiryId = inquiryId;
@@ -36,19 +36,19 @@ public class InquiryDTO {
 		this.processDate = processDate;
 	}
 
-	public int getInquiryId() {
+	public Integer getInquiryId() {
 		return inquiryId;
 	}
 
-	public void setInquiryId(int inquiryId) {
+	public void setInquiryId(Integer inquiryId) {
 		this.inquiryId = inquiryId;
 	}
 
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
 

@@ -1,19 +1,14 @@
 package controller.member;
 
-import dto.member.MemberDTO;
-import service.member.MemberService;
-
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
 
 @WebServlet("/checkEmail")
 public class CheckEmailController extends HttpServlet {
@@ -22,7 +17,7 @@ public class CheckEmailController extends HttpServlet {
 
 		        String email = req.getParameter("email");
 
-		        MemberDAO dao = new MemberDAOImpl();
+		        LoginDAO dao = new LoginDAOImpl();
 		        boolean exists = dao.isEmailExists(email);
 
 		        resp.setContentType("application/json; charset=UTF-8");

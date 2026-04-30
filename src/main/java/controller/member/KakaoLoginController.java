@@ -1,19 +1,23 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
+import dto.member.LoginDTO;
 import util.KakaoUtil;
 
 @WebServlet("/kakaoLogin")
 public class KakaoLoginController extends HttpServlet {
 
-    private MemberDAO dao = new MemberDAOImpl();
+    private LoginDAO dao = new LoginDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,11 +37,11 @@ public class KakaoLoginController extends HttpServlet {
         }
 
         // 3. 기존 회원 확인
-        MemberDTO user = dao.findByEmail(email);
+        LoginDTO user = dao.findByEmail(email);
 
         // 4. 없으면 자동 회원가입
         if (user == null) {
-            user = new MemberDTO();
+            user = new LoginDTO();
             user.setEmail(email);
             user.setNickname("카카오회원");
             user.setEmailVerified(true);

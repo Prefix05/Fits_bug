@@ -9,6 +9,7 @@
 		<typeAlias type="dto.admin.ExerciseDTO" alias="exercise"/>
 		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
 		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
+		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
 		<typeAlias type="dto.trainer.LessonDTO" alias="lesson"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
@@ -20,7 +21,8 @@
 			<transactionManager type="JDBC"/>
 			<dataSource type="POOLED">
 				<property name="driver" value="org.mariadb.jdbc.Driver"/>
-				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
+<!--				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>-->
+				<property name="url" value="jdbc:mariadb://localhost:3306/fitbull_db"/>
 				<property name="username" value="root"/>
 				<property name="password" value="7564"/>
 <!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
@@ -36,14 +38,19 @@
 		<mapper resource="mapper/admin/exercise.xml"/>
 		<mapper resource="mapper/admin/report.xml"/>
 		<mapper resource="mapper/admin/inquiry.xml"/>
+		<mapper resource="mapper/admin/sales.xml"/>
 		<mapper resource="mapper/gym/gymMain.xml"/>
 		<mapper resource="mapper/gym/gymNotice.xml"/>
 		<mapper resource="mapper/gym/gymTrainerView.xml"/>
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
+
 		<mapper resource="mapper/gym/payment.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/>
+
+		<mapper resource="mapper/member/loginMapper.xml"/>
+
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>

@@ -24,13 +24,13 @@ import java.net.URL;
 
 import org.json.JSONObject;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dto.member.MemberDTO;
+import dao.member.LoginDAO;
+import dao.member.LoginDAOImpl;
+import dto.member.LoginDTO;
 
 public class KakaoServiceImpl implements KakaoService {
 
-    private MemberDAO dao = new MemberDAOImpl();
+    private LoginDAO dao = new LoginDAOImpl();
 
     @Override
     public String getAccessToken(String code) {
@@ -73,8 +73,8 @@ public class KakaoServiceImpl implements KakaoService {
     }
 
     @Override
-    public MemberDTO getUserInfo(String token) {
-        MemberDTO member = null;
+    public LoginDTO getUserInfo(String token) {
+        LoginDTO member = null;
 
         try {
             URL url = new URL("https://kapi.kakao.com/v2/user/me");
@@ -101,7 +101,7 @@ public class KakaoServiceImpl implements KakaoService {
             member = dao.findByEmail(email);
 
             if (member == null) {
-            	member = new MemberDTO();
+            	member = new LoginDTO();
             	member.setEmail(email);
             	member.setNickname("카카오회원");
 

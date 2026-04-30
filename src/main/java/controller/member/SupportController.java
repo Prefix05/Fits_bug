@@ -1,12 +1,16 @@
 package controller.member;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.List;
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dto.member.LoginDTO;
 import dto.member.SupportDTO;
 import service.member.SupportService;
 import service.member.SupportServiceImpl;
@@ -22,7 +26,7 @@ public class SupportController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             response.sendRedirect("login.jsp");
@@ -43,7 +47,7 @@ public class SupportController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             response.setStatus(401);

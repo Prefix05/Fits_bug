@@ -1,10 +1,10 @@
 package service.member;
 
+import java.util.List;
+
 import dao.member.CommentDAO;
 import dao.member.CommentDAOImpl;
 import dto.member.CommentDTO;
-
-import java.util.List;
 
 public class CommentServiceImpl implements CommentService {
     private CommentDAO dao = new CommentDAOImpl();

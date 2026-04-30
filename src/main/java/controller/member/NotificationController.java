@@ -6,9 +6,11 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.NotificationDTO;
 import service.member.NotificationService;
 import service.member.NotificationServiceImpl;
@@ -26,7 +28,7 @@ public class NotificationController extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
 
-        MemberDTO user = (MemberDTO) req.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) req.getSession().getAttribute("loginUser");
 
         if(user == null){
             out.print("{\"error\":\"login required\"}");

@@ -1,17 +1,21 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dto.member.LoginDTO;
 import dto.member.MyPageDTO;
 import dto.member.WorkoutPlanDTO;
 import service.member.MyPageService;
 import service.member.MyPageServiceImpl;
 
-@WebServlet("/mypage")
+@WebServlet("/member/mypage")
 public class MyPageController extends HttpServlet {
     private MyPageService service = new MyPageServiceImpl();
 
@@ -23,7 +27,7 @@ public class MyPageController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         // 로그인 체크
         if (loginUser == null) {
@@ -71,7 +75,7 @@ public class MyPageController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -83,7 +87,7 @@ public class MyPageController extends HttpServlet {
         // ======================
         // 1. MemberDTO
         // ======================
-        MemberDTO member = new MemberDTO();
+        LoginDTO member = new LoginDTO();
         member.setEmail(email);
         member.setNickname(request.getParameter("nickname"));
         member.setPhone(request.getParameter("phone"));

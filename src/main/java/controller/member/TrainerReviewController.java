@@ -6,9 +6,12 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import dto.member.TrainerReviewDTO;
 import service.member.TrainerReviewService;
 import service.member.TrainerReviewServiceImpl;
@@ -21,7 +24,7 @@ public class TrainerReviewController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        MemberDTO user = (MemberDTO) req.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) req.getSession().getAttribute("loginUser");
 
         if(user == null){
             resp.getWriter().write("로그인 필요");

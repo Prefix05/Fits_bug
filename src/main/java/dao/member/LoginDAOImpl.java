@@ -1,12 +1,15 @@
 package dao.member;
 
-import java.sql.*;
-import dto.member.MemberDTO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import dto.member.LoginDTO;
 import util.DBUtil;
 
-public class MemberDAOImpl implements MemberDAO {
+public class LoginDAOImpl implements LoginDAO {
     @Override
-    public int insertMember(MemberDTO member) {
+    public int insertMember(LoginDTO member) {
 
         String sql = "INSERT INTO member(email, password, nickname, phone, profile_image, email_verified, social_type) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -31,7 +34,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 	
     @Override
-    public MemberDTO login(String email, String password) {
+    public LoginDTO login(String email, String password) {
 
         String sql = "SELECT * FROM member WHERE email=? AND password=?";
 
@@ -44,7 +47,7 @@ public class MemberDAOImpl implements MemberDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                MemberDTO m = new MemberDTO();
+                LoginDTO m = new LoginDTO();
                 m.setEmail(rs.getString("email"));
                 m.setNickname(rs.getString("nickname"));
                 m.setProfileImage(rs.getString("profile_image"));
@@ -82,8 +85,8 @@ public class MemberDAOImpl implements MemberDAO {
     }
     
     @Override
-    public MemberDTO findByEmail(String email) {
-    	MemberDTO user = null;
+    public LoginDTO findByEmail(String email) {
+    	LoginDTO user = null;
         try (Connection conn = DBUtil.getConnection()) {
 
             String sql = "SELECT * FROM member WHERE email=?";
@@ -93,7 +96,7 @@ public class MemberDAOImpl implements MemberDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                user = new MemberDTO();
+                user = new LoginDTO();
                 user.setEmail(rs.getString("email"));
                 user.setNickname(rs.getString("nickname"));
                 user.setProfileImage(rs.getString("profile_image"));
@@ -109,7 +112,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public void insertKakaoUser(MemberDTO dto) {
+    public void insertKakaoUser(LoginDTO dto) {
     	try (Connection conn = DBUtil.getConnection()) {
             String sql = "INSERT INTO member(email, nickname, email_verified, social_type) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -126,8 +129,8 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
 	@Override
-	public MemberDTO loginCheck(MemberDTO dto) {
-		MemberDTO user = null;
+	public LoginDTO loginCheck(LoginDTO dto) {
+		LoginDTO user = null;
         try (Connection conn = DBUtil.getConnection()) {
 
             String sql = "SELECT * FROM member WHERE email=? AND password=?";
@@ -139,7 +142,7 @@ public class MemberDAOImpl implements MemberDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                user = new MemberDTO();
+                user = new LoginDTO();
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
                 user.setNickname(rs.getString("nickname"));
@@ -179,7 +182,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public boolean update(MemberDTO dto) {
+	public boolean update(LoginDTO dto) {
 
 	    String sql = "UPDATE member SET nickname=?, password=? WHERE email=?";
 

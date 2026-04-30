@@ -1,198 +1,109 @@
-<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>트레이너 인증</title>
-
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-</head>
-
-<body class="bg-gray-900 flex items-center justify-center h-screen">
-
-<div class="bg-white w-[420px] p-8 rounded">
-
-<h2 class="text-xl font-bold mb-6">트레이너 인증 (선택)</h2>
-
-<form action="trainerVerify" method="post" class="space-y-4">
-
-<input name="experience" placeholder="운동 경력 (예: 3년)" class="w-full border p-3 rounded">
-
-<textarea name="career" placeholder="커리어" class="w-full border p-3 rounded"></textarea>
-
-<input name="certificate" placeholder="자격증" class="w-full border p-3 rounded">
-
-<div class="flex gap-2">
-<button type="button" onclick="location.href='main.jsp'" class="w-1/2 border p-3 rounded">
-건너뛰기
-</button>
-
-<button class="w-1/2 bg-orange-500 text-white p-3 rounded">
-제출하기
-</button>
-</div>
-
-</form>
-
-</div>
-
-</body>
-</html> --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<!DOCTYPE html>
-
-<html lang="ko"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>트레이너 인증</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-bright": "#f8f9fb",
-                        "background": "#f8f9fb",
-                        "surface-tint": "#a04100",
-                        "tertiary-fixed": "#d0e4ff",
-                        "outline": "#8e7164",
-                        "primary-fixed-dim": "#ffb693",
-                        "inverse-surface": "#2e3132",
-                        "inverse-on-surface": "#f0f1f3",
-                        "tertiary-fixed-dim": "#9ccaff",
-                        "on-surface-variant": "#5a4136",
-                        "on-tertiary-fixed-variant": "#00497b",
-                        "error": "#ba1a1a",
-                        "surface-container-high": "#e7e8ea",
-                        "secondary-fixed": "#ffdbcc",
-                        "tertiary-container": "#059eff",
-                        "on-primary-fixed-variant": "#7a3000",
-                        "surface-dim": "#d9dadc",
-                        "tertiary": "#0062a1",
-                        "surface-container-lowest": "#ffffff",
-                        "on-primary-fixed": "#351000",
-                        "on-error-container": "#93000a",
-                        "on-tertiary": "#ffffff",
-                        "secondary": "#96481e",
-                        "on-secondary-container": "#763006",
-                        "secondary-fixed-dim": "#ffb693",
-                        "secondary-container": "#fe9a69",
-                        "surface-container-low": "#f3f4f6",
-                        "error-container": "#ffdad6",
-                        "surface-container": "#edeef0",
-                        "surface": "#f8f9fb",
-                        "on-surface": "#191c1e",
-                        "on-secondary": "#ffffff",
-                        "on-secondary-fixed": "#351000",
-                        "primary-container": "#ff6b00",
-                        "on-tertiary-container": "#003357",
-                        "on-background": "#191c1e",
-                        "surface-variant": "#e1e2e4",
-                        "on-secondary-fixed-variant": "#783207",
-                        "surface-container-highest": "#e1e2e4",
-                        "on-tertiary-fixed": "#001d35",
-                        "on-error": "#ffffff",
-                        "outline-variant": "#e2bfb0",
-                        "on-primary": "#ffffff",
-                        "primary-fixed": "#ffdbcc",
-                        "on-primary-container": "#572000",
-                        "inverse-primary": "#ffb693",
-                        "primary": "#a04100"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.5rem",
-                        "sm": "0.5rem",
-                        "lg": "2rem",
-                        "xl": "3rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {},
-                    "fontFamily": {
-                        "headline": ["Inter", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "label": ["Inter", "sans-serif"]
-                    }
-                },
-            },
-        }
-    </script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>핏츠버그 - 트레이너 인증</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .material-symbols-outlined.filled {
-            font-variation-settings: 'FILL' 1;
-        }
-    </style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Nunito',sans-serif;background:rgba(26,31,54,0.7);min-height:100vh;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
+.fb-inp{width:100%;padding:13px 18px;border-radius:14px;border:2px solid #E8EDF5;background:#F7F9FC;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1A1F36;outline:none;transition:all 0.2s;}
+.fb-inp:focus{border-color:#FF6B35;box-shadow:0 0 0 3px rgba(255,107,53,0.12);background:white;}
+.fb-inp::placeholder{color:#C4CEDE;}
+.upload-box{width:100%;border:2.5px dashed #E8EDF5;border-radius:16px;padding:32px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#F7F9FC;}
+.upload-box:hover{border-color:#FF6B35;background:#FFF3EE;}
+@keyframes fb_modal_in{from{opacity:0;transform:scale(0.9) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+</style>
 </head>
-<body class="bg-background font-body text-on-surface antialiased h-screen w-screen overflow-hidden relative">
-<!-- Background Image with Overlay -->
-<div class="absolute inset-0 z-0 bg-cover bg-center" data-alt="Dark, moody, high-end fitness gym interior with modern equipment and dramatic lighting, slightly out of focus." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMdTg95p3QNGjKAO_DLmeBnrUkTQFWNS89Skc1sK3TgJy43-WPL0bMnJhkfxcCvp0U3hV6AKuccXH_bG6R3rM0A5oDss_L8HBEaPGPj1g2o_CTGFNsV2WU5zRxDzLdcszx1iOC2a43SOz1kOF4ojeMMqjeLKywio7xMC3HXvAy918TQrSDBmGuF9recp8dbc0-7Ctyz7rdoEoJWICWj-53R_yp89SEcohfmKN0llDU9ZcMDpL1uPV4RfgEH_oX68pczxSAebNr2bs');">
-<div class="absolute inset-0 bg-inverse-surface/60 backdrop-blur-md"></div>
+<body>
+
+<!-- 상단 완료 토스트 -->
+<div style="position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:200;animation:slideDown 0.5s ease;">
+  <div style="background:white;border-radius:99px;padding:12px 20px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.12);border:1.5px solid #E8EDF5;">
+    <div style="width:26px;height:26px;border-radius:50%;background:#E8F8F6;display:flex;align-items:center;justify-content:center;">
+      <span class="material-symbols-outlined" style="font-size:16px;color:#00897B;">check_circle</span>
+    </div>
+    <span style="font-size:14px;font-weight:700;color:#1A1F36;white-space:nowrap;">회원가입이 완료되었습니다. 관리자 승인 후 인증 마크가 부여됩니다.</span>
+  </div>
 </div>
-<!-- Main Content Area -->
-<main class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
-<!-- Top Toast Message -->
-<div class="absolute top-8 w-full max-w-md px-4 flex justify-center animate-[slideDown_0.5s_ease-out]">
-<div class="bg-surface-container-lowest text-on-surface shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-3 px-5 flex items-center gap-3 border border-surface-container-high/50">
-<div class="bg-[#e8f5e9] text-[#2e7d32] rounded-full p-1 flex items-center justify-center">
-<span class="material-symbols-outlined filled text-lg">check_circle</span>
+
+<!-- 인증 모달 카드 -->
+<div style="background:white;border-radius:28px;width:100%;max-width:460px;margin:80px 20px 20px;box-shadow:0 24px 80px rgba(0,0,0,0.2);overflow:hidden;animation:fb_modal_in 0.35s ease;">
+
+  <!-- 헤더 -->
+  <div style="background:linear-gradient(135deg,#FF6B35,#FF8C5A);padding:28px 32px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🏅</div>
+    <h2 style="font-size:22px;font-weight:900;color:white;margin-bottom:6px;">트레이너 인증 (선택)</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.85);">입력 시 인증된 트레이너로 표시됩니다<br>(관리자 승인 필요)</p>
+  </div>
+
+  <!-- 폼 -->
+  <form action="trainerVerify" method="post" enctype="multipart/form-data" style="padding:28px 32px;display:flex;flex-direction:column;gap:18px;">
+
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">운동 경력</label>
+      <input name="experience" class="fb-inp" placeholder="예: 7년 (ACSM 자격증 보유)">
+    </div>
+
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">커리어 (근무 이력)</label>
+      <textarea name="career" class="fb-inp" style="min-height:90px;resize:vertical;" placeholder="주요 근무 이력 · 수상 경력 등을 입력해주세요"></textarea>
+    </div>
+
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">보유 자격증</label>
+      <input name="certificate" class="fb-inp" placeholder="예: 생활스포츠지도사 2급, ACSM-CPT">
+    </div>
+
+    <!-- 자격증 파일 업로드 -->
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">자격증 사진 업로드</label>
+      <label class="upload-box" id="uploadLabel">
+        <span class="material-symbols-outlined" style="font-size:36px;color:#9DA8C0;margin-bottom:8px;">photo_camera</span>
+        <div style="font-size:14px;font-weight:700;color:#5A6480;">자격증 사진 첨부</div>
+        <div style="font-size:12px;color:#C4CEDE;margin-top:4px;">JPG, PNG 파일 지원</div>
+        <input type="file" name="certFile" accept="image/*" style="display:none;" onchange="previewUpload(this)">
+      </label>
+      <div id="fileName" style="font-size:12px;color:#FF6B35;font-weight:700;margin-top:6px;min-height:18px;"></div>
+    </div>
+
+    <!-- 인증 혜택 안내 -->
+    <div style="background:linear-gradient(135deg,#FFF3EE,#FFEEE5);border:1.5px solid rgba(255,107,53,0.15);border-radius:14px;padding:14px 16px;">
+      <div style="font-size:12px;font-weight:700;color:#FF6B35;margin-bottom:6px;">✅ 인증 트레이너 혜택</div>
+      <ul style="font-size:12px;color:#5A6480;line-height:1.8;padding-left:16px;">
+        <li>인증 뱃지 표시로 신뢰도 UP</li>
+        <li>검색 결과 상위 노출</li>
+        <li>회원 매칭 우선권 부여</li>
+      </ul>
+    </div>
+
+    <!-- 버튼 -->
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button type="button" onclick="location.href='main'" style="flex:1;padding:13px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">
+        건너뛰기
+      </button>
+      <button type="submit" style="flex:2;padding:13px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+        🚀 제출하기
+      </button>
+    </div>
+
+  </form>
 </div>
-<p class="text-sm font-medium tracking-tight whitespace-nowrap">회원가입이 완료되었습니다. 관리자 승인 후 인증 마크가 부여됩니다.</p>
-</div>
-</div>
-<!-- Verification Modal -->
-<div class="bg-surface-container-lowest w-full max-w-[440px] rounded-DEFAULT p-8 shadow-[0_20px_60px_rgba(25,28,30,0.06)] relative overflow-hidden">
-<!-- Header -->
-<div class="text-center mb-8">
-<h2 class="text-2xl font-bold font-headline tracking-tight text-on-surface mb-2">트레이너 인증 (선택)</h2>
-<p class="text-on-surface-variant text-sm font-medium">입력 시 인증된 트레이너로 표시됩니다 (관리자 승인 필요)</p>
-</div>
-<!-- Form -->
-<form class="space-y-6">
-<!-- Experience Field -->
-<div class="space-y-2">
-<label class="block text-sm font-semibold text-on-surface">운동 경력</label>
-<input class="w-full bg-surface-variant border-none rounded-sm px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary/20 focus:bg-primary-fixed/10 transition-colors" placeholder="년 수 입력 (예: 3년)" type="text"/>
-</div>
-<!-- Career Field -->
-<div class="space-y-2">
-<label class="block text-sm font-semibold text-on-surface">커리어 (근무 이력)</label>
-<textarea class="w-full bg-surface-variant border-none rounded-sm px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary/20 focus:bg-primary-fixed/10 transition-colors resize-none" placeholder="주요 근무 이력 작성" rows="3"></textarea>
-</div>
-<!-- Certificate Name Field -->
-<div class="space-y-2">
-<label class="block text-sm font-semibold text-on-surface">자격증 입력</label>
-<input class="w-full bg-surface-variant border-none rounded-sm px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary/20 focus:bg-primary-fixed/10 transition-colors" placeholder="자격증 명칭 입력" type="text"/>
-</div>
-<!-- Certificate Upload Box -->
-<div class="relative group cursor-pointer">
-<div class="w-full border-2 border-dashed border-outline-variant/30 rounded-sm bg-surface-container hover:bg-surface-container-high transition-colors py-8 flex flex-col items-center justify-center gap-2 group-hover:border-primary/30">
-<span class="material-symbols-outlined text-3xl text-on-surface-variant">photo_camera</span>
-<span class="text-sm font-medium text-on-surface-variant">자격증 업로드</span>
-<div class="absolute right-4 bottom-4 w-8 h-8 rounded-full bg-surface-container-lowest shadow-sm flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined text-sm">upload</span>
-</div>
-</div>
-</div>
-<!-- Actions -->
-<div class="flex gap-4 pt-4">
-<button class="flex-1 py-3.5 px-4 rounded-full border border-outline-variant text-on-surface font-semibold text-sm hover:bg-surface-container transition-colors text-center" type="button">건너뛰기</button>
-<button class="flex-1 py-3.5 px-4 rounded-full bg-gradient-to-br from-primary-container to-primary text-on-primary font-semibold text-sm hover:scale-[1.02] transition-transform duration-200 shadow-sm text-center" type="submit">제출하기</button>
-</div>
-<!-- Action Buttons -->
-<!-- <div class="flex gap-4 pt-4">
-<button class="flex-1 bg-surface-container-lowest text-on-surface py-3 rounded-full font-medium text-[14px] hover:bg-surface-container-low transition-colors shadow-[inset_0_0_0_1px_rgba(226,191,176,0.3)]" type="button">건너뛰기</button>
-<button class="flex-1 bg-gradient-to-br from-primary-container to-primary text-on-primary py-3 rounded-full font-medium text-[14px] shadow-[0_4px_14px_rgba(255,107,0,0.25)] hover:scale-[1.02] transition-transform duration-300" type="submit">제출하기</button>
-</div> -->
-</form>
-</div>
-</main>
-</body></html>
+
+<script>
+function previewUpload(input){
+  const label = document.getElementById('uploadLabel');
+  const name  = document.getElementById('fileName');
+  if(input.files && input.files[0]){
+    name.innerText = '📎 ' + input.files[0].name;
+    label.style.borderColor = '#FF6B35';
+    label.style.background  = '#FFF3EE';
+  }
+}
+</script>
+</body>
+</html>

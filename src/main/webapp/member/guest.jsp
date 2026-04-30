@@ -1,379 +1,265 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-    String contextPath = request.getContextPath();
-%>
+<% String contextPath = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>핏츠버그 - 당신만의 최적의 운동을 발견하세요</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-surface": "#191b23",
-                        "surface-container-highest": "#e1e2ec",
-                        "on-tertiary-fixed-variant": "#74198b",
-                        "tertiary-fixed": "#fdd6ff",
-                        "tertiary": "#8c34a2",
-                        "outline-variant": "#c2c6d6",
-                        "surface-container": "#ecedf7",
-                        "surface-container-high": "#e6e7f2",
-                        "primary-fixed": "#d8e2ff",
-                        "on-secondary-fixed": "#001a42",
-                        "on-primary-fixed-variant": "#004395",
-                        "on-secondary-fixed-variant": "#304671",
-                        "inverse-primary": "#adc6ff",
-                        "on-tertiary-container": "#fffbff",
-                        "on-surface-variant": "#424754",
-                        "on-background": "#191b23",
-                        "on-tertiary": "#ffffff",
-                        "error": "#ba1a1a",
-                        "tertiary-fixed-dim": "#f4aeff",
-                        "on-primary-fixed": "#001a42",
-                        "inverse-on-surface": "#eff0fa",
-                        "secondary-fixed": "#d8e2ff",
-                        "outline": "#727785",
-                        "on-secondary-container": "#405682",
-                        "on-error": "#ffffff",
-                        "surface-dim": "#d8d9e3",
-                        "primary-container": "#2170e4",
-                        "error-container": "#ffdad6",
-                        "surface-container-lowest": "#ffffff",
-                        "primary-fixed-dim": "#adc6ff",
-                        "primary": "#0058be",
-                        "secondary-fixed-dim": "#b1c6f9",
-                        "secondary": "#495e8a",
-                        "inverse-surface": "#2e3038",
-                        "surface": "#f9f9ff",
-                        "background": "#f9f9ff",
-                        "surface-tint": "#005ac2",
-                        "on-tertiary-fixed": "#340042",
-                        "tertiary-container": "#a84fbe",
-                        "surface-variant": "#e1e2ec",
-                        "on-secondary": "#ffffff",
-                        "surface-bright": "#f9f9ff",
-                        "on-error-container": "#93000a",
-                        "on-primary-container": "#fefcff",
-                        "on-primary": "#ffffff",
-                        "secondary-container": "#b6ccff",
-                        "surface-container-low": "#f2f3fd"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.5rem",
-                        "xl": "1rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Inter", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "label": ["Inter", "sans-serif"]
-                    }
-                },
-            },
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>핏츠버그 - 당신만의 피트니스를 발견하세요</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-        body { font-family: 'Inter', sans-serif; width: 1280px; margin: 0 auto; height: 1395px; position: relative; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Specific slider styles to ensure 3 cards are visible */
-        .card-slider-container {
-            display: grid;
-            grid-auto-flow: column;
-            grid-auto-columns: calc((100% - 32px) / 3);
-            gap: 16px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-        }
-    </style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A1F36;overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-thumb{background:#00BFA5;border-radius:99px;}
+
+/* 사이드바 */
+.guest-sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:white;border-right:1.5px solid #E8EDF5;display:flex;flex-direction:column;padding:22px 16px;z-index:100;box-shadow:4px 0 20px rgba(0,0,0,0.05);}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;color:#5A6480;transition:all 0.2s;font-family:'Noto Sans KR',sans-serif;}
+.sb-link:hover{background:#FFF3EE;color:#FF6B35;transform:translateX(3px);}
+
+/* 히어로 */
+.hero{background:linear-gradient(135deg,#FF6B35 0%,#FF8C5A 40%,#00BFA5 100%);padding:80px 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,0.06);top:-120px;right:-80px;}
+.hero::after{content:'';position:absolute;width:360px;height:360px;border-radius:50%;background:rgba(255,255,255,0.04);bottom:-80px;left:200px;}
+
+/* 카드 슬라이더 */
+.card-slider{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 48px)/3);gap:16px;overflow-x:auto;padding-bottom:8px;scroll-behavior:smooth;}
+.card-slider::-webkit-scrollbar{display:none;}
+
+/* 카드 hover */
+.slide-card{background:white;border-radius:18px;overflow:hidden;border:1.5px solid #E8EDF5;transition:all 0.25s;cursor:pointer;}
+.slide-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.12);transform:translateY(-3px);}
+
+/* 섹션 공통 */
+.section{padding:48px 60px;}
+.section-title{font-size:20px;font-weight:900;color:#1A1F36;margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:'';width:4px;height:22px;background:linear-gradient(180deg,#FF6B35,#FF8C5A);border-radius:99px;}
+
+/* 하단 CTA 바 */
+.cta-bar{position:fixed;bottom:0;left:240px;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-top:1.5px solid #E8EDF5;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+</style>
 </head>
-<jsp:include page="sidebar.jsp" />
-<body class="bg-surface text-on-surface overflow-x-hidden">
-<aside class="h-full w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col justify-between p-5 z-50 border-r border-surface-container-highest">
-<div class="flex flex-col">
-<div class="text-2xl font-black text-blue-600 dark:text-blue-500 italic mb-4 flex items-center gap-2">
-<img class="w-8 h-8 rounded-full" alt="Fitbull Logo" src="<%=contextPath%>/resources/images/logo.png" onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuCveWQWdmN7R9sHZYJtczW7JlQkSJksW17FyrAjX0sIqVNoO7rUvZ5aVmTxr--s6QdrpYaJkNs9Aj3Lm4Z9ICG1waBV-yEKtgQqf7a77X3bEMweDYmiRv_2wprNj_xs__Vqyh2f5bVQr3QkuYOxRdXb5jfED0ktJFxf9r0RpjFrb6By02eTD3KzReErGiYzzhFyCBXRSRYqsQM2VKkdk7mWWO2R5jjBRMjcPYzPyBozh6wbh3bLzhw8KrRNIyipW0rhClHJNWthxiM'"/>
-<span>핏츠버그</span>
-</div>
-<div class="flex p-1 bg-surface-container rounded-full mb-6 text-[11px] font-bold">
-<button class="flex-1 py-1.5 rounded-full bg-primary text-on-primary shadow-sm">회원</button>
-<button class="flex-1 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface">트레이너</button>
-<button class="flex-1 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface">헬스장</button>
-</div>
-<nav class="flex flex-col gap-2">
+<body>
 
-            <a href="<%=contextPath%>/main.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-blue-600 bg-white shadow-sm">
-                <span class="material-symbols-outlined">home</span>
-                <span class="text-sm font-semibold">홈</span>
-            </a>
+<!-- ── 사이드바 ── -->
+<div class="guest-sidebar">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;padding:0 6px;">
+    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6B35,#00BFA5);display:flex;align-items:center;justify-content:center;font-size:18px;">🐾</div>
+    <span style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,#FF6B35,#00BFA5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">핏츠버그</span>
+  </div>
 
-            <a href="<%=contextPath%>/guide.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-                <span class="material-symbols-outlined">fitness_center</span>
-                <span class="text-sm">운동가이드</span>
-            </a>
+  <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
+    <a href="<%=contextPath%>/guide" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span>운동 가이드</a>
+    <a href="<%=contextPath%>/trainer" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">badge</span>트레이너</a>
+    <a href="<%=contextPath%>/gym" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">store</span>헬스장</a>
+    <a href="<%=contextPath%>/community.jsp" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">groups</span>커뮤니티</a>
+  </nav>
 
-            <a href="<%=contextPath%>/trainer.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-                <span class="material-symbols-outlined">badge</span>
-                <span class="text-sm">트레이너</span>
-            </a>
+  <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-weight:800;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+      🔥 로그인
+    </button>
+    <button onclick="location.href='<%=contextPath%>/join.jsp'" style="width:100%;padding:11px;border-radius:12px;border:2px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-weight:700;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">
+      회원가입
+    </button>
+  </div>
+</div>
 
-            <a href="<%=contextPath%>/gym.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-                <span class="material-symbols-outlined">store</span>
-                <span class="text-sm">헬스장</span>
-            </a>
+<!-- ── 메인 ── -->
+<div style="margin-left:240px;padding-bottom:100px;">
 
-            <a href="<%=contextPath%>/community.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-                <span class="material-symbols-outlined">groups</span>
-                <span class="text-sm">커뮤니티</span>
-            </a>
+  <!-- 히어로 -->
+  <div class="hero">
+    <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.3);border-radius:99px;padding:7px 16px;margin-bottom:20px;">
+          <span style="font-size:14px;">🐾</span>
+          <span style="font-size:13px;font-weight:700;color:white;">핏불이 함께하는 피트니스</span>
+        </div>
+        <h1 style="font-size:44px;font-weight:900;color:white;line-height:1.2;letter-spacing:-1px;margin-bottom:16px;">
+          당신만의 최적의<br>운동을 발견하세요
+        </h1>
+        <p style="font-size:16px;color:rgba(255,255,255,0.88);line-height:1.6;margin-bottom:32px;">
+          맞춤형 운동 플랜 · 전문 트레이너 매칭 · 오운완 커뮤니티<br>
+          핏츠버그와 함께 건강한 라이프스타일을 만들어보세요
+        </p>
+        <div style="display:flex;gap:12px;">
+          <button onclick="location.href='<%=contextPath%>/join.jsp'" style="padding:14px 32px;border-radius:99px;border:none;cursor:pointer;background:white;color:#FF6B35;font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,0.15);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            🚀 무료 시작하기
+          </button>
+          <button onclick="location.href='<%=contextPath%>/login.jsp'" style="padding:14px 32px;border-radius:99px;border:2px solid rgba(255,255,255,0.6);cursor:pointer;background:transparent;color:white;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
+            로그인
+          </button>
+        </div>
+      </div>
 
-            <a href="<%=contextPath%>/mypage.jsp"
-               class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-                <span class="material-symbols-outlined">person</span>
-                <span class="text-sm">마이페이지</span>
-            </a>
+      <!-- 마스코트 -->
+      <div style="flex-shrink:0;animation:fb_float 4s ease-in-out infinite;">
+        <div style="width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.18);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 48px rgba(0,0,0,0.15);">
+          <svg width="140" height="140" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="100" cy="148" rx="52" ry="36" fill="rgba(255,255,255,0.85)"/>
+            <circle cx="100" cy="85" r="44" fill="rgba(255,255,255,0.9)"/>
+            <circle cx="76" cy="60" r="15" fill="rgba(255,255,255,0.9)"/><circle cx="124" cy="60" r="15" fill="rgba(255,255,255,0.9)"/>
+            <circle cx="76" cy="60" r="9" fill="#F4A0A0"/><circle cx="124" cy="60" r="9" fill="#F4A0A0"/>
+            <ellipse cx="100" cy="90" rx="28" ry="22" fill="#E8E8F0"/>
+            <path d="M58 70 Q100 55 142 70" stroke="#FFD166" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <circle cx="87" cy="80" r="6" fill="#1A1F36"/><circle cx="113" cy="80" r="6" fill="#1A1F36"/>
+            <circle cx="88.5" cy="78.5" r="2" fill="white"/><circle cx="114.5" cy="78.5" r="2" fill="white"/>
+            <ellipse cx="100" cy="93" rx="7" ry="5" fill="#1A1F36"/>
+            <path d="M87 103 Q100 115 113 103" stroke="#FF6B35" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="80" cy="97" rx="8" ry="5" fill="#FFB4A2" opacity="0.8"/>
+            <ellipse cx="120" cy="97" rx="8" ry="5" fill="#FFB4A2" opacity="0.8"/>
+            <rect x="24" y="112" width="36" height="9" rx="4.5" fill="rgba(255,255,255,0.7)"/>
+            <rect x="18" y="106" width="10" height="22" rx="5" fill="rgba(255,255,255,0.6)"/>
+            <rect x="56" y="106" width="10" height="22" rx="5" fill="rgba(255,255,255,0.6)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
 
-        </nav>
+    <!-- 통계 -->
+    <div style="position:relative;z-index:1;display:flex;gap:20px;margin-top:40px;">
+      <% String[][] stats={{"12,000+","활성 회원"},{"500+","전문 트레이너"},{"200+","파트너 헬스장"},{"98%","회원 만족도"}};
+         for(String[] s : stats){ %>
+      <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.25);border-radius:14px;padding:14px 22px;text-align:center;">
+        <div style="font-size:22px;font-weight:900;color:white;"><%= s[0] %></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;margin-top:2px;"><%= s[1] %></div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- 운동 가이드 -->
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+      <div class="section-title">운동 가이드</div>
+      <a href="<%=contextPath%>/guide" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">모두 보기 →</a>
+    </div>
+    <div class="card-slider" id="guideSlider">
+      <% String[][] guides = {
+        {"데드리프트","하체 / 전신","중급","rgba(255,107,53,0.1)","💪"},
+        {"벤치프레스","가슴 / 어깨","초급","rgba(0,191,165,0.1)","🏋️"},
+        {"스쿼트","하체","초급","rgba(255,209,102,0.15)","🦵"},
+        {"런닝머신","유산소","고급","rgba(147,51,234,0.1)","🏃"}
+      };
+      for(String[] g : guides){ %>
+      <div class="slide-card">
+        <div style="height:140px;background:<%= g[3] %>;display:flex;align-items:center;justify-content:center;font-size:56px;"><%= g[4] %></div>
+        <div style="padding:14px 16px;">
+          <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:#F7F9FC;color:#5A6480;border:1px solid #E8EDF5;"><%= g[1] %></span>
+            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:<%= g[2].equals("초급") ? "#E8F8F6" : g[2].equals("중급") ? "#FFF9E6" : "#FFF3EE" %>;color:<%= g[2].equals("초급") ? "#00897B" : g[2].equals("중급") ? "#B7791F" : "#FF4D1F" %>;"><%= g[2] %></span>
+          </div>
+          <div style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:12px;"><%= g[0] %></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button style="padding:8px;border-radius:10px;border:1.5px solid #E8EDF5;background:white;font-size:12px;font-weight:700;color:#5A6480;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">▶ 영상 보기</button>
+            <button onclick="requireLogin()" style="padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='none'">기록 시작</button>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- 추천 트레이너 -->
+  <div class="section" style="background:linear-gradient(135deg,#FAFBFF,#F7F9FC);padding-top:40px;padding-bottom:40px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+      <div class="section-title">전문 트레이너</div>
+      <a href="<%=contextPath%>/trainer" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;">모두 보기 →</a>
+    </div>
+    <div class="card-slider">
+      <% String[][] trainers = {
+        {"김지훈","바디프로필 / 근력","4.9","128","65,000"},
+        {"이서연","요가 / 체형교정","5.0","210","70,000"},
+        {"박민호","재활 / 기능성","4.8","85","60,000"},
+        {"최유리","필라테스 / 다이어트","4.9","156","68,000"}
+      };
+      String[] seeds={"jh","sy","mh","yr"};
+      for(int i=0;i<trainers.length;i++){
+        String[] t=trainers[i]; %>
+      <div class="slide-card" style="padding:20px;text-align:center;">
+        <div style="position:relative;display:inline-block;margin-bottom:14px;">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=<%= seeds[i] %>" style="width:72px;height:72px;border-radius:50%;border:3px solid #FF6B35;object-fit:cover;" alt="<%= t[0] %>">
+          <div style="position:absolute;bottom:1px;right:1px;width:13px;height:13px;background:#00BFA5;border-radius:50%;border:2.5px solid white;"></div>
+        </div>
+        <div style="font-weight:800;font-size:15px;color:#1A1F36;margin-bottom:4px;"><%= t[0] %> 트레이너</div>
+        <div style="font-size:12px;color:#FF6B35;font-weight:700;margin-bottom:8px;"><%= t[1] %></div>
+        <div style="display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:14px;">
+          <span style="font-size:14px;font-weight:900;color:#1A1F36;"><%= t[2] %></span>
+          <span style="font-size:12px;color:#9DA8C0;">(후기 <%= t[3] %>)</span>
+        </div>
+        <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:#9DA8C0;">1회 PT</span>
+          <span style="font-size:15px;font-weight:900;color:#1A1F36;"><%= t[4] %>원~</span>
+        </div>
+        <button onclick="requireLogin()" style="width:100%;margin-top:12px;padding:9px;border-radius:10px;border:none;background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">PT 신청하기</button>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- 핫한 커뮤니티 -->
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+      <div class="section-title">🔥 핫한 오운완</div>
+      <a href="<%=contextPath%>/community.jsp" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;">커뮤니티 →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <% String[][] posts={{"벤치 100kg 달성! 🔥","근육왕철수","34","12"},{"스쿼트 120kg 오운완 💪","헬창여왕","28","9"},{"다이어트 -10kg 성공 🥗","날씬해져요","52","21"}};
+         for(String[] p : posts){ %>
+      <div class="slide-card" onclick="requireLogin()">
+        <div style="height:120px;background:linear-gradient(135deg,#FFF3EE,#E8F8F6);display:flex;align-items:center;justify-content:center;font-size:48px;">🏆</div>
+        <div style="padding:14px 16px;">
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;background:linear-gradient(135deg,#FF6B35,#FFD166);color:white;font-size:11px;font-weight:800;margin-bottom:8px;">🏆 오운완</span>
+          <div style="font-size:14px;font-weight:800;color:#1A1F36;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><%= p[0] %></div>
+          <div style="font-size:12px;color:#9DA8C0;margin-bottom:10px;"><%= p[1] %></div>
+          <div style="display:flex;gap:12px;">
+            <span style="font-size:12px;color:#9DA8C0;">❤️ <%= p[2] %></span>
+            <span style="font-size:12px;color:#9DA8C0;">💬 <%= p[3] %></span>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
 </div>
-<div class="flex flex-col gap-2 mt-auto pt-4 border-t border-surface-container-highest">
-<!-- 고객센터 (하단 고정) -->
-        <a href="<%=contextPath%>/support.jsp"
-           class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-            <span class="material-symbols-outlined">support_agent</span>
-            <span class="text-sm">고객센터</span>
-        </a>
-<button onclick="location.href='<%=contextPath%>/login.jsp'" class="bg-primary text-on-primary py-2.5 px-4 rounded-xl font-bold text-sm active:scale-95 transition-transform">
-                로그인하여 시작하기
-            </button>
-<button onclick="location.href='<%=contextPath%>/join.jsp'" class="border-2 border-outline-variant text-on-surface py-2.5 px-4 rounded-xl font-bold text-sm hover:bg-surface-container-low transition-colors active:scale-95">
-                회원가입
-            </button>
+
+<!-- ── 하단 CTA 바 ── -->
+<div class="cta-bar">
+  <div>
+    <div style="font-size:15px;font-weight:800;color:#1A1F36;">로그인하면 더 많은 기능을 사용할 수 있어요!</div>
+    <div style="font-size:13px;color:#9DA8C0;margin-top:3px;">맞춤 운동 플랜 · 트레이너 PT · 오운완 커뮤니티</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span style="font-size:11px;font-weight:800;color:#C4CEDE;letter-spacing:2px;">FITSBUG</span>
+    <button onclick="location.href='<%=contextPath%>/join.jsp'" style="padding:12px 28px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">무료 회원가입</button>
+    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="padding:12px 28px;border-radius:99px;border:2px solid #FF6B35;cursor:pointer;background:white;color:#FF6B35;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#FFF3EE'" onmouseout="this.style.background='white'">로그인</button>
+  </div>
 </div>
-</aside>
-<main class="ml-64 pb-32">
-<header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-10 py-6 border-b border-surface-container-highest">
-<h1 class="text-2xl font-bold tracking-tight text-on-surface">당신만의 최적의 운동을 발견하세요</h1>
-</header>
-<div class="px-10 space-y-12 mt-6">
-<section class="relative">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-lg font-bold flex items-center gap-2">
-<span class="w-1 h-5 bg-primary rounded-full"></span>
-                        운동 가이드
-                    </h2>
-<a class="text-xs font-bold text-primary hover:underline" href="#">모두보기</a>
+
+<!-- 로그인 유도 모달 -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(26,31,54,0.55);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+  <div style="background:white;border-radius:28px;padding:40px;width:100%;max-width:380px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.18);animation:fb_in 0.3s ease;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FF6B35,#FFD166);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:38px;">🔒</div>
+    <h2 style="font-size:20px;font-weight:900;color:#1A1F36;margin-bottom:8px;">로그인이 필요해요!</h2>
+    <p style="font-size:14px;color:#9DA8C0;line-height:1.6;margin-bottom:28px;">이 기능은 회원만 사용 가능해요.<br>지금 가입하면 모든 기능을 무료로 이용할 수 있어요 🐾</p>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeLoginModal()" style="flex:1;padding:13px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">취소</button>
+      <button onclick="location.href='<%=contextPath%>/join.jsp'" style="flex:1;padding:13px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(255,107,53,0.3);">회원가입</button>
+    </div>
+    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="width:100%;margin-top:10px;padding:11px;border-radius:99px;border:none;background:none;color:#FF6B35;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">이미 계정이 있어요 →</button>
+  </div>
 </div>
-<div class="group relative flex items-center">
-<div class="card-slider-container no-scrollbar w-full pb-2" id="exercise-slider">
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col border border-outline-variant/10">
-<div class="relative h-40">
-<img class="w-full h-full object-cover" alt="데드리프트" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzfNvoKphEa7oSksSxieSN5z8yxClKPimzTQ4YQPPcX0WPgcojDTVtNyZvNCijgRf8H2lhMiGF9D5do8a3YV5EGD55sD4ojYnPQEym0vmuErW1zcIuLYCj17UvpsUb0W8n5ILj6HFNeXRBzrqxES9_yRVLv-gA2VYu3FnAkXO_PhticuKDkrE6h9rmoJQZ5X2L-1y9364SP8kFA_F76-lAMiwA2L3x4EJBKIvQTnnq_L_Q9H-vVFF75OyEMPsF4ntI-Vli5TkAsSM"/>
-<div class="absolute top-2 left-2 flex gap-1">
-<span class="bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold px-1.5 py-0.5 rounded">하체/전신</span>
-<span class="bg-primary text-on-primary text-[9px] font-bold px-1.5 py-0.5 rounded">근력</span>
-<span class="bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">중급</span>
-</div>
-</div>
-<div class="p-4 flex flex-col h-full">
-<h3 class="font-bold text-sm mb-1 truncate">데드리프트</h3>
-<p class="text-[11px] text-on-surface-variant mb-4 truncate">데드리프트 위주의 고중량 복합 다관절 운동 루틴</p>
-<div class="grid grid-cols-2 gap-2 mt-auto">
-<button class="border border-primary text-primary py-1.5 rounded-lg text-xs font-bold hover:bg-primary/5">영상보기</button>
-<button class="bg-primary text-on-primary py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-transform">기록시작</button>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col border border-outline-variant/10">
-<div class="relative h-40">
-<img class="w-full h-full object-cover" alt="벤치프레스" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0R3nhXMHGRRhGU3ic8k7vDeQm-Curk2GF6seyibz2QjB5UEsPMrfQIkYLV9o5haGIT_JvC32XWj_ZND-BxGnupYytfJb7lwbvg-AaDsSfFhEGz2qgNcsFREHgjLiDbM9p3t8PKtV7mUJisgsgIsrd6lPGsenZVolz0nuJJja6GHxbwjgP_DJn9zAn3MOCn0MeljMsbAMWVvPkiY93ZDq-YhNCidbdiYSKDwbyoDHnL4wGfNokAj0_G2NzXFTIfHJvDGseD85FS2Q"/>
-<div class="absolute top-2 left-2 flex gap-1">
-<span class="bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold px-1.5 py-0.5 rounded">전신</span>
-<span class="bg-tertiary text-on-tertiary text-[9px] font-bold px-1.5 py-0.5 rounded">유연성</span>
-<span class="bg-green-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">초급</span>
-</div>
-</div>
-<div class="p-4 flex flex-col h-full">
-<h3 class="font-bold text-sm mb-1 truncate">벤치프레스</h3>
-<p class="text-[11px] text-on-surface-variant mb-4 truncate">근육 긴장을 완화하고 가동 범위를 늘려주는 스트레칭</p>
-<div class="grid grid-cols-2 gap-2 mt-auto">
-<button class="border border-tertiary text-tertiary py-1.5 rounded-lg text-xs font-bold hover:bg-tertiary/5">영상보기</button>
-<button class="bg-tertiary text-on-tertiary py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-transform">기록시작</button>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col border border-outline-variant/10">
-<div class="relative h-40">
-<img class="w-full h-full object-cover" alt="런닝머신" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB-OW11lRqov921AjCl0Khc1jahs1l6mJMjA1D-xkpk6fqQvWSelrMXU9gjemjR5SLioh4e1_MXqXJ907dwLvZ7blN1joY9yMfmU1eLQ97GaHOl3QkIKiHfU9LHSCpKcQ2di67EH5lstPV6bRB7ncHDKhSPfGv-DD6CNw6k49fV5GiPVFaj73ehfZXtDO-bf0EBnECgaiVgI_pjkYaTBV3cwzkOdcjlT-QxY1FS7jqf0p0OIkw1RPAutouEAg9Hj9PewZqrNSMySQ"/>
-<div class="absolute top-2 left-2 flex gap-1">
-<span class="bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold px-1.5 py-0.5 rounded">심폐</span>
-<span class="bg-error text-on-error text-[9px] font-bold px-1.5 py-0.5 rounded">유산소</span>
-<span class="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">고급</span>
-</div>
-</div>
-<div class="p-4 flex flex-col h-full">
-<h3 class="font-bold text-sm mb-1 truncate">런닝머신</h3>
-<p class="text-[11px] text-on-surface-variant mb-4 truncate">짧은 휴식과 최대 강도의 반복으로 이루어진 HIIT</p>
-<div class="grid grid-cols-2 gap-2 mt-auto">
-<button class="border border-error text-error py-1.5 rounded-lg text-xs font-bold hover:bg-error/5">영상보기</button>
-<button class="bg-error text-on-error py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-transform">기록시작</button>
-</div>
-</div>
-</div>
-</div>
-<button class="absolute -right-6 z-10 p-3 rounded-full bg-white shadow-xl border border-outline-variant hover:bg-primary hover:text-white transition-all active:scale-90 flex items-center justify-center" onclick="document.getElementById('exercise-slider').scrollBy({left: 400, behavior: 'smooth'})">
-<span class="material-symbols-outlined text-2xl">chevron_right</span>
-</button>
-</div>
-</section>
-<section class="relative">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-lg font-bold flex items-center gap-2">
-<span class="w-1 h-5 bg-primary rounded-full"></span>
-                        전문 트레이너 목록
-                    </h2>
-<a class="text-xs font-bold text-primary hover:underline" href="#">모두보기</a>
-</div>
-<div class="group relative flex items-center">
-<div class="card-slider-container no-scrollbar w-full pb-2" id="trainer-slider">
-<div class="bg-white rounded-2xl p-4 shadow-sm border border-outline-variant/10 text-center flex flex-col items-center">
-<div class="relative mb-3">
-<img class="w-16 h-16 rounded-full object-cover border-2 border-primary-fixed" alt="김지훈 트레이너" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhkFiXcZcXRmPhdGGGvjOxmVdMn-QhOObGKi5SKmfZRTwAw2NGY81IKKiyI1bLmq9dyhNNIh8JGAnq8SOXjyqcKh9DtoyAoX9p850xWlVMR2e6sQHf9pYwJwDNOKTqC7LmSFqWuKJxB9HVB3NtAWqNZsmw6GmgFO-k0l9gCT9djwpSc4pZazEp12NXTS9UUgFY2OZNL4oYAhGsQuUWOzH1XaVjce5O-M9zq6d7DolwgOTU8YCyS0jirkAqjjrnocGyu3wvh4v1zio"/>
-</div>
-<h4 class="font-bold text-sm">김지훈 트레이너</h4>
-<p class="text-primary text-[10px] font-semibold mb-2">바디프로필 / 근력증진</p>
-<div class="flex gap-1 items-center mb-3">
-<span class="text-xs font-bold">4.9</span>
-<span class="text-on-surface-variant text-[10px]">(후기 128)</span>
-</div>
-<div class="w-full pt-2 border-t border-slate-100 flex justify-between items-center mt-auto">
-<span class="text-[10px] text-on-surface-variant">1회 PT</span>
-<span class="text-sm font-black">65,000원~</span>
-</div>
-</div>
-<div class="bg-white rounded-2xl p-4 shadow-sm border border-outline-variant/10 text-center flex flex-col items-center">
-<div class="relative mb-3">
-<img class="w-16 h-16 rounded-full object-cover border-2 border-primary-fixed" alt="이서연 트레이너" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvXOrztKYMnEPEShnkvPRQ_LgbVKP6odsWckpRrzomXLVCLwk0oLAbIAfJkanINC9ZC9tgnOzHXB0bExthiTUfzCdd8CUlkPi-MkhNYYu66De0Im_gpg1H1zdkb0IuN2XobRJ2BNcLN1ZcLRrElVHjZD1CnG50B0lJ2XOlxMPbGXZ7Y0FL-liu53a-9Qx1jLI4jTaI_4xD0jDriT9NgrdDzAdUqj4PpYOP60mbnKvXPJo4LkZ19n--_2hVvPZNF1qO6d5cJR92QHc"/>
-</div>
-<h4 class="font-bold text-sm">이서연 트레이너</h4>
-<p class="text-primary text-[10px] font-semibold mb-2">요가 / 체형교정</p>
-<div class="flex gap-1 items-center mb-3">
-<span class="text-xs font-bold">5.0</span>
-<span class="text-on-surface-variant text-[10px]">(후기 210)</span>
-</div>
-<div class="w-full pt-2 border-t border-slate-100 flex justify-between items-center mt-auto">
-<span class="text-[10px] text-on-surface-variant">1회 PT</span>
-<span class="text-sm font-black">70,000원~</span>
-</div>
-</div>
-<div class="bg-white rounded-2xl p-4 shadow-sm border border-outline-variant/10 text-center flex flex-col items-center">
-<div class="relative mb-3">
-<img class="w-16 h-16 rounded-full object-cover border-2 border-primary-fixed" alt="박민호 트레이너" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbjJVaFJ3bz84Ufbf_oFdgLj60iv2ADwlT5bonTTK9apF3YPJ2QFj5pyMqhVUIN3x3Qc8QtKwlqkV2RiYOkk-8L0z2fJgk95ZzLZ61pLf6i0xo4j2UN1nxsEDUVBJJi2D9ODvdCrR2k9yxhMPXHDLdr265FIBO2n9ts3BJ8nEOy_tjdODq_PmBGA81fBT-NL-sM1RuQE4cw5t8YHbPIwi9FaAmQFrX2-R0pcyX33Qt8HDAkeYRMZvLgTD7Z6R3S8YKs2FbDMbv384"/>
-</div>
-<h4 class="font-bold text-sm">박민호 트레이너</h4>
-<p class="text-primary text-[10px] font-semibold mb-2">재활 / 기능성 훈련</p>
-<div class="flex gap-1 items-center mb-3">
-<span class="text-xs font-bold">4.8</span>
-<span class="text-on-surface-variant text-[10px]">(후기 85)</span>
-</div>
-<div class="w-full pt-2 border-t border-slate-100 flex justify-between items-center mt-auto">
-<span class="text-[10px] text-on-surface-variant">1회 PT</span>
-<span class="text-sm font-black">60,000원~</span>
-</div>
-</div>
-</div>
-<button class="absolute -right-6 z-10 p-3 rounded-full bg-white shadow-xl border border-outline-variant hover:bg-primary hover:text-white transition-all active:scale-90 flex items-center justify-center" onclick="document.getElementById('trainer-slider').scrollBy({left: 400, behavior: 'smooth'})">
-<span class="material-symbols-outlined text-2xl">chevron_right</span>
-</button>
-</div>
-</section>
-<section class="relative">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-lg font-bold flex items-center gap-2">
-<span class="w-1 h-5 bg-primary rounded-full"></span>
-                        추천 헬스장
-                    </h2>
-<a class="text-xs font-bold text-primary hover:underline" href="#">모두보기</a>
-</div>
-<div class="group relative flex items-center">
-<div class="card-slider-container no-scrollbar w-full pb-4" id="gym-slider">
-<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/10">
-<div class="relative h-44">
-<img class="w-full h-full object-cover" alt="더 프라임 휘트니스 강남점" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYebjvJBGGB0uqMx-s6UEpZ5Htv7sCQKD91Me_KF9KLev064wVAsZgmVc3O6IR_LD5z2pE125OWg3dwXP2As6SdM4hFkuoZIa005AxiMPicTcLxJMfBMBdFwekToeDpm28CedgpsfUdqwzrsE4FZJ6w_ji3zCGbhXN6SB8fedpR4_vFsdXRZREWtgOXORGjsToWH47RMoCgV5punXmd1-kYl6ppvUHjITHK-YmTxCe6J8AD-JjZMj_cAjaFi5sGSOl8ZYem7P4gQU"/>
-<div class="absolute bottom-3 left-3 bg-white/90 px-2 py-0.5 rounded text-[10px] text-primary font-bold">강남구</div>
-</div>
-<div class="p-4">
-<div class="flex justify-between items-start mb-1">
-<h3 class="font-bold text-base truncate">더 프라임 휘트니스 강남점</h3>
-<span class="text-primary font-bold text-sm">4.9</span>
-</div>
-<p class="text-on-surface-variant text-[10px] flex items-center gap-1 mb-2 truncate">
-<span class="material-symbols-outlined text-[10px]">location_on</span>
-                                    서울특별시 강남구 테헤란로 123
-                                </p>
-<div class="flex justify-between items-center">
-<span class="text-[10px] text-on-surface-variant">한 달 이용권</span>
-<span class="text-base font-black text-primary">80,000원~</span>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/10">
-<div class="relative h-44">
-<img class="w-full h-full object-cover" alt="어반 필라테스 & 요가" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-xX_u_uZChpv5Mukt_lCw8KdSgBWvBnZNhzeWfNk9UfB8Y5UWtm-l_WXvcWyQrS87pSHE0ViBE0Ti5ulnGnhRF00QXd9DfZZ8p0bL_n8ggSEF0hz8FWh-QFulKC4qH0pfH4bNGDbjuFiG2SdFMX17CC-ZaqOt17om-QzduYTadchu95nmcTpS9oAcZiaj1dePNx-rDjwp4DLarfr-M-g8diTQmdavXAk-bQpJ2JTfh8hl4gd_Rp_IC7VlXObhy8l1Rrpkzx7swoo"/>
-<div class="absolute bottom-3 left-3 bg-white/90 px-2 py-0.5 rounded text-[10px] text-primary font-bold">서초구</div>
-</div>
-<div class="p-4">
-<div class="flex justify-between items-start mb-1">
-<h3 class="font-bold text-base truncate">어반 필라테스 & 요가</h3>
-<span class="text-primary font-bold text-sm">4.8</span>
-</div>
-<p class="text-on-surface-variant text-[10px] flex items-center gap-1 mb-2 truncate">
-<span class="material-symbols-outlined text-[10px]">location_on</span>
-                                    서울특별시 서초구 서초대로 456
-                                </p>
-<div class="flex justify-between items-center">
-<span class="text-[10px] text-on-surface-variant">10회 수강권</span>
-<span class="text-base font-black text-primary">250,000원~</span>
-</div>
-</div>
-</div>
-</div>
-<button class="absolute -right-6 z-10 p-3 rounded-full bg-white shadow-xl border border-outline-variant hover:bg-primary hover:text-white transition-all active:scale-90 flex items-center justify-center" onclick="document.getElementById('gym-slider').scrollBy({left: 400, behavior: 'smooth'})">
-<span class="material-symbols-outlined text-2xl">chevron_right</span>
-</button>
-</div>
-</section>
-</div>
-</main>
-<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-4xl px-8 z-[100] ml-32">
-<div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-5 flex items-center justify-between shadow-2xl backdrop-blur-sm">
-<div class="flex flex-col">
-<span class="text-on-surface font-bold text-sm leading-tight">로그인하시면 더 많은 기능을 사용할 수 있습니다.</span>
-<span class="text-on-surface-variant text-xs mt-0.5">개인 맞춤 운동 계획과 식단 관리를 시작해 보세요.</span>
-</div>
-<div class="flex items-center gap-6">
-<span class="text-[10px] font-black text-slate-300 tracking-widest hidden md:block">FITSBUG EXPERIENCE</span>
-<button onclick="location.href='<%=contextPath%>/login.jsp'" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
-로그인
-</button>
-</div>
-</div>
-</div>
+
+<style>
+@keyframes fb_float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes fb_in{from{opacity:0;transform:scale(0.9) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+</style>
+<script>
+function requireLogin(){ document.getElementById('loginModal').style.display='flex'; }
+function closeLoginModal(){ document.getElementById('loginModal').style.display='none'; }
+</script>
 </body>
 </html>

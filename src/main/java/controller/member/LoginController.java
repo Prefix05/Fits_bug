@@ -1,17 +1,20 @@
 package controller.member;
 
-import dto.member.MemberDTO;
-import service.member.MemberService;
-import service.member.MemberServiceImpl;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@WebServlet("/login") // ⭐ login으로 매핑 (폼 action이랑 맞춰야함)
-public class MemberController extends HttpServlet {
+import dto.member.LoginDTO;
+import service.member.MemberService;
+import service.member.MemberServiceImpl;
+
+@WebServlet("/member/login") // ⭐ login으로 매핑 (폼 action이랑 맞춰야함)
+public class LoginController extends HttpServlet {
 
     private MemberService memberService = new MemberServiceImpl();
 
@@ -31,7 +34,7 @@ public class MemberController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        MemberDTO loginUser = memberService.login(email, password);
+        LoginDTO loginUser = memberService.login(email, password);
 
         if (loginUser != null) {
             HttpSession session = request.getSession();

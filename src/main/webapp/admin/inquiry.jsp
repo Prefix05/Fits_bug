@@ -128,7 +128,7 @@
     						<p class="text-xs text-gray-400 font-bold uppercase tracking-wider">첨부 파일 증빙</p>
     						<div class="flex gap-4">
         					<div class="relative group cursor-pointer overflow-hidden rounded-xl border border-gray-100 w-48 h-32 bg-gray-50">
-            					<img id="detFileImg" src="" alt="첨부이미지" class="w-full h-full object-cover transition-transform group-hover:scale-105">
+            					<img id="detFileImg" onclick="zoomImage(this.src)" src="" alt="첨부이미지" class="w-full h-full object-cover transition-transform group-hover:scale-105">
         					</div>
     						</div>
 						</div>
@@ -153,6 +153,11 @@
             </div>
         </div>
 
+<div id="imageModal" onclick="closeImageModal()" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center cursor-zoom-out backdrop-blur-sm">
+    <div class="max-w-[90%] max-h-[90%] overflow-hidden rounded-lg shadow-2xl">
+        <img id="modalFullImage" src="" class="w-full h-full object-contain" alt="확대 이미지">
+    </div>
+</div>
         <section class="grid grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <p class="text-xs text-gray-400 mb-1 font-medium">전체 내역</p>
@@ -271,6 +276,26 @@
                     alert('처리 중 오류가 발생했습니다.');
                 }
             });
+        }
+     	// 이미지 확대 함수
+        function zoomImage(imgSrc) {
+            if(!imgSrc || imgSrc.includes('undefined')) return;
+            
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalFullImage');
+            
+            modalImg.src = imgSrc;
+            modal.classList.remove('hidden');
+            // 스크롤 방지 (필요 시)
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 이미지 모달 닫기 함수
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            // 스크롤 복구
+            document.body.style.overflow = 'auto';
         }
     </script>
 </main>

@@ -1,560 +1,422 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="dto.member.LoginDTO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+  String nickname = (loginUser != null) ? loginUser.getNickname() : "";
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>커뮤니티</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>핏츠버그 - 커뮤니티</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800" rel="stylesheet"/>
-
 <style>
-body { font-family: 'Inter', sans-serif; }
+*, *::before, *::after { box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; display: flex; min-height: 100vh; }
+
+/* 포스트 카드 hover */
+.fb-post-card {
+  background: white; border-radius: 20px; overflow: hidden;
+  border: 1.5px solid #E8EDF5; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+  margin-bottom: 16px;
+}
+.fb-post-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
+
+/* 리액션 버튼 */
+.react-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 99px;
+  border: 1.5px solid #E8EDF5; background: white;
+  font-size: 13px; cursor: pointer; transition: all 0.2s;
+  font-family: 'Noto Sans KR', sans-serif; font-weight: 600;
+  color: #5A6480;
+}
+.react-btn:hover { border-color: #FF6B35; background: #FFF3EE; color: #FF6B35; transform: scale(1.05); }
+.react-btn.reacted { background: #FFF3EE; border-color: #FF6B35; color: #FF6B35; }
+
+/* 탭 버튼 */
+.cat-tab { padding: 8px 20px; border-radius: 99px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: transparent; transition: all 0.2s; font-family: 'Noto Sans KR', sans-serif; color: #5A6480; }
+.cat-tab.active { background: white; color: #FF6B35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+/* 댓글 입력 */
+.comment-input { flex: 1; padding: 10px 16px; border-radius: 99px; border: 2px solid #E8EDF5; outline: none; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; transition: border-color 0.2s; }
+.comment-input:focus { border-color: #FF6B35; }
+
+/* 스트릭 원 */
+.streak-dot {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.streak-dot.done { background: linear-gradient(135deg,#FF6B35,#FFD166); color: white; box-shadow: 0 2px 8px rgba(255,107,53,0.3); }
+.streak-dot.empty { background: #F0F0F0; color: #C4CEDE; }
+
+@keyframes fb_modal_in { from { opacity:0; transform:scale(0.9) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
 </style>
 </head>
 
-<body class="bg-gray-50 flex">
-
+<body>
 <!-- 사이드바 -->
 <jsp:include page="sidebar.jsp" />
 
-<!-- 신고 모달 -->
+<!-- 신고 모달 (include) -->
 <jsp:include page="reportModal.jsp" />
 
-<!-- 게시글 작성 모달 -->
+<!-- 게시글 작성 모달 (include) -->
 <jsp:include page="postModal.jsp" />
 
-<!-- 우측 상단 -->
-<!-- <div class="fixed top-4 right-6 flex gap-4 z-50">
-    <span class="material-symbols-outlined">notifications</span>
-    <span class="material-symbols-outlined">mail</span>
-</div> -->
-
 <!-- 메인 -->
-<main class="flex-1 ml-0 md:ml-72 p-8 flex gap-8">
+<main style="flex:1;margin-left:260px;padding:32px 36px;display:flex;gap:28px;max-width:calc(100vw - 260px);">
 
-<!-- ================= LEFT ================= -->
-<div class="flex-1 max-w-4xl mx-auto flex flex-col gap-6">
+<!-- ============ 피드 영역 ============ -->
+<div style="flex:1;min-width:0;">
 
-<!-- 헤더 -->
-<div class="flex justify-between items-center">
-    <h2 class="text-2xl font-bold">커뮤니티</h2>
-
-    <div class="flex gap-3 items-center">
-        <input type="text" placeholder="검색"
-            class="px-4 py-2 rounded-full bg-gray-100 text-sm w-52"/>
-        <button onclick="openPostModal()"
-    		class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm">
-    		글 작성
-		</button>
+  <!-- 헤더 -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+    <div>
+      <h2 style="font-size:26px;font-weight:900;color:#1A1F36;letter-spacing:-0.5px;">커뮤니티 💬</h2>
+      <p style="font-size:14px;color:#9DA8C0;margin-top:3px;">핏불 멤버들의 오운완 인증 & 자유게시판</p>
     </div>
-</div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div style="position:relative;">
+        <input type="text" placeholder="🔍 검색..." style="
+          padding:10px 18px;border-radius:99px;border:2px solid #E8EDF5;
+          background:white;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+          outline:none;width:200px;transition:border-color 0.2s;
+        " onfocus="this.style.borderColor='#FF6B35'" onblur="this.style.borderColor='#E8EDF5'">
+      </div>
+      <button onclick="openPostModal()" style="
+        padding:10px 22px;border-radius:99px;border:none;cursor:pointer;
+        background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;
+        font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;
+        box-shadow:0 4px 16px rgba(255,107,53,0.3);transition:all 0.2s;
+      " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+        ✏️ 글 작성
+      </button>
+    </div>
+  </div>
 
-<!-- 오운완 스트릭 -->
-<div class="bg-white rounded-xl shadow p-6 flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-            🦴
+  <!-- 오운완 스트릭 카드 -->
+  <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:18px;">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#FFF3EE,#FFE5D5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">🔥</div>
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:17px;font-weight:900;color:#FF6B35;">5일 연속 오운완!</span>
+          <span style="font-size:12px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">최고 기록: 14일</span>
         </div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <% String[] daysKR = {"월","화","수","목","금","토","일"};
+             boolean[] done  = {true,true,true,true,true,false,false};
+             for(int i=0;i<7;i++){ %>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div class="streak-dot <%= done[i] ? "done" : "empty" %>">
+              <%= done[i] ? "✔" : "" %>
+            </div>
+            <span style="font-size:10px;color:#9DA8C0;font-weight:600;"><%= daysKR[i] %></span>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:13px;color:#9DA8C0;">이번주 목표까지</div>
+      <div style="font-size:20px;font-weight:900;color:#FF6B35;margin-top:2px;">2일 남음</div>
+    </div>
+  </div>
+
+  <!-- 카테고리 탭 -->
+  <div style="background:#F7F9FC;border:1.5px solid #E8EDF5;border-radius:99px;padding:4px;display:inline-flex;gap:2px;margin-bottom:20px;">
+    <button onclick="filterPost('all',this)" class="cat-tab active">전체</button>
+    <button onclick="filterPost('owun',this)" class="cat-tab">🏆 오운완</button>
+    <button onclick="filterPost('free',this)" class="cat-tab">💬 자유게시판</button>
+  </div>
+
+  <!-- ── 테스트 게시글 (owun) ── -->
+  <article class="post owun fb-post-card">
+    <div style="padding:14px 18px 0;">
+      <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;background:linear-gradient(135deg,#FF6B35,#FFD166);color:white;font-size:12px;font-weight:800;">
+        🏆 오운완
+      </span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px;">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=user1" style="width:42px;height:42px;border-radius:50%;border:2px solid #E8EDF5;" alt="프로필">
         <div>
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-lg text-orange-500">5일 연속 오운완</span>
-                <span class="text-xs text-gray-500">최고 기록: 14일</span>
-            </div>
-
-            <div class="flex gap-3 mt-3 text-xs">
-                <div><div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center">✔</div>월</div>
-                <div><div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center">✔</div>화</div>
-                <div><div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center">✔</div>수</div>
-                <div><div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center">✔</div>목</div>
-                <div><div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center">✔</div>금</div>
-                <div><div class="w-8 h-8 border-2 border-orange-300 rounded-full"></div>토</div>
-                <div><div class="w-8 h-8 bg-gray-200 rounded-full"></div>일</div>
-            </div>
+          <div style="font-weight:700;font-size:14px;color:#1A1F36;">테스트유저</div>
+          <div style="font-size:12px;color:#9DA8C0;">방금 전</div>
         </div>
+      </div>
+      <button onclick="openReportModal(999)" style="display:flex;align-items:center;gap:4px;font-size:12px;color:#C4CEDE;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:color 0.2s;" onmouseover="this.style.color='#FF4D4D'" onmouseout="this.style.color='#C4CEDE'">
+        <span class="material-symbols-outlined" style="font-size:16px;">flag</span> 신고
+      </button>
     </div>
-
-    <div class="text-sm text-gray-500">
-        이번주 목표까지 <span class="text-blue-600 font-bold">2일</span> 남음
+    <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&q=80" style="width:100%;height:300px;object-fit:cover;" alt="운동 사진">
+    <div style="padding:18px;">
+      <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;">오늘 벤치 신기록 달성! 🔥</h3>
+      <p style="font-size:14px;color:#5A6480;line-height:1.6;">드디어 100kg 벤치 달성했습니다. 핏불이 응원해줘서 더 힘이 났어요!</p>
+      <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">#오운완 #벤치프레스 #신기록</div>
+      <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
+        <button onclick="react(this, 999, 'like')" id="btn-like-999" class="react-btn">❤️ <span id="like-999">24</span></button>
+        <button onclick="react(this, 999, 'good')" id="btn-good-999" class="react-btn">👍 <span id="good-999">18</span></button>
+        <button onclick="react(this, 999, 'muscle')" id="btn-muscle-999" class="react-btn">💪 <span id="muscle-999">31</span></button>
+        <button onclick="toggleComment(this, 999)" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:13px;color:#9DA8C0;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;" onmouseover="this.style.color='#FF6B35'" onmouseout="this.style.color='#9DA8C0'">
+          <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 댓글 12
+        </button>
+      </div>
     </div>
-</div>
+    <div class="comment-box" style="display:none;background:#F7F9FC;border-top:1.5px solid #E8EDF5;padding:16px 18px;">
+      <div id="commentList-999" style="margin-bottom:12px;display:flex;flex-direction:column;gap:8px;"></div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=me" style="width:32px;height:32px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;" alt="내 프로필">
+        <input id="commentInput-999" class="comment-input" placeholder="댓글을 입력하세요...">
+        <button onclick="writeComment(999)" style="padding:8px 16px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;">작성</button>
+      </div>
+    </div>
+  </article>
 
-<!-- 카테고리 -->
-<div class="flex gap-2">
-    <button onclick="filterPost('all', this)" class="tab px-4 py-2 bg-blue-600 text-white rounded-full text-sm">전체</button>
-    <button onclick="filterPost('owun', this)" class="tab px-4 py-2 bg-gray-200 rounded-full text-sm">✔ 오운완</button>
-    <button onclick="filterPost('free', this)" class="tab px-4 py-2 bg-gray-200 rounded-full text-sm">자유게시판</button>
-</div>
-
-<!-- DB 게시글 출력 -->
-<!-- 테스트용 게시글 -->
-<article class="post owun bg-white rounded-xl shadow overflow-hidden">
-
-<div class="p-3">
-    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">✔ 오운완</span>
-</div>
-
-<div class="flex justify-between items-center p-5 pt-0">
-
-    <div class="flex gap-3 items-center">
-        <img src="https://randomuser.me/api/portraits/men/10.jpg"
-             class="w-10 h-10 rounded-full"/>
-
+  <!-- DB 게시글 출력 -->
+  <c:forEach var="post" items="${postList}">
+  <article class="post ${post.category} fb-post-card">
+    <div style="padding:14px 18px 0;">
+      <c:choose>
+        <c:when test="${post.category eq 'owun'}">
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;background:linear-gradient(135deg,#FF6B35,#FFD166);color:white;font-size:12px;font-weight:800;">🏆 오운완</span>
+        </c:when>
+        <c:otherwise>
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;background:#E8F8F6;color:#00897B;font-size:12px;font-weight:800;">💬 자유</span>
+        </c:otherwise>
+      </c:choose>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px;">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${post.userId}" style="width:42px;height:42px;border-radius:50%;border:2px solid #E8EDF5;" alt="프로필">
         <div>
-            <div class="font-semibold">테스트유저</div>
-            <div class="text-xs text-gray-500">방금 전</div>
+          <div style="font-weight:700;font-size:14px;color:#1A1F36;">${post.userId}</div>
+          <div style="font-size:12px;color:#9DA8C0;">${post.createdAt}</div>
         </div>
+      </div>
+      <button onclick="openReportModal(${post.id})" style="display:flex;align-items:center;gap:4px;font-size:12px;color:#C4CEDE;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:color 0.2s;" onmouseover="this.style.color='#FF4D4D'" onmouseout="this.style.color='#C4CEDE'">
+        <span class="material-symbols-outlined" style="font-size:16px;">flag</span> 신고
+      </button>
     </div>
-
-    <button onclick="openReportModal(999)"
-        class="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500">
-        신고 <span class="material-symbols-outlined text-sm">flag</span>
-    </button>
-
-</div>
-
-<img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e"
-     class="w-full h-80 object-cover"/>
-
-<div class="p-5">
-    <h3 class="font-bold mb-2">테스트 게시글</h3>
-    <p>모달 테스트용 게시글입니다 </p>
-
-    <div class="text-blue-500 text-sm mt-2">
-        #테스트 #오운완
-    </div>
-    
-    <div class="flex gap-4 mt-3 text-sm items-center">
-
-    <button onclick="react(this, ${post.id}, 'like')" 
-            id="btn-like-${post.id}" 
-            class="flex items-center gap-1">
-        ❤️ <span id="like-${post.id}">${post.likeCount}</span>
-    </button>
-
-    <button onclick="react(this, ${post.id}, 'good')" 
-            id="btn-good-${post.id}" 
-            class="flex items-center gap-1">
-        👍 <span id="good-${post.id}">${post.goodCount}</span>
-    </button>
-
-    <button onclick="react(this, ${post.id}, 'muscle')" 
-            id="btn-muscle-${post.id}" 
-            class="flex items-center gap-1">
-        💪 <span id="muscle-${post.id}">${post.muscleCount}</span>
-    </button>
-
-</div>
-
-    <div class="flex mt-4 text-sm text-gray-600 items-center">
-        <button onclick="toggleComment(this)" class="ml-auto flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">chat</span> 댓글
+    <c:if test="${not empty post.image}">
+      <img src="${pageContext.request.contextPath}/${post.image}" style="width:100%;max-height:340px;object-fit:cover;" alt="게시글 이미지">
+    </c:if>
+    <div style="padding:18px;">
+      <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;">${post.title}</h3>
+      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.content}</p>
+      <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
+      <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
+        <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">${post.likeCount}</span></button>
+        <button onclick="react(this,${post.id},'good')" id="btn-good-${post.id}" class="react-btn">👍 <span id="good-${post.id}">${post.goodCount}</span></button>
+        <button onclick="react(this,${post.id},'muscle')" id="btn-muscle-${post.id}" class="react-btn">💪 <span id="muscle-${post.id}">${post.muscleCount}</span></button>
+        <button onclick="toggleComment(this,${post.id})" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:13px;color:#9DA8C0;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;" onmouseover="this.style.color='#FF6B35'" onmouseout="this.style.color='#9DA8C0'">
+          <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 댓글
         </button>
+      </div>
     </div>
-</div>
-
-<div class="comment-box hidden bg-gray-50 p-5">
-
-    <!-- 댓글 목록 -->
-    <div id="commentList-${post.id}"></div>
-
-    <!-- 입력 -->
-    <div class="flex mt-3 gap-2">
-        <input id="commentInput-${post.id}"
-               class="border p-2 flex-1 text-sm"
-               placeholder="댓글 작성">
-
-        <button onclick="writeComment(${post.id})"
-                class="bg-blue-500 text-white px-3 rounded text-sm">
-            작성
-        </button>
+    <div class="comment-box" style="display:none;background:#F7F9FC;border-top:1.5px solid #E8EDF5;padding:16px 18px;">
+      <div id="commentList-${post.id}" style="margin-bottom:12px;"></div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input id="commentInput-${post.id}" class="comment-input" placeholder="댓글을 입력하세요...">
+        <button onclick="writeComment(${post.id})" style="padding:8px 16px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;">작성</button>
+      </div>
     </div>
+  </article>
+  </c:forEach>
 
-</div>
+</div><!-- end feed -->
 
-</article>
-<c:forEach var="post" items="${postList}">
+<!-- ============ 사이드 패널 ============ -->
+<aside style="width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:18px;">
 
-<!-- ================= 게시글 ================= -->
-<!-- 오운완 -->
-<!-- <article class="post owun bg-white rounded-xl shadow overflow-hidden">
-
-    <div class="p-3">
-        <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">✔ 오운완</span>
-    </div>
-
-    <div class="flex justify-between items-center p-5 pt-0">
-
-        <div class="flex gap-3 items-center">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg"
-                 class="w-10 h-10 rounded-full"/>
-            <div>
-                <div class="font-semibold">강철근</div>
-                <div class="text-xs text-gray-500">2시간 전</div>
-            </div>
+  <!-- 오운완 랭킹 -->
+  <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:22px;">
+    <h3 style="font-size:16px;font-weight:800;color:#1A1F36;margin-bottom:16px;">🏆 이번 주 오운완 랭킹</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <c:forEach var="post" items="${postList}" varStatus="status">
+        <c:if test="${status.index < 3}">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:#F7F9FC;border:1.5px solid #E8EDF5;">
+          <div style="font-size:22px;">
+            <c:choose>
+              <c:when test="${status.index == 0}">🥇</c:when>
+              <c:when test="${status.index == 1}">🥈</c:when>
+              <c:otherwise>🥉</c:otherwise>
+            </c:choose>
+          </div>
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${post.userId}" style="width:38px;height:38px;border-radius:50%;border:2px solid #E8EDF5;" alt="랭킹">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:13px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${post.userId}</div>
+            <div style="font-size:12px;color:#FF6B35;font-weight:700;">🔥 ${post.likeCount + post.goodCount + post.muscleCount}점</div>
+          </div>
         </div>
-
-        신고
-        <button onclick="openReportModal(1)"
-            class="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500">
-            신고 <span class="material-symbols-outlined text-sm">flag</span>
-        </button>
-    </div>
-
-    <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e"
-         class="w-full h-80 object-cover"/>
-
-    <div class="p-5">
-        <p>데드리프트 성공 🔥</p>
-
-        <div class="flex mt-4 text-sm text-gray-600 items-center">
-            <button onclick="toggleComment(this)" class="ml-auto flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">chat</span> 2
-            </button>
-        </div>
-    </div>
-
-    <div class="comment-box hidden bg-gray-50 p-5">
-        댓글1<br>댓글2
-    </div>
-
-</article>
-
-자유게시판
-<article class="post free bg-white rounded-xl shadow overflow-hidden">
-
-    <div class="p-3">
-        <span class="bg-gray-300 text-black text-xs px-2 py-1 rounded">자유</span>
-    </div>
-
-    <div class="flex justify-between items-center p-5 pt-0">
-
-        <div class="flex gap-3 items-center">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg"
-                 class="w-10 h-10 rounded-full"/>
-            <div>
-                <div class="font-semibold">근육몬</div>
-                <div class="text-xs text-gray-500">1시간 전</div>
-            </div>
-        </div>
-
-        신고
-        <button onclick="openReportModal(2)"
-            class="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500">
-            신고 <span class="material-symbols-outlined text-sm">flag</span>
-        </button>
-    </div>
-
-    <div class="p-5">
-        <p>헬스장 추천 부탁드립니다!</p>
-
-        <div class="flex mt-4 text-sm text-gray-600 items-center">
-            <button onclick="toggleComment(this)" class="ml-auto flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">chat</span> 1
-            </button>
-        </div>
-    </div>
-
-    <div class="comment-box hidden bg-gray-50 p-5">
-        댓글입니다
-    </div>
-
-</article> -->
-<article class="post ${post.category} bg-white rounded-xl shadow overflow-hidden">
-
-<!-- 카테고리 -->
-<div class="p-3">
-<c:choose>
-<c:when test="${post.category eq 'owun'}">
-<span class="bg-green-500 text-white text-xs px-2 py-1 rounded">✔ 오운완</span>
-</c:when>
-<c:otherwise>
-<span class="bg-gray-300 text-black text-xs px-2 py-1 rounded">자유</span>
-</c:otherwise>
-</c:choose>
-</div>
-
-<!-- 작성자 -->
-<div class="flex justify-between items-center p-5 pt-0">
-
-    <div class="flex gap-3 items-center">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg"
-             class="w-10 h-10 rounded-full"/>
-
+        </c:if>
+      </c:forEach>
+      <!-- 예시 랭킹 (DB 없을 때) -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(135deg,#FFF3EE,#fff);border:1.5px solid rgba(255,107,53,0.2);">
+        <div style="font-size:22px;">🥇</div>
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=champ" style="width:38px;height:38px;border-radius:50%;border:2px solid #FFB4A2;" alt="1위">
         <div>
-            <div class="font-semibold">${post.userId}</div>
-            <div class="text-xs text-gray-500">${post.createdAt}</div>
+          <div style="font-weight:700;font-size:13px;color:#1A1F36;">근육왕철수</div>
+          <div style="font-size:12px;color:#FF6B35;font-weight:700;">🔥 152점</div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- 신고 -->
-    <button onclick="openReportModal(${post.id})"
-        class="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500">
-        신고 <span class="material-symbols-outlined text-sm">flag</span>
+  <!-- 핏불 응원 카드 -->
+  <div style="background:linear-gradient(135deg,#FF6B35,#FFD166);border-radius:20px;padding:22px;text-align:center;box-shadow:0 4px 20px rgba(255,107,53,0.28);">
+    <div style="font-size:40px;margin-bottom:8px;">🐾</div>
+    <div style="font-size:15px;font-weight:900;color:white;margin-bottom:6px;">핏불이 응원해요!</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5;">오운완 게시글을 올리면<br>핏불이 따봉 🤙을 보내줄 거예요!</div>
+    <button onclick="openPostModal()" style="margin-top:14px;padding:9px 22px;border-radius:99px;border:2px solid white;background:transparent;color:white;font-weight:700;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+      오운완 인증하기 →
     </button>
+  </div>
 
-</div>
-
-<!-- 이미지 -->
-<c:if test="${not empty post.image}">
-<img src="${pageContext.request.contextPath}/${post.image}"
-     class="w-full h-80 object-cover"/>
-</c:if>
-
-<!-- 내용 -->
-<div class="p-5">
-    <h3 class="font-bold mb-2">${post.title}</h3>
-    <p>${post.content}</p>
-
-    <div class="text-blue-500 text-sm mt-2">
-        ${post.hashtags}
+  <!-- 핫 해시태그 -->
+  <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:22px;">
+    <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:14px;">🔥 인기 태그</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <% String[] tags = {"#오운완","#벤치프레스","#스쿼트","#다이어트","#헬스","#단백질","#인바디","#PT"};
+         for(String t : tags){ %>
+      <span style="padding:5px 12px;border-radius:99px;background:#F7F9FC;border:1.5px solid #E8EDF5;font-size:12px;font-weight:700;color:#5A6480;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">
+        <%= t %>
+      </span>
+      <% } %>
     </div>
-    
-    	<div class="flex gap-4 mt-3 text-sm items-center">
-
-    <button onclick="react(this, ${post.id}, 'like')" 
-            id="btn-like-${post.id}" 
-            class="flex items-center gap-1">
-        ❤️ <span id="like-${post.id}">${post.likeCount}</span>
-    </button>
-
-    <button onclick="react(this, ${post.id}, 'good')" 
-            id="btn-good-${post.id}" 
-            class="flex items-center gap-1">
-        👍 <span id="good-${post.id}">${post.goodCount}</span>
-    </button>
-
-    <button onclick="react(this, ${post.id}, 'muscle')" 
-            id="btn-muscle-${post.id}" 
-            class="flex items-center gap-1">
-        💪 <span id="muscle-${post.id}">${post.muscleCount}</span>
-    </button>
-
-</div>
-
-    <!-- 댓글 -->
-    <div class="flex mt-4 text-sm text-gray-600 items-center">
-        <button onclick="toggleComment(this, ${post.id})" class="ml-auto flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">chat</span> 댓글
-        </button>
-    </div>
-</div>
-
-<div class="comment-box hidden bg-gray-50 p-5">
-    댓글 영역
-</div>
-
-</article>
-
-</c:forEach>
-</div>
-
-<!-- ================= RIGHT ================= -->
-<aside class="w-80 flex flex-col gap-4">
-
-<h3 class="font-bold text-lg">🏆 이번 주 오운완 랭킹</h3>
-
-<c:forEach var="post" items="${postList}" varStatus="status">
-
-<c:if test="${status.index < 3}">
-
-<div class="bg-gray-100 p-4 rounded-xl flex items-center gap-3">
-
-    <c:choose>
-        <c:when test="${status.index == 0}">🥇</c:when>
-        <c:when test="${status.index == 1}">🥈</c:when>
-        <c:otherwise>🥉</c:otherwise>
-    </c:choose>
-
-    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full"/>
-
-    <div class="flex-1">
-        <div class="font-bold">${post.userId}</div>
-        <div class="text-sm text-orange-500">
-            🔥 ${post.likeCount + post.goodCount + post.muscleCount}
-        </div>
-    </div>
-
-</div>
-
-</c:if>
-</c:forEach>
+  </div>
 
 </aside>
 
 </main>
 
-<!-- ================= JS ================= -->
 <script>
-
-// 필터
-function filterPost(type, el){
-    const posts = document.querySelectorAll(".post");
-
-    posts.forEach(p=>{
-        if(type === "all" || p.classList.contains(type)){
-            p.style.display = "block";
-        }else{
-            p.style.display = "none";
-        }
-    });
-
-    document.querySelectorAll(".tab").forEach(btn=>{
-        btn.classList.remove("bg-blue-600","text-white");
-        btn.classList.add("bg-gray-200");
-    });
-
-    el.classList.add("bg-blue-600","text-white");
+// 카테고리 필터
+function filterPost(type, el) {
+  document.querySelectorAll('.post').forEach(p => {
+    p.style.display = (type === 'all' || p.classList.contains(type)) ? 'block' : 'none';
+  });
+  document.querySelectorAll('.cat-tab').forEach(b => {
+    b.classList.remove('active'); b.style.background = 'transparent'; b.style.color = '#5A6480'; b.style.boxShadow = 'none';
+  });
+  el.classList.add('active'); el.style.background = 'white'; el.style.color = '#FF6B35'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
 }
 
-// 댓글
-/* function toggleComment(btn){
-    const box = btn.closest("article").querySelector(".comment-box");
-    box.classList.toggle("hidden");
-} */
-
-function writeComment(postId){
-    const input = document.getElementById("commentInput-" + postId);
-    const content = input.value;
-
-    fetch("comment", {
-        method: "POST",
-        headers: {"Content-Type":"application/x-www-form-urlencoded"},
-        body: "postId=" + postId +
-              "&nickname=" + "<%=session.getAttribute("loginUser") != null ? ((dto.member.MemberDTO)session.getAttribute("loginUser")).getNickname() : ""%>" +
-              "&content=" + content
-    })
-    .then(res => res.text())
-    .then(result => {
-
-        if(result === "ok"){
-            input.value = "";
-            loadComments(postId);
-        }
-    });
+// 댓글 토글
+function toggleComment(btn, postId) {
+  const article = btn.closest('article');
+  const box = article.querySelector('.comment-box');
+  const isHidden = box.style.display === 'none';
+  box.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) loadComments(postId);
 }
 
+// 댓글 로드
 function loadComments(postId) {
-    fetch("commentList?postId=" + postId)
-        .then(function(res) {
-            return res.json();
-        })
-        .then(function(list) {
-            var box = document.getElementById("commentList-" + postId);
-            var html = "";
-
-            for (var i = 0; i < list.length; i++) {
-                var c = list[i];
-                html += '<div class="text-sm mb-1">' +
-                        '<b>' + c.userEmail + '</b> : ' + c.content +
-                        '</div>';
-            }
-
-            box.innerHTML = html;
-        })
-        .catch(function(err) {
-            console.error("댓글 로드 실패:", err);
-        });
+  fetch('commentList?postId=' + postId)
+    .then(res => res.json())
+    .then(list => {
+      const box = document.getElementById('commentList-' + postId);
+      if (!box) return;
+      box.innerHTML = list.map(c => `
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${c.userEmail}" style="width:30px;height:30px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;">
+          <div style="background:white;border:1.5px solid #E8EDF5;border-radius:12px;padding:8px 14px;flex:1;">
+            <div style="font-weight:700;font-size:12px;color:#1A1F36;">${c.userEmail}</div>
+            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.content}</div>
+          </div>
+        </div>
+      `).join('');
+    }).catch(err => console.error('댓글 로드 실패:', err));
 }
 
-// 댓글 열 때 자동 로딩
-function toggleComment(btn){
-    const article = btn.closest("article");
-    const box = article.querySelector(".comment-box");
+// 댓글 작성
+function writeComment(postId) {
+  const input = document.getElementById('commentInput-' + postId);
+  const content = input.value.trim();
+  if (!content) return;
+  fetch('comment', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'postId=' + postId + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
+  }).then(res => res.text()).then(result => {
+    if (result === 'ok') { input.value = ''; loadComments(postId); }
+  });
+}
 
-    box.classList.toggle("hidden");
+// 리액션
+function react(btn, postId, type) {
+  if (btn.disabled) return;
+  fetch('reaction', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'postId=' + postId + '&type=' + type
+  }).then(res => res.text()).then(result => {
+    if (result === 'ok') {
+      const span = document.getElementById(type + '-' + postId);
+      if (span) span.innerText = parseInt(span.innerText) + 1;
+      btn.disabled = true;
+      btn.classList.add('reacted');
 
-    loadComments(postId);
+      // 오운완 게시글이고 muscle 리액션이면 핏불 따봉 애니메이션
+      const article = btn.closest('article');
+      if (article && article.classList.contains('owun')) {
+        showFitbullCheer('💪 대단해! 같이 운동해요!');
+      }
+    }
+  });
 }
 
 // 신고 모달
-function openReportModal(postId){
-    document.getElementById("reportModal").classList.remove("hidden");
-    document.getElementById("reportPostId").value = postId;
+function openReportModal(postId) {
+  const m = document.getElementById('reportModal');
+  if (m) { m.style.display = 'flex'; document.getElementById('reportPostId').value = postId; }
+}
+function closeModal() {
+  const m = document.getElementById('reportModal');
+  if (m) m.style.display = 'none';
 }
 
-function closeModal(){
-    document.getElementById("reportModal").classList.add("hidden");
+// 게시글 모달
+function openPostModal() {
+  const m = document.getElementById('postModal');
+  if (m) m.style.display = 'flex';
+}
+function closePostModal() {
+  const m = document.getElementById('postModal');
+  if (m) m.style.display = 'none';
 }
 
-// 게시글 작성 모달
-function openPostModal(){
-    document.getElementById("postModal").classList.remove("hidden");
+function selectCategory(type) {
+  const owunBtn = document.getElementById('owunBtn');
+  const freeBtn = document.getElementById('freeBtn');
+  const uploadText = document.getElementById('uploadText');
+  const hashtagInput = document.getElementById('hashtagInput');
+  const categoryInput = document.getElementById('category');
+  if (type === 'owun') {
+    owunBtn.style.background = 'linear-gradient(135deg,#FF6B35,#FF8C5A)'; owunBtn.style.color = 'white';
+    freeBtn.style.background = '#F7F9FC'; freeBtn.style.color = '#5A6480';
+    if (uploadText) uploadText.innerText = '🏋️ 오늘 운동 인증샷을 공유해보세요!';
+    if (hashtagInput) hashtagInput.value = '#오운완 #운동';
+    if (categoryInput) categoryInput.value = 'owun';
+  } else {
+    freeBtn.style.background = 'linear-gradient(135deg,#00BFA5,#26D4BB)'; freeBtn.style.color = 'white';
+    owunBtn.style.background = '#F7F9FC'; owunBtn.style.color = '#5A6480';
+    if (uploadText) uploadText.innerText = '💬 자유롭게 사진을 공유해보세요!';
+    if (hashtagInput) hashtagInput.value = '#헬스 #운동';
+    if (categoryInput) categoryInput.value = 'free';
+  }
 }
 
-function closePostModal(){
-    document.getElementById("postModal").classList.add("hidden");
-}
-
-// 카테고리 선택
-function selectCategory(type){
-
-    const owunBtn = document.getElementById("owunBtn");
-    const freeBtn = document.getElementById("freeBtn");
-
-    const uploadText = document.getElementById("uploadText");
-    const hashtagInput = document.getElementById("hashtagInput");
-    const categoryInput = document.getElementById("category");
-
-    // 초기화
-    owunBtn.classList.remove("bg-blue-600","text-white");
-    freeBtn.classList.remove("bg-blue-600","text-white");
-
-    owunBtn.classList.add("bg-gray-200");
-    freeBtn.classList.add("bg-gray-200");
-
-    if(type === "owun"){
-        owunBtn.classList.add("bg-blue-600","text-white");
-        uploadText.innerText = "운동 인증샷을 공유해보세요!";
-        hashtagInput.value = "#등운동 #오운완";
-        categoryInput.value = "owun";
-
-    }else{
-        freeBtn.classList.add("bg-blue-600","text-white");
-        uploadText.innerText = "자유로운 인증샷을 공유해보세요!";
-        hashtagInput.value = "#프로틴 #운동장비";
-        categoryInput.value = "free";
-    }
-}
-
-function react(btn, postId, type){
-
-    fetch("reaction", {
-        method: "POST",
-        headers: {"Content-Type":"application/x-www-form-urlencoded"},
-        body: "postId="+postId+"&type="+type
-    })
-    .then(res=>res.text())
-    .then(result => {
-
-        if(result === "ok"){
-
-            // 숫자 증가
-            let countSpan = document.getElementById(type + "-" + postId);
-            let count = parseInt(countSpan.innerText);
-            countSpan.innerText = count + 1;
-
-            // 버튼 비활성화 (중복 방지)
-            btn.disabled = true;
-            btn.style.opacity = 0.5;
-
-            // 🔥 총합 점수 계산
-            let like = parseInt(document.getElementById("like-"+postId).innerText);
-            let good = parseInt(document.getElementById("good-"+postId).innerText);
-            let muscle = parseInt(document.getElementById("muscle-"+postId).innerText);
-
-            let total = like + good + muscle;
-
-            // 콘솔 확인용
-            console.log("🔥 total:", total);
-        }
-    });
+function toggleEtc(show) {
+  const el = document.getElementById('etcBox');
+  if (el) el.style.display = show ? 'block' : 'none';
 }
 </script>
-
 </body>
 </html>

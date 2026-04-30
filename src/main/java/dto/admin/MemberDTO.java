@@ -7,29 +7,29 @@ public class MemberDTO {
 	//헬스장
 	private String gymName;
 	private String gymTel;
-	private int gymClientCount;
-	private long gymCal;
+	private Integer gymClientCount;
+	private Double gymCal;
 	
 	//트레이너
 	private String trainerName;
 	private String trainerTel;
-	private int trainerClientCount;
-	private long trainerCal;
+	private Integer trainerClientCount;
+	private Double trainerCal;
 	
 	//회원
 	private String clientName;
 	private String clientTel;
 	private String ptTrainer;
-	private long payment;
+	private Double payment;
 	
 	public MemberDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MemberDTO(String regDate, String gymName, String gymTel, int gymClientCount, long gymCal, String trainerName,
-			String trainerTel, int trainerClientCount, long trainerCal, String clientName, String clientTel,
-			String ptTrainer, long payment) {
+	public MemberDTO(String regDate, String gymName, String gymTel, Integer gymClientCount, Double gymCal, String trainerName,
+			String trainerTel, Integer trainerClientCount, Double trainerCal, String clientName, String clientTel,
+			String ptTrainer, Double payment) {
 		super();
 		this.regDate = regDate;
 		this.gymName = gymName;
@@ -70,19 +70,19 @@ public class MemberDTO {
 		this.gymTel = gymTel;
 	}
 
-	public int getGymClientCount() {
+	public Integer getGymClientCount() {
 		return gymClientCount;
 	}
 
-	public void setGymClientCount(int gymClientCount) {
+	public void setGymClientCount(Integer gymClientCount) {
 		this.gymClientCount = gymClientCount;
 	}
 
-	public long getGymCal() {
+	public Double getGymCal() {
 		return gymCal;
 	}
 
-	public void setGymCal(long gymCal) {
+	public void setGymCal(Double gymCal) {
 		this.gymCal = gymCal;
 	}
 
@@ -102,19 +102,19 @@ public class MemberDTO {
 		this.trainerTel = trainerTel;
 	}
 
-	public int getTrainerClientCount() {
+	public Integer getTrainerClientCount() {
 		return trainerClientCount;
 	}
 
-	public void setTrainerClientCount(int trainerClientCount) {
+	public void setTrainerClientCount(Integer trainerClientCount) {
 		this.trainerClientCount = trainerClientCount;
 	}
 
-	public long getTrainerCal() {
+	public Double getTrainerCal() {
 		return trainerCal;
 	}
 
-	public void setTrainerCal(long trainerCal) {
+	public void setTrainerCal(Double trainerCal) {
 		this.trainerCal = trainerCal;
 	}
 
@@ -142,11 +142,11 @@ public class MemberDTO {
 		this.ptTrainer = ptTrainer;
 	}
 
-	public long getPayment() {
+	public Double getPayment() {
 		return payment;
 	}
 
-	public void setPayment(long payment) {
+	public void setPayment(Double payment) {
 		this.payment = payment;
 	}
 

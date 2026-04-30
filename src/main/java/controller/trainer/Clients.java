@@ -9,24 +9,25 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import dto.trainer.TrainerDTO;
+import service.trainer.ClientService;
+import service.trainer.ClientServiceImpl;
 
-@WebServlet("/clients")
+@WebServlet({"/trainer/clients", "/clients", "/clients.html"})
 public class Clients extends HttpServlet {
 
     private static final int DEFAULT_PAGE_SIZE = 5;
-    private final ClientDAOImpl clientDAO = new ClientDAOImpl();
+    private final ClientService clientService = new ClientServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 1. 세션 체크
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loginTrainer") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/login");
             return;
         }
 
-        // 2. 세션에서 trainerId 가져오기
         TrainerDTO trainer = (TrainerDTO) session.getAttribute("loginTrainer");
         int trainerId = trainer.getTrainerId();
 
@@ -37,7 +38,7 @@ public class Clients extends HttpServlet {
             if (pageParam != null) {
                 try {
                     currentPage = Integer.parseInt(pageParam);
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ignored) {
                     currentPage = 1;
                 }
             }
@@ -45,15 +46,17 @@ public class Clients extends HttpServlet {
             String filter = request.getParameter("filter");
             if (filter == null || filter.isEmpty()) filter = "all";
 
-            // 3. trainerId 넘기기
-            int totalClients = clientDAO.countClients(filter, trainerId);
+            // ✅ Use Service instead of DAO
+            int totalClients = clientService.getClientCount(filter, trainerId);
             int totalPages = (int) Math.ceil((double) totalClients / DEFAULT_PAGE_SIZE);
 
             if (currentPage < 1) currentPage = 1;
             if (totalPages > 0 && currentPage > totalPages) currentPage = totalPages;
 
             int offset = (currentPage - 1) * DEFAULT_PAGE_SIZE;
-            List<ClientDTO> clients = clientDAO.selectClients(offset, DEFAULT_PAGE_SIZE, filter, trainerId);
+
+            List<ClientDTO> clients =
+                    clientService.getClients(offset, DEFAULT_PAGE_SIZE, filter, trainerId);
 
             request.setAttribute("clients", clients);
             request.setAttribute("currentPage", currentPage);

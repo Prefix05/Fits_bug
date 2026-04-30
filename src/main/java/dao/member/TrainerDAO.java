@@ -1,17 +1,16 @@
 package dao.member;
 
-import java.sql.*;
+import dto.member.TrainerDTO;
 
-public class TrainerDAO {
+import java.sql.Connection;
+import java.util.List;
 
-    public void insertTrainer(Connection conn, String id, String pw, String name) throws Exception {
-        String sql = "INSERT INTO trainer VALUES (?, ?, ?)";
+public interface TrainerDAO {
+    // 기존 기능 (회원가입/트레이너 등록)
+    void insertTrainer(Connection conn, String id, String pw, String name) throws Exception;
 
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, id);
-        ps.setString(2, pw);
-        ps.setString(3, name);
-
-        ps.executeUpdate();
-    }
+    // 리스트 조회 (새 기능)
+    List<TrainerDTO> getTrainerList(String keyword, String category, String sort);
+    
+    public TrainerDTO getTrainerDetail(int trainerId);
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ExerciseDTO {
 	//exercise 테이블용
-	private int egNum;
+	private Integer egNum;
 	private String type;
 	private String difficulty;
 	private String targetMuscle;
@@ -22,7 +22,7 @@ public class ExerciseDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ExerciseDTO(int egNum, String type, String difficulty, String targetMuscle,
+	public ExerciseDTO(Integer egNum, String type, String difficulty, String targetMuscle,
 			String title, String description, String keyPoint, String image, String video, Date regDate) {
 		super();
 		this.egNum = egNum;
@@ -36,11 +36,11 @@ public class ExerciseDTO {
 		this.video = video;
 		this.regDate = regDate;
 	}
-	public int getEgNum() {
+	public Integer getEgNum() {
 		return egNum;
 	}
 
-	public void setEgNum(int egNum) {
+	public void setEgNum(Integer egNum) {
 		this.egNum = egNum;
 	}
 

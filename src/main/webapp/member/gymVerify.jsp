@@ -1,128 +1,101 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
-
-<html lang="ko"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>회원가입 인증</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-primary-fixed-variant": "#7a3000",
-                        "primary-container": "#ff6b00",
-                        "primary": "#a04100",
-                        "surface-dim": "#d9dadc",
-                        "tertiary": "#0062a1",
-                        "tertiary-fixed-dim": "#9ccaff",
-                        "outline": "#8e7164",
-                        "on-primary": "#ffffff",
-                        "surface-bright": "#f8f9fb",
-                        "error": "#ba1a1a",
-                        "secondary-container": "#fe9a69",
-                        "surface-tint": "#a04100",
-                        "on-error-container": "#93000a",
-                        "on-primary-fixed": "#351000",
-                        "tertiary-container": "#059eff",
-                        "secondary": "#96481e",
-                        "on-primary-container": "#572000",
-                        "on-tertiary-container": "#003357",
-                        "on-secondary-fixed": "#351000",
-                        "surface-container-lowest": "#ffffff",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-high": "#e7e8ea",
-                        "surface-container-low": "#f3f4f6",
-                        "secondary-fixed-dim": "#ffb693",
-                        "primary-fixed-dim": "#ffb693",
-                        "on-secondary-fixed-variant": "#783207",
-                        "on-surface-variant": "#5a4136",
-                        "on-secondary-container": "#763006",
-                        "inverse-on-surface": "#f0f1f3",
-                        "surface-variant": "#e1e2e4",
-                        "secondary-fixed": "#ffdbcc",
-                        "primary-fixed": "#ffdbcc",
-                        "outline-variant": "#e2bfb0",
-                        "background": "#f8f9fb",
-                        "surface": "#f8f9fb",
-                        "on-tertiary-fixed": "#001d35",
-                        "inverse-primary": "#ffb693",
-                        "error-container": "#ffdad6",
-                        "on-secondary": "#ffffff",
-                        "on-background": "#191c1e",
-                        "tertiary-fixed": "#d0e4ff",
-                        "inverse-surface": "#2e3132",
-                        "surface-container-highest": "#e1e2e4",
-                        "surface-container": "#edeef0",
-                        "on-surface": "#191c1e",
-                        "on-error": "#ffffff",
-                        "on-tertiary-fixed-variant": "#00497b"
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    fontFamily: {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    }
-                }
-            }
-        }
-    </script>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>핏츠버그 - 헬스장 사업자 인증</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Nunito',sans-serif;background:rgba(26,31,54,0.7);min-height:100vh;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
+.fb-inp{width:100%;padding:13px 18px;border-radius:14px;border:2px solid #E8EDF5;background:#F7F9FC;font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#1A1F36;outline:none;transition:all 0.2s;}
+.fb-inp:focus{border-color:#00BFA5;box-shadow:0 0 0 3px rgba(0,191,165,0.15);background:white;}
+.fb-inp::placeholder{color:#C4CEDE;}
+.upload-box{width:100%;border:2.5px dashed #E8EDF5;border-radius:16px;padding:32px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#F7F9FC;}
+.upload-box:hover{border-color:#00BFA5;background:#E8F8F6;}
+@keyframes fb_modal_in{from{opacity:0;transform:scale(0.9) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+</style>
 </head>
-<body class="bg-surface relative min-h-screen font-body text-on-surface flex items-center justify-center">
-<!-- Blurred Background (simulating overlay) -->
-<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm z-0"></div>
-<!-- Main Container relative for toast positioning -->
-<div class="relative w-full max-w-lg z-10 flex flex-col items-center px-4">
-<div class="absolute -top-24 w-full bg-surface-container-lowest rounded-[8px] shadow-[0_4px_24px_rgba(25,28,30,0.06)] p-4 flex items-center gap-3">
-<span class="material-symbols-outlined text-[#10B981] fill-current" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<p class="text-on-surface text-[14px] leading-[1.6]">회원가입이 완료되었습니다. 관리자 승인 후 인증 마크가 부여됩니다.</p>
+<body>
+
+<!-- 상단 완료 토스트 -->
+<div style="position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:200;animation:slideDown 0.5s ease;">
+  <div style="background:white;border-radius:99px;padding:12px 22px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.12);border:1.5px solid #E8EDF5;">
+    <div style="width:26px;height:26px;border-radius:50%;background:#E8F8F6;display:flex;align-items:center;justify-content:center;">
+      <span class="material-symbols-outlined" style="font-size:16px;color:#00897B;">check_circle</span>
+    </div>
+    <span style="font-size:14px;font-weight:700;color:#1A1F36;white-space:nowrap;">회원가입이 완료되었습니다. 관리자 승인 후 인증 마크가 부여됩니다.</span>
+  </div>
 </div>
-<!-- Success Toast Notification -->
-<div class="absolute -top-24 w-full bg-surface-container-lowest rounded-[8px] shadow-[0_4px_24px_rgba(25,28,30,0.06)] p-4 flex items-center gap-3">
-<span class="material-symbols-outlined text-[#10B981] fill-current" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<p class="text-on-surface text-[14px] leading-[1.6]">회원가입이 완료되었습니다. 관리자 승인 후 인증 마크가 부여됩니다.</p>
+
+<!-- 인증 모달 -->
+<div style="background:white;border-radius:28px;width:100%;max-width:460px;margin:80px 20px 20px;box-shadow:0 24px 80px rgba(0,0,0,0.2);overflow:hidden;animation:fb_modal_in 0.35s ease;">
+
+  <!-- 헤더 -->
+  <div style="background:linear-gradient(135deg,#00897B,#00BFA5);padding:28px 32px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🏢</div>
+    <h2 style="font-size:22px;font-weight:900;color:white;margin-bottom:6px;">사업자 인증 (선택)</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,0.85);">입력 시 인증된 헬스장으로 표시됩니다<br>(관리자 승인 필요)</p>
+  </div>
+
+  <!-- 폼 -->
+  <form action="gymVerify" method="post" enctype="multipart/form-data" style="padding:28px 32px;display:flex;flex-direction:column;gap:18px;">
+
+    <!-- 사업자등록번호 -->
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">사업자등록번호</label>
+      <input name="bizNumber" class="fb-inp" placeholder="000-00-00000" maxlength="12">
+    </div>
+
+    <!-- 사업자등록증 업로드 -->
+    <div>
+      <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">사업자등록증 업로드</label>
+      <label class="upload-box" id="uploadLabel">
+        <span class="material-symbols-outlined" style="font-size:36px;color:#9DA8C0;margin-bottom:8px;">cloud_upload</span>
+        <div style="font-size:14px;font-weight:700;color:#5A6480;">사업자등록증 파일 첨부</div>
+        <div style="font-size:12px;color:#C4CEDE;margin-top:4px;">JPG, PNG, PDF 지원</div>
+        <input type="file" name="bizFile" accept="image/*,.pdf" style="display:none;" onchange="previewUpload(this)">
+      </label>
+      <div id="fileName" style="font-size:12px;color:#00BFA5;font-weight:700;margin-top:6px;min-height:18px;"></div>
+    </div>
+
+    <!-- 인증 혜택 안내 -->
+    <div style="background:linear-gradient(135deg,#E8F8F6,#F0FBF9);border:1.5px solid rgba(0,191,165,0.2);border-radius:14px;padding:14px 16px;">
+      <div style="font-size:12px;font-weight:700;color:#00897B;margin-bottom:6px;">✅ 인증 헬스장 혜택</div>
+      <ul style="font-size:12px;color:#5A6480;line-height:1.8;padding-left:16px;">
+        <li>인증 뱃지 표시로 신뢰도 UP</li>
+        <li>검색 결과 우선 노출</li>
+        <li>회원 유입 데이터 분석 제공</li>
+        <li>핏츠버그 파트너 할인 혜택</li>
+      </ul>
+    </div>
+
+    <!-- 버튼 -->
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button type="button" onclick="location.href='main'" style="flex:1;padding:13px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">
+        건너뛰기
+      </button>
+      <button type="submit" style="flex:2;padding:13px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,191,165,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+        🚀 제출하기
+      </button>
+    </div>
+
+  </form>
 </div>
-<!-- Verification Modal -->
-<div class="w-full bg-surface-container-lowest rounded-[16px] shadow-[0_8px_32px_rgba(25,28,30,0.08)] p-8">
-<div class="text-center mb-8">
-<h2 class="text-display-md font-bold text-on-surface tracking-tight mb-2">사업자 인증 (선택)</h2>
-<p class="text-on-surface-variant text-[14px]">입력 시 인증된 헬스장으로 표시됩니다 (관리자 승인 필요)</p>
-</div>
-<form class="space-y-6">
-<!-- Input Field -->
-<div>
-<label class="block text-on-surface font-medium text-[14px] mb-2">사업자등록번호</label>
-<div class="relative">
-<input class="w-full bg-surface-variant text-on-surface placeholder:text-on-surface-variant/50 rounded-[8px] border-none py-3 px-4 focus:bg-primary-fixed/10 focus:ring-0 focus:outline-none transition-all duration-300" placeholder="번호를 입력해주세요" style="box-shadow: inset 0 0 0 1px rgba(226, 191, 176, 0.15);" type="text"/>
-</div>
-</div>
-<!-- File Upload Area -->
-<div>
-<div class="w-full border border-dashed border-outline-variant/30 bg-surface-container-low rounded-[8px] py-10 flex flex-col items-center justify-center cursor-pointer hover:bg-surface-variant/50 transition-colors">
-<span class="material-symbols-outlined text-on-surface-variant text-3xl mb-2">cloud_upload</span>
-<p class="text-on-surface font-medium text-[14px]">사업자등록증 업로드</p>
-</div>
-</div>
-<!-- Action Buttons -->
-<div class="flex gap-4 pt-4">
-<button class="flex-1 bg-surface-container-lowest text-on-surface py-3 rounded-full font-medium text-[14px] hover:bg-surface-container-low transition-colors shadow-[inset_0_0_0_1px_rgba(226,191,176,0.3)]" type="button">건너뛰기</button>
-<button class="flex-1 bg-gradient-to-br from-primary-container to-primary text-on-primary py-3 rounded-full font-medium text-[14px] shadow-[0_4px_14px_rgba(255,107,0,0.25)] hover:scale-[1.02] transition-transform duration-300" type="submit">제출하기</button>
-</div>
-</form>
-</div>
-</div>
-</body></html>
+
+<script>
+function previewUpload(input){
+  const label = document.getElementById('uploadLabel');
+  const name  = document.getElementById('fileName');
+  if(input.files && input.files[0]){
+    name.innerText = '📎 ' + input.files[0].name;
+    label.style.borderColor = '#00BFA5';
+    label.style.background  = '#E8F8F6';
+  }
+}
+</script>
+</body>
+</html>

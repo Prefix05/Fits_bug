@@ -21,7 +21,7 @@ import java.util.List;
 public class DashboardServiceImpl implements DashboardService {
 
     // 수업 데이터를 DB에서 가져오는 DAO
-    private final LessonDAO lessonDAO = new LessonDAOImpl();
+    private final LessonService lessonService = new LessonServiceImpl();
 
     // 알림 데이터를 DB에서 가져오는 DAO
     private final NotificationDAO notificationDAO = new NotificationDAOImpl();
@@ -35,7 +35,7 @@ public class DashboardServiceImpl implements DashboardService {
         LocalTime now = LocalTime.now();
 
         // ── 1. 오늘 날짜의 수업 목록을 DB에서 가져온다 ──────────────────
-        List<LessonDTO> lessons = lessonDAO.findLessonsByDate(today, trainerId);
+        List<LessonDTO> lessons = lessonService.getLessonsByDate(today, trainerId);
 
         // ── 2. 수업 목록을 시작 시간 기준으로 오름차순 정렬 ──────────────
         lessons.sort(Comparator.comparing(this::safeStartTime));

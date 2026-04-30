@@ -8,9 +8,9 @@
  */
 package service.member;
 
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 
 public interface KakaoService {
     String getAccessToken(String code);
-    MemberDTO getUserInfo(String token);
+    LoginDTO getUserInfo(String token);
 }

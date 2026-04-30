@@ -1,10 +1,14 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dto.member.LoginDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
@@ -34,7 +38,7 @@ public class PaymentSuccessController extends HttpServlet {
             return;
         }
 
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
 
         if(user == null){
             resp.sendRedirect("login.jsp");

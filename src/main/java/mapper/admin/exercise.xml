@@ -25,7 +25,7 @@
 	
 	<select id="selectAllGuide" resultType="exercise">
     SELECT 
-        eg_num as egNum, 
+        id as egNum, 
         title, 
         difficulty, 
         targetMuscle,
@@ -46,10 +46,10 @@
     
     <select id="selectGuideById" parameterType="int" resultType="exercise">
     	SELECT 
-        	eg_num as egNum, title, difficulty, targetMuscle,
+        	id as egNum, title, difficulty, targetMuscle,
         	type, description, keyPoint, image, video, reg_date as regDate
     	FROM EXERCISE_GUIDE
-    	WHERE eg_num = #{egNum}
+    	WHERE id = #{egNum}
 	</select>
 
 	<update id="updateExerciseGuide" parameterType="exercise">
@@ -63,11 +63,11 @@
         	keyPoint = #{keyPoint}
         	<if test="image != null">, image = #{image}</if>
         	<if test="video != null">, video = #{video}</if>
-    	WHERE eg_num = #{egNum}
+    	WHERE id = #{egNum}
 	</update>
 
 	<delete id="deleteGuide" parameterType="int">
-    	DELETE FROM EXERCISE_GUIDE WHERE eg_num = #{egNum}
+    	DELETE FROM EXERCISE_GUIDE WHERE id = #{egNum}
 	</delete>
 
 </mapper>
