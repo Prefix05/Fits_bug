@@ -3,12 +3,12 @@ package dto.admin;
 import java.sql.Timestamp;
 
 public class ReportDTO {
-	private int reportId;
-    private int reporterId;
+	private Integer reportId;
+    private Integer reporterId;
     private String reporterName;
-    private int targetId;
+    private Integer targetId;
     private String targetName;
-    private int postNum;
+    private Integer postNum;
     private String category; // ENUM 매칭
     private String title;
     private String content;
@@ -18,15 +18,14 @@ public class ReportDTO {
     private Timestamp regDate;
     private Timestamp processDate;
     
-    
-    
 	public ReportDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public ReportDTO(int reportId, int reporterId, String reporterName, int targetId, String targetName, int postNum, String category, String title,
-			String content, String file, String result, String status, Timestamp regDate, Timestamp processDate) {
+	
+	public ReportDTO(Integer reportId, Integer reporterId, String reporterName, Integer targetId, String targetName,
+			Integer postNum, String category, String title, String content, String file, String result, String status,
+			Timestamp regDate, Timestamp processDate) {
 		super();
 		this.reportId = reportId;
 		this.reporterId = reporterId;
@@ -44,19 +43,19 @@ public class ReportDTO {
 		this.processDate = processDate;
 	}
 
-	public int getReportId() {
+	public Integer getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(int reportId) {
+	public void setReportId(Integer reportId) {
 		this.reportId = reportId;
 	}
 
-	public int getReporterId() {
+	public Integer getReporterId() {
 		return reporterId;
 	}
 
-	public void setReporterId(int reporterId) {
+	public void setReporterId(Integer reporterId) {
 		this.reporterId = reporterId;
 	}
 
@@ -68,6 +67,14 @@ public class ReportDTO {
 		this.reporterName = reporterName;
 	}
 
+	public Integer getTargetId() {
+		return targetId;
+	}
+
+	public void setTargetId(Integer targetId) {
+		this.targetId = targetId;
+	}
+
 	public String getTargetName() {
 		return targetName;
 	}
@@ -76,19 +83,11 @@ public class ReportDTO {
 		this.targetName = targetName;
 	}
 
-	public int getTargetId() {
-		return targetId;
-	}
-
-	public void setTargetId(int targetId) {
-		this.targetId = targetId;
-	}
-
-	public int getPostNum() {
+	public Integer getPostNum() {
 		return postNum;
 	}
 
-	public void setPostNum(int postNum) {
+	public void setPostNum(Integer postNum) {
 		this.postNum = postNum;
 	}
 

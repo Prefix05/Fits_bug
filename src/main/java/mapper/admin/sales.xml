@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.sales">
+	<!-- [핵심] ResultMap: DB 칼럼과 SalesDTO 필드 매핑, as alias 안해도됨. -->
+    <resultMap id="SalesResultMap" type="sales">
+        <!-- 공통 및 결제 -->
+        <id property="paymentNum" column="payment_num"/>
+        <result property="paymentDate" column="payment_date"/>
+        <result property="paymentPrice" column="payment_price"/>
+        <result property="paymentFee" column="payment_fee"/>
+        <result property="paymentStatus" column="status"/>
+        <result property="userNum" column="user_num"/>
+        <result property="userName" column="user_name"/>
+        <result property="method" column="method"/>
+        <result property="canceledAt" column="canceled_at"/>
+        <result property="reason" column="reason"/>
+        <result property="tossPaymentKey" column="toss_payment_key"/>
+        <result property="tossOrderId" column="toss_order_id"/>
+        
+        <!-- 정산 관련 -->
+        <result property="settlementNum" column="settlement_num"/>
+        <result property="targetNum" column="target_num"/>
+        <result property="targetType" column="target_type"/>
+        <result property="settlementMonth" column="settlement_month"/>
+        <result property="settlementDeadline" column="settlement_deadline"/>
+        <result property="totalSales" column="total_sales"/>
+        <result property="totalFee" column="total_fee"/>
+        <result property="netAmount" column="net_amount"/>
+        <result property="settlementStatus" column="settlement_status"/>
+        <result property="completedAt" column="completed_at"/>
+        
+        <!-- 매출 분석용(조인 결과) -->
+        <result property="gymId" column="gym_num"/>
+        <result property="gymName" column="gym_name"/>
+        <result property="trainerId" column="trainer_num"/>
+        <result property="trainerName" column="trainer_name"/>
+    </resultMap>
+
+    <!-- [섹션 1] 정산 상세 내역 조회 (상태 필터링 포함) -->
+    <select id="selectSettlementList" resultMap="SalesResultMap">
+        SELECT * FROM SETTLEMENT
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="searchKeyword != null">
+                AND (target_num LIKE CONCAT('%', #{searchKeyword}, '%')) 
+                <!-- 실제 운영시에는 강사/지점 테이블 조인하여 이름 검색 추가 -->
+            </if>
+        </where>
+        ORDER BY settlement_deadline ASC
+    </select>
+
+    <!-- [섹션 2] 매출 상세 내역 조회 (JOIN 활용) -->
+    <select id="selectSalesList" resultMap="SalesResultMap">
+        SELECT 
+            p.payment_num, p.payment_date, p.payment_price, p.payment_fee,
+            p.gym_num, g.gym_name, 
+            p.trainer_num, t.trainer_name
+        FROM PAYMENT p
+        LEFT JOIN GYM g ON p.gym_num = g.gym_num
+        LEFT JOIN TRAINER t ON p.trainer_num = t.trainer_num
+        WHERE p.status = '결제완료'
+        <if test="startDate != null and endDate != null">
+            AND p.payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        ORDER BY p.payment_date DESC
+    </select>
+
+    <!-- [섹션 3] 결제 내역 조회 (전체/환불/취소 필터) -->
+    <select id="selectPaymentHistory" resultMap="SalesResultMap">
+        SELECT * FROM PAYMENT
+        <where>
+            <if test="status != null and status != '전체'">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY payment_date DESC
+    </select>
+
+    <!-- [추가] 대시보드 상단 요약 카드 데이터 -->
+    <select id="getSalesSummary" resultType="map">
+        SELECT 
+            SUM(payment_price) as totalSales,
+            SUM(payment_fee) as totalFee,
+            (SUM(payment_price) - SUM(payment_fee)) as netProfit
+        FROM PAYMENT
+        WHERE status = '결제완료' 
+          AND payment_date >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+    </select>
+
+</mapper>

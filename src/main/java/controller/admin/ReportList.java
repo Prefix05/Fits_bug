@@ -105,9 +105,10 @@ public class ReportList extends HttpServlet {
         String title = dto.getTitle() != null ? dto.getTitle().replace("\"", "\\\"").replace("\n", " ") : "";
         String content = dto.getContent() != null ? dto.getContent().replace("\"", "\\\"").replace("\n", " ") : "";
         String result = dto.getResult() != null ? dto.getResult().replace("\"", "\\\"").replace("\n", " ") : "";
-
+        String file = dto.getFile() != null ? dto.getFile().replace("\"", "\\\"") : "";
+        
         return String.format(
-        		"{\"reportId\": %d, \"reporterId\": %d, \"reporterName\": \"%s\", \"targetId\": %d, \"targetName\": \"%s\", \"postNum\": %d, \"category\": \"%s\", \"title\": \"%s\", \"content\": \"%s\", \"status\": \"%s\", \"result\": \"%s\", \"regDate\": \"%s\", \"processDate\": \"%s\"}",
+        		"{\"reportId\": %d, \"reporterId\": %d, \"reporterName\": \"%s\", \"targetId\": %d, \"targetName\": \"%s\", \"postNum\": %d, \"category\": \"%s\", \"title\": \"%s\", \"content\": \"%s\", \"status\": \"%s\", \"result\": \"%s\", \"file\": \"%s\", \"regDate\": \"%s\", \"processDate\": \"%s\"}",
             dto.getReportId(),
             dto.getReporterId(),
             dto.getReporterName(),
@@ -119,6 +120,7 @@ public class ReportList extends HttpServlet {
             content,
             dto.getStatus(),
             result,
+            file,
             dateStr1,
             dateStr2
         );
