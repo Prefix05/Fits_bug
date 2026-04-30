@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.member.InbodyRecordDTO;
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import service.member.InbodyRecordService;
 import service.member.InbodyRecordServiceImpl;
 
@@ -23,7 +23,7 @@ public class InbodyRecordController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+    	LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -61,7 +61,7 @@ public class InbodyRecordController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+    	LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

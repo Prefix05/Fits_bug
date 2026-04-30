@@ -28,7 +28,7 @@
         FROM lesson l
                  JOIN member m ON l.client_id = m.id
         WHERE l.lesson_date = #{date}
-          AND c.trainer_id = #{trainerId}
+          AND m.trainer_id = #{trainerId}
         ORDER BY l.start_time ASC
     </select>
 </mapper>

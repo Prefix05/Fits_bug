@@ -1,6 +1,6 @@
 package dao.member;
 
-import dto.trainer.TrainerDTO;
+import dto.member.TrainerDTO;
 
 import java.sql.Connection;
 import java.util.List;
