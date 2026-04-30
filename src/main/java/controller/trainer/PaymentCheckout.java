@@ -1,18 +1,20 @@
 package controller.trainer;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "PaymentCheckout", value = "/PaymentCheckout")
+@WebServlet("/payment/checkout")
 public class PaymentCheckout extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    }
+        // Optional: load product / lesson / membership info
+        // request.setAttribute("lesson", lessonData);
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/trainer/payment/checkout.jsp");
+        dispatcher.forward(request, response);
     }
 }

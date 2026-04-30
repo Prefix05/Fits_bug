@@ -64,7 +64,8 @@
             total_lessons,
             height,
             weight,
-            status
+            status,
+            trainer_id
         FROM clients
         WHERE client_id = #{clientId}
     </select>

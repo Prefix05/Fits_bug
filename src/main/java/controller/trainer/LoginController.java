@@ -3,6 +3,8 @@ package controller.trainer;
 import dao.trainer.TrainerDAOImpl;
 import dto.trainer.TrainerDTO;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import service.trainer.LoginService;
+import service.trainer.LoginServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -21,30 +23,30 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        TrainerDAOImpl dao = new TrainerDAOImpl();
-        TrainerDTO trainer = dao.getTrainerByEmail(email);
+        LoginService service = new LoginServiceImpl();
 
-        if (trainer != null) {
-            // BCrypt 비밀번호 검증
-            BCrypt.Result result = BCrypt.verifyer().verify(
-                    password.toCharArray(),
-                    trainer.getPassword()
-            );
+        try {
+            TrainerDTO trainer = service.loginTrainer(email, password);
 
-            if (result.verified) {
+            if (trainer != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("loginTrainer", trainer);
                 response.sendRedirect(request.getContextPath() + "/trainer/dashboard");
             } else {
-                request.setAttribute("error", "비밀번호가 틀렸습니다.");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                // 🔒 unified error (security best practice)
+                request.setAttribute("error", "이메일 또는 비밀번호가 올바르지 않습니다.");
+                request.getRequestDispatcher("/trainer/login.jsp").forward(request, response);
             }
-        } else {
-            request.setAttribute("error", "존재하지 않는 이메일입니다.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            request.setAttribute("error", "서버 오류가 발생했습니다.");
+            request.getRequestDispatcher("/trainer/login.jsp").forward(request, response);
         }
     }
 }

@@ -1,4 +1,7 @@
 package service.trainer;
 
-public class LoginService {
+import dto.trainer.TrainerDTO;
+
+public interface LoginService {
+    public TrainerDTO loginTrainer(String email, String password);
 }
