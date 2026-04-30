@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.admin.sales">
-
     <!-- [1] 결제 및 매출 분석용 ResultMap -->
     <resultMap id="PaymentResultMap" type="sales">
         <id property="paymentNum" column="id"/> <!-- PAYMENT 테이블의 id -->
@@ -45,11 +44,12 @@
             <if test="status != null and status != ''">
                 AND status = #{status}
             </if>
-            <if test="searchKeyword != null">
+            <if test="searchKeyword != null and searchKeyword != ''">
                 AND (target_id LIKE CONCAT('%', #{searchKeyword}, '%')) 
             </if>
         </where>
         ORDER BY settlement_deadline ASC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- [섹션 2] 매출 상세 내역 조회 (PaymentResultMap 사용) -->
@@ -66,6 +66,7 @@
             AND p.payment_date BETWEEN #{startDate} AND #{endDate}
         </if>
         ORDER BY p.payment_date DESC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- [섹션 3] 결제 내역 조회 (PaymentResultMap 사용) -->
@@ -75,8 +76,12 @@
             <if test="status != null and status != '전체'">
                 AND status = #{status}
             </if>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (user_id LIKE CONCAT('%', #{searchKeyword}, '%') OR toss_order_id LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
         </where>
         ORDER BY payment_date DESC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- [추가] 대시보드 요약 -->
@@ -87,6 +92,16 @@
             IFNULL(SUM(payment_price) - SUM(payment_fee), 0) as netProfit
         FROM PAYMENT
         WHERE status = '결제완료' 
-          AND payment_date >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        <if test="startDate != null and endDate != null">
+            AND payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
     </select>
+    
+    <!-- [추가] 정산 상태 업데이트 -->
+    <update id="updateSettlementStatus">
+        UPDATE SETTLEMENT 
+        SET status = '정산완료', 
+            completed_at = NOW() 
+        WHERE id = #{id}
+    </update>
 </mapper>
