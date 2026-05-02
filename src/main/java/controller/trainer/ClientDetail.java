@@ -44,7 +44,7 @@ public class ClientDetail extends HttpServlet {
             int clientId = Integer.parseInt(idParam);
 
             // 3. Use Service (NOT DAO)
-            ClientDTO client = clientService.getClientDetail(clientId);
+            ClientDTO client = clientService.getClientById(clientId);
 
             // 🔐 4. Ownership check (VERY IMPORTANT)
             if (client == null || client.getTrainerId() != trainerId) {

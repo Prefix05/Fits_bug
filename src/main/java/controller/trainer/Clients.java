@@ -46,7 +46,6 @@ public class Clients extends HttpServlet {
             String filter = request.getParameter("filter");
             if (filter == null || filter.isEmpty()) filter = "all";
 
-            // ✅ Use Service instead of DAO
             int totalClients = clientService.getClientCount(filter, trainerId);
             int totalPages = (int) Math.ceil((double) totalClients / DEFAULT_PAGE_SIZE);
 

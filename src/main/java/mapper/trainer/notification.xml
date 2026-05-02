@@ -13,20 +13,20 @@
         <result property="message" column="message"/>
         <result property="targetUrl" column="target_url"/>
         <result property="read" column="is_read"/>
-        <result property="createdAtLabel" column="created_at_label"/>
+        <result property="createdAtLabel" column="create_date_label"/>
     </resultMap>
 
     <select id="findRecentByUserAndMember" parameterType="map" resultMap="notificationMap">
         SELECT n.*,
         CASE
-        WHEN TIMESTAMPDIFF(MINUTE, n.created_at, NOW()) &lt; 1 THEN '방금 전'
-        WHEN TIMESTAMPDIFF(MINUTE, n.created_at, NOW()) &lt; 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, n.created_at, NOW()),
+        WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 1 THEN '방금 전'
+        WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, n.create_date, NOW()),
         '분 전')
-        WHEN TIMESTAMPDIFF(HOUR, n.created_at, NOW()) &lt; 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, n.created_at, NOW()), '시간
+        WHEN TIMESTAMPDIFF(HOUR, n.create_date, NOW()) &lt; 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, n.create_date, NOW()), '시간
         전')
-        WHEN TIMESTAMPDIFF(DAY, n.created_at, NOW()) = 1 THEN '어제'
-        ELSE DATE_FORMAT(n.created_at, '%m/%d')
-        END AS created_at_label
+        WHEN TIMESTAMPDIFF(DAY, n.create_date, NOW()) = 1 THEN '어제'
+        ELSE DATE_FORMAT(n.create_date, '%m/%d')
+        END AS create_date_label
         FROM notification n
         WHERE n.member_name IN (
         SELECT DISTINCT l.member_name
@@ -36,7 +36,7 @@
         <if test="memberName != null">
             AND n.member_name = #{memberName}
         </if>
-        ORDER BY n.created_at DESC
+        ORDER BY n.create_date DESC
         LIMIT #{limit}
     </select>
 

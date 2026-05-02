@@ -32,7 +32,8 @@
     </select>
 
     <select id="countClients" resultType="int">
-        SELECT COUNT(*) FROM member    <where>
+        SELECT COUNT(*) FROM member
+        <where>
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
@@ -42,29 +43,6 @@
 
     <select id="selectClientById" resultMap="clientResultMap">
         SELECT *
-        FROM member
-        WHERE id = #{clientId}
-    </select>
-
-    <select id="selectClientByName" resultMap="clientResultMap">
-        SELECT *
-        FROM member
-        WHERE name = #{name}
-    </select>
-
-    <select id="getClientDetail" parameterType="int" resultMap="clientResultMap">
-        SELECT
-            id,
-            name,
-            age,
-            goals,
-            next_session,
-            lesson_count,
-            total_lessons,
-            height,
-            weight,
-            status,
-            trainer_id
         FROM member
         WHERE id = #{clientId}
     </select>
