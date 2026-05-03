@@ -187,7 +187,7 @@
         <a href="./profile.html"
            class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200">
             <img alt="연진호" class="w-10 h-10 rounded-full object-cover shrink-0"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ" />
+                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}" />
             <div class="overflow-hidden">
                 <p class="text-sm font-bold text-blue-700 truncate">연진호</p>
                 <p class="text-xs text-blue-500 truncate">마이프로필</p>

@@ -144,7 +144,7 @@
         </button>
         <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
             <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
+                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
         </a>
     </div>
 </header>
@@ -281,7 +281,7 @@
     <a href="./profile.html"
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
         <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
+             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
              style=""/>
         <div class="overflow-hidden">
             <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
@@ -350,6 +350,17 @@
         <div class="flex-1 overflow-y-auto max-w-7xl w-full mx-auto" id="client-list-container">
             <div class="space-y-3 md:space-y-4 pr-2 pt-3 md:pt-0">
                 <%-- Client Cards:--%>
+                <c:choose>
+                    <c:when test="${empty clients}">
+                        <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+                            <div class="flex flex-col items-center justify-center gap-3 text-center h-[300px] px-4">
+                                <span class="material-symbols-outlined text-4xl text-slate-300">group_off</span>
+                                <p class="text-sm font-semibold text-on-surface">등록된 회원이 없습니다</p>
+                                <p class="text-xs text-slate-400">새로운 회원을 추가하거나 수업을 등록해 보세요.</p>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
                 <c:forEach var="client" items="${clients}">
                     <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
                        class="block no-underline">
@@ -413,6 +424,8 @@
                         </div>
                     </a>
                 </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <div class="flex justify-center items-center py-6 mt-2 border-slate-100 sticky bottom-0">

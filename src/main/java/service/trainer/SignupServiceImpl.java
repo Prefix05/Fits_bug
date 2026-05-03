@@ -2,23 +2,28 @@ package service.trainer;
 
 import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
+import dao.trainer.UserDAO;
+import dao.trainer.UserDAOImpl;
 import dto.trainer.TrainerDTO;
+import dto.trainer.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 
 public class SignupServiceImpl implements SignupService {
 
+    private UserDAO userDAO = new UserDAOImpl();
     private TrainerDAO trainerDAO = new TrainerDAOImpl();
 
     @Override
-    public int signupTrainer(TrainerDTO dto) {
+    public int signupTrainer(UserDTO dto) {
 
         SqlSession session = MybatisSqlSessionFactory
                 .getSqlSessionFactory()
                 .openSession(false); // transaction control
 
         try {
-            int result = trainerDAO.insertTrainer(session, dto);
+
+            int result = userDAO.insertUserTrainer(session, dto);
 
             session.commit(); // ✅ success
             return result;
@@ -26,6 +31,27 @@ public class SignupServiceImpl implements SignupService {
         } catch (Exception e) {
             session.rollback(); // ❌ fail
             throw new RuntimeException("Signup failed", e);
+
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public int signupTrainerProfile(TrainerDTO dto) {
+        SqlSession session = MybatisSqlSessionFactory
+                .getSqlSessionFactory()
+                .openSession(false);
+
+        try {
+            int result = trainerDAO.insertTrainer(session, dto);
+
+            session.commit();
+            return result;
+
+        } catch (Exception e) {
+            session.rollback();
+            throw new RuntimeException("Trainer profile signup failed", e);
 
         } finally {
             session.close();

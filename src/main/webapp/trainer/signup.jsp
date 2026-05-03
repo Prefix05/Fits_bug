@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Fitzberg - Signup</title>
 </head>
 <body>
     <h2>트레이너 회원가입</h2>
@@ -17,7 +17,11 @@
         <input type="text" name="name" placeholder="이름" required/><br/>
         <input type="email" name="email" placeholder="이메일" required/><br/>
         <input type="password" name="password" placeholder="비밀번호" required/><br/>
-        <button type="submit">회원가입</button>
+        <input type="tel" name="tel" placeholder="전화번호" required/><br/>
+        <input type="text" name="nickname" placeholder="닉네임" required/><br/>
+<%--        <input type="file" name="profileImage" accept="image/*">--%>
+        <input type="hidden" name="role" value="TRAINER"/>
+        <button type="submit">다음</button>
     </form>
     <a href="${pageContext.request.contextPath}/trainer/login">로그인하기</a>
 </body>
