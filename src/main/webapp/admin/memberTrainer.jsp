@@ -2,9 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%
-    String contextPath = request.getContextPath();
-%>    
+<c:set var="contextPath" value="${pageContext.request.contextPath }"/>   
 <!DOCTYPE html>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <html lang="ko"><head>
@@ -108,7 +106,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">fitness_trainer</span>
+                                            <img src=${profileImage} width="20px"/>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -162,7 +160,7 @@
 <body class="bg-surface font-body text-on-surface antialiased">
 <!-- SideNavBar Shell -->
 <div class="flex">
-	<jsp:include page="../member/sidebar.jsp"></jsp:include>
+	<jsp:include page="sidebar.jsp"></jsp:include>
 </div>
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">
@@ -177,23 +175,23 @@
 </div>
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-8 border-b border-outline-variant/20">
-<a href="<%= contextPath %>/admin/memberAuth"
+<a href="${contextPath}/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath}/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 <!-- Bento Filter Section -->
 <div class="grid grid-cols-12 gap-6 mb-8">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath}/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:bg-surface-container flex items-center justify-center">
 헬스장
 </a>
-<a href="<%= contextPath %>/admin/memberTrainer"
+<a href="${contextPath}/admin/memberTrainer"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
 트레이너
 </a>
-<a href="<%= contextPath %>/admin/memberClient"
+<a href="${contextPath}/admin/memberClient"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surface-variant hover:bg-surface-container flex items-center justify-center">
 회원
 </a>
@@ -240,9 +238,7 @@ placeholder="트레이너 이름 검색" type="text"/>
 <tr class="hover:bg-surface-container-low transition-colors group">
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">fitness_trainer</span>
-</div>
+<img src="${contextPath}/trainer/profile-img/${item.profileImage}" width="40px" style="border-radius:50%"/>
 <div>
 <p class="text-sm font-bold text-on-surface">${item.trainerName }</p>
 <p class="text-xs text-on-surface-variant">${item.trainerTel }</p>

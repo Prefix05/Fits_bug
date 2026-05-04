@@ -35,7 +35,15 @@ public class MemberDAOImpl implements MemberDAO {
         SqlSession session = factory.openSession();
         MemberDTO result = null;
         try {
+
             result = session.selectOne(NS + "findByUserId", userId);
+
+            MemberDTO param = new MemberDTO();
+            param.setEmail(email);
+            param.setPassword(password);
+            System.out.println(param);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

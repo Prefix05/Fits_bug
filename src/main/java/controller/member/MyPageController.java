@@ -31,7 +31,7 @@ public class MyPageController extends HttpServlet {
 
         // 로그인 체크
         if (loginUser == null) {
-        	response.sendRedirect(request.getContextPath() + "/member/login.jsp");
+        	response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
         

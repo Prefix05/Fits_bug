@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-    String contextPath = request.getContextPath();
-%>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>     
+<c:set var="contextPath" value="${pageContext.request.contextPath }"/>   
 <!DOCTYPE html>
+
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -127,6 +127,7 @@
                 $("#detailName").text(data.name);
             	$("#detailEmail").text(data.email);
             	$("#detailTel").text(data.tel);
+            	$("#detailProfileImg").attr("src",`${contextPath}/trainer/profile-img/`+data.profileImg);
             	$("#detailType").text(type === 'GYM' ? '헬스장' : '트레이너');
                 //타입별 특화정보
                 if(type === 'GYM') {
@@ -134,7 +135,7 @@
                     $("#detailAuthDoc").attr("src", "/uploads/gym/" + data.business_registration_num); // 예시
                 } else {
                     $("#detailAddr").text(data.address || '프리랜서/지점소속');
-                    $("#detailAuthDoc").attr("src", "/uploads/trainer/" + data.file);
+                    $("#detailAuthDoc").attr("src", `${contextPath}/trainer/profile-img/` + data.certFile);
                 }
             }
         });
@@ -158,7 +159,7 @@
 <body class="bg-surface font-body text-on-surface antialiased">
 
 <div class="flex">
-	<jsp:include page="../member/sidebar.jsp"></jsp:include>
+	<jsp:include page="sidebar.jsp"></jsp:include>
 </div>
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">

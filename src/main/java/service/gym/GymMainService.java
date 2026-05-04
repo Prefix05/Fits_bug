@@ -10,6 +10,7 @@ import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
+import dto.trainer.UserDTO;
 
 public interface GymMainService {
 	Gym getGymMainInfo(int gymId) throws Exception;
@@ -19,4 +20,5 @@ public interface GymMainService {
     Schedule getSchedule(int gymId) throws Exception;
     List<GymTrainerView> getGymTrainerViewList(int gymId) throws Exception;
     HotTime getTodayHotTime(int gymId) throws Exception;
+    void joinGym(UserDTO user,Gym gym) throws Exception;
 }

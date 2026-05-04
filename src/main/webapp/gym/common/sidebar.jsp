@@ -38,24 +38,18 @@ String contextPath = request.getContextPath();
 						<span class="material-symbols-outlined">home</span>
     					<span class="text-sm">홈</span>
 			</a>
-			 	<a href="<%=contextPath%>/guide.jsp"
-				class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-				<span class="material-symbols-outlined">fitness_center</span> <span
-				class="text-sm">운동가이드</span>
-			</a> <a href="<%=contextPath%>/trainer.jsp"
-				class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-				<span class="material-symbols-outlined">badge</span> <span
-				class="text-sm">트레이너</span>
-			</a> <a href="<%=contextPath%>/gym.jsp"
-				class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-				<span class="material-symbols-outlined">store</span> <span
-				class="text-sm">헬스장</span>
-			</a> <a href="<%=contextPath%>/community.jsp"
-				class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-				<span class="material-symbols-outlined">groups</span> <span
-				class="text-sm">커뮤니티</span>
-			</a>
-
+			    <a href="<%=contextPath%>/member/guide" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
+    </a>
+    <a href="<%=contextPath%>/member/trainerList" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
+    </a>
+   <a href="<%=contextPath%>/member/gymList" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
+    </a>
+    <a href="<%=contextPath%>/member/community" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
+    </a>
 
 
 			<div class="flex flex-col">

@@ -32,6 +32,7 @@
         <result property="age"               column="age"/>
     </resultMap>
 
+
     <!-- JOIN 조회용 ResultMap (USER 테이블 정보 포함) -->
     <resultMap id="memberWithUserResultMap" type="dto.member.MemberDTO"
                extends="memberResultMap">
@@ -84,6 +85,18 @@
                last_session, STATUS, age
         FROM MEMBER
         WHERE user_id = #{userId}
+=======
+    <!-- ──────────────────────────────────────────────────────
+         MemberDAOImpl.loginCheck(MemberDTO dto)
+         → param: MemberDTO  (dto.getEmail(), dto.getPassword())
+         ────────────────────────────────────────────────────── -->
+    <select id="loginCheck" parameterType="MemberDTO" resultType="MemberDTO">
+        SELECT email, password, nickname, phone, role,
+               profile_image
+        FROM user
+        WHERE email    = #{email}
+          AND password = #{password}
+>>>>>>> 7f2c02f926c40b66df277c21344e819780aab63e
     </select>
 
     <!-- ============================================================

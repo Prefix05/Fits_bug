@@ -58,6 +58,7 @@ public class MemberDTO {
     public Integer getGymId() { return gymId; }
     public void setGymId(Integer gymId) { this.gymId = gymId; }
 
+
     public String getPurpose() { return purpose; }
     public void setPurpose(String purpose) { this.purpose = purpose; }
 
@@ -131,8 +132,10 @@ public class MemberDTO {
     public String getSocialType() { return socialType; }
     public void setSocialType(String socialType) { this.socialType = socialType; }
 
-    @Override
-    public String toString() {
-        return "MemberDTO{id=" + id + ", email='" + email + "', nickname='" + nickname + "'}";
-    }
+	@Override
+	public String toString() {
+		return "MemberDTO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", phone=" + phone
+				+ ", profileImage=" + profileImage + ", emailVerified=" + emailVerified + ", socialType=" + socialType
+				+ "]";
+	}
 }

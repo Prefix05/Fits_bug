@@ -42,7 +42,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
 
     <div>
       <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">아이디 (이메일)</label>
-      <input name="username" class="fb-inp" placeholder="관리자 이메일 주소" autocomplete="email">
+      <input name="email" class="fb-inp" placeholder="관리자 이메일 주소" autocomplete="email">
     </div>
     <div>
       <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:7px;">비밀번호</label>

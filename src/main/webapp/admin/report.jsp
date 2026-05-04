@@ -99,7 +99,7 @@
 <body class="bg-surface text-on-surface">
 <!-- SideNavBar Shell -->
 <div class="flex">
-	<jsp:include page="../member/sidebar.jsp"></jsp:include>
+	<jsp:include page="sidebar.jsp"></jsp:include>
 </div>
 <!-- Main Canvas -->
 <main class="ml-64 min-h-screen">

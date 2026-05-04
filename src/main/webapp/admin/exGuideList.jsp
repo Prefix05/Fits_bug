@@ -110,7 +110,7 @@ function searchGuide(keyword) {
 <body class="bg-surface font-body text-on-surface antialiased">
 
 <div class="flex">
-    <jsp:include page="../member/sidebar.jsp"></jsp:include>
+    <jsp:include page="sidebar.jsp"></jsp:include>
 
     <main class="flex-1 ml-64 min-h-screen">
         <div class="pt-24 px-10 pb-10">

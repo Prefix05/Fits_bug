@@ -100,7 +100,7 @@
 <body class="bg-surface font-body text-on-surface antialiased">
 <!-- SideNavBar Shell -->
 <div class="flex">
-	<jsp:include page="../member/sidebar.jsp"></jsp:include>
+	<jsp:include page="sidebar.jsp"></jsp:include>
 </div>
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">

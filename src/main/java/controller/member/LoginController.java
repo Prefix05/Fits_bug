@@ -50,6 +50,7 @@ public class LoginController extends HttpServlet {
             session.setAttribute("loginEmail", email);         // 이메일 별도 저장 (다른 DAO에서 사용)
 
             response.sendRedirect(request.getContextPath() + "/member/main");
+
         } else {
             request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
             request.getRequestDispatcher("/member/login.jsp").forward(request, response);

@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Gym;
 import dto.gym.HotTime;
+import dto.trainer.UserDTO;
 import util.MybatisSqlSessionFactory;
 
 public class GymMainDaoImpl implements GymMainDao {
@@ -27,6 +28,27 @@ public class GymMainDaoImpl implements GymMainDao {
 			return sqlSession.selectOne("mapper.gymMain.selectTodayHotTime", param);
 		}finally{
 			sqlSession.close();
+		}
+	}
+
+	@Override
+	public void insertGym(Gym gym) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			sqlSession.insert("mapper.gymMain.insertGym", gym);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void insertUserByGym(UserDTO user) throws Exception {
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			sqlSession.insert("mapper.gymMain.insertUserByGym", user);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
