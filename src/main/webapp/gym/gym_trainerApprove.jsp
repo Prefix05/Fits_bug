@@ -117,7 +117,9 @@
 		<c:forEach var="trainer" items="${trainerList}">
 			<div class="bg-surface-container-lowest rounded-xl p-6 flex flex-col md:flex-row items-center gap-6 group transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-on-surface/5">
 			
-				<img src="${pageContext.request.contextPath}/gym/trainerProfileImg/${trainer.profileImg}"/>
+				<img src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+					 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"
+					 class="w-20 h-20 rounded-full object-cover"/>
 				<div class="flex-1 text-center md:text-left flex flex-col justify-center">
 						<h3 class="text-xl font-extrabold tracking-tight" style="">${trainer.name} 트레이너</h3>
              	</div>

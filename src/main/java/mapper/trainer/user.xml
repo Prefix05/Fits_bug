@@ -9,9 +9,9 @@
         <result property="email" column="email"/>
         <result property="password" column="password"/>
         <result property="name" column="name"/>
-        <result property="tel" column="tel"/>
+        <result property="tel" column="phone"/>
         <result property="nickname" column="nickname"/>
-        <result property="profileImg" column="profile_img"/>
+        <result property="profileImg" column="profileImg"/>
         <result property="role" column="role"/>
         <result property="createdAt" column="created_at"/>
         <result property="deleted" column="is_deleted"/>
@@ -26,9 +26,9 @@
             email,
             password,
             name,
-            tel,
+            phone,
             nickname,
-            profile_img,
+            profileImg,
             role,
             <if test="provider != null and provider != ''">
                 provider,
@@ -55,7 +55,7 @@
     </insert>
 
     <select id="selectUserById" parameterType="int" resultMap="userResultMap">
-        SELECT id, email, password, name, tel, nickname, profile_img, role, created_at, is_deleted, provider, provider_id
+        SELECT id, email, password, name, phone, nickname, profileImg, role, created_at, is_deleted, provider, provider_id
         FROM `user` WHERE id = #{id}
     </select>
 
@@ -64,7 +64,7 @@
             name     = #{name},
             email    = #{email},
             password = #{password},
-            tel      = #{tel},
+            phone      = #{tel},
             nickname = #{nickname}
         WHERE id = #{id}
     </update>
@@ -72,7 +72,7 @@
     <update id="updateUserProfile" parameterType="user">
         UPDATE `user` SET
             name     = #{name},
-            tel      = #{tel},
+            phone      = #{tel},
             nickname = #{nickname}
         WHERE id = #{id}
     </update>
@@ -83,9 +83,9 @@
             email,
             password,
             name,
-            tel,
+            phone,
             nickname,
-            profile_img,
+            profileImg,
             role,
             created_at,
             is_deleted,

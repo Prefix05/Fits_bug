@@ -62,10 +62,10 @@
     <a href="<%=contextPath%>/main.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
-    <a href="<%=contextPath%>/guide" class="sb-link">
+    <a href="<%=contextPath%>/member/guide" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
     </a>
-    <a href="<%=contextPath%>/trainerList" class="sb-link">
+    <a href="<%=contextPath%>/member/trainerList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
     </a>
    <a href="<%=contextPath%>/gymList" class="sb-link">
