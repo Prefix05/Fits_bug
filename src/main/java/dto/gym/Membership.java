@@ -1,17 +1,19 @@
 package dto.gym;
 
+import java.math.BigDecimal;
+
 public class Membership {
 	private int membershipNum;
 	private int gymNum;
 	private String type;
 	private int typeRep;
-	private int price;
+	private BigDecimal price;
 	
 	public Membership() {
 		super();
 	}
 
-	public Membership(int membershipNum, int gymNum, String type, int typeRep, int price) {
+	public Membership(int membershipNum, int gymNum, String type, int typeRep, BigDecimal price) {
 		super();
 		this.membershipNum = membershipNum;
 		this.gymNum = gymNum;
@@ -52,11 +54,11 @@ public class Membership {
 		this.typeRep = typeRep;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

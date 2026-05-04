@@ -7,35 +7,34 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import service.gym.GymTrainerApproveService;
 import service.gym.GymTrainerApproveServiceImpl;
 
-/**
- * Servlet implementation class GymTrainerApprove
- */
 @WebServlet("/gym/trainerApprove")
 public class GymTrainerApprove extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    private static final long serialVersionUID = 1L;
+
     public GymTrainerApprove() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
-		
-		try {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("gymId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        try {
             int trainerId = Integer.parseInt(request.getParameter("trainerId"));
 
-//            service.approveTrainer(trainerId);
+            GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
+            service.approveTrainer(trainerId);
 
             response.sendRedirect(request.getContextPath() + "/gym/trainer");
 
@@ -43,6 +42,5 @@ public class GymTrainerApprove extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/gym/trainerPending");
         }
-	}
-
+    }
 }

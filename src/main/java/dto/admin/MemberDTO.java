@@ -157,4 +157,5 @@ public class MemberDTO {
 				+ ", trainerClientCount=" + trainerClientCount + ", trainerCal=" + trainerCal + ", clientName="
 				+ clientName + ", clientTel=" + clientTel + ", ptTrainer=" + ptTrainer + ", payment=" + payment + "]";
 	}
+
 }

@@ -13,7 +13,7 @@ public class GymMainTrainerViewDaoImpl implements GymMainTrainerViewDao {
 	public List<GymTrainerView> selectGymTrainerViewByGym(int gymId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return sqlSession.selectList("mapper.trainerView.selectTrainerViewByGym", gymId);
+			return sqlSession.selectList("mapper.gymTrainerView.selectTrainerViewByGym", gymId);
 		}finally{
 			sqlSession.close();
 		}

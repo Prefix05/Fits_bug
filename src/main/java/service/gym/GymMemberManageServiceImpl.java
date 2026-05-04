@@ -25,4 +25,9 @@ public class GymMemberManageServiceImpl implements GymMemberManageService {
 		return dao.countNewMember(gymId);
 	}
 
+	@Override
+	public int getMemberListCount(Map<String, Object> param) throws Exception {
+		return dao.countMemberList(param);
+	}
+
 }

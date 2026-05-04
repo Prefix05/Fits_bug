@@ -1,25 +1,27 @@
 package dto.gym;
 
+import java.sql.Timestamp;
+
 public class TrainerAssign {
 	private String trainerName;
     private String memberName;
-    private String assignedAt;
+    private Timestamp assignedAt;
     private String membershipName;
-    private String remainingInfo;
+    private int remainingCount;
     private String status;
 	
     public TrainerAssign() {
 		super();
 	}
 
-	public TrainerAssign(String trainerName, String memberName, String assignedAt, String membershipName,
-			String remainingInfo, String status) {
+	public TrainerAssign(String trainerName, String memberName, Timestamp assignedAt, String membershipName,
+			int remainingCount, String status) {
 		super();
 		this.trainerName = trainerName;
 		this.memberName = memberName;
 		this.assignedAt = assignedAt;
 		this.membershipName = membershipName;
-		this.remainingInfo = remainingInfo;
+		this.remainingCount = remainingCount;
 		this.status = status;
 	}
 
@@ -39,11 +41,11 @@ public class TrainerAssign {
 		this.memberName = memberName;
 	}
 
-	public String getAssignedAt() {
+	public Timestamp getAssignedAt() {
 		return assignedAt;
 	}
 
-	public void setAssignedAt(String assignedAt) {
+	public void setAssignedAt(Timestamp assignedAt) {
 		this.assignedAt = assignedAt;
 	}
 
@@ -55,12 +57,12 @@ public class TrainerAssign {
 		this.membershipName = membershipName;
 	}
 
-	public String getRemainingInfo() {
-		return remainingInfo;
+	public int getRemainingCount() {
+		return remainingCount;
 	}
 
-	public void setRemainingInfo(String remainingInfo) {
-		this.remainingInfo = remainingInfo;
+	public void setRemainingCount(int remainingCount) {
+		this.remainingCount = remainingCount;
 	}
 
 	public String getStatus() {
@@ -71,12 +73,7 @@ public class TrainerAssign {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "TrainerAssign [trainerName=" + trainerName + ", memberName=" + memberName + ", assignedAt=" + assignedAt
-				+ ", membershipName=" + membershipName + ", remainingInfo=" + remainingInfo + ", status=" + status
-				+ "]";
-	}
+	
     
     
 }

@@ -40,4 +40,14 @@ public class GymMemberManageDaoImpl implements GymMemberManageDao {
 		}
 	}
 
+	@Override
+	public int countMemberList(Map<String, Object> param) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			return sqlSession.selectOne("mapper.memberManage.countMemberList", param);
+		}finally{
+			sqlSession.close();
+		}
+	}
+
 }

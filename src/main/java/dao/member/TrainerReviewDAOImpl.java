@@ -1,31 +1,25 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import org.apache.ibatis.session.SqlSession;
 
 import dto.member.TrainerReviewDTO;
-import util.DBUtil;
+import util.MybatisSqlSessionFactory;
 
 public class TrainerReviewDAOImpl implements TrainerReviewDAO {
+
     @Override
     public int insert(TrainerReviewDTO dto) {
-        String sql = "INSERT INTO trainer_review(user_email, trainer_id, rating, content, image_path) VALUES (?, ?, ?, ?, ?)";
-
-        try(Connection conn = DBUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
-
-            ps.setString(1, dto.getUserEmail());
-            ps.setInt(2, dto.getTrainerId());
-            ps.setInt(3, dto.getRating());
-            ps.setString(4, dto.getContent());
-            ps.setString(5, dto.getImagePath());
-
-            return ps.executeUpdate();
-
-        }catch(Exception e){
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        int result = 0;
+        try {
+            result = sqlSession.insert("mapper.TrainerReviewMapper.insert", dto);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
-        return 0;
+        return result;
     }
 }

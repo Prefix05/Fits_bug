@@ -23,91 +23,60 @@ import service.gym.GymTrainerManageServiceImpl;
 public class GymTrainerManage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor. 
-     */
-    public GymTrainerManage() {
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * Default constructor.
+	 */
+	public GymTrainerManage() {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		GymTrainerManageService service = new GymTrainerManageServiceImpl();
-		
-		// ✔ 세션에서 gymId 가져오기
-        HttpSession session = request.getSession();
-        Integer gymIdObj = (Integer) session.getAttribute("gymId");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 
-        if (gymIdObj == null) {
-            // 세션 없으면 로그인 페이지로 보내는 게 안전
-//            response.sendRedirect(request.getContextPath() + "/login.jsp");
-//            return;
-        	session.setAttribute("gymId", 1); // 더미 데이터
-            gymIdObj = 1; // 더미 데이터
-        }
+		GymTrainerManageService service = new GymTrainerManageServiceImpl();
 
-        int gymId = gymIdObj;
+		HttpSession session = request.getSession(false);
 
-        String keyword = request.getParameter("keyword");
-        if (keyword == null) {
-            keyword = "";
-        }
+		if (session == null || session.getAttribute("gymId") == null) {
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			return;
+		}
 
-//        List<TrainerList> trainerList = service.getTrainerList(gymId, keyword);
-//        List<TrainerAssign> assignList = service.getTrainerAssignList(gymId);
-        //더미 데이터
-        
-        List<TrainerList> trainerList = new ArrayList<>();
+		int gymId = (int) session.getAttribute("gymId");
 
-        TrainerList t = new TrainerList();
-        t.setId(1);
-        t.setName("김트레이너");
-        t.setPhoneNum("010-1111-1111");
-        t.setProfileImg(null);
-        t.setMemberCount(2);
+		String keyword = request.getParameter("keyword");
+		if (keyword == null) {
+			keyword = "";
+		}
 
-        trainerList.add(t);
+		try {
+			List<TrainerList> trainerList = service.getTrainerList(gymId, keyword);
+			List<TrainerAssign> assignList = service.getTrainerAssignList(gymId);
 
+			if (trainerList == null) {
+				trainerList = new ArrayList<>();
+			}
 
-        List<TrainerAssign> assignList = new ArrayList<>();
+			if (assignList == null) {
+				assignList = new ArrayList<>();
+			}
 
-        TrainerAssign a1 = new TrainerAssign();
-        a1.setTrainerName("김트레이너");
-        a1.setMemberName("이회원");
-        a1.setAssignedAt("2024-04-01");
-        a1.setMembershipName("PT 20회");
-        a1.setRemainingInfo("15회");
-        a1.setStatus("이용중");
+			request.setAttribute("trainerList", trainerList);
+			request.setAttribute("assignList", assignList);
+			request.setAttribute("keyword", keyword);
 
-        assignList.add(a1);
+			request.getRequestDispatcher("/gym/gym_trainerManage.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException("트레이너 관리 페이지 조회 중 오류", e);
+		}
 
-        TrainerAssign a2 = new TrainerAssign();
-        a2.setTrainerName("김트레이너");
-        a2.setMemberName("박회원");
-        a2.setAssignedAt("2024-03-01");
-        a2.setMembershipName("PT 10회");
-        a2.setRemainingInfo("0회");
-        a2.setStatus("종료");
-
-        assignList.add(a2);
-        //더미 데이터
-
-        if (trainerList == null) {
-            trainerList = new ArrayList<>();
-        }
-
-        if (assignList == null) {
-            assignList = new ArrayList<>();
-        }
-
-        request.setAttribute("trainerList", trainerList);
-        request.setAttribute("assignList", assignList);
-        request.setAttribute("keyword", keyword);
-        
-        request.getRequestDispatcher("/gym/gym_trainerManage.jsp").forward(request, response);
-    
 	}
 
 }

@@ -21,80 +21,86 @@ import service.gym.GymPaymentServiceImpl;
 
 @WebServlet("/gym/payment/*")
 public class GymPayment extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public GymPayment() {
-        super();
-    }
+	public GymPayment() {
+		super();
+	}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 
-        GymPaymentService paymentService = new GymPaymentServiceImpl();
-        HttpSession session = request.getSession();
+		GymPaymentService paymentService = new GymPaymentServiceImpl();
 
-        String path = request.getPathInfo();
+		HttpSession session = request.getSession(false);
 
-        if ("/complete".equals(path)) {
+		if (session == null || session.getAttribute("userId") == null || session.getAttribute("memberId") == null) {
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			return;
+		}
 
-            String impUid = request.getParameter("imp_uid");
-            String merchantUid = request.getParameter("merchant_uid");
-            int membershipNum = Integer.parseInt(request.getParameter("membershipId"));
-            String startDateStr = request.getParameter("startDate");
+		String path = request.getPathInfo();
 
-            Membership membership = paymentService.getMembership(membershipNum);
+		try {
+		if ("/complete".equals(path)) {
 
-            if (membership == null) {
-                response.sendRedirect(request.getContextPath() + "/gym/main");
-                return;
-            }
+			int userId = (Integer) session.getAttribute("userId");
+			int memberId = (Integer) session.getAttribute("memberId");
+			String userName = (String) session.getAttribute("userName");
 
-            LocalDate startLocalDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_DATE);
-            LocalDate endLocalDate;
+			int membershipNum = Integer.parseInt(request.getParameter("membershipId"));
+			String startDateStr = request.getParameter("startDate");
 
-            if ("day".equals(membership.getType())) {
-                endLocalDate = startLocalDate.plusDays(membership.getTypeRep());
-            } else if ("month".equals(membership.getType())) {
-                endLocalDate = startLocalDate.plusMonths(membership.getTypeRep());
-            } else {
-                throw new ServletException("알 수 없는 멤버십 타입입니다: " + membership.getType());
-            }
+			Membership membership = paymentService.getMembership(membershipNum);
 
-            MembershipRegistration mr = new MembershipRegistration();
+			if (membership == null) {
+				response.sendRedirect(request.getContextPath() + "/gym/main");
+				return;
+			}
 
-            // 로그인 연결 전 임시 이메일
-            mr.setMemberEmail("test@test.com");
+			LocalDate startLocalDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_DATE);
+			LocalDate endLocalDate;
 
-            mr.setMembershipNum(membershipNum);
-            mr.setStartDate(Date.valueOf(startLocalDate));
-            mr.setEndDate(Date.valueOf(endLocalDate));
-            mr.setStatus("active");
+			if ("day".equals(membership.getType())) {
+			    endLocalDate = startLocalDate.plusDays(membership.getTypeRep() - 1);
+			} else if ("month".equals(membership.getType())) {
+			    endLocalDate = startLocalDate.plusMonths(membership.getTypeRep());
+			}else {
+			    throw new ServletException("헬스장 이용권 결제에서는 day/month 타입만 처리 가능합니다.");
+			}
 
-            Payment payment = new Payment();
+			MembershipRegistration mr = new MembershipRegistration();
+			mr.setMemberNum(memberId);
+			mr.setMembershipNum(membershipNum);
+			mr.setStartDate(Date.valueOf(startLocalDate));
+			mr.setEndDate(Date.valueOf(endLocalDate));
+			mr.setStatus("active");
 
-            // 로그인 연결 전 임시 이메일
-            payment.setUserEmail("test@test.com");
+			Payment payment = new Payment();
+			payment.setUserId(userId);
+			payment.setUserName(userName);
+			payment.setMembershipNum(membershipNum);
+			payment.setGymId(membership.getGymNum());
+			payment.setTrainerId(null);
+			payment.setPaymentPrice(membership.getPrice());
+			payment.setPaymentFee(BigDecimal.ZERO);
+			payment.setMethod("PORTONE");
+			payment.setStatus("결제완료");
+			payment.setPaymentType("MEMBERSHIP");
 
-            payment.setMembershipNum(membershipNum);
-            payment.setPaymentPrice(BigDecimal.valueOf(membership.getPrice()));
-            payment.setPaymentFee(BigDecimal.ZERO);
-            payment.setMethod("PORTONE");
-            payment.setStatus("paid");
+			paymentService.registerMembershipAndPayment(mr, payment);
 
-            // DB 연결 안 될 때는 주석 유지
-             paymentService.registerMembershipAndPayment(mr, payment);
+			response.sendRedirect(request.getContextPath() + "/member/paymentSuccess.jsp");
+			return;
+		}
+		}catch(Exception e) {
+		    e.printStackTrace();
+		    throw new ServletException(e);
+		}
 
-            System.out.println("impUid = " + impUid);
-            System.out.println("merchantUid = " + merchantUid);
-            System.out.println("membershipNum = " + membershipNum);
-            System.out.println("startDate = " + startDateStr);
-
-            response.sendRedirect(request.getContextPath() + "/success.jsp");
-            return;
-        }
-
-        response.sendRedirect(request.getContextPath() + "/gym/main");
-    }
+		response.sendRedirect(request.getContextPath() + "/gym/main");
+	}
 }

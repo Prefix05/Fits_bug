@@ -14,33 +14,36 @@ import javax.servlet.http.HttpSession;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
-/**
- * Servlet implementation class GymChangePassword
- */
 @WebServlet("/gym/changePassword")
 public class GymChangePassword extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    private static final long serialVersionUID = 1L;
+
     public GymChangePassword() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		GymInfoEditService service = new GymInfoEditServiceImpl();
-		
-		request.setCharacterEncoding("UTF-8");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain; charset=UTF-8");
 
-        HttpSession session = request.getSession();
-        int userId = (int) session.getAttribute("userId");
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("userId") == null) {
+            response.getWriter().write("login_required");
+            return;
+        }
+
+        Integer userId = (Integer) session.getAttribute("userId");
         String password = request.getParameter("password");
+
+        if (password == null || password.trim().isEmpty()) {
+            response.getWriter().write("empty_password");
+            return;
+        }
+
+        GymInfoEditService service = new GymInfoEditServiceImpl();
 
         Map<String, Object> param = new HashMap<>();
         param.put("userId", userId);
@@ -49,6 +52,5 @@ public class GymChangePassword extends HttpServlet {
         int result = service.updatePassword(param);
 
         response.getWriter().write(result > 0 ? "success" : "fail");
-	}
-
+    }
 }

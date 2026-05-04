@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.member.LoginDTO;
+import dto.member.MemberDTO;
 import service.member.MemberService;
 import service.member.MemberServiceImpl;
 
@@ -34,7 +35,7 @@ public class LoginController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        LoginDTO loginUser = memberService.login(email, password);
+        MemberDTO loginUser = memberService.login(email, password);
 
         if (loginUser != null) {
             HttpSession session = request.getSession();

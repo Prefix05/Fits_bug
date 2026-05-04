@@ -14,7 +14,7 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	private GymPaymentDao dao = new GymPaymentDaoImpl();
 
 	@Override
-	public int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment) {
+	public int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment) throws Exception{
 		int mrResult = dao.insertMembershipRegistration(membershipRegistration);
         payment.setMrNum(membershipRegistration.getMrNum());
         int paymentResult = dao.insertPayment(payment);
@@ -22,17 +22,17 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	}
 
 	@Override
-	public MembershipRegistration getMembershipRegistration(int mrNum) {
+	public MembershipRegistration getMembershipRegistration(int mrNum) throws Exception{
 		return dao.selectMembershipRegistration(mrNum);
 	}
 
 	@Override
-	public Payment getPayment(int paymentNum) {
+	public Payment getPayment(int paymentNum) throws Exception{
 		return dao.selectPayment(paymentNum);
 	}
 
 	@Override
-	public Membership getMembership(int membershipNum) {
+	public Membership getMembership(int membershipNum) throws Exception{
 		return dao.selectMembership(membershipNum);
 	}
 
@@ -49,6 +49,7 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	@Override
 	public void approveRefund(int paymentNum) throws Exception {
 		dao.approveRefund(paymentNum);
+	    dao.cancelPtSessionByPayment(paymentNum);
 	}
 
 	@Override

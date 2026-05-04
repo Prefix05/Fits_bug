@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -368,23 +369,24 @@ body {
 									${payment.membershipName}</td>
 
 								<td class="px-6 py-3 text-sm font-bold text-on-surface">
-									${payment.paymentPrice}원</td>
+									<fmt:formatNumber value="${payment.paymentPrice}" type="number"/>원</td>
 
 								<td class="px-6 py-3 text-xs text-on-surface-variant">
 									${payment.reason}</td>
 
 								<td class="px-6 py-3 text-xs text-on-surface-variant">
-									${fn:substring(payment.paymentDate, 0, 16)}</td>
+									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm"/></td>
 
 								<td class="px-6 py-3">
 									<div class="flex justify-center gap-2">
+									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm" var="formattedDate"/>
 										<button type="button" onclick="openModal(this)"
 											class="px-3 py-1 bg-error text-white rounded text-xs font-bold hover:opacity-90"
 											data-name="${payment.memberName}"
 											data-membership="${payment.membershipName}"
 											data-price="${payment.paymentPrice}"
-											data-date="${fn:substring(payment.paymentDate, 0, 16)}"
 											data-payment-num="${payment.paymentNum}"
+											data-date="${formattedDate}"
 											data-reason="${payment.reason}">승인</button>
 									</div>
 								</td>
@@ -474,7 +476,7 @@ body {
 						</td>
 
 						<td class="px-6 py-3 text-sm font-bold text-on-surface">
-							${cancel.paymentPrice}원
+							<fmt:formatNumber value="${cancel.paymentPrice}" type="number"/>원
 						</td>
 
 						<td class="px-6 py-3 text-xs text-on-surface-variant">
@@ -482,19 +484,20 @@ body {
 						</td>
 
 						<td class="px-6 py-3 text-xs text-on-surface-variant">
-							${fn:substring(cancel.paymentDate, 0, 16)}
+							<fmt:formatDate value="${cancel.paymentDate}" pattern="yyyy-MM-dd HH:mm"/>
 						</td>
 
 						<td class="px-6 py-3">
 							<div class="flex justify-center gap-2">
+							<fmt:formatDate value="${cancel.paymentDate}" pattern="yyyy-MM-dd HH:mm" var="cancelFormattedDate"/>
 								<button type="button"
 									onclick="openCancelModal(this)"
 									class="px-3 py-1 bg-error text-white rounded text-xs font-bold hover:opacity-90"
 									data-name="${cancel.memberName}"
 									data-membership="${cancel.membershipName}"
 									data-price="${cancel.paymentPrice}"
-									data-date="${fn:substring(cancel.paymentDate, 0, 16)}"
 									data-payment-num="${cancel.paymentNum}"
+									data-date="${cancelFormattedDate}"
 									data-reason="${cancel.reason}">
 									승인
 								</button>
@@ -631,21 +634,21 @@ body {
         <!-- 푸터 -->
         <div class="px-6 py-5 flex justify-end gap-3 border-t border-outline-variant/10 bg-surface-container-lowest">
 
-            <button type="button"
-                    onclick="closeModal()"
-                    class="px-5 py-2.5 bg-surface-container text-on-surface-variant rounded-lg text-sm font-bold">
-                취소
-            </button>
+    <button type="button"
+            onclick="closeModal()"
+            class="px-5 py-2.5 bg-surface-container text-on-surface-variant rounded-lg text-sm font-bold">
+        취소
+    </button>
 
-            <form action="${pageContext.request.contextPath}/gym/refundApprove" method="post">
-                <input type="hidden" id="modalPaymentNum" name="paymentNum">
+    
 
-					<button type="button" onclick="approveRefund()"
-						class="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold shadow-md hover:opacity-90">
-						환불 처리하기</button>
-				</form>
+    <button type="button"
+            onclick="approveRefund()"
+            class="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold shadow-md hover:opacity-90">
+        환불 처리하기
+    </button>
 
-        </div>
+</div>
     </div>
 </div>
 
@@ -680,7 +683,6 @@ function openModal(btn) {
     document.getElementById("modalPrice").innerText = btn.dataset.price + "원";
     document.getElementById("modalReason").innerText = btn.dataset.reason;
     document.getElementById("modalRefundPrice").innerText = btn.dataset.price;
-    document.getElementById("modalPaymentNum").value = btn.dataset.paymentNum;
 
     document.getElementById("refundModal").classList.remove("hidden");
 }
@@ -732,7 +734,6 @@ function openCancelModal(btn) {
     document.getElementById("cancelModalPrice").innerText = btn.dataset.price + "원";
     document.getElementById("cancelModalReason").innerText = btn.dataset.reason;
     document.getElementById("cancelModalCancelPrice").innerText = btn.dataset.price;
-    document.getElementById("cancelModalPaymentNum").value = btn.dataset.paymentNum;
 
     document.getElementById("cancelModal").classList.remove("hidden");
 }
@@ -851,7 +852,6 @@ function approveCancel() {
 				취소
 			</button>
 
-			<input type="hidden" id="cancelModalPaymentNum" name="paymentNum">
 
 			<button type="button"
 				onclick="approveCancel()"

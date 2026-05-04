@@ -1,30 +1,23 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import org.apache.ibatis.session.SqlSession;
 
 import dto.member.ReportDTO;
-import util.DBUtil;
+import util.MybatisSqlSessionFactory;
 
 public class ReportDAOImpl implements ReportDAO {
 
     @Override
-    public void insert(ReportDTO dto){
-
-        String sql = "INSERT INTO report(post_id, reason, detail, user_id) VALUES(?,?,?,?)";
-
-        try(Connection conn = DBUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
-
-            ps.setInt(1, dto.getPostId());
-            ps.setString(2, dto.getReason());
-            ps.setString(3, dto.getDetail());
-            ps.setString(4, dto.getUserId());
-
-            ps.executeUpdate();
-
-        }catch(Exception e){
+    public void insert(ReportDTO dto) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.insert("mapper.ReportMapper.insert", dto);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 }

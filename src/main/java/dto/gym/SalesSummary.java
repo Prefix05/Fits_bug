@@ -1,59 +1,64 @@
 package dto.gym;
 
+import java.math.BigDecimal;
+
 public class SalesSummary {
-	private int totalSales;
-    private int gymSales;
-    private int ptSales;
-    private int totalFee;
-    private int netSales;
-    private double growthRate;
+	private BigDecimal totalSales;
+    private BigDecimal gymSales;
+    private BigDecimal ptSales;
+    private BigDecimal totalFee;
+    private BigDecimal netSales;
+    private Double growthRate;
 	public SalesSummary() {
 		super();
 	}
-	public SalesSummary(int totalSales, int gymSales, int ptSales, int totalFee, int netSales, double growthRate) {
+	public SalesSummary(BigDecimal totalSales, BigDecimal gymSales, BigDecimal ptSales, BigDecimal totalFee,
+			BigDecimal netSales, Double growthRate) {
 		super();
 		this.totalSales = totalSales;
 		this.gymSales = gymSales;
 		this.ptSales = ptSales;
 		this.totalFee = totalFee;
 		this.netSales = netSales;
-	}
-	public int getTotalSales() {
-		return totalSales;
-	}
-	public void setTotalSales(int totalSales) {
-		this.totalSales = totalSales;
-	}
-	public int getGymSales() {
-		return gymSales;
-	}
-	public void setGymSales(int gymSales) {
-		this.gymSales = gymSales;
-	}
-	public int getPtSales() {
-		return ptSales;
-	}
-	public void setPtSales(int ptSales) {
-		this.ptSales = ptSales;
-	}
-	public int getTotalFee() {
-		return totalFee;
-	}
-	public void setTotalFee(int totalFee) {
-		this.totalFee = totalFee;
-	}
-	public int getNetSales() {
-		return netSales;
-	}
-	public void setNetSales(int netSales) {
-		this.netSales = netSales;
-	}
-	public double getGrowthRate() {
-		return growthRate;
-	}
-	public void setGrowthRate(double growthRate) {
 		this.growthRate = growthRate;
 	}
+	public BigDecimal getTotalSales() {
+		return totalSales;
+	}
+	public void setTotalSales(BigDecimal totalSales) {
+		this.totalSales = totalSales;
+	}
+	public BigDecimal getGymSales() {
+		return gymSales;
+	}
+	public void setGymSales(BigDecimal gymSales) {
+		this.gymSales = gymSales;
+	}
+	public BigDecimal getPtSales() {
+		return ptSales;
+	}
+	public void setPtSales(BigDecimal ptSales) {
+		this.ptSales = ptSales;
+	}
+	public BigDecimal getTotalFee() {
+		return totalFee;
+	}
+	public void setTotalFee(BigDecimal totalFee) {
+		this.totalFee = totalFee;
+	}
+	public BigDecimal getNetSales() {
+		return netSales;
+	}
+	public void setNetSales(BigDecimal netSales) {
+		this.netSales = netSales;
+	}
+	public Double getGrowthRate() {
+		return growthRate;
+	}
+	public void setGrowthRate(Double growthRate) {
+		this.growthRate = growthRate;
+	}
+	
 	
 	
     

@@ -8,16 +8,16 @@ import dto.gym.MembershipRegistration;
 import dto.gym.Payment;
 
 public interface GymPaymentDao {
-	int insertMembershipRegistration(MembershipRegistration membershipRegistration);
-    int insertPayment(Payment payment);
-    MembershipRegistration selectMembershipRegistration(int mrNum);
-    Payment selectPayment(int paymentNum);
-    Membership selectMembership(int membershipNum);
+	int insertMembershipRegistration(MembershipRegistration membershipRegistration)throws Exception;
+    int insertPayment(Payment payment)throws Exception;
+    MembershipRegistration selectMembershipRegistration(int mrNum)throws Exception;
+    Payment selectPayment(int paymentNum)throws Exception;
+    Membership selectMembership(int membershipNum)throws Exception;
     List<Payment> selectRefundRequestList(int gymId) throws Exception;
     int countRefundRequest(int gymId) throws Exception;
     void approveRefund(int paymentNum) throws Exception;
     List<Payment> selectCancelRequestList(Map<String, Object> param) throws Exception;
     int countCancelRequest(int gymId) throws Exception;
     void updateCancelApprove(int paymentNum) throws Exception;
-    void cancelPtSessionByPayment(int paymentNum);
+    void cancelPtSessionByPayment(int paymentNum)throws Exception;
 }

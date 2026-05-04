@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.LoginDTO;
+import dto.member.MemberDTO;
 import dto.member.PtFeedbackDTO;
 import service.member.PtFeedbackService;
 import service.member.PtFeedbackServiceImpl;
@@ -23,7 +23,7 @@ public class PtFeedbackController extends HttpServlet {
 
         resp.setContentType("application/json;charset=UTF-8");
 
-        LoginDTO user = (LoginDTO) req.getSession().getAttribute("loginUser");
+        MemberDTO user = (MemberDTO) req.getSession().getAttribute("loginUser");
 
         String mode = req.getParameter("mode");
 

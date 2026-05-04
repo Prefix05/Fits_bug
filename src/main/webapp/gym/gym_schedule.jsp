@@ -256,6 +256,12 @@ function moveWeek(offset) {
 
     window.location.href = url.toString();
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".session-badge").forEach(badge => {
+        badge.classList.add("session-active");
+    });
+});
 </script>
 
 </body>

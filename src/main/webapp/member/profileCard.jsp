@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.LoginDTO,dto.member.WorkoutPlanDTO"%>
+<%@ page import="dto.member.MemberDTO, dto.member.WorkoutPlanDTO"%>
 <%
-LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+  MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
   WorkoutPlanDTO plan  = (WorkoutPlanDTO) request.getAttribute("plan");
   if (loginUser == null) return;
   String imgSrc = (loginUser.getProfileImage() != null)

@@ -132,7 +132,6 @@
         </div>
     </div>
 
-    <!-- 🔥 이거 안으로 넣어야 함 -->
     <div class="mt-6 space-y-3">
         <div class="flex justify-between text-[10px] font-bold text-on-surface-variant uppercase">
             <span>신규 이용권 분포</span>
@@ -335,14 +334,7 @@ class="px-4 py-1.5 text-[10px] font-bold rounded-md transition-all day-tab
 ${selectedDay eq 'SUN' ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant'}"
 data-day="SUN">SUN</button>
 
-    <c:forEach var="d" items="${days}">
-        <button type="button"
-        class="px-4 py-1.5 text-[10px] font-bold rounded-md transition-all day-tab
-        ${selectedDay eq d ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant'}"
-        data-day="${d}">
-            ${d}
-        </button>
-    </c:forEach>
+    
 
 </div>
 
@@ -365,9 +357,9 @@ data-day="SUN">SUN</button>
 <stop offset="100%" style="stop-color:rgba(59, 130, 246, 0); stop-opacity:1"></stop>
 </linearGradient>
 </defs>
-<path class="chart-transition" d="M0,80 Q50,90 100,50 T200,30 T300,70 T400,20 V100 H0 Z" fill="url(#grad)" id="chart-area"></path>
-<path class="chart-transition" d="M0,80 Q50,90 100,50 T200,30 T300,70 T400,20" fill="none" id="chart-line" stroke="#3B82F6" stroke-linecap="round" stroke-width="3"></path>
-<circle class="chart-transition" cx="200" cy="30" fill="#3B82F6" id="chart-peak-dot" r="4"></circle>
+<path id="chart-area" d="M0,90 L400,90 V100 H0 Z"></path>
+<path id="chart-line" d="M0,90 L400,90"></path>
+<circle id="chart-peak-dot" cx="0" cy="90"></circle>
 </svg>
 <div class="absolute bottom-0 left-0 w-full flex justify-between px-2 pt-2 -mb-6">
 <span class="text-[9px] font-bold opacity-50 uppercase" style="">06:00</span>

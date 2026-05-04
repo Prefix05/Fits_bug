@@ -68,24 +68,22 @@ public class GymNoticeDelete extends HttpServlet {
 
             if (imageList != null) {
                 for (NoticeImages image : imageList) {
-                    File file = new File(uploadPath, image.getImageUrl());
+                    String imageUrl = image.getImageUrl();
 
-                    if (file.exists()) {
-                        file.delete();
+                    if (imageUrl != null) {
+                        String fileName = new File(imageUrl).getName();
+                        File file = new File(uploadPath, fileName);
+
+                        if (file.exists()) {
+                            file.delete();
+                        }
                     }
                 }
             }
 
-            // 3. 이미지 DB 삭제
-            service.deleteImagesByNoticeId(noticeId);
-
-            // 4. 공지 DB 삭제
             service.deleteNotice(noticeId);
 
-           
-
-            response.sendRedirect(request.getContextPath()
-                    + "/gym/notice?gymId=" + loginGymId);
+            response.sendRedirect(request.getContextPath() + "/gym/notice");
 
         } catch (Exception e) {
             e.printStackTrace();

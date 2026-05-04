@@ -1,5 +1,7 @@
 package service.gym;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public class GymSalesServiceImpl implements GymSalesService {
 		List<Sales> list = dao.selectSalesList(param);
 
 	    for (Sales s : list) {
-	        s.setNetPrice(s.getPaymentPrice() - s.getPaymentFee());
+	    	s.setNetPrice(s.getPaymentPrice().subtract(s.getPaymentFee()));
 	    }
 
 	    return list;
@@ -46,7 +48,7 @@ public class GymSalesServiceImpl implements GymSalesService {
 
 		if (startDateStr == null || startDateStr.isBlank()
 				|| endDateStr == null || endDateStr.isBlank()) {
-			current.setGrowthRate(0);
+			current.setGrowthRate(0.0);
 			return current;
 		}
 
@@ -59,14 +61,21 @@ public class GymSalesServiceImpl implements GymSalesService {
 
 		SalesSummary prev = dao.selectSalesSummary(prevParam);
 
-		int currentSales = current.getTotalSales();
-		int prevSales = (prev == null) ? 0 : prev.getTotalSales();
+		BigDecimal currentSales = current.getTotalSales() == null ? BigDecimal.ZERO : current.getTotalSales();
+		BigDecimal prevSales = (prev == null || prev.getTotalSales() == null)
+		        ? BigDecimal.ZERO
+		        : prev.getTotalSales();
 
-		double growthRate = 0;
+		double growthRate = 0.0;
 
-		if (prevSales > 0) {
-			growthRate = ((double) (currentSales - prevSales) / prevSales) * 100;
-			growthRate = Math.round(growthRate * 10) / 10.0;
+		if (prevSales.compareTo(BigDecimal.ZERO) > 0) {
+		    growthRate = currentSales
+		            .subtract(prevSales)
+		            .divide(prevSales, 4, RoundingMode.HALF_UP)
+		            .multiply(BigDecimal.valueOf(100))
+		            .doubleValue();
+
+		    growthRate = Math.round(growthRate * 10) / 10.0;
 		}
 
 		current.setGrowthRate(growthRate);
@@ -78,23 +87,34 @@ public class GymSalesServiceImpl implements GymSalesService {
 	public List<SalesChart> getSalesChartList(Map<String, Object> param) throws Exception {
 		List<SalesChart> raw = dao.selectSalesChartList(param);
 
-	    int[] buckets = new int[5];
+		BigDecimal[] buckets = {
+			    BigDecimal.ZERO,
+			    BigDecimal.ZERO,
+			    BigDecimal.ZERO,
+			    BigDecimal.ZERO,
+			    BigDecimal.ZERO
+			};
 
-	    for (SalesChart c : raw) {
-	        int day = Integer.parseInt(c.getLabel().split("/")[1]);
+			for (SalesChart c : raw) {
+			    int day = Integer.parseInt(c.getLabel().split("/")[1]);
 
-	        int index;
-	        if (day <= 1) index = 0;
-	        else if (day <= 7) index = 1;
-	        else if (day <= 14) index = 2;
-	        else if (day <= 21) index = 3;
-	        else index = 4;
+			    int index;
+			    if (day <= 1) index = 0;
+			    else if (day <= 7) index = 1;
+			    else if (day <= 14) index = 2;
+			    else if (day <= 21) index = 3;
+			    else index = 4;
 
-	        buckets[index] += c.getSales();
+			    BigDecimal sales = c.getSales() == null ? BigDecimal.ZERO : c.getSales();
+			    buckets[index] = buckets[index].add(sales);
+			}
+
+	    String startDateStr = (String) param.get("startDate");
+
+	    if (startDateStr == null || startDateStr.isBlank()) {
+	        startDateStr = LocalDate.now().withDayOfMonth(1).toString();
 	    }
 
-	    // 🔥 여기 추가
-	    String startDateStr = (String) param.get("startDate");
 	    int month = Integer.parseInt(startDateStr.split("-")[1]);
 
 	    String[] labels = {

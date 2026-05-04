@@ -13,7 +13,6 @@ public interface GymNoticeService {
 	void increaseViewCount(int id) throws Exception;
 	void writeNotice(GymNotice notice) throws Exception;
 	void updateNotice(GymNotice notice) throws Exception;
-	List<NoticeImages> getImagesBtNoticeId(int noticeId) throws Exception;
 	void addImage(NoticeImages image) throws Exception;
 	void removeImages(List<Integer> imageId) throws Exception;
 	List<NoticeImages> getImagesByNoticeId(int noticeId) throws Exception;

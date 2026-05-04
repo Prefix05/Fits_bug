@@ -1,13 +1,15 @@
 package dto.gym;
 
+import java.math.BigDecimal;
+
 public class SalesChart {
 	private String label;  // 날짜 or 월
-    private int sales;
+    private BigDecimal sales;
     private int percent;
 	public SalesChart() {
 		super();
 	}
-	public SalesChart(String label, int sales, int percent) {
+	public SalesChart(String label, BigDecimal sales, int percent) {
 		super();
 		this.label = label;
 		this.sales = sales;
@@ -19,10 +21,10 @@ public class SalesChart {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public int getSales() {
+	public BigDecimal getSales() {
 		return sales;
 	}
-	public void setSales(int sales) {
+	public void setSales(BigDecimal sales) {
 		this.sales = sales;
 	}
 	public int getPercent() {
@@ -31,5 +33,6 @@ public class SalesChart {
 	public void setPercent(int percent) {
 		this.percent = percent;
 	}
+	
     
 }

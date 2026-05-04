@@ -1,139 +1,80 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import org.apache.ibatis.session.SqlSession;
 
-import dto.member.LoginDTO;
+import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
-import util.DBUtil;
+import util.MybatisSqlSessionFactory;
 
 public class MyPageDAOImpl implements MyPageDAO {
 
-    // 회원 조회
     @Override
-    public LoginDTO selectMember(String email) {
-
-        LoginDTO dto = null;
-
-        try (Connection conn = DBUtil.getConnection()) {
-
-            String sql = "SELECT * FROM member WHERE email=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                dto = new LoginDTO();
-                dto.setEmail(rs.getString("email"));
-                dto.setPassword(rs.getString("password"));
-                dto.setNickname(rs.getString("nickname"));
-                dto.setPhone(rs.getString("phone"));
-                dto.setProfileImage(rs.getString("profile_image"));
-                dto.setEmailVerified(rs.getBoolean("email_verified"));
-                dto.setSocialType(rs.getString("social_type"));
-            }
-
+    public MemberDTO selectMember(String email) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        MemberDTO result = null;
+        try {
+            result = sqlSession.selectOne("mapper.MemberMapper.findByEmail", email);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
-        return dto;
+        return result;
     }
 
-    // 운동 계획 조회
     @Override
     public WorkoutPlanDTO selectWorkoutPlan(String email) {
-
-        WorkoutPlanDTO dto = null;
-
-        try (Connection conn = DBUtil.getConnection()) {
-
-            String sql = "SELECT * FROM workout_plan WHERE email=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                dto = new WorkoutPlanDTO();
-                dto.setEmail(rs.getString("email"));
-                dto.setGoal(rs.getString("goal"));
-                dto.setLevel(rs.getString("level"));
-                dto.setHeight(rs.getInt("height"));
-                dto.setWeight(rs.getInt("weight"));
-                dto.setDiet(rs.getString("diet"));
-                dto.setFrequency(rs.getString("frequency"));
-            }
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        WorkoutPlanDTO result = null;
+        try {
+            result = sqlSession.selectOne("mapper.WorkoutPlanMapper.getPlan", email);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
-        return dto;
+        return result;
     }
 
-    // 회원 수정
     @Override
-    public void updateMember(LoginDTO dto) {
-
-        try (Connection conn = DBUtil.getConnection()) {
-
-            String sql = "UPDATE member SET nickname=?, phone=? WHERE email=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setString(1, dto.getNickname());
-            ps.setString(2, dto.getPhone());
-            ps.setString(3, dto.getEmail());
-
-            ps.executeUpdate();
-
+    public void updateMember(MemberDTO member) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.update("mapper.MemberMapper.update", member);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 
-    // 운동 계획 수정
     @Override
-    public void updateWorkoutPlan(WorkoutPlanDTO dto) {
-
-        try (Connection conn = DBUtil.getConnection()) {
-
-            String sql = "UPDATE workout_plan SET goal=?, level=?, height=?, weight=?, diet=?, frequency=? WHERE email=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setString(1, dto.getGoal());
-            ps.setString(2, dto.getLevel());
-            ps.setInt(3, dto.getHeight());
-            ps.setInt(4, dto.getWeight());
-            ps.setString(5, dto.getDiet());
-            ps.setString(6, dto.getFrequency());
-            ps.setString(7, dto.getEmail());
-
-            ps.executeUpdate();
-
+    public void updateWorkoutPlan(WorkoutPlanDTO plan) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.update("mapper.WorkoutPlanMapper.update", plan);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 
-    // 프로필 이미지 수정
     @Override
-    public void updateProfileImg(LoginDTO dto) {
-
-        try (Connection conn = DBUtil.getConnection()) {
-
-            String sql = "UPDATE member SET profile_image=? WHERE email=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setString(1, dto.getProfileImage());
-            ps.setString(2, dto.getEmail());
-
-            ps.executeUpdate();
-
+    public void updateProfileImg(MemberDTO member) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.update("mapper.MemberMapper.updateProfileImage", member);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 }

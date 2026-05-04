@@ -1,74 +1,41 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import dto.member.WorkoutRecordDTO;
-import util.DBUtil;
+import util.MybatisSqlSessionFactory;
 
 public class WorkoutRecordDAOImpl implements WorkoutRecordDAO {
 
-    // ===== 저장 =====
     @Override
     public int insertRecord(WorkoutRecordDTO dto) {
-        String sql = "INSERT INTO records(email, name, weight, reps, sets, date) VALUES (?, ?, ?, ?, ?, NOW())";
-
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, dto.getEmail());
-            ps.setString(2, dto.getName());
-            ps.setInt(3, dto.getWeight());
-            ps.setInt(4, dto.getReps());
-            ps.setInt(5, dto.getSets());
-
-            return ps.executeUpdate();
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        int result = 0;
+        try {
+            result = sqlSession.insert("mapper.WorkoutRecordMapper.insertRecord", dto);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
-        return 0;
+        return result;
     }
 
-    // ===== 조회 =====
     @Override
     public List<WorkoutRecordDTO> getRecords(String email) {
-
-        List<WorkoutRecordDTO> list = new ArrayList<>();
-
-        String sql = "SELECT * FROM records WHERE email=? ORDER BY date DESC";
-
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                WorkoutRecordDTO dto = new WorkoutRecordDTO();
-
-                dto.setId(rs.getInt("id"));
-                dto.setEmail(rs.getString("email"));
-                dto.setName(rs.getString("name"));
-                dto.setWeight(rs.getInt("weight"));
-                dto.setReps(rs.getInt("reps"));
-                dto.setSets(rs.getInt("sets"));
-                dto.setWorkoutRecordTime(
-                        rs.getTimestamp("date").toLocalDateTime()
-                    );
-
-                list.add(dto);
-            }
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        List<WorkoutRecordDTO> list = null;
+        try {
+            list = sqlSession.selectList("mapper.WorkoutRecordMapper.getRecords", email);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
         return list;
     }
 }

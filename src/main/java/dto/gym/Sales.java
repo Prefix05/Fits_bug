@@ -1,28 +1,28 @@
 package dto.gym;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class Sales {
 	 private String memberName;
 	    private String membershipType; // day, month, pt
 	    private int typeRep;           // 개월 / 횟수 / 일수
 	    private String trainerName;
-	    private Date paymentDate;
-	    private int paymentPrice;
-	    private int paymentFee;
-	    private int netPrice; // 계산값
+	    private Timestamp paymentDate;
+	    private BigDecimal paymentPrice;
+	    private BigDecimal paymentFee;
+	    private BigDecimal netPrice; // 계산값
 	    private String status;
-	    private Date canceledAt;
+	    private Timestamp canceledAt;
 	    private String reason;
 
 		public Sales() {
 			super();
 		}
 
-		
-
-		public Sales(String memberName, String membershipType, int typeRep, String trainerName, Date paymentDate,
-				int paymentPrice, int paymentFee, int netPrice, String status, Date canceledAt, String reason) {
+		public Sales(String memberName, String membershipType, int typeRep, String trainerName, Timestamp paymentDate,
+				BigDecimal paymentPrice, BigDecimal paymentFee, BigDecimal netPrice, String status,
+				Timestamp canceledAt, String reason) {
 			super();
 			this.memberName = memberName;
 			this.membershipType = membershipType;
@@ -36,8 +36,6 @@ public class Sales {
 			this.canceledAt = canceledAt;
 			this.reason = reason;
 		}
-
-
 
 		public String getMemberName() {
 			return memberName;
@@ -71,35 +69,35 @@ public class Sales {
 			this.trainerName = trainerName;
 		}
 
-		public Date getPaymentDate() {
+		public Timestamp getPaymentDate() {
 			return paymentDate;
 		}
 
-		public void setPaymentDate(Date paymentDate) {
+		public void setPaymentDate(Timestamp paymentDate) {
 			this.paymentDate = paymentDate;
 		}
 
-		public int getPaymentPrice() {
+		public BigDecimal getPaymentPrice() {
 			return paymentPrice;
 		}
 
-		public void setPaymentPrice(int paymentPrice) {
+		public void setPaymentPrice(BigDecimal paymentPrice) {
 			this.paymentPrice = paymentPrice;
 		}
 
-		public int getPaymentFee() {
+		public BigDecimal getPaymentFee() {
 			return paymentFee;
 		}
 
-		public void setPaymentFee(int paymentFee) {
+		public void setPaymentFee(BigDecimal paymentFee) {
 			this.paymentFee = paymentFee;
 		}
 
-		public int getNetPrice() {
+		public BigDecimal getNetPrice() {
 			return netPrice;
 		}
 
-		public void setNetPrice(int netPrice) {
+		public void setNetPrice(BigDecimal netPrice) {
 			this.netPrice = netPrice;
 		}
 
@@ -111,28 +109,21 @@ public class Sales {
 			this.status = status;
 		}
 
-
-
-		public Date getCanceledAt() {
+		public Timestamp getCanceledAt() {
 			return canceledAt;
 		}
 
-
-
-		public void setCanceledAt(Date canceledAt) {
+		public void setCanceledAt(Timestamp canceledAt) {
 			this.canceledAt = canceledAt;
 		}
-
-
 
 		public String getReason() {
 			return reason;
 		}
 
-
-
 		public void setReason(String reason) {
 			this.reason = reason;
 		}
+
 	    
 }

@@ -1,24 +1,21 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-import util.DBUtil;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
 
 public class MembershipDAOImpl implements MembershipDAO {
+
     @Override
     public void decreaseCount(String email) {
-
-        String sql = "UPDATE membership SET remain_count = remain_count - 1 WHERE email=? AND remain_count > 0";
-
-        try(Connection conn = DBUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
-
-            ps.setString(1, email);
-            ps.executeUpdate();
-
-        } catch(Exception e){
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.update("mapper.MembershipMapper.decreaseCount", email);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 }

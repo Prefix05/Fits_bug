@@ -9,15 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.member.LoginDAO;
-import dao.member.LoginDAOImpl;
-import dto.member.LoginDTO;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dto.member.MemberDTO;
 import util.KakaoUtil;
 
 @WebServlet("/kakaoLogin")
 public class KakaoLoginController extends HttpServlet {
 
-    private LoginDAO dao = new LoginDAOImpl();
+    private MemberDAO dao = new MemberDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,11 +37,11 @@ public class KakaoLoginController extends HttpServlet {
         }
 
         // 3. 기존 회원 확인
-        LoginDTO user = dao.findByEmail(email);
+        MemberDTO user = dao.findByEmail(email);
 
         // 4. 없으면 자동 회원가입
         if (user == null) {
-            user = new LoginDTO();
+            user = new MemberDTO();
             user.setEmail(email);
             user.setNickname("카카오회원");
             user.setEmailVerified(true);

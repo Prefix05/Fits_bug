@@ -7,44 +7,52 @@
 
     <resultMap id="gymMap" type="dto.gym.Gym">
         <id property="id" column="id"/>
+        <result property="name" column="name"/>
         <result property="phoneNum" column="phone_num"/>
+        <result property="description" column="description"/>
+        <result property="address" column="address"/>
+        <result property="file" column="file"/>
+        <result property="rating" column="rating"/>
         <result property="reviewCount" column="review_count"/>
     </resultMap>
 
     <select id="selectGymMainInfo" parameterType="int" resultMap="gymMap">
-        SELECT
-            g.id,
-            g.name,
-            g.phone_num,
-            g.description,
-            g.address,
-            g.file,
-            IFNULL(ROUND(AVG(r.rating), 1), 0) AS rating, 
-            COUNT(r.review_num) AS review_count
-        FROM GYM g
-        LEFT JOIN REVIEW_GYM r
-            ON g.id = r.gym_id
-        WHERE g.id = #{value}
-        GROUP BY g.id, g.name, g.phone_num, g.description, g.address, g.file
-    </select>
-    
-    <!-- 오늘 최고 혼잡 시간대 -->
-<select id="selectTodayHotTime"
-        parameterType="map"
-        resultType="dto.gym.HotTime">
-
     SELECT
-        HOUR(start_time) AS hour,
-        COUNT(*) AS visitCount,
-        100 AS heightPercent
-    FROM WORKOUT_LOG
-    WHERE gym_id = #{gymId}
-      AND date = CURDATE()
-    GROUP BY HOUR(start_time)
-    ORDER BY visitCount DESC
-    LIMIT 1
-
+        g.id,
+        g.name,
+        g.phone_num,
+        g.description,
+        g.address,
+        g.file,
+        IFNULL(ROUND(AVG(r.rating), 1), 0) AS rating,
+        COUNT(DISTINCT r.id) AS review_count
+    FROM GYM g
+    LEFT JOIN REVIEW_GYM r
+        ON g.id = r.gym_id
+    WHERE g.id = #{value}
+    GROUP BY
+        g.id,
+        g.name,
+        g.phone_num,
+        g.description,
+        g.address,
+        g.file
 </select>
 
+    <!-- 오늘 최고 혼잡 시간대 -->
+    <select id="selectTodayHotTime"
+            parameterType="map"
+            resultType="dto.gym.HotTime">
+        SELECT
+            HOUR(start_time) AS hour,
+            COUNT(*) AS visitCount,
+            100 AS heightPercent
+        FROM WORKOUT_LOG
+        WHERE gym_id = #{gymId}
+          AND `date` = CURDATE()
+        GROUP BY HOUR(start_time)
+        ORDER BY visitCount DESC
+        LIMIT 1
+    </select>
 
 </mapper>

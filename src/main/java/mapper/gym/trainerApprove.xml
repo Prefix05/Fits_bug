@@ -6,38 +6,42 @@
 <mapper namespace="mapper.trainerApprove">
 
     <!-- 승인 대기 트레이너 목록 -->
-    <select id="selectPendingTrainerList" parameterType="int" resultType="dto.gym.TrainerApprove">
-        SELECT
-            t.id,
-            u.name,
-            u.tel AS phoneNum,
-            u.profileImg,
-            t.approval_status AS approvalStatus
-        FROM trainer t
-        JOIN user u ON t.user_id = u.id
-        WHERE t.gym_id = #{gymId}
-          AND t.approval_status = 'PENDING'
-        ORDER BY t.id DESC
-    </select>
+    <select id="selectPendingTrainerList"
+        parameterType="int"
+        resultType="dto.gym.TrainerApprove">
+    SELECT
+        t.id AS trainerId,
+        u.name,
+        u.tel AS phoneNum,
+        u.profile_img AS profileImg,
+        t.approval_status AS approvalStatus
+    FROM TRAINER t
+    JOIN `USER` u ON t.user_id = u.id
+    WHERE t.gym_id = #{value}
+      AND t.approval_status = 'PENDING'
+    ORDER BY t.id DESC
+</select>
 
-    <!-- 트레이너 승인 -->
-    <update id="approveTrainer" parameterType="int">
-        UPDATE trainer
-        SET approval_status = 'APPROVED'
-        WHERE id = #{trainerId}
-    </update>
+<update id="approveTrainer" parameterType="int">
+    UPDATE TRAINER
+    SET approval_status = 'APPROVED'
+    WHERE id = #{value}
+</update>
 
-	<select id="selectApprovedTrainerList" parameterType="int" resultType="dto.gym.TrainerApprove">
-    	SELECT
-        	t.id,
-        	u.name,
-        	u.tel AS phoneNum,
-        	u.profileImg,
-        	t.approval_status AS approvalStatus
-    	FROM trainer t
-    	JOIN `user` u ON t.user_id = u.id
-    	WHERE t.gym_id = #{gymId}
-      	AND t.approval_status = 'APPROVED'
-    	ORDER BY t.id DESC
-	</select>
+<select id="selectApprovedTrainerList"
+        parameterType="int"
+        resultType="dto.gym.TrainerApprove">
+    SELECT
+        t.id AS trainerId,
+        u.name,
+        u.tel AS phoneNum,
+        u.profile_img AS profileImg,
+        t.approval_status AS approvalStatus
+    FROM TRAINER t
+    JOIN `USER` u ON t.user_id = u.id
+    WHERE t.gym_id = #{value}
+      AND t.approval_status = 'APPROVED'
+    ORDER BY t.id DESC
+</select>
+
 </mapper>

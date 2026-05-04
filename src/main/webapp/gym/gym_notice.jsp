@@ -132,7 +132,7 @@
 		<!-- Notice List -->
 		<div class="space-y-4">
 			<c:forEach var="notice" items="${noticeList}">
-				<a href="${pageContext.request.contextPath}/gym/noticeDetail?id=${notice.id}"
+				<a href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${notice.id}"
 			   	   class="block bg-white hover:bg-surface-container-low p-6 rounded-lg transition-all duration-200 flex items-start gap-6 group cursor-pointer border border-outline-variant/10">
 			
 				<div class="flex-shrink-0 text-center w-16">
@@ -217,6 +217,7 @@
         <form action="${pageContext.request.contextPath}/gym/noticeWrite"
               method="post"
               onsubmit="return submitNoticeForm();"
+              enctype="multipart/form-data"
               class="px-8 pb-8 pt-6 space-y-6">
 
             <!-- 제목 -->
@@ -239,10 +240,17 @@
                 </label>
 
                 <!-- Toast UI Editor 들어갈 자리 -->
-                <div id="editor"></div>
+                <div id="editor">
+                </div>
+                
 
                 <!-- 실제 서버로 보낼 hidden input -->
                 <input type="hidden" name="content" id="noticeContent" />
+                
+                <input type="file"
+           			   name="noticeImages"
+           			   multiple
+           			   class="w-full text-sm border border-outline-variant/30 rounded-lg p-2">
             </div>
 
             <!-- 버튼 -->

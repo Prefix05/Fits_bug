@@ -8,8 +8,8 @@ import dto.gym.TrainerList;
 import dto.gym.TrainerMemberView;
 
 public interface TrainerManageDao {
-	List<TrainerList> selectTrainerList(Map<String, Object> param);
-    List<TrainerAssign> selectTrainerAssignList(int gymId);
-	List<TrainerMemberView> selectCurrentMembers(int trainerId);
-	List<TrainerMemberView> selectPastMembers(int trainerId);
+	List<TrainerList> selectTrainerList(Map<String, Object> param)throws Exception;
+    List<TrainerAssign> selectTrainerAssignList(int gymId)throws Exception;
+	List<TrainerMemberView> selectCurrentMembers(int trainerId)throws Exception;
+	List<TrainerMemberView> selectPastMembers(int trainerId)throws Exception;
 }
