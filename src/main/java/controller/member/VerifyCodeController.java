@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-@WebServlet("/verifyCode")
+@WebServlet("/member/verifyCode")
 public class VerifyCodeController extends HttpServlet {
 
     // ─────────────────────────────────────────────────

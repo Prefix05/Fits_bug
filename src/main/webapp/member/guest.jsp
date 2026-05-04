@@ -130,38 +130,6 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
     </div>
   </div>
 
-  <!-- 운동 가이드 -->
-  <div class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
-      <div class="section-title">운동 가이드</div>
-      <a href="<%=contextPath%>/guide" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">모두 보기 →</a>
-    </div>
-    <div class="card-slider" id="guideSlider">
-      <% String[][] guides = {
-        {"데드리프트","하체 / 전신","중급","rgba(255,107,53,0.1)","💪"},
-        {"벤치프레스","가슴 / 어깨","초급","rgba(0,191,165,0.1)","🏋️"},
-        {"스쿼트","하체","초급","rgba(255,209,102,0.15)","🦵"},
-        {"런닝머신","유산소","고급","rgba(147,51,234,0.1)","🏃"}
-      };
-      for(String[] g : guides){ %>
-      <div class="slide-card">
-        <div style="height:140px;background:<%= g[3] %>;display:flex;align-items:center;justify-content:center;font-size:56px;"><%= g[4] %></div>
-        <div style="padding:14px 16px;">
-          <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:#F7F9FC;color:#5A6480;border:1px solid #E8EDF5;"><%= g[1] %></span>
-            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:<%= g[2].equals("초급") ? "#E8F8F6" : g[2].equals("중급") ? "#FFF9E6" : "#FFF3EE" %>;color:<%= g[2].equals("초급") ? "#00897B" : g[2].equals("중급") ? "#B7791F" : "#FF4D1F" %>;"><%= g[2] %></span>
-          </div>
-          <div style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:12px;"><%= g[0] %></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button style="padding:8px;border-radius:10px;border:1.5px solid #E8EDF5;background:white;font-size:12px;font-weight:700;color:#5A6480;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">▶ 영상 보기</button>
-            <button onclick="requireLogin()" style="padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='none'">기록 시작</button>
-          </div>
-        </div>
-      </div>
-      <% } %>
-    </div>
-  </div>
-
   <!-- 추천 트레이너 -->
   <div class="section" style="background:linear-gradient(135deg,#FAFBFF,#F7F9FC);padding-top:40px;padding-bottom:40px;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
@@ -194,6 +162,38 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
           <span style="font-size:15px;font-weight:900;color:#1A1F36;"><%= t[4] %>원~</span>
         </div>
         <button onclick="requireLogin()" style="width:100%;margin-top:12px;padding:9px;border-radius:10px;border:none;background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">PT 신청하기</button>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <!-- 운동 가이드 -->
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+      <div class="section-title">운동 가이드</div>
+      <a href="<%=contextPath%>/guide" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">모두 보기 →</a>
+    </div>
+    <div class="card-slider" id="guideSlider">
+      <% String[][] guides = {
+        {"데드리프트","하체 / 전신","중급","rgba(255,107,53,0.1)","💪"},
+        {"벤치프레스","가슴 / 어깨","초급","rgba(0,191,165,0.1)","🏋️"},
+        {"스쿼트","하체","초급","rgba(255,209,102,0.15)","🦵"},
+        {"런닝머신","유산소","고급","rgba(147,51,234,0.1)","🏃"}
+      };
+      for(String[] g : guides){ %>
+      <div class="slide-card">
+        <div style="height:140px;background:<%= g[3] %>;display:flex;align-items:center;justify-content:center;font-size:56px;"><%= g[4] %></div>
+        <div style="padding:14px 16px;">
+          <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:#F7F9FC;color:#5A6480;border:1px solid #E8EDF5;"><%= g[1] %></span>
+            <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:<%= g[2].equals("초급") ? "#E8F8F6" : g[2].equals("중급") ? "#FFF9E6" : "#FFF3EE" %>;color:<%= g[2].equals("초급") ? "#00897B" : g[2].equals("중급") ? "#B7791F" : "#FF4D1F" %>;"><%= g[2] %></span>
+          </div>
+          <div style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:12px;"><%= g[0] %></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button style="padding:8px;border-radius:10px;border:1.5px solid #E8EDF5;background:white;font-size:12px;font-weight:700;color:#5A6480;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">▶ 영상 보기</button>
+            <!-- <button onclick="requireLogin()" style="padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='none'">기록 시작</button> -->
+          </div>
+        </div>
       </div>
       <% } %>
     </div>

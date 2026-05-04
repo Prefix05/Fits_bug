@@ -14,7 +14,7 @@ import javax.servlet.http.Part;
 import dto.member.MemberDTO;
 import service.member.MyPageServiceImpl;
 
-@WebServlet("/uploadProfile")
+@WebServlet("/member/uploadProfile")
 @MultipartConfig
 public class UploadController extends HttpServlet {
 

@@ -16,7 +16,7 @@ import dto.member.TrainerReviewDTO;
 import service.member.TrainerReviewService;
 import service.member.TrainerReviewServiceImpl;
 
-@WebServlet("/review")
+@WebServlet("/member/review")
 @MultipartConfig
 public class TrainerReviewController extends HttpServlet {
     private TrainerReviewService service = new TrainerReviewServiceImpl();

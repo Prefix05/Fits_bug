@@ -19,7 +19,7 @@ import service.member.PostReactionServiceImpl;
 import service.member.PostService;
 import service.member.PostServiceImpl;
 
-@WebServlet("/post")
+@WebServlet("/member/post")
 @MultipartConfig
 public class PostController extends HttpServlet {
 

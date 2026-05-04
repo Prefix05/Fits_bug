@@ -13,7 +13,7 @@ import dto.member.CommunityDTO;
 import service.member.CommunityService;
 import service.member.CommunityServiceImpl;
 
-@WebServlet("/community")
+@WebServlet("/member/community")
 public class CommunityController extends HttpServlet {
 
     private CommunityService service = new CommunityServiceImpl();

@@ -255,7 +255,7 @@
 
     <select id="selectRevenueTrendList" parameterType="map" resultType="dto.gym.RevenueTrend">
         SELECT
-            CONCAT(MONTH(monthly.monthDate), '월') AS month,
+            MONTH(monthly.monthDate) AS month,
             IFNULL(ROUND(monthly.totalRevenue / NULLIF(maxTable.maxRevenue, 0) * 100), 0) AS totalPercent,
             CASE
                 WHEN monthly.totalRevenue = 0 THEN 0

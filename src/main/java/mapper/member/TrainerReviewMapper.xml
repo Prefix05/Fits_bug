@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.TrainerReviewMapper">
 
-    <resultMap id="reviewResultMap" type="TrainerReviewDTO">
+    <resultMap id="reviewResultMap" type="dto.member.TrainerReviewDTO">
         <result property="userEmail"  column="user_email"/>
         <result property="trainerId"  column="trainer_id"/>
         <result property="rating"     column="rating"/>

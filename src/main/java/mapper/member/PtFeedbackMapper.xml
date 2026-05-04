@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.PtFeedbackMapper">
 
-    <resultMap id="feedbackResultMap" type="PtFeedbackDTO">
+    <resultMap id="feedbackResultMap" type="dto.member.PtFeedbackDTO">
         <id     property="id"          column="id"/>
         <result property="userEmail"   column="user_email"/>
         <result property="trainerName" column="trainer_name"/>

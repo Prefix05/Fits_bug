@@ -5,7 +5,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet("/trainerJoin")
+@WebServlet("/member/trainerJoin")
 public class TrainerJoinController extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

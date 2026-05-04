@@ -12,7 +12,7 @@ import dto.member.CommentDTO;
 import service.member.CommentService;
 import service.member.CommentServiceImpl;
 
-@WebServlet("/comment")
+@WebServlet("/member/comment")
 public class CommentController extends HttpServlet {
     private CommentService service = new CommentServiceImpl();
 

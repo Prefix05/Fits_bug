@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dto.member.FeedbackDTO;
 
-@WebServlet("/feedback")
+@WebServlet("/member/feedback")
 public class FeedbackController extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

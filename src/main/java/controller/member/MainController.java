@@ -14,7 +14,7 @@ import dao.member.WorkoutPlanDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
 
-@WebServlet("/main")
+@WebServlet("/member/main")
 public class MainController extends HttpServlet {
 
     @Override

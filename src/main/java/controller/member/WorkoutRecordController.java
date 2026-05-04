@@ -56,7 +56,7 @@ import dto.member.WorkoutRecordDTO;
 import service.member.WorkoutRecordService;
 import service.member.WorkoutRecordServiceImpl;
 
-@WebServlet("/records")
+@WebServlet("/member/records")
 public class WorkoutRecordController extends HttpServlet {
 
     private WorkoutRecordService service = new WorkoutRecordServiceImpl();

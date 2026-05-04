@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.ReservationMapper">
 
-    <resultMap id="reservationResultMap" type="ReservationDTO">
+    <resultMap id="reservationResultMap" type="dto.member.ReservationDTO">
         <id     property="id"            column="id"/>
         <result property="memberEmail"   column="member_email"/>
         <result property="trainerEmail"  column="trainer_email"/>

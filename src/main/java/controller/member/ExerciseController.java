@@ -13,7 +13,7 @@ import dto.member.ExerciseDTO;
 import service.member.ExerciseService;
 import service.member.ExerciseServiceImpl;
 
-@WebServlet("/guide")
+@WebServlet("/member/guide")
 public class ExerciseController extends HttpServlet {
     private ExerciseService service = new ExerciseServiceImpl();
 

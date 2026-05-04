@@ -7,7 +7,7 @@
     <!-- ======================================================
          ResultMap : DB 컬럼 ↔ DTO 필드 매핑
          ====================================================== -->
-    <resultMap id="memberResultMap" type="MemberDTO">
+    <resultMap id="memberResultMap" type="dto.member.MemberDTO">
         <id     property="email"         column="email"/>
         <result property="password"      column="password"/>
         <result property="nickname"      column="nickname"/>

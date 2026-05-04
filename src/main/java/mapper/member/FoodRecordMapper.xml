@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.FoodRecordMapper">
 
-    <resultMap id="foodResultMap" type="FoodRecordDTO">
+    <resultMap id="foodResultMap" type="dto.member.FoodRecordDTO">
         <id     property="id"         column="id"/>
         <result property="email"      column="email"/>
         <result property="foodName"   column="food_name"/>

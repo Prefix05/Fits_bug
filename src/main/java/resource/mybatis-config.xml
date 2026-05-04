@@ -21,6 +21,7 @@
         <typeAlias alias="InbodyRecordDTO"  type="dto.member.InbodyRecordDTO"/>
         <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
         <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
+        <typeAlias alias="CommunityDTO"     type="dto.member.CommunityDTO"/>
         <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
         <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
@@ -61,6 +62,18 @@
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
+
+		<mapper resource="mapper/gym/dashboard.xml"/>
+		<mapper resource="mapper/gym/memberManage.xml"/>
+		<mapper resource="mapper/gym/trainerManage.xml"/>
+		<mapper resource="mapper/gym/trainerApprove.xml"/>
+		<mapper resource="mapper/gym/sales.xml"/>
+		<mapper resource="mapper/gym/infoEdit.xml"/>
+
+		<mapper resource="mapper/gym/payment.xml"/>
+		<mapper resource="mapper/member/MemberMapper.xml"/> 
+
+
 		<mapper resource="mapper/member/loginMapper.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/>
         <mapper resource="mapper/member/WorkoutPlanMapper.xml"/>
@@ -68,6 +81,7 @@
         <mapper resource="mapper/member/FoodRecordMapper.xml"/>
         <mapper resource="mapper/member/InbodyRecordMapper.xml"/>
         <mapper resource="mapper/member/PostMapper.xml"/>
+        <mapper resource="mapper/member/CommunityMapper.xml"/>
         <mapper resource="mapper/member/PostReactionMapper.xml"/>
         <mapper resource="mapper/member/CommentMapper.xml"/>
         <mapper resource="mapper/member/MessageMapper.xml"/>

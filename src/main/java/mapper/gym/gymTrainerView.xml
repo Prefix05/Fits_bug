@@ -5,7 +5,7 @@
   
 <mapper namespace="mapper.gymTrainerView">
   	
-    <select id="selectGymTrainerViewByGym"
+    <select id="selectTrainerViewByGym"
         parameterType="int"
         resultType="dto.gym.GymTrainerView">
     SELECT

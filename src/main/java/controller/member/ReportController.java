@@ -13,7 +13,7 @@ import dto.member.ReportDTO;
 import service.member.ReportService;
 import service.member.ReportServiceImpl;
 
-@WebServlet("/report")
+@WebServlet("/member/report")
 public class ReportController extends HttpServlet {
 
     private ReportService service = new ReportServiceImpl();
