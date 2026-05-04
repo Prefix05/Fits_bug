@@ -213,38 +213,28 @@
 
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/dashboard" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드
-        </a>
+           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드</a>
 
         <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원관리
-        </a>
+           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원
+            관리</a>
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/calendar.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정
-        </a>
+           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정</a>
 
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">chat</span>
-            메시지
-        </a>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익
-        </a>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익</a>
     </nav>
 
     <!-- 공통 nav item -->
@@ -277,9 +267,11 @@
     <header
             class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
         <div class="flex items-center gap-4">
+            <a href="${pageContext.request.contextPath}/trainer/clientDetail">
             <button class="hover:opacity-70 transition-opacity active:scale-95 duration-150 text-blue-700">
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
+            </a>
             <h1 class="font-sans tracking-tight text-lg font-semibold text-on-surface">회원목록</h1>
         </div>
     </header>

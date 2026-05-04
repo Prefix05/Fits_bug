@@ -250,11 +250,11 @@
 
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
             수익</a>
     </nav>
 

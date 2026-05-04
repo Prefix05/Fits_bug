@@ -291,9 +291,10 @@
     <header
             class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
         <div class="flex items-center gap-4">
-            <button class="hover:opacity-70 transition-opacity active:scale-95 duration-150 text-blue-700">
+            <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${clientId}"
+               class="hover:opacity-70 transition-opacity active:scale-95 duration-150 text-blue-700">
                 <span class="material-symbols-outlined">arrow_back</span>
-            </button>
+            </a>
             <h1 class="font-sans tracking-tight text-lg font-semibold text-on-surface">회원상세</h1>
         </div>
     </header>
