@@ -8,38 +8,38 @@
     <!-- Fetch Single Day -->
     <select id="selectMealsByDay" parameterType="map" resultType="meal">
         SELECT
-            meal_id as id,
-            user_id AS userId,
-            meal_name AS mealName,
+            id as id,
+            member_id AS userId,
             meal_time AS mealTime,
-            description,
+            meal AS mealName,
             image_url AS imageUrl,
             calories,
             protein,
             carbs,
             fat,
+            totcalorie,
             meal_date AS mealDate
-        FROM meals
-        WHERE user_id = #{userId}
+        FROM meal_log
+        WHERE member_id = #{userId}
           AND meal_date = #{date}
     </select>
 
     <!-- Fetch Range (Monday - Sunday) -->
     <select id="selectMealsByWeek" parameterType="map" resultType="meal">
         SELECT
-            meal_id as id,
-            user_id AS userId,
-            meal_name AS mealName,
+            id as id,
+            member_id AS userId,
             meal_time AS mealTime,
-            description,
+            meal as mealName,
             image_url AS imageUrl,
             calories,
             protein,
             carbs,
             fat,
+            totcalorie,
             meal_date AS mealDate
-        FROM meals
-        WHERE user_id = #{userId}
+        FROM meal_log
+        WHERE member_id = #{userId}
           AND meal_date BETWEEN #{monday} AND #{sunday}
         ORDER BY meal_date
     </select>
