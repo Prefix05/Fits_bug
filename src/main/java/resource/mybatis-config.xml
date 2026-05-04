@@ -88,6 +88,8 @@
 		<mapper resource="mapper/trainer/user.xml"/>
 		<mapper resource="mapper/trainer/trainer.xml"/>
 		<mapper resource="mapper/trainer/payout_account.xml"/>
+		<mapper resource="mapper/trainer/certification.xml"/>
+		<mapper resource="mapper/trainer/pricing_availability.xml"/>
 
 	</mappers>
 </configuration>

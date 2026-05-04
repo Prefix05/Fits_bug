@@ -1,5 +1,6 @@
 package controller.trainer;
 
+import dto.gym.Gym;
 import dto.trainer.PayoutAccountDTO;
 import dto.trainer.TrainerDTO;
 import service.trainer.TrainerService;
@@ -22,6 +23,16 @@ public class SignupController3 extends HttpServlet {
         if (session == null || session.getAttribute("pendingTrainerUserId") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/signup");
             return;
+        }
+
+        int userId = (int) session.getAttribute("pendingTrainerUserId");
+        TrainerService trainerService = new TrainerServiceImpl();
+        TrainerDTO trainer = trainerService.getTrainerByUserId(userId);
+        if (trainer != null) {
+            PayoutAccountDTO payout = trainerService.getPayoutAccountByTrainerId(trainer.getTrainerId());
+            if (payout != null) {
+                request.setAttribute("prefillPayout", payout);
+            }
         }
 
         request.getRequestDispatcher("/trainer/signup3.jsp").forward(request, response);
@@ -72,6 +83,18 @@ public class SignupController3 extends HttpServlet {
         payout.setTrainerId(trainer.getTrainerId());
         payout.setTrainerType(trainerType);
 
+        // Map granular payout type → display trainer_type on the trainer record
+        // GYM_RENTAL operates independently (own business, rents space) — different from employed
+        String displayTrainerType;
+        if ("GYM_RENTAL".equals(trainerType)) {
+            displayTrainerType = "GYM_RENTAL";
+        } else if (trainerType != null && trainerType.startsWith("GYM_")) {
+            displayTrainerType = "GYM_EMPLOYED";
+        } else {
+            displayTrainerType = "FREELANCE";
+        }
+        trainer.setTrainerType(displayTrainerType);
+
         // Resolve gym_code → gym_id for gym-associated types
         if (gymCode != null && !gymCode.isEmpty()) {
             Integer gymId = trainerService.findGymIdByGymCode(gymCode);
@@ -81,26 +104,44 @@ public class SignupController3 extends HttpServlet {
                 return;
             }
             payout.setGymId(gymId);
+
+            // Set gym_id on trainer record and copy gym's location
+            trainer.setGymId(gymId);
+            Gym gym = trainerService.getGymInfoById(gymId);
+            if (gym != null) {
+                trainer.setAddress(gym.getAddress());
+                trainer.setAddressDetail(gym.getAddressDetail());
+                trainer.setPostcode(gym.getPostcode());
+                if (gym.getLatitude() != null) {
+                    trainer.setLatitude(new BigDecimal(gym.getLatitude().toString()));
+                }
+                if (gym.getLongitude() != null) {
+                    trainer.setLongitude(new BigDecimal(gym.getLongitude().toString()));
+                }
+            }
         }
         if ("GYM_COMMISSION".equals(trainerType) && commissionRateStr != null && !commissionRateStr.isEmpty()) {
             payout.setCommissionRate(new BigDecimal(commissionRateStr));
         }
 
-        // Identity fields (only set the relevant one)
+        // Identity fields — also copy business_registration_num to trainer table for verification badge
         if ("FREELANCE_BUSINESS".equals(trainerType) && businessRegistrationNum != null && !businessRegistrationNum.isEmpty()) {
             payout.setBusinessRegistrationNum(businessRegistrationNum);
+            trainer.setBusinessRegistrationNum(businessRegistrationNum);
         }
         if ("FREELANCE_INDIVIDUAL".equals(trainerType) && residentRegistrationNum != null && !residentRegistrationNum.isEmpty()) {
             payout.setResidentRegistrationNum(residentRegistrationNum);
         }
 
+        // Persist trainer profile changes (type, gym_id, address, business_registration_num)
+        trainerService.updateTrainer(trainer);
+
         payout.setBankName(bankName);
         payout.setAccountNumber(accountNumber);
 
         try {
-            trainerService.insertPayoutAccount(payout);
-            session.removeAttribute("pendingTrainerUserId");
-            response.sendRedirect(request.getContextPath() + "/trainer/login");
+            trainerService.replacePayoutAccount(payout);
+            response.sendRedirect(request.getContextPath() + "/trainer/signup/step4");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "정산 정보 저장에 실패했습니다.");

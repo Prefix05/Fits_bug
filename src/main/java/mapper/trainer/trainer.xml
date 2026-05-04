@@ -31,30 +31,36 @@
 
     <update id="updateTrainer" parameterType="dto.trainer.TrainerDTO">
         UPDATE trainer SET
-            description  = #{description},
-            address      = #{address},
-            address_detail = #{addressDetail},
-            postcode     = #{postcode},
-            latitude     = #{latitude},
-            longitude    = #{longitude}
+            description               = #{description},
+            address                   = #{address},
+            address_detail            = #{addressDetail},
+            postcode                  = #{postcode},
+            latitude                  = #{latitude},
+            longitude                 = #{longitude},
+            trainer_type              = #{trainerType},
+            gym_id                    = #{gymId},
+            business_registration_num = #{businessRegistrationNum}
         WHERE id = #{trainerId}
     </update>
 
     <select id="findByUserId" parameterType="int" resultType="dto.trainer.TrainerDTO">
         SELECT
-            t.id            AS trainerId,
-            t.user_id       AS userId,
+            t.id                        AS trainerId,
+            t.user_id                   AS userId,
+            t.trainer_type              AS trainerType,
+            t.gym_id                    AS gymId,
+            t.business_registration_num AS businessRegistrationNum,
             t.description,
             t.address,
-            t.address_detail AS addressDetail,
+            t.address_detail            AS addressDetail,
             t.postcode,
             t.latitude,
             t.longitude,
-            t.approval_status AS approvalStatus,
-            t.is_verified   AS isVerified,
+            t.approval_status           AS approvalStatus,
+            t.is_verified               AS isVerified,
             u.name,
             u.email,
-            u.created_at    AS createdAt
+            u.created_at                AS createdAt
         FROM trainer t
         JOIN `user` u ON t.user_id = u.id
         WHERE t.user_id = #{userId}
@@ -80,9 +86,25 @@
         INSERT INTO trainer_traits (trainer_id, type) VALUES (#{trainerId}, #{type})
     </insert>
 
+    <!-- SPECIALIZATIONS READ -->
+    <select id="findSpecializationsByTrainerId" parameterType="int" resultType="String">
+        SELECT type FROM trainer_specialization WHERE trainer_id = #{trainerId}
+    </select>
+
+    <!-- TRAITS READ -->
+    <select id="findTraitsByTrainerId" parameterType="int" resultType="String">
+        SELECT type FROM trainer_traits WHERE trainer_id = #{trainerId}
+    </select>
+
     <!-- GYM LOOKUP (used during trainer signup to resolve gym_code → gym_id) -->
     <select id="findGymIdByGymCode" parameterType="String" resultType="int">
         SELECT id FROM gym WHERE gym_code = #{gymCode}
+    </select>
+
+    <!-- GYM INFO (used to copy location onto trainer record) -->
+    <select id="findGymInfoById" parameterType="int" resultType="dto.gym.Gym">
+        SELECT id, name, address, address_detail AS addressDetail, postcode, latitude, longitude
+        FROM gym WHERE id = #{id}
     </select>
 
     <!-- PROFILE IMAGE (stored on user table) -->

@@ -54,6 +54,29 @@
         </trim>
     </insert>
 
+    <select id="selectUserById" parameterType="int" resultMap="userResultMap">
+        SELECT id, email, password, name, tel, nickname, profile_img, role, created_at, is_deleted, provider, provider_id
+        FROM `user` WHERE id = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="user">
+        UPDATE `user` SET
+            name     = #{name},
+            email    = #{email},
+            password = #{password},
+            tel      = #{tel},
+            nickname = #{nickname}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateUserProfile" parameterType="user">
+        UPDATE `user` SET
+            name     = #{name},
+            tel      = #{tel},
+            nickname = #{nickname}
+        WHERE id = #{id}
+    </update>
+
     <select id="selectUserTrainer" parameterType="String" resultMap="userResultMap">
         SELECT
             id,

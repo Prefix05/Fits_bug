@@ -38,6 +38,48 @@ public class SignupServiceImpl implements SignupService {
     }
 
     @Override
+    public UserDTO getUserById(int id) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            return userDAO.getUserById(session, id);
+        } catch (Exception e) {
+            throw new RuntimeException("Get user by id failed", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public int updateUser(UserDTO dto) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession(false);
+        try {
+            int result = userDAO.updateUser(session, dto);
+            session.commit();
+            return result;
+        } catch (Exception e) {
+            session.rollback();
+            throw new RuntimeException("Update user failed", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public int updateUserProfile(UserDTO dto) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession(false);
+        try {
+            int result = userDAO.updateUserProfile(session, dto);
+            session.commit();
+            return result;
+        } catch (Exception e) {
+            session.rollback();
+            throw new RuntimeException("Update user profile failed", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
     public int signupTrainerProfile(TrainerDTO dto) {
         SqlSession session = MybatisSqlSessionFactory
                 .getSqlSessionFactory()

@@ -147,9 +147,9 @@
         <button class="p-2 rounded-lg hover:bg-slate-200">
             <span class="material-symbols-outlined">notifications</span>
         </button>
-        <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+        <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
             <img alt="${sessionScope.loginTrainer.name}" class="w-8 h-8 rounded-full object-cover"
-                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
+                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
         </a>
     </div>
 </header>
@@ -172,7 +172,7 @@
         <span class="material-symbols-outlined text-[22px]">group</span>
         <span class="text-[10px] font-medium">회원관리</span>
     </a>
-    <a href=""
+    <a href="${pageContext.request.contextPath}/trainer/calendar"
        class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
         <span class="material-symbols-outlined text-[22px]">calendar_today</span>
         <span class="text-[10px] font-medium">일정</span>
@@ -234,7 +234,7 @@
 
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
             대시보드</a>
 
         <!-- 회원관리 -->
@@ -245,8 +245,7 @@
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/calendar.html" style=""><span class="material-symbols-outlined" data-icon=""
-                                                style="">calendar_today</span>
+           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
             일정</a>
 
         <!-- 메시지 -->
@@ -271,10 +270,10 @@
     </div>
 
     <!-- 마이프로필 -->
-    <a href="./profile.html"
+    <a href="${pageContext.request.contextPath}/trainer/profile"
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
         <img alt="profile image" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
+             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
              style=""/>
         <div class="overflow-hidden">
             <p class="text-sm font-bold text-on-surface truncate" style="">${sessionScope.loginTrainer.name}</p>

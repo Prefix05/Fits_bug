@@ -13,8 +13,7 @@ import util.MybatisSqlSessionFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class LessonServiceImpl implements LessonService {
 
@@ -23,15 +22,54 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<LessonDTO> getLessonsByDate(LocalDate date, int trainerId) {
-        SqlSession session = MybatisSqlSessionFactory
-                .getSqlSessionFactory()
-                .openSession();
-
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            return lessonDAO.selectLessonsByDate(session, date, trainerId);
+            List<LessonDTO> lessons = lessonDAO.selectLessonsByDate(session, date, trainerId);
+            for (LessonDTO l : lessons) computePosition(l);
+            return lessons;
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public List<LessonDTO> getLessonsByDateRange(LocalDate startDate, LocalDate endDate, int trainerId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            List<LessonDTO> lessons = lessonDAO.selectLessonsByDateRange(session, startDate, endDate, trainerId);
+            for (LessonDTO l : lessons) computePosition(l);
+            return lessons;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public Map<String, Integer> getLessonCountsByMonth(int year, int month, int trainerId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            List<Map<String, Object>> rows = lessonDAO.selectLessonCountsByMonth(session, year, month, trainerId);
+            Map<String, Integer> result = new HashMap<>();
+            for (Map<String, Object> row : rows) {
+                String date = (String) row.get("lesson_date");
+                int cnt = ((Number) row.get("cnt")).intValue();
+                result.put(date, cnt);
+            }
+            return result;
+        } finally {
+            session.close();
+        }
+    }
+
+    // Computes top/height pixel positions for the 24h time grid (1h = 80px)
+    private void computePosition(LessonDTO lesson) {
+        try {
+            String[] parts = lesson.getStartTime().split(":");
+            int h = Integer.parseInt(parts[0]);
+            int m = Integer.parseInt(parts[1]);
+            lesson.setTopPx(h * 80 + m * 80 / 60);
+            lesson.setHeightPx(Math.max(lesson.getDurationMinutes() * 80 / 60, 28));
+        } catch (Exception ignored) {}
     }
 
     @Override

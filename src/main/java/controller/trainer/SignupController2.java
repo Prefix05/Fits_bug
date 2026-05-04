@@ -20,7 +20,13 @@ import java.nio.file.Paths;
 )
 public class SignupController2 extends HttpServlet {
 
-    private static final String UPLOAD_DIR = System.getProperty("user.home") + "/fitbull_uploads";
+    private String uploadDir;
+
+    @Override
+    public void init() {
+        uploadDir = getServletContext().getRealPath("/uploads");
+        new File(uploadDir).mkdirs();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -30,6 +36,15 @@ public class SignupController2 extends HttpServlet {
         if (session == null || session.getAttribute("pendingTrainerUserId") == null) {
             response.sendRedirect(request.getContextPath() + "/trainer/signup");
             return;
+        }
+
+        int userId = (int) session.getAttribute("pendingTrainerUserId");
+        TrainerService trainerService = new TrainerServiceImpl();
+        TrainerDTO trainer = trainerService.getTrainerByUserId(userId);
+        if (trainer != null) {
+            request.setAttribute("prefillTrainer", trainer);
+            request.setAttribute("prefillSpecs", trainerService.getSpecializationsByTrainerId(trainer.getTrainerId()));
+            request.setAttribute("prefillTraits", trainerService.getTraitsByTrainerId(trainer.getTrainerId()));
         }
 
         request.getRequestDispatcher("/trainer/signup2.jsp").forward(request, response);
@@ -61,9 +76,7 @@ public class SignupController2 extends HttpServlet {
 
         if (filePart != null && filePart.getSize() > 0) {
             fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-            filePart.write(UPLOAD_DIR + File.separator + fileName);
+            filePart.write(uploadDir + File.separator + fileName);
         }
 
         TrainerDTO trainer = new TrainerDTO();

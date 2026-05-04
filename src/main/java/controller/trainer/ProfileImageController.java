@@ -9,7 +9,12 @@ import java.nio.file.Files;
 @WebServlet("/trainer/profile-img/*")
 public class ProfileImageController extends HttpServlet {
 
-    private static final String UPLOAD_DIR = System.getProperty("user.home") + "/fitbull_uploads";
+    private String uploadDir;
+
+    @Override
+    public void init() {
+        uploadDir = getServletContext().getRealPath("/uploads");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -23,7 +28,7 @@ public class ProfileImageController extends HttpServlet {
 
         // Strip leading slash and block path traversal
         fileName = new File(fileName).getName();
-        File file = new File(UPLOAD_DIR, fileName);
+        File file = new File(uploadDir, fileName);
 
         if (!file.exists() || !file.isFile()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

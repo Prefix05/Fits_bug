@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 public class TrainerDTO {
     private int trainerId;
     private int userId;
+    private String trainerType;
+    private Integer gymId;
+    private String businessRegistrationNum;
     private String description;
     private String address;
     private String addressDetail;
@@ -24,6 +27,15 @@ public class TrainerDTO {
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+
+    public String getTrainerType() { return trainerType; }
+    public void setTrainerType(String trainerType) { this.trainerType = trainerType; }
+
+    public Integer getGymId() { return gymId; }
+    public void setGymId(Integer gymId) { this.gymId = gymId; }
+
+    public String getBusinessRegistrationNum() { return businessRegistrationNum; }
+    public void setBusinessRegistrationNum(String businessRegistrationNum) { this.businessRegistrationNum = businessRegistrationNum; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

@@ -5,6 +5,10 @@
 
 <mapper namespace="payoutAccount">
 
+    <delete id="deleteByTrainerId" parameterType="int">
+        DELETE FROM payout_account WHERE trainer_id = #{trainerId}
+    </delete>
+
     <insert id="insertPayoutAccount" parameterType="dto.trainer.PayoutAccountDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO payout_account (

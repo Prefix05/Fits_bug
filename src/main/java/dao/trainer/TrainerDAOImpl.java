@@ -1,9 +1,13 @@
 package dao.trainer;
 
+import dto.trainer.AvailabilityDTO;
+import dto.trainer.CertificationDTO;
 import dto.trainer.PayoutAccountDTO;
+import dto.trainer.PricingDTO;
 import dto.trainer.TrainerDTO;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.List;
 import java.util.Map;
 
 public class TrainerDAOImpl implements TrainerDAO {
@@ -57,7 +61,83 @@ public class TrainerDAOImpl implements TrainerDAO {
     }
 
     @Override
+    public dto.gym.Gym findGymInfoById(SqlSession session, int gymId) {
+        return session.selectOne("trainer.findGymInfoById", gymId);
+    }
+
+    @Override
     public int insertPayoutAccount(SqlSession session, PayoutAccountDTO dto) {
         return session.insert("payoutAccount.insertPayoutAccount", dto);
+    }
+
+    @Override
+    public void deletePayoutAccount(SqlSession session, int trainerId) {
+        session.delete("payoutAccount.deleteByTrainerId", trainerId);
+    }
+
+    @Override
+    public PayoutAccountDTO getPayoutAccountByTrainerId(SqlSession session, int trainerId) {
+        return session.selectOne("payoutAccount.findByTrainerId", trainerId);
+    }
+
+    @Override
+    public List<String> findSpecializationsByTrainerId(SqlSession session, int trainerId) {
+        return session.selectList("trainer.findSpecializationsByTrainerId", trainerId);
+    }
+
+    @Override
+    public List<String> findTraitsByTrainerId(SqlSession session, int trainerId) {
+        return session.selectList("trainer.findTraitsByTrainerId", trainerId);
+    }
+
+    // ── Certifications ───────────────────────────────────────────────────────
+
+    @Override
+    public void deleteCertifications(SqlSession session, int trainerId) {
+        session.delete("certification.deleteCertifications", trainerId);
+    }
+
+    @Override
+    public void insertCertification(SqlSession session, CertificationDTO dto) {
+        session.insert("certification.insertCertification", dto);
+    }
+
+    @Override
+    public List<CertificationDTO> findCertificationsByTrainerId(SqlSession session, int trainerId) {
+        return session.selectList("certification.findByTrainerId", trainerId);
+    }
+
+    // ── Pricing ──────────────────────────────────────────────────────────────
+
+    @Override
+    public void deletePricing(SqlSession session, int trainerId) {
+        session.delete("pricingAvailability.deletePricing", trainerId);
+    }
+
+    @Override
+    public void insertPricing(SqlSession session, PricingDTO dto) {
+        session.insert("pricingAvailability.insertPricing", dto);
+    }
+
+    @Override
+    public List<PricingDTO> findPricingByTrainerId(SqlSession session, int trainerId) {
+        return session.selectList("pricingAvailability.findPricingByTrainerId", trainerId);
+    }
+
+    // ── Availability ─────────────────────────────────────────────────────────
+
+    @Override
+    public void deleteAvailability(SqlSession session, int trainerId) {
+        session.delete("pricingAvailability.deleteAvailability", trainerId);
+    }
+
+    @Override
+    public void insertAvailability(SqlSession session, AvailabilityDTO dto) {
+        session.insert("pricingAvailability.insertAvailability", dto);
+    }
+
+    @Override
+    public List<AvailabilityDTO> findAvailabilityByTrainerId(SqlSession session, int trainerId) {
+        return session.selectList("pricingAvailability.findAvailabilityByTrainerId", trainerId);
     }
 }

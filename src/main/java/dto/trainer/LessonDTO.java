@@ -9,6 +9,9 @@ public class LessonDTO {
     private int durationMinutes;
     private String status;
     private int clientId;
+    private String lessonDate; // "YYYY-MM-DD"
+    private int topPx;         // pixel offset from top of 24h grid (1h = 80px)
+    private int heightPx;      // pixel height based on duration
 
 
     public LessonDTO() {
@@ -88,4 +91,13 @@ public class LessonDTO {
     public void setClientId(int clientId) {
         this.clientId = clientId;
     }
+
+    public String getLessonDate() { return lessonDate; }
+    public void setLessonDate(String lessonDate) { this.lessonDate = lessonDate; }
+
+    public int getTopPx() { return topPx; }
+    public void setTopPx(int topPx) { this.topPx = topPx; }
+
+    public int getHeightPx() { return heightPx; }
+    public void setHeightPx(int heightPx) { this.heightPx = heightPx; }
 }

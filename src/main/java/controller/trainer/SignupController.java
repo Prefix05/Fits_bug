@@ -1,7 +1,5 @@
 package controller.trainer;
 
-import dao.trainer.TrainerDAOImpl;
-import dto.trainer.TrainerDTO;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import dto.trainer.UserDTO;
 import service.trainer.SignupService;
@@ -17,6 +15,15 @@ public class SignupController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("pendingTrainerUserId") != null) {
+            int userId = (int) session.getAttribute("pendingTrainerUserId");
+            SignupService service = new SignupServiceImpl();
+            UserDTO existing = service.getUserById(userId);
+            if (existing != null) {
+                request.setAttribute("prefill", existing);
+            }
+        }
         request.getRequestDispatcher("/trainer/signup.jsp").forward(request, response);
     }
 
@@ -56,23 +63,37 @@ public class SignupController extends HttpServlet {
         dto.setProviderId(providerId);
 
         SignupService service = new SignupServiceImpl();
+        HttpSession session = request.getSession();
+        Integer existingUserId = (Integer) session.getAttribute("pendingTrainerUserId");
 
         try {
-            int result = service.signupTrainer(dto);
-
-            if (result > 0) {
-                HttpSession session = request.getSession();
-                session.setAttribute("pendingTrainerUserId", dto.getId());
-                response.sendRedirect(request.getContextPath() + "/trainer/signup/step2");
+            if (existingUserId != null) {
+                // User already created — just update their info
+                dto.setId(existingUserId);
+                service.updateUser(dto);
             } else {
-                request.setAttribute("error", "회원가입 실패");
-                request.getRequestDispatcher("/trainer/signup.jsp").forward(request, response);
+                // First time — insert new user
+                int result = service.signupTrainer(dto);
+                if (result <= 0) {
+                    request.setAttribute("error", "회원가입 실패");
+                    request.getRequestDispatcher("/trainer/signup.jsp").forward(request, response);
+                    return;
+                }
+                session.setAttribute("pendingTrainerUserId", dto.getId());
             }
+            response.sendRedirect(request.getContextPath() + "/trainer/signup/step2");
 
         } catch (Exception e) {
             e.printStackTrace();
 
-            request.setAttribute("error", "서버 오류로 회원가입에 실패했습니다.");
+            String cause = e.getMessage() != null ? e.getMessage() : "";
+            // MariaDB/MySQL error 1062 = Duplicate entry
+            if (cause.contains("Duplicate entry") || cause.contains("1062")) {
+                request.setAttribute("isDuplicate", true);
+                request.setAttribute("error", "이미 사용 중인 이메일입니다. 다른 이메일을 사용하거나 로그인해 주세요.");
+            } else {
+                request.setAttribute("error", "서버 오류로 회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+            }
             request.getRequestDispatcher("/trainer/signup.jsp").forward(request, response);
         }
     }
