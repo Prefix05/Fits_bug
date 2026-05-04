@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.WorkoutRecordMapper">
+
+    <resultMap id="recordResultMap" type="WorkoutRecordDTO">
+        <id     property="id"                column="id"/>
+        <result property="email"             column="email"/>
+        <result property="name"              column="name"/>
+        <result property="weight"            column="weight"/>
+        <result property="reps"              column="reps"/>
+        <result property="sets"              column="sets"/>
+        <result property="workoutRecordTime" column="date"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         WorkoutRecordDAOImpl.insertRecord(WorkoutRecordDTO dto)
+         → param: WorkoutRecordDTO
+         ────────────────────────────────────────────────────── -->
+    <insert id="insertRecord" parameterType="WorkoutRecordDTO">
+        INSERT INTO records (email, name, weight, reps, sets, date)
+        VALUES (#{email}, #{name}, #{weight}, #{reps}, #{sets}, NOW())
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         WorkoutRecordDAOImpl.getRecords(String email)
+         → param: string
+         ────────────────────────────────────────────────────── -->
+    <select id="getRecords" parameterType="string" resultMap="recordResultMap">
+        SELECT id, email, name, weight, reps, sets, date
+        FROM records
+        WHERE email = #{email}
+        ORDER BY date DESC
+    </select>
+
+</mapper>

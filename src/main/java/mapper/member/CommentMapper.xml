@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.CommentMapper">
+
+    <resultMap id="commentResultMap" type="CommentDTO">
+        <id     property="id"        column="id"/>
+        <result property="postId"    column="post_id"/>
+        <result property="nickname"  column="nickname"/>
+        <result property="content"   column="content"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         CommentDAOImpl.insert(CommentDTO dto)
+         → param: CommentDTO
+         ────────────────────────────────────────────────────── -->
+    <insert id="insert" parameterType="CommentDTO">
+        INSERT INTO comment (post_id, nickname, content)
+        VALUES (#{postId}, #{nickname}, #{content})
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         CommentDAOImpl.findByPostId(int postId)
+         → param: int (단일 값)
+         ────────────────────────────────────────────────────── -->
+    <select id="findByPostId" parameterType="int" resultMap="commentResultMap">
+        SELECT id, post_id, nickname, content, created_at
+        FROM comment
+        WHERE post_id = #{postId}
+        ORDER BY id ASC
+    </select>
+
+</mapper>

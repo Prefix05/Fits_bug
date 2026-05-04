@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.NotificationMapper">
+
+    <!-- DB 컬럼 member_email ↔ DTO 필드 email 불일치 → resultMap으로 해소 -->
+    <resultMap id="notiResultMap" type="NotificationDTO">
+        <id     property="id"        column="id"/>
+        <result property="email"     column="member_email"/>
+        <result property="type"      column="type"/>
+        <result property="message"   column="message"/>
+        <result property="url"       column="url"/>
+        <result property="isRead"    column="is_read"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         NotificationDAOImpl.findByEmail(String email)
+         → param: string
+         ────────────────────────────────────────────────────── -->
+    <select id="findByEmail" parameterType="string" resultMap="notiResultMap">
+        SELECT id, member_email, type, message, url, is_read, created_at
+        FROM notification
+        WHERE member_email = #{email}
+        ORDER BY id DESC
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         NotificationDAOImpl.countUnread(String email)
+         → param: string, return: int
+         ────────────────────────────────────────────────────── -->
+    <select id="countUnread" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM notification
+        WHERE member_email = #{email} AND is_read = false
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         NotificationDAOImpl.insert(NotificationDTO dto)
+         → param: NotificationDTO  (dto.getEmail() → member_email 컬럼)
+         ────────────────────────────────────────────────────── -->
+    <insert id="insert" parameterType="NotificationDTO">
+        INSERT INTO notification (member_email, type, message, url)
+        VALUES (#{email}, #{type}, #{message}, #{url})
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         NotificationDAOImpl.updateReadAll(String email)
+         → param: string
+         ────────────────────────────────────────────────────── -->
+    <update id="updateReadAll" parameterType="string">
+        UPDATE notification
+        SET is_read = true
+        WHERE member_email = #{email}
+    </update>
+
+    <!-- ──────────────────────────────────────────────────────
+         NotificationDAOImpl.updateReadOne(int id)
+         → param: int (단일 값)
+         ────────────────────────────────────────────────────── -->
+    <update id="updateReadOne" parameterType="int">
+        UPDATE notification
+        SET is_read = true
+        WHERE id = #{id}
+    </update>
+
+</mapper>

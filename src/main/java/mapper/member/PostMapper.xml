@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.PostMapper">
+
+    <resultMap id="postResultMap" type="PostDTO">
+        <id     property="id"          column="id"/>
+        <result property="userId"      column="user_id"/>
+        <result property="category"    column="category"/>
+        <result property="title"       column="title"/>
+        <result property="content"     column="content"/>
+        <result property="image"       column="image"/>
+        <result property="hashtags"    column="hashtags"/>
+        <result property="createdAt"   column="created_at"/>
+        <result property="likeCount"   column="like_count"/>
+        <result property="goodCount"   column="good_count"/>
+        <result property="muscleCount" column="muscle_count"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         PostDAOImpl.insert(PostDTO dto)
+         → param: PostDTO
+         ────────────────────────────────────────────────────── -->
+    <insert id="insert" parameterType="PostDTO">
+        INSERT INTO post (user_id, category, title, content, image, hashtags)
+        VALUES (#{userId}, #{category}, #{title}, #{content}, #{image}, #{hashtags})
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         PostDAOImpl.getList()
+         → 파라미터 없음 / 리액션 카운트 LEFT JOIN 포함
+         ────────────────────────────────────────────────────── -->
+    <select id="getList" resultMap="postResultMap">
+        SELECT
+            p.id, p.user_id, p.category, p.title, p.content,
+            p.image, p.hashtags, p.created_at,
+            SUM(CASE WHEN pr.type = 'like'   THEN 1 ELSE 0 END) AS like_count,
+            SUM(CASE WHEN pr.type = 'good'   THEN 1 ELSE 0 END) AS good_count,
+            SUM(CASE WHEN pr.type = 'muscle' THEN 1 ELSE 0 END) AS muscle_count
+        FROM post p
+        LEFT JOIN post_reaction pr ON p.id = pr.post_id
+        GROUP BY p.id, p.user_id, p.category, p.title,
+                 p.content, p.image, p.hashtags, p.created_at
+        ORDER BY p.id DESC
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         PostDAOImpl.getWriterEmail(int postId)
+         → param: int (단일 값)
+         → post 테이블의 작성자 컬럼은 user_id
+         ────────────────────────────────────────────────────── -->
+    <select id="getWriterEmail" parameterType="int" resultType="string">
+        SELECT user_id FROM post WHERE id = #{postId}
+    </select>
+
+</mapper>
