@@ -16,7 +16,7 @@ import dao.member.WorkoutPlanDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
 
-@WebServlet("/step3")
+@WebServlet("/member/step3")
 public class Step3Controller extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

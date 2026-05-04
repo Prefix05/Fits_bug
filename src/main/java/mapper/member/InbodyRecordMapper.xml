@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.InbodyRecordMapper">
 
-    <resultMap id="inbodyResultMap" type="InbodyRecordDTO">
+    <resultMap id="inbodyResultMap" type="dto.member.InbodyRecordDTO">
         <id     property="id"         column="id"/>
         <result property="email"      column="email"/>
         <result property="weight"     column="weight"/>

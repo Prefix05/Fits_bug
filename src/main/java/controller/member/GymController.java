@@ -14,7 +14,7 @@ import dto.member.GymDTO;
 import service.member.GymService;
 import service.member.GymServiceImpl;
 
-@WebServlet("/gymList")
+@WebServlet("/member/gymList")
 public class GymController extends HttpServlet {
     private GymService service = new GymServiceImpl();
 

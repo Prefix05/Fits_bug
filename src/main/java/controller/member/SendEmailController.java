@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-@WebServlet("/sendEmailCode")
+@WebServlet("/member/sendEmailCode")
 public class SendEmailController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		    throws IOException {

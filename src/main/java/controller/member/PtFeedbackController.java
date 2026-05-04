@@ -13,7 +13,7 @@ import dto.member.PtFeedbackDTO;
 import service.member.PtFeedbackService;
 import service.member.PtFeedbackServiceImpl;
 
-@WebServlet("/ptFeedback")
+@WebServlet("/member/ptFeedback")
 public class PtFeedbackController extends HttpServlet {
 
     private PtFeedbackService service = new PtFeedbackServiceImpl();

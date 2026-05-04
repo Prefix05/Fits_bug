@@ -15,7 +15,7 @@ import dto.member.SupportDTO;
 import service.member.SupportService;
 import service.member.SupportServiceImpl;
 
-@WebServlet("/support")
+@WebServlet("/member/support")
 public class SupportController extends HttpServlet {
 
     private SupportService service = new SupportServiceImpl();

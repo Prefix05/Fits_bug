@@ -15,7 +15,7 @@ import dto.member.WorkoutPlanDTO;
 import service.member.MyPageService;
 import service.member.MyPageServiceImpl;
 
-@WebServlet("/mypage")
+@WebServlet("/member/mypage")
 public class MyPageController extends HttpServlet {
     private MyPageService service = new MyPageServiceImpl();
 

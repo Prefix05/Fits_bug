@@ -76,7 +76,7 @@ import javax.servlet.http.HttpServletResponse;
 import dto.member.MemberDTO;
 import dto.member.NotificationDTO;
 
-@WebServlet("/notification")
+@WebServlet("/member/notification")
 public class NotificationController extends HttpServlet {
 
     @Override

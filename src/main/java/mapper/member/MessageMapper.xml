@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.MessageMapper">
 
-    <resultMap id="messageResultMap" type="MessageDTO">
+    <resultMap id="messageResultMap" type="dto.member.MessageDTO">
         <id     property="id"       column="id"/>
         <result property="sender"   column="sender"/>
         <result property="receiver" column="receiver"/>
@@ -13,7 +13,7 @@
         <result property="isRead"   column="is_read"/>
     </resultMap>
 
-    <resultMap id="roomResultMap" type="MessageRoomDTO">
+    <resultMap id="roomResultMap" type="dto.member.MessageRoomDTO">
         <result property="email"       column="chat_user"/>
         <result property="nickname"    column="nickname"/>
         <result property="lastMessage" column="last_message"/>

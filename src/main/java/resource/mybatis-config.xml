@@ -21,6 +21,7 @@
         <typeAlias alias="InbodyRecordDTO"  type="dto.member.InbodyRecordDTO"/>
         <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
         <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
+        <typeAlias alias="CommunityDTO"     type="dto.member.CommunityDTO"/>
         <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
         <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
@@ -67,6 +68,7 @@
         <mapper resource="mapper/member/FoodRecordMapper.xml"/>
         <mapper resource="mapper/member/InbodyRecordMapper.xml"/>
         <mapper resource="mapper/member/PostMapper.xml"/>
+        <mapper resource="mapper/member/CommunityMapper.xml"/>
         <mapper resource="mapper/member/PostReactionMapper.xml"/>
         <mapper resource="mapper/member/CommentMapper.xml"/>
         <mapper resource="mapper/member/MessageMapper.xml"/>

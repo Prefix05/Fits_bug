@@ -5,7 +5,7 @@
 <mapper namespace="mapper.NotificationMapper">
 
     <!-- DB 컬럼 member_email ↔ DTO 필드 email 불일치 → resultMap으로 해소 -->
-    <resultMap id="notiResultMap" type="NotificationDTO">
+    <resultMap id="notiResultMap" type="dto.member.NotificationDTO">
         <id     property="id"        column="id"/>
         <result property="email"     column="member_email"/>
         <result property="type"      column="type"/>

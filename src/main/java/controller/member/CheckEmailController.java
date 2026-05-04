@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 
-@WebServlet("/checkEmail")
+@WebServlet("/member/checkEmail")
 public class CheckEmailController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 		    throws IOException {

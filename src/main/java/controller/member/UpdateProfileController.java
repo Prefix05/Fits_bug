@@ -16,7 +16,7 @@ import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 
-@WebServlet("/updateProfile")
+@WebServlet("/member/updateProfile")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
     maxFileSize = 1024 * 1024 * 5,

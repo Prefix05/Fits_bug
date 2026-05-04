@@ -36,7 +36,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet("/join")
+@WebServlet("/member/join")
 public class JoinController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -13,7 +13,7 @@ import dto.member.PaymentDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
-@WebServlet("/payment")
+@WebServlet("/member/payment")
 public class PaymentController extends HttpServlet {
 
     private PaymentService service = new PaymentServiceImpl();

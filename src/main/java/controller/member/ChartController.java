@@ -14,7 +14,7 @@ import dto.member.MemberDTO;
 import service.member.ChartService;
 import service.member.ChartServiceImpl;
 
-@WebServlet("/chart")
+@WebServlet("/member/chart")
 public class ChartController extends HttpServlet {
 
     private ChartService service = new ChartServiceImpl();

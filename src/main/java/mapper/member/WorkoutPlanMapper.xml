@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.WorkoutPlanMapper">
 
-    <resultMap id="planResultMap" type="WorkoutPlanDTO">
+    <resultMap id="planResultMap" type="dto.member.WorkoutPlanDTO">
         <id     property="email"     column="email"/>
         <result property="goal"      column="goal"/>
         <result property="level"     column="level"/>

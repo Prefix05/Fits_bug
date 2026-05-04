@@ -12,7 +12,7 @@ import dto.member.MemberDTO;
 import service.member.HotTimeService;
 import service.member.HotTimeServiceImpl;
 
-@WebServlet("/hotTime")
+@WebServlet("/member/hotTime")
 public class HotTimeController extends HttpServlet {
 
     private HotTimeService service = new HotTimeServiceImpl();

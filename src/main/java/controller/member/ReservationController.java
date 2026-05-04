@@ -12,7 +12,7 @@ import dto.member.ReservationDTO;
 import service.member.ReservationService;
 import service.member.ReservationServiceImpl;
 
-@WebServlet("/nextClass")
+@WebServlet("/member/nextClass")
 public class ReservationController extends HttpServlet {
 
     private ReservationService service = new ReservationServiceImpl();

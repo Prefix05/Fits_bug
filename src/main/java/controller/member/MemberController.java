@@ -13,7 +13,7 @@ import dto.member.MemberDTO;
 import service.member.MemberService;
 import service.member.MemberServiceImpl;
 
-@WebServlet("/login")
+@WebServlet("/member/login")
 public class MemberController extends HttpServlet {
 
     private MemberService memberService = new MemberServiceImpl();

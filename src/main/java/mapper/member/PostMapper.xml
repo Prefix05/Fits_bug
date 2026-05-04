@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.PostMapper">
 
-    <resultMap id="postResultMap" type="PostDTO">
+    <resultMap id="postResultMap" type="dto.member.PostDTO">
         <id     property="id"          column="id"/>
         <result property="userId"      column="user_id"/>
         <result property="category"    column="category"/>

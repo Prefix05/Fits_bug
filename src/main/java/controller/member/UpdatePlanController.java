@@ -13,7 +13,7 @@ import dao.member.WorkoutPlanDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
 
-@WebServlet("/updatePlan")
+@WebServlet("/member/updatePlan")
 public class UpdatePlanController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 

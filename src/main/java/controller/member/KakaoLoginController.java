@@ -14,7 +14,7 @@ import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 import util.KakaoUtil;
 
-@WebServlet("/kakaoLogin")
+@WebServlet("/member/kakaoLogin")
 public class KakaoLoginController extends HttpServlet {
 
     private MemberDAO dao = new MemberDAOImpl();

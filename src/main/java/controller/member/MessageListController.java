@@ -57,7 +57,7 @@ import javax.servlet.http.HttpSession;
 import dto.member.MemberDTO;
 import dto.member.MessageRoomDTO;
 
-@WebServlet("/messageList")
+@WebServlet("/member/messageList")
 public class MessageListController extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

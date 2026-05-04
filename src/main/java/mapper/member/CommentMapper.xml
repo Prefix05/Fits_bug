@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.CommentMapper">
 
-    <resultMap id="commentResultMap" type="CommentDTO">
+    <resultMap id="commentResultMap" type="dto.member.CommentDTO">
         <id     property="id"        column="id"/>
         <result property="postId"    column="post_id"/>
         <result property="nickname"  column="nickname"/>

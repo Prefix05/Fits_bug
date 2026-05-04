@@ -15,7 +15,7 @@ import dto.member.MessageDTO;
 import service.member.MessageService;
 import service.member.MessageServiceImpl;
 
-@WebServlet("/message")
+@WebServlet("/member/message")
 public class MessageController extends HttpServlet {
 
     private MessageService service = new MessageServiceImpl();
