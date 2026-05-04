@@ -59,7 +59,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/member/main.jsp" class="sb-link">
+    <a href="<%=contextPath%>/member/main" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -74,7 +74,7 @@
     <a href="<%=contextPath%>/member/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
-    <a href="<%=contextPath%>/member/mypage" class="sb-link">
+    <a href="<%=contextPath%>/admin/mypage" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>마이페이지</span>
     </a>
 
