@@ -2,109 +2,101 @@ package controller.gym;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import dto.gym.TrainerMemberView;
+import service.gym.GymTrainerManageService;
+import service.gym.GymTrainerManageServiceImpl;
 
-/**
- * Servlet implementation class GymTrainerMembers
- */
 @WebServlet("/gym/trainerMembers")
 public class GymTrainerMembers extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor. 
-     */
     public GymTrainerMembers() {
-        // TODO Auto-generated constructor stub
+        super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		GymTrainerManageService service = new GymTrainerManageServiceImpl();
-		
-		int trainerId = 0;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+    	request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("gymId") == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("[]");
+            return;
+        }
+
+        String trainerIdStr = request.getParameter("trainerId");
+
+        if (trainerIdStr == null || trainerIdStr.trim().isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("[]");
+            return;
+        }
+
+        int trainerId;
+
         try {
-            trainerId = Integer.parseInt(request.getParameter("trainerId"));
-        } catch (Exception e) {
-            trainerId = 0;
+            trainerId = Integer.parseInt(trainerIdStr);
+        } catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("[]");
+            return;
         }
 
         String type = request.getParameter("type");
-        if (type == null || type.equals("")) {
+        if (type == null || type.isEmpty()) {
             type = "current";
         }
 
-//        List<TrainerMemberView> list = service.getMembers(trainerId, type);
-        //더미 데이터
-        List<TrainerMemberView> list = new ArrayList<>();
+        try {
+            GymTrainerManageService service = new GymTrainerManageServiceImpl();
 
-        if ("past".equals(type)) {
+            List<TrainerMemberView> list = service.getMembers(trainerId, type);
 
-            TrainerMemberView m1 = new TrainerMemberView();
-            m1.setMemberName("박회원");
-            m1.setMembershipName("PT 10회");
-            m1.setRemainingSession(0);
-            m1.setStartDate("2024-03-01");
-
-            list.add(m1);
-
-        } else {
-
-            TrainerMemberView m1 = new TrainerMemberView();
-            m1.setMemberName("이회원");
-            m1.setMembershipName("PT 20회");
-            m1.setRemainingSession(15);
-            m1.setStartDate("2024-04-01");
-
-            list.add(m1);
-
-            TrainerMemberView m2 = new TrainerMemberView();
-            m2.setMemberName("최회원");
-            m2.setMembershipName("PT 30회");
-            m2.setRemainingSession(20);
-            m2.setStartDate("2024-04-10");
-
-            list.add(m2);
-        }
-        //더미 데이터
-
-        response.setContentType("application/json;charset=UTF-8");
-
-        PrintWriter out = response.getWriter();
-        StringBuilder json = new StringBuilder();
-
-        json.append("[");
-
-        for (int i = 0; i < list.size(); i++) {
-            TrainerMemberView m = list.get(i);
-
-            json.append("{");
-            json.append("\"memberName\":\"").append(jsonEscape(m.getMemberName())).append("\",");
-            json.append("\"membershipName\":\"").append(jsonEscape(m.getMembershipName())).append("\",");
-            json.append("\"remainingSession\":").append(m.getRemainingSession()).append(",");
-            json.append("\"startDate\":\"").append(jsonEscape(m.getStartDate())).append("\"");
-            json.append("}");
-
-            if (i < list.size() - 1) {
-                json.append(",");
+            if (list == null) {
+                list = java.util.Collections.emptyList();
             }
+
+            PrintWriter out = response.getWriter();
+            StringBuilder json = new StringBuilder();
+
+            json.append("[");
+
+            for (int i = 0; i < list.size(); i++) {
+                TrainerMemberView m = list.get(i);
+
+                json.append("{");
+                json.append("\"memberName\":\"").append(jsonEscape(m.getMemberName())).append("\",");
+                json.append("\"membershipName\":\"").append(jsonEscape(m.getMembershipName())).append("\",");
+                json.append("\"remainingSession\":").append(m.getRemainingSession()).append(",");
+                json.append("\"startDate\":\"")
+                .append(m.getStartDate() == null ? "" : m.getStartDate().toLocalDateTime().toLocalDate())
+                .append("\"");
+                json.append("}");
+
+                if (i < list.size() - 1) {
+                    json.append(",");
+                }
+            }
+
+            json.append("]");
+
+            out.print(json.toString());
+            out.flush();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("[]");
         }
-
-        json.append("]");
-
-        out.print(json.toString());
-        out.flush();
     }
 
     private String jsonEscape(String value) {
@@ -119,6 +111,4 @@ public class GymTrainerMembers extends HttpServlet {
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");
     }
-	
-
 }

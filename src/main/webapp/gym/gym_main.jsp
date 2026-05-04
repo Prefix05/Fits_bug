@@ -150,7 +150,7 @@
 			<c:forEach var="img" items="${images}" varStatus="status">
 				<div class="aspect-video rounded-lg overflow-hidden border border-outline-variant/10">
 					<img alt="Gym gallery image"  
-						 src="${pageContext.request.contextPath}/galleryImages/${img}"
+						 src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"
 	 					 onclick="openLightbox(${status.index})"
      					 class="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer"/>
 				</div>
@@ -168,7 +168,7 @@
 		<c:choose>
 			<c:when test="${not empty noticeList}">
 				<c:forEach var="notice" items="${noticeList}">
-					<a href="${pageContext.request.contextPath}/gym/noticeDetail?id=${notice.id}"
+					<a href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${notice.id}"
 					   class="flex justify-between items-center p-2 rounded hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/5 last:border-0">
 							<div class="flex items-center space-x-2">
 								<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
@@ -239,6 +239,11 @@
             	</button>
         	</div>
     	</div>
+    	<form id="reviewForm" method="post" action="${pageContext.request.contextPath}/gym/reviewWrite">
+    		<input type="hidden" name="gymId" value="${gym.id}">
+   	 		<input type="hidden" name="star" id="reviewStarInput">
+    		<input type="hidden" name="comment" id="reviewCommentInput">
+		</form>
 	</c:if>
 <div id="reviewList" class="grid grid-cols-2 gap-4">
     <c:choose>
@@ -256,10 +261,10 @@
 
                         <div class="flex items-center">
                             <div class="flex text-yellow-400 scale-75 origin-right mr-1">
-                                <c:forEach begin="1" end="${review.star}">
+                                <c:forEach begin="1" end="${review.rating}">
                                     <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
                                 </c:forEach>
-                                <c:forEach begin="${review.star + 1}" end="5">
+                                <c:forEach begin="${review.rating + 1}" end="5">
                                     <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
                                 </c:forEach>
                             </div>
@@ -315,10 +320,10 @@
                         </div>
 
                         <div class="flex text-yellow-400 scale-75 origin-right">
-                            <c:forEach begin="1" end="${review.star}">
+                            <c:forEach begin="1" end="${review.rating}">
                                 <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
                             </c:forEach>
-                            <c:forEach begin="${review.star + 1}" end="5">
+                            <c:forEach begin="${review.rating + 1}" end="5">
                                 <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
                             </c:forEach>
                         </div>
@@ -452,7 +457,7 @@
 			<c:when test="${not empty trainerList}">
 				<c:forEach var="trainer" items="${trainerList}" begin="0" end="2">
 					<img class="w-8 h-8 rounded-full border-2 border-white object-cover" 
-						 src="${pageContext.request.contextPath}/profileImages/${trainer.profileImg}"
+						 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
 						 alt="${trainer.name}"/>
 				</c:forEach>
 				<c:if test="${trainerCount > 3}">
@@ -514,7 +519,7 @@
 
 const galleryImages =[
 	<c:forEach var="img" items="${images}" varStatus="status">
-		"${pageContext.request.contextPath}/galleryImages/${img}"<c:if test="${!status.last}">,</c:if>
+	"${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"<c:if test="${!status.last}">,</c:if>
 	</c:forEach>
 ];
 
@@ -569,8 +574,9 @@ function prevImage(){
 						<div class="flex items-center gap-4 p-4 hover:bg-surface-container-low/50 transition-colors cursor-pointer group">
 							<div class="relative shrink-0">
 								<img class="w-12 h-12 rounded-full object-cover border-2 border-primary-container/20 group-hover:border-primary transition-colors" 
-									 alt="${trainer.name}" 
-									 src="${pageContext.request.contextPath}/profileImages/${trainer.profileImg}"/>
+     								 alt="${trainer.name}" 
+     								 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+     								 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"/>
 							</div>
 							<div class="flex-1 min-w-0">
 								<div class="flex justify-between items-baseline mb-0.5">
@@ -679,16 +685,19 @@ function submitReview(){
         return;
     }
 
-    location.href = "${pageContext.request.contextPath}/review/write?gymId=${gym.id}&star=" + selectedStar + "&comment=" + content;
+    document.getElementById("reviewStarInput").value = selectedStar;
+    document.getElementById("reviewCommentInput").value = content;
+
+    document.getElementById("reviewForm").submit();
 }
 
 function editReview(id){
-    location.href = "/review/edit?reviewNum=" + id;
+    location.href = "${pageContext.request.contextPath}/gym/reviewUpdate?reviewNum=" + id;
 }
 
 function deleteReview(id){
     if(confirm("삭제하시겠습니까?")){
-        location.href = "/review/delete?reviewNum=" + id;
+        location.href = "${pageContext.request.contextPath}/gym/reviewDelete?reviewNum=" + id;
     }
 }
 </script>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,7 +96,7 @@
 
 <!-- Navigation Action Bar -->
 <div class="flex justify-between items-center mb-10">
-<a href="${pageContext.request.contextPath}/gym/notice?gymId=${notice.gymId}" 
+<a href="${pageContext.request.contextPath}/gym/notice" 
    class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors font-medium text-sm group">
 	<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     목록으로 돌아가기
@@ -122,7 +123,9 @@
 <div class="flex items-center gap-6 text-on-surface-variant">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-[18px]">calendar_today</span>
-<span class="text-sm font-medium">${notice.createdAt}</span>
+<span class="text-sm font-medium">
+	<fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+</span>
 </div>
 <div class="w-px h-3 bg-outline-variant/30"></div>
 <div class="flex items-center gap-2">
@@ -162,7 +165,7 @@
 <div class="mt-12 space-y-px">
 	<c:if test="${not empty prevNotice}">
 		<a class="flex items-center group bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-t-xl transition-colors" 
-		   href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${prevNotice.id}&gymId=${notice.gymId}">
+		   href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${prevNotice.id}">
 		
 			<div class="w-24 text-[10px] font-black text-on-surface-variant tracking-widest uppercase flex items-center gap-2">
 				이전글
@@ -174,14 +177,14 @@
             </div>
             
             <div class="text-xs text-on-surface-variant font-medium">
-            	${prevNotice.createdAt}
+            	<fmt:formatDate value="${prevNotice.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
             </div>
 		</a>
 	</c:if>
 	
 	<c:if test="${not empty nextNotice}">
 		<a class="flex items-center group bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-b-xl transition-colors"
-		   href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${nextNotice.id}&gymId=${notice.gymId}">
+		   href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${nextNotice.id}">
 			
 			<div class="w-24 text-[10px] font-black text-on-surface-variant tracking-widest uppercase flex items-center gap-2">
             	다음글
@@ -191,7 +194,7 @@
 				${nextNotice.title}
 			</div>
 			<div class="text-xs text-on-surface-variant font-medium">
-				${nextNotice.createdAt}
+				<fmt:formatDate value="${nextNotice.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
 			</div>
 		</a>
 	</c:if>

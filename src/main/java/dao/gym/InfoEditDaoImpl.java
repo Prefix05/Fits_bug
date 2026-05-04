@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import dto.gym.Gym;
-import dto.gym.GymPeakTime;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import util.MybatisSqlSessionFactory;
@@ -30,6 +29,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.update("mapper.infoEdit.updateGym", gym);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -42,6 +44,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.update("mapper.infoEdit.updateGymUser", gym);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -54,6 +59,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.update("mapper.infoEdit.updatePassword", param);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -86,6 +94,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.update("mapper.infoEdit.updateSchedule", schedule);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -108,6 +119,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.update("mapper.infoEdit.updateMembership", membership);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -120,6 +134,9 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.insert("mapper.infoEdit.insertMembership", membership);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
@@ -132,43 +149,13 @@ public class InfoEditDaoImpl implements InfoEditDao{
 			int res = sqlSession.delete("mapper.infoEdit.deleteMembership", membershipNum);
 	        sqlSession.commit();
 	        return res;
+		} catch (Exception e) {
+		    sqlSession.rollback();
+		    throw e;
 		}finally{
 			sqlSession.close();
 		}
 	}
 
-	@Override
-	public List<GymPeakTime> selectPeakTimeList(int gymId) {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			return sqlSession.selectList("mapper.infoEdit.selectPeakTimeList", gymId);
-		}finally{
-			sqlSession.close();
-		}
-	}
-
-	@Override
-	public int deletePeakTimeByGymId(int gymId) {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			int res = sqlSession.delete("mapper.infoEdit.deletePeakTimeByGymId", gymId);
-	        sqlSession.commit();
-	        return res;
-		}finally{
-			sqlSession.close();
-		}
-	}
-
-	@Override
-	public int insertPeakTime(GymPeakTime peakTime) {
-		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			int res = sqlSession.insert("mapper.infoEdit.insertPeakTime", peakTime);
-	        sqlSession.commit();
-	        return res;
-		}finally{
-			sqlSession.close();
-		}
-	}
 	
 }

@@ -6,7 +6,6 @@ import java.util.Map;
 import dao.gym.InfoEditDao;
 import dao.gym.InfoEditDaoImpl;
 import dto.gym.Gym;
-import dto.gym.GymPeakTime;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 
@@ -68,20 +67,7 @@ public class GymInfoEditServiceImpl implements GymInfoEditService {
 		return dao.deleteMembership(membershipNum);
 	}
 
-	@Override
-	public List<GymPeakTime> selectPeakTimeList(int gymId) {
-		return dao.selectPeakTimeList(gymId);
-	}
-
-	@Override
-	public int deletePeakTimeByGymId(int gymId) {
-		return dao.deletePeakTimeByGymId(gymId);
-	}
-
-	@Override
-	public int insertPeakTime(GymPeakTime peakTime) {
-		return dao.insertPeakTime(peakTime);
-	}
+	
 
 	@Override
 	public boolean isEmailAvailable(String emailId) {

@@ -9,4 +9,5 @@ public interface GymMemberManageDao {
 	List<MemberManage> selectMemberList(Map<String, Object> param) throws Exception;
     int countMember(int gymId) throws Exception;
     int countNewMember(int gymId) throws Exception;
+    int countMemberList(Map<String, Object> param) throws Exception;
 }

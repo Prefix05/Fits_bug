@@ -1,7 +1,7 @@
 package dto.gym;
 
 public class TrainerApprove {
-	private int id;
+	private int trainerId;
     private String name;
     private String phoneNum;
     private String profileImg;
@@ -9,19 +9,19 @@ public class TrainerApprove {
 	public TrainerApprove() {
 		super();
 	}
-	public TrainerApprove(int id, String name, String phoneNum, String profileImg, String approvalStatus) {
+	public TrainerApprove(int trainerId, String name, String phoneNum, String profileImg, String approvalStatus) {
 		super();
-		this.id = id;
+		this.trainerId = trainerId;
 		this.name = name;
 		this.phoneNum = phoneNum;
 		this.profileImg = profileImg;
 		this.approvalStatus = approvalStatus;
 	}
-	public int getId() {
-		return id;
+	public int getTrainerId() {
+		return trainerId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setTrainerId(int trainerId) {
+		this.trainerId = trainerId;
 	}
 	public String getName() {
 		return name;
@@ -47,10 +47,6 @@ public class TrainerApprove {
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
-	@Override
-	public String toString() {
-		return "TrainerApprove [id=" + id + ", name=" + name + ", phoneNum=" + phoneNum + ", profileImg=" + profileImg
-				+ ", approvalStatus=" + approvalStatus + "]";
-	}
+	
     
 }

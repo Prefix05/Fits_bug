@@ -4,43 +4,37 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
-/**
- * Servlet implementation class GymCheckEmail
- */
 @WebServlet("/gym/checkEmail")
 public class GymCheckEmail extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    private static final long serialVersionUID = 1L;
+
     public GymCheckEmail() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		GymInfoEditService service = new GymInfoEditServiceImpl();
-		
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/plain; charset=UTF-8");
-		
-		String emailId = request.getParameter("emailId");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        boolean available = service.isEmailAvailable(emailId);
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
+
+        String emailId = request.getParameter("emailId");
+
+        // 🔥 null / 빈값 방어
+        if (emailId == null || emailId.trim().isEmpty()) {
+            response.getWriter().write("invalid");
+            return;
+        }
+
+        GymInfoEditService service = new GymInfoEditServiceImpl();
+
+        boolean available = service.isEmailAvailable(emailId.trim());
 
         response.getWriter().write(available ? "available" : "duplicate");
-		
-	}
-
+    }
 }

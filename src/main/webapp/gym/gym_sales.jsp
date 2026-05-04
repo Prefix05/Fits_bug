@@ -199,7 +199,14 @@
 
                     <div class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                         <span class="material-symbols-outlined text-sm">trending_up</span>
-                        전월 대비 ${salesSummary.growthRate}% 증가
+                        <c:choose>
+    <c:when test="${empty salesSummary || empty salesSummary.growthRate}">
+        전월 대비 데이터 없음
+    </c:when>
+    <c:otherwise>
+        전월 대비 ${salesSummary.growthRate}% 증가
+    </c:otherwise>
+</c:choose>
                     </div>
                 </div>
             </div>
@@ -480,11 +487,11 @@
 
             <div class="flex items-center gap-2">
             	<c:if test="${totalPage > 0}">
-                	<c:forEach var="page" begin="1" end="${totalPage}">
-                    	<a href="${pageContext.request.contextPath}/gym/sales?page=${page}&startDate=${startDate}&endDate=${endDate}&membershipType=${membershipType}&trainerId=${trainerId}&status=${status}&keyword=${keyword}"
+                	<c:forEach var="p" begin="1" end="${totalPage}">
+                    	<a href="${pageContext.request.contextPath}/gym/sales?page=${p}&startDate=${startDate}&endDate=${endDate}&membershipType=${membershipType}&trainerId=${trainerId}&status=${status}&keyword=${keyword}"
                        	   class="w-8 h-8 text-xs font-bold rounded flex items-center justify-center
-                       		${page == currentPage ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'}">
-                        	${page}
+                       		${p == currentPage ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'}">
+                        	${p}
                     	</a>
                 	</c:forEach>
                 </c:if>

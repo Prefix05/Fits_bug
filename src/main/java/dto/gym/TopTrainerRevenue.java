@@ -6,14 +6,16 @@ public class TopTrainerRevenue {
 	 private String trainerName;   // 트레이너 이름
 	 private int sessionCount;     // 세션 수
 	 private BigDecimal revenue;   // 매출
+	 private Integer trainerId;
 	public TopTrainerRevenue() {
 		super();
 	}
-	public TopTrainerRevenue(String trainerName, int sessionCount, BigDecimal revenue) {
+	public TopTrainerRevenue(String trainerName, int sessionCount, BigDecimal revenue, Integer trainerId) {
 		super();
 		this.trainerName = trainerName;
 		this.sessionCount = sessionCount;
 		this.revenue = revenue;
+		this.trainerId = trainerId;
 	}
 	public String getTrainerName() {
 		return trainerName;
@@ -33,6 +35,13 @@ public class TopTrainerRevenue {
 	public void setRevenue(BigDecimal revenue) {
 		this.revenue = revenue;
 	}
+	public Integer getTrainerId() {
+		return trainerId;
+	}
+	public void setTrainerId(Integer trainerId) {
+		this.trainerId = trainerId;
+	}
+	
 	 
 	 
 }

@@ -1,22 +1,22 @@
 package dto.gym;
 
 public class RevenueTrend {
-	private String month;
+	private int month;
     private int totalPercent;
     private int membershipPercent;
 	public RevenueTrend() {
 		super();
 	}
-	public RevenueTrend(String month, int totalPercent, int membershipPercent) {
+	public RevenueTrend(int month, int totalPercent, int membershipPercent) {
 		super();
 		this.month = month;
 		this.totalPercent = totalPercent;
 		this.membershipPercent = membershipPercent;
 	}
-	public String getMonth() {
+	public int getMonth() {
 		return month;
 	}
-	public void setMonth(String month) {
+	public void setMonth(int month) {
 		this.month = month;
 	}
 	public int getTotalPercent() {
@@ -31,5 +31,6 @@ public class RevenueTrend {
 	public void setMembershipPercent(int membershipPercent) {
 		this.membershipPercent = membershipPercent;
 	}
+	
     
 }

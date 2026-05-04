@@ -187,7 +187,7 @@ tailwind.config = {
                             <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm">
                                 <img class="w-full h-full object-cover"
                                      src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
-                                     onerror="this.src='${pageContext.request.contextPath}/resources/images/default-profile.png'">
+ 									 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                             </div>
                             <button type="button" onclick="openModal('profileModal')"
         							class="absolute -bottom-0.5 -right-0.5 p-1 bg-primary text-white rounded-full shadow cursor-pointer">
@@ -201,8 +201,8 @@ tailwind.config = {
                         <div class="relative">
                             <div class="w-20 h-14 rounded overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm bg-slate-200">
                                 <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
-                                     onerror="this.src='${pageContext.request.contextPath}/resources/images/default-bg.png'">
+     								 src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+ 									 onerror="this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                             </div>
                             <button type="button" onclick="openModal('backgroundModal')"
         							class="absolute -bottom-0.5 -right-0.5 p-1 bg-primary text-white rounded-full shadow cursor-pointer">
@@ -487,7 +487,8 @@ tailwind.config = {
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container shadow">
                     <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}">
+                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
+						 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                 </div>
                 <p class="mt-3 text-sm text-on-surface-variant">현재 등록된 로고</p>
             </div>
@@ -522,7 +523,8 @@ tailwind.config = {
                 <p class="text-xs font-bold mb-2">현재 배경 사진</p>
                 <div class="aspect-[21/9] rounded-lg overflow-hidden">
                     <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}">
+                         src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+						 onerror="this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                 </div>
             </div>
 
@@ -726,7 +728,7 @@ function toggleHourEdit() {
     document.getElementById("hourEdit").classList.toggle("hidden");
 }
 
-}
+
 
 function openKakaoAddress() {
     new daum.Postcode({

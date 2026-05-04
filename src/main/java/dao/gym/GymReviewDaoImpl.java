@@ -15,6 +15,9 @@ public class GymReviewDaoImpl implements GymReviewDao {
 		try {
 			session.insert("mapper.review.insertReview",review);
 			session.commit();
+		} catch (Exception e) {
+		    session.rollback();
+		    throw e;
 		}finally {
 			session.close();
 		}
@@ -36,6 +39,9 @@ public class GymReviewDaoImpl implements GymReviewDao {
 		try {
 			session.update("mapper.review.updateReview",review);
 			session.commit();
+		} catch (Exception e) {
+		    session.rollback();
+		    throw e;
 		}finally {
 			session.close();
 		}
@@ -47,6 +53,9 @@ public class GymReviewDaoImpl implements GymReviewDao {
 		try {
 			session.delete("mapper.review.deleteReview",reviewNum);
 			session.commit();
+		} catch (Exception e) {
+		    session.rollback();
+		    throw e;
 		}finally {
 			session.close();
 		}
