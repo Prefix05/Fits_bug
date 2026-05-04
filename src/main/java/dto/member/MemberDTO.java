@@ -89,5 +89,4 @@ public class MemberDTO {
 				+ ", profileImage=" + profileImage + ", emailVerified=" + emailVerified + ", socialType=" + socialType
 				+ "]";
 	}
-    
 }
