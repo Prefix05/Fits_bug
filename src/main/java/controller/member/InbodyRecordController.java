@@ -13,7 +13,7 @@ import dto.member.LoginDTO;
 import service.member.InbodyRecordService;
 import service.member.InbodyRecordServiceImpl;
 
-@WebServlet("/inbody")
+@WebServlet("/member/inbody")
 public class InbodyRecordController extends HttpServlet {
 
     private InbodyRecordService service = new InbodyRecordServiceImpl();

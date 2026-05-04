@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.member.PostReactionDAO;
 import dao.member.PostReactionDAOImpl;
 
-@WebServlet("/reaction")
+@WebServlet("/member/reaction")
 public class ReactionController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

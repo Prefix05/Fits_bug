@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.PostReactionMapper">
+
+    <!-- ──────────────────────────────────────────────────────
+         PostReactionDAOImpl.addReaction(int postId, String userId, String type)
+         → Map 키: postId / userId / type
+         ────────────────────────────────────────────────────── -->
+    <insert id="addReaction" parameterType="map">
+        INSERT INTO post_reaction (post_id, user_id, type)
+        VALUES (#{postId}, #{userId}, #{type})
+    </insert>
+
+    <!-- ──────────────────────────────────────────────────────
+         PostReactionDAOImpl.getReactionCount(int postId, String type)
+         → Map 키: postId / type
+         ────────────────────────────────────────────────────── -->
+    <select id="getReactionCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM post_reaction
+        WHERE post_id = #{postId} AND type = #{type}
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         중복 리액션 체크 (postId / userId / type)
+         ────────────────────────────────────────────────────── -->
+    <select id="hasReacted" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM post_reaction
+        WHERE post_id = #{postId} AND user_id = #{userId} AND type = #{type}
+    </select>
+
+</mapper>

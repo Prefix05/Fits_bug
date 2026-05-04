@@ -56,11 +56,11 @@
     <select id="selectSalesList" resultMap="PaymentResultMap">
         SELECT 
             p.id, p.payment_date, p.payment_price, p.payment_fee,
-            p.gym_id, g.gym_name, 
-            p.trainer_id, t.trainer_name
+            p.gym_id, g.name as gym_name, 
+            p.trainer_id, t.name as trainer_name
         FROM PAYMENT p
-        LEFT JOIN GYM g ON p.gym_id = g.gym_id
-        LEFT JOIN TRAINER t ON p.trainer_id = t.trainer_id
+        LEFT JOIN GYM g ON p.gym_id = g.id
+        LEFT JOIN TRAINER t ON p.trainer_id = t.id
         WHERE p.status = '결제완료'
         <if test="startDate != null and endDate != null">
             AND p.payment_date BETWEEN #{startDate} AND #{endDate}

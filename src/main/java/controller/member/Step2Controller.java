@@ -5,7 +5,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet("/step2")
+@WebServlet("/member/step2")
 public class Step2Controller extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

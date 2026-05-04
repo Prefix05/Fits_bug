@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dao.member.LoginDAO;
-import dao.member.LoginDAOImpl;
-import dto.member.LoginDTO;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dto.member.MemberDTO;
 
-@WebServlet("/updateProfile")
+@WebServlet("/member/updateProfile")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
     maxFileSize = 1024 * 1024 * 5,
@@ -29,7 +29,7 @@ public class UpdateProfileController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
         String nickname = req.getParameter("nickname");
         String password = req.getParameter("password");
@@ -60,7 +60,7 @@ public class UpdateProfileController extends HttpServlet {
             loginUser.setPassword(password);
         }
 
-        LoginDAO dao = new LoginDAOImpl();
+        MemberDAO dao = new MemberDAOImpl();
         boolean result = dao.update(loginUser);
 
         if(result){

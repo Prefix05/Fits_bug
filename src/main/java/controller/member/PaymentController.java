@@ -1,15 +1,19 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 
-import dto.member.LoginDTO;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dto.member.MemberDTO;
 import dto.member.PaymentDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
-@WebServlet("/payment")
+@WebServlet("/member/payment")
 public class PaymentController extends HttpServlet {
 
     private PaymentService service = new PaymentServiceImpl();
@@ -19,7 +23,7 @@ public class PaymentController extends HttpServlet {
             throws IOException {
 
         HttpSession session = req.getSession();
-        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
+        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
 
         resp.setContentType("application/json;charset=UTF-8");
 

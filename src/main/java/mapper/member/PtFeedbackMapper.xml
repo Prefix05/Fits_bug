@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.PtFeedbackMapper">
+
+    <resultMap id="feedbackResultMap" type="dto.member.PtFeedbackDTO">
+        <id     property="id"          column="id"/>
+        <result property="userEmail"   column="user_email"/>
+        <result property="trainerName" column="trainer_name"/>
+        <result property="content"     column="content"/>
+        <result property="sessionDate" column="session_date"/>
+        <result property="exercise"    column="exercise"/>
+        <result property="food"        column="food"/>
+        <result property="inbody"      column="inbody"/>
+        <result property="feedback"    column="feedback"/>
+        <result property="growth"      column="growth"/>
+        <result property="nextPlan"    column="next_plan"/>
+    </resultMap>
+
+    <!-- ──────────────────────────────────────────────────────
+         PtFeedbackDAOImpl.getFeedbackList(String email)
+         → param: string
+         ────────────────────────────────────────────────────── -->
+    <select id="getFeedbackList" parameterType="string" resultMap="feedbackResultMap">
+        SELECT id, user_email, trainer_name, session_date
+        FROM pt_feedback
+        WHERE user_email = #{email}
+        ORDER BY session_date DESC
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         PtFeedbackDAOImpl.getFeedbackDetail(int id)
+         → param: int (단일 값)
+         ────────────────────────────────────────────────────── -->
+    <select id="getFeedbackDetail" parameterType="int" resultMap="feedbackResultMap">
+        SELECT id, user_email, trainer_name, content, session_date,
+               exercise, food, inbody, feedback, growth, next_plan
+        FROM pt_feedback
+        WHERE id = #{id}
+    </select>
+
+    <!-- ──────────────────────────────────────────────────────
+         PtFeedbackDAOImpl.insertFeedback(PtFeedbackDTO dto)
+         → param: PtFeedbackDTO
+         ────────────────────────────────────────────────────── -->
+    <insert id="insertFeedback" parameterType="PtFeedbackDTO">
+        INSERT INTO pt_feedback
+            (user_email, trainer_name, exercise, food, inbody,
+             feedback, growth, next_plan, content, session_date)
+        VALUES
+            (#{userEmail}, #{trainerName}, #{exercise}, #{food}, #{inbody},
+             #{feedback}, #{growth}, #{nextPlan}, #{content}, NOW())
+    </insert>
+
+</mapper>

@@ -14,6 +14,24 @@
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
+		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
+        <typeAlias alias="WorkoutPlanDTO"   type="dto.member.WorkoutPlanDTO"/>
+        <typeAlias alias="WorkoutRecordDTO" type="dto.member.WorkoutRecordDTO"/>
+        <typeAlias alias="FoodRecordDTO"    type="dto.member.FoodRecordDTO"/>
+        <typeAlias alias="InbodyRecordDTO"  type="dto.member.InbodyRecordDTO"/>
+        <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
+        <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
+        <typeAlias alias="CommunityDTO"     type="dto.member.CommunityDTO"/>
+        <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
+        <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
+        <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
+        <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
+        <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
+        <typeAlias alias="ReservationDTO"   type="dto.member.ReservationDTO"/>
+        <typeAlias alias="SupportDTO"       type="dto.member.SupportDTO"/>
+        <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
+		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
 	</typeAliases>
 
 	<environments default="development">
@@ -22,7 +40,6 @@
 			<dataSource type="POOLED">
 				<property name="driver" value="org.mariadb.jdbc.Driver"/>
 				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
-<!-- 				<property name="url" value="jdbc:mariadb://localhost:3306/fitbull_db"/> -->
 				<property name="username" value="root"/>
 				<property name="password" value="7564"/>
 <!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
@@ -45,6 +62,7 @@
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
+
 		<mapper resource="mapper/gym/dashboard.xml"/>
 		<mapper resource="mapper/gym/memberManage.xml"/>
 		<mapper resource="mapper/gym/trainerManage.xml"/>
@@ -55,14 +73,37 @@
 		<mapper resource="mapper/gym/payment.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/> 
 
-		<mapper resource="mapper/member/loginMapper.xml"/>
 
+		<mapper resource="mapper/member/loginMapper.xml"/>
+		<mapper resource="mapper/member/MemberMapper.xml"/>
+        <mapper resource="mapper/member/WorkoutPlanMapper.xml"/>
+        <mapper resource="mapper/member/WorkoutRecordMapper.xml"/>
+        <mapper resource="mapper/member/FoodRecordMapper.xml"/>
+        <mapper resource="mapper/member/InbodyRecordMapper.xml"/>
+        <mapper resource="mapper/member/PostMapper.xml"/>
+        <mapper resource="mapper/member/CommunityMapper.xml"/>
+        <mapper resource="mapper/member/PostReactionMapper.xml"/>
+        <mapper resource="mapper/member/CommentMapper.xml"/>
+        <mapper resource="mapper/member/MessageMapper.xml"/>
+        <mapper resource="mapper/member/NotificationMapper.xml"/>
+        <mapper resource="mapper/member/PaymentMapper.xml"/>
+        <mapper resource="mapper/member/PtFeedbackMapper.xml"/>
+        <mapper resource="mapper/member/ReportMapper.xml"/>
+        <mapper resource="mapper/member/ReservationMapper.xml"/>
+        <mapper resource="mapper/member/SupportMapper.xml"/>
+        <mapper resource="mapper/member/TrainerReviewMapper.xml"/>
+        <mapper resource="mapper/member/CompleteMapper.xml"/>
+        <mapper resource="mapper/member/MembershipMapper.xml"/>
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
 		<mapper resource="mapper/trainer/meal.xml"/>
 		<mapper resource="mapper/trainer/payment.xml"/>
+		<mapper resource="mapper/trainer/user.xml"/>
 		<mapper resource="mapper/trainer/trainer.xml"/>
+		<mapper resource="mapper/trainer/payout_account.xml"/>
+		<mapper resource="mapper/trainer/certification.xml"/>
+		<mapper resource="mapper/trainer/pricing_availability.xml"/>
 
 	</mappers>
 </configuration>

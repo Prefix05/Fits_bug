@@ -52,19 +52,6 @@ public class ClientServiceImpl implements ClientService {
             session.close();
         }
     }
-
-    @Override
-    public ClientDTO getClientDetail(int clientId) {
-        SqlSession session = MybatisSqlSessionFactory
-                .getSqlSessionFactory()
-                .openSession();
-        try {
-            return clientDAO.selectClientDetail(session, clientId);
-        } finally {
-            session.close();
-        }
-    }
 }
-
 //DAO     → select / insert / update (SQL language)
 //Service → get / create / update   (business language)

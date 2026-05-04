@@ -1,22 +1,22 @@
 package controller.member;
 
 import java.io.IOException;
-
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
-@WebServlet("/logout")
+@WebServlet("/member/logout")
 public class LogoutController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session = request.getSession();
-        session.invalidate();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
-        response.sendRedirect("login.jsp");
+        // ✅ /login 컨트롤러로 리다이렉트
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

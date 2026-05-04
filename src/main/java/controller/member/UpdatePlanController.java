@@ -10,17 +10,17 @@ import javax.servlet.http.HttpSession;
 
 import dao.member.WorkoutPlanDAO;
 import dao.member.WorkoutPlanDAOImpl;
-import dto.member.LoginDTO;
+import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
 
-@WebServlet("/updatePlan")
+@WebServlet("/member/updatePlan")
 public class UpdatePlanController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
+        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
 
         WorkoutPlanDTO dto = new WorkoutPlanDTO();
 

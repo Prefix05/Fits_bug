@@ -124,9 +124,9 @@
         <button class="p-2 rounded-lg hover:bg-slate-200">
             <span class="material-symbols-outlined">notifications</span>
         </button>
-        <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+        <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
             <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
+                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
         </a>
     </div>
 </header>
@@ -213,38 +213,28 @@
 
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/dashboard" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드
-        </a>
+           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드</a>
 
         <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원관리
-        </a>
+           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원
+            관리</a>
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/calendar.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정
-        </a>
+           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정</a>
 
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">chat</span>
-            메시지
-        </a>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익
-        </a>
+           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익</a>
     </nav>
 
     <!-- 공통 nav item -->
@@ -260,10 +250,10 @@
 
 
     <!-- 마이프로필 nav item -->
-    <a href="./profile.html"
+    <a href="${pageContext.request.contextPath}/trainer/profile"
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
         <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
+             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
              style=""/>
         <div class="overflow-hidden">
             <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
@@ -277,9 +267,11 @@
     <header
             class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
         <div class="flex items-center gap-4">
+            <a href="${pageContext.request.contextPath}/trainer/clientDetail">
             <button class="hover:opacity-70 transition-opacity active:scale-95 duration-150 text-blue-700">
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
+            </a>
             <h1 class="font-sans tracking-tight text-lg font-semibold text-on-surface">회원목록</h1>
         </div>
     </header>

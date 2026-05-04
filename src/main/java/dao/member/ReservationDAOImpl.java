@@ -1,71 +1,43 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
 
 import dto.member.ReservationDTO;
-import util.DBUtil;
+import util.MybatisSqlSessionFactory;
 
 public class ReservationDAOImpl implements ReservationDAO {
 
-    /**
-     * 🔥 예약 저장
-     */
     @Override
     public void insert(ReservationDTO dto) {
-
-        String sql = "INSERT INTO reservation " +
-                     "(member_email, trainer_email, class_time) " +
-                     "VALUES (?, ?, ?)";
-
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, dto.getMemberEmail());
-            ps.setString(2, dto.getTrainerEmail());
-            ps.setTimestamp(3, dto.getClassTime());
-
-            ps.executeUpdate();
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        try {
+            sqlSession.insert("mapper.ReservationMapper.insert", dto);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
     }
 
-    /**
-     * 🔥 다음 수업 조회
-     */
     @Override
     public ReservationDTO getNextReservation(String memberEmail, String trainerEmail) {
-
-        String sql = "SELECT * FROM reservation " +
-                     "WHERE member_email=? AND trainer_email=? " +
-                     "AND class_time > NOW() " +
-                     "ORDER BY class_time ASC LIMIT 1";
-
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, memberEmail);
-            ps.setString(2, trainerEmail);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                ReservationDTO dto = new ReservationDTO();
-
-                dto.setMemberEmail(rs.getString("member_email"));
-                dto.setTrainerEmail(rs.getString("trainer_email"));
-                dto.setClassTime(rs.getTimestamp("class_time"));
-
-                return dto;
-            }
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        ReservationDTO result = null;
+        try {
+            Map<String, String> param = new HashMap<>();
+            param.put("memberEmail",  memberEmail);
+            param.put("trainerEmail", trainerEmail);
+            result = sqlSession.selectOne("mapper.ReservationMapper.getNextReservation", param);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
-        return null;
+        return result;
     }
 }

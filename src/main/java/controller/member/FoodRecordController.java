@@ -13,7 +13,7 @@ import dto.member.LoginDTO;
 import service.member.FoodRecordService;
 import service.member.FoodRecordServiceImpl;
 
-@WebServlet("/food")
+@WebServlet("/member/food")
 public class FoodRecordController extends HttpServlet {
 
     private FoodRecordService service = new FoodRecordServiceImpl();

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dto.member.MyPostDTO;
 
-@WebServlet("/mypost")
+@WebServlet("/member/mypost")
 public class MyPostController extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

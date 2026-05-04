@@ -1,59 +1,46 @@
 package dao.member;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import util.DBUtil;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PostReactionDAOImpl implements PostReactionDAO {
 
-    Connection conn;
-
-    public PostReactionDAOImpl() {
-        conn = DBUtil.getConnection();
-    }
-
     @Override
     public int addReaction(int postId, String userId, String type) {
-
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
-
-        String sql = "INSERT INTO post_reaction(post_id, user_id, type) VALUES(?,?,?)";
-
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, postId);
-            ps.setString(2, userId);
-            ps.setString(3, type);
-
-            result = ps.executeUpdate();
-
+            Map<String, Object> param = new HashMap<>();
+            param.put("postId", postId);
+            param.put("userId", userId);
+            param.put("type",   type);
+            result = sqlSession.insert("mapper.PostReactionMapper.addReaction", param);
+            sqlSession.commit();
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-
         return result;
     }
 
-	@Override
-	public int getReactionCount(int postId, String type) {
-		String sql = "SELECT COUNT(*) FROM post_reaction WHERE post_id=? AND type=?";
-
+    @Override
+    public int getReactionCount(int postId, String type) {
+        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        int result = 0;
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, postId);
-            ps.setString(2, type);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
+            Map<String, Object> param = new HashMap<>();
+            param.put("postId", postId);
+            param.put("type",   type);
+            result = sqlSession.selectOne("mapper.PostReactionMapper.getReactionCount", param);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlSession.close();
         }
-		return 0;
-	}
+        return result;
+    }
 }

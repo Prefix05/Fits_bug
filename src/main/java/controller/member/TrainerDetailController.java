@@ -13,7 +13,7 @@ import dto.member.TrainerDTO;
 import service.member.TrainerService;
 import service.member.TrainerServiceImpl;
 
-@WebServlet("/trainerDetail")
+@WebServlet("/member/trainerDetail")
 public class TrainerDetailController extends HttpServlet {
     private TrainerService service = new TrainerServiceImpl();
 

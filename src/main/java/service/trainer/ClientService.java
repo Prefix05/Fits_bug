@@ -11,7 +11,6 @@ public interface ClientService {
 
     ClientDTO getClientById(int clientId);
 
-    ClientDTO getClientDetail(int clientId);
 }
 
 //DAO     → select / insert / update (SQL language)

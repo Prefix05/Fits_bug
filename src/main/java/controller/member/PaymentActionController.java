@@ -12,7 +12,7 @@ import dto.member.LoginDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
-@WebServlet("/paymentAction")
+@WebServlet("/member/paymentAction")
 public class PaymentActionController extends HttpServlet {
 
     private PaymentService service = new PaymentServiceImpl();
