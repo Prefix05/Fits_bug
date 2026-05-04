@@ -36,7 +36,7 @@ public class ExerciseController extends HttpServlet {
 
             req.setAttribute("guideList", list);
 
-            req.getRequestDispatcher("/exerciseCardFragment.jsp")
+            req.getRequestDispatcher("/member/exerciseCardFragment.jsp")
                .forward(req, resp);
             return;
         }
@@ -44,6 +44,6 @@ public class ExerciseController extends HttpServlet {
         // ⭐ 일반 페이지
         req.setAttribute("exerciseList", list);
         
-        req.getRequestDispatcher("/guideList.jsp").forward(req, resp);
+        req.getRequestDispatcher("/member/guideList.jsp").forward(req, resp);
     }
 }

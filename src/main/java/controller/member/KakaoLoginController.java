@@ -32,7 +32,7 @@ public class KakaoLoginController extends HttpServlet {
         String email = KakaoUtil.getUserEmail(accessToken);
 
         if (email == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/member/login.jsp");
             return;
         }
 
@@ -54,6 +54,6 @@ public class KakaoLoginController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", user);
 
-        response.sendRedirect("mypage");
+        response.sendRedirect("/member/mypage");
     }
 }

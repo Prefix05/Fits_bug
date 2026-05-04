@@ -23,6 +23,6 @@ public class GymJoinController extends HttpServlet {
         // 👉 DB 저장 처리
 
         // 완료 후 인증 페이지 이동
-        response.sendRedirect("gymVerify.jsp");
+        response.sendRedirect("/member/gymVerify.jsp");
     }
 }

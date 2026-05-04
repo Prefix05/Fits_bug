@@ -17,6 +17,6 @@ public class LogoutController extends HttpServlet {
         }
 
         // ✅ /login 컨트롤러로 리다이렉트
-        response.sendRedirect(request.getContextPath() + "/login");
+        response.sendRedirect(request.getContextPath() + "/member/login");
     }
 }

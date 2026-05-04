@@ -22,6 +22,6 @@ public class CompleteJoinController extends HttpServlet {
         session.setAttribute("workout", workout);
 
         // ✅ /main 컨트롤러로 리다이렉트
-        response.sendRedirect(request.getContextPath() + "/main");
+        response.sendRedirect(request.getContextPath() + "/member/main");
     }
 }
