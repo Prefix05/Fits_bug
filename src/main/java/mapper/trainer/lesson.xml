@@ -13,21 +13,53 @@
         <result property="durationMinutes" column="duration_minutes"/>
         <result property="status" column="status"/>
         <result property="clientId" column="client_id"/>
+        <result property="lessonDate" column="lesson_date"/>
     </resultMap>
 
     <select id="findLessonsByDate" parameterType="map" resultMap="lessonMap">
         SELECT l.id,
                l.goal,
-               l.member_name,
+               m.name AS member_name,
                l.client_id,
                l.status,
                DATE_FORMAT(l.start_time, '%H:%i')              AS start_time,
                DATE_FORMAT(l.end_time, '%H:%i')                AS end_time,
-               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes
+               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes,
+               DATE_FORMAT(l.lesson_date, '%Y-%m-%d')          AS lesson_date
         FROM lesson l
                  JOIN member m ON l.client_id = m.id
         WHERE l.lesson_date = #{date}
           AND m.trainer_id = #{trainerId}
         ORDER BY l.start_time ASC
     </select>
+
+    <select id="findLessonsByDateRange" parameterType="map" resultMap="lessonMap">
+        SELECT l.id,
+               l.goal,
+               m.name AS member_name,
+               l.client_id,
+               l.status,
+               DATE_FORMAT(l.start_time, '%H:%i')              AS start_time,
+               DATE_FORMAT(l.end_time, '%H:%i')                AS end_time,
+               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes,
+               DATE_FORMAT(l.lesson_date, '%Y-%m-%d')          AS lesson_date
+        FROM lesson l
+                 JOIN member m ON l.client_id = m.id
+        WHERE l.lesson_date BETWEEN #{startDate} AND #{endDate}
+          AND m.trainer_id = #{trainerId}
+        ORDER BY l.lesson_date ASC, l.start_time ASC
+    </select>
+
+    <!-- Returns [{lesson_date: "YYYY-MM-DD", cnt: N}, ...] for month overview dots -->
+    <select id="findLessonCountsByMonth" parameterType="map" resultType="map">
+        SELECT DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS lesson_date,
+               COUNT(*)                               AS cnt
+        FROM lesson l
+                 JOIN member m ON l.client_id = m.id
+        WHERE YEAR(l.lesson_date)  = #{year}
+          AND MONTH(l.lesson_date) = #{month}
+          AND m.trainer_id = #{trainerId}
+        GROUP BY l.lesson_date
+    </select>
+
 </mapper>

@@ -142,9 +142,9 @@
         <button class="p-2 rounded-lg hover:bg-slate-200">
             <span class="material-symbols-outlined">notifications</span>
         </button>
-        <a href="./profile.html" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+        <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
             <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"/>
+                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
         </a>
     </div>
 </header>
@@ -152,21 +152,22 @@
 <!-- Mobile Bottom Nav -->
 <nav
         class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+    <a href="#"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
         <span class="material-symbols-outlined text-[22px]">distance</span>
         <span class="text-[10px] font-medium">내주변</span>
     </a>
-    <a href="${pageContext.request.contextPath}/dashboard"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-medium">대시보드</span>
+    <a href="" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[22px]"
+                  style='font-variation-settings: "FILL" 1;'>dashboard</span>
+        <span class="text-[10px] font-bold text-blue-700">대시보드</span>
     </a>
-    <a href=""
+    <a href="${pageContext.request.contextPath}/trainer/clients"
        class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
         <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-bold text-blue-700">화원관리</span>
+        <span class="text-[10px] font-medium">회원관리</span>
     </a>
-    <a href=""
+    <a href="${pageContext.request.contextPath}/trainer/calendar"
        class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
         <span class="material-symbols-outlined text-[22px]">calendar_today</span>
         <span class="text-[10px] font-medium">일정</span>
@@ -183,7 +184,7 @@
     </a>
 </nav>
 
-<!-- SideNavBar -->
+<!-- SideNavBar Shell -->
 <aside
         class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
     <a href="" class="flex items-center gap-3 mb-10">
@@ -195,15 +196,14 @@
     <nav class="flex-1 space-y-1" id="main-nav">
 
         <!-- 공통 nav item -->
-
         <!-- 내주변 -->
         <div class="relative">
             <!-- Parent toggle -->
             <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
                onclick="
-                            this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                            this.querySelector('.chevron').classList.toggle('rotate-180');
-                        " href="#">
+                        this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
+                        this.querySelector('.chevron').classList.toggle('rotate-180');
+                    " href="#">
                 <span class="material-symbols-outlined">distance</span>
                 내주변
                 <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
@@ -227,45 +227,33 @@
             </div>
         </div>
 
-        <!-- 트레이너  nav item-->
-
         <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/dashboard" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드
-        </a>
+           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드</a>
 
         <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원관리
-        </a>
+           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원
+            관리</a>
 
         <!-- 일정 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/calendar.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정
-        </a>
+           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정</a>
 
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">chat</span>
-            메시지
-        </a>
+           href="/messages.html" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style="">
-            <span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익
-        </a>
+           href="earnings.html" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익</a>
     </nav>
 
-    <!-- 공통 nav item -->
+    <!--설정, 고객 지원-->
     <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
            href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
@@ -276,15 +264,14 @@
         <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
     </div>
 
-
-    <!-- 마이프로필 nav item -->
-    <a href="./profile.html"
+    <!-- 마이프로필 -->
+    <a href="${pageContext.request.contextPath}/trainer/profile"
        class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
-        <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhyuu6rdbT8CspzqySgGADnPxyIZWQ8JzIVzEVHSPkB3UoDOAnZJJhZ7cPpcvRt9El0mEpCGTPo-ipH8tmcW9-1VJX9uPfKjuW6-wnQk8l60TyYJuHFUx-ER7gH9tCPui0ZcXDuvH0okvDCPmNyngCwbTzX130D_1k-cU7r_UYLYwjc9G4FkGvBrwYIPVBudS3XRg5OfUza5BbOyu2mmJQa8uPxFR30YuJ6RWgfoV5POhIwmfRnsUouAZZYhCreQjA-1_7aGakeQ"
+        <img alt="profile image" class="w-10 h-10 rounded-full object-cover shrink-0"
+             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
              style=""/>
         <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
+            <p class="text-sm font-bold text-on-surface truncate" style="">${sessionScope.loginTrainer.name}</p>
             <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
         </div>
     </a>
@@ -350,6 +337,17 @@
         <div class="flex-1 overflow-y-auto max-w-7xl w-full mx-auto" id="client-list-container">
             <div class="space-y-3 md:space-y-4 pr-2 pt-3 md:pt-0">
                 <%-- Client Cards:--%>
+                <c:choose>
+                    <c:when test="${empty clients}">
+                        <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+                            <div class="flex flex-col items-center justify-center gap-3 text-center h-[300px] px-4">
+                                <span class="material-symbols-outlined text-4xl text-slate-300">group_off</span>
+                                <p class="text-sm font-semibold text-on-surface">등록된 회원이 없습니다</p>
+                                <p class="text-xs text-slate-400">새로운 회원을 추가하거나 수업을 등록해 보세요.</p>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
                 <c:forEach var="client" items="${clients}">
                     <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
                        class="block no-underline">
@@ -413,6 +411,8 @@
                         </div>
                     </a>
                 </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <div class="flex justify-center items-center py-6 mt-2 border-slate-100 sticky bottom-0">

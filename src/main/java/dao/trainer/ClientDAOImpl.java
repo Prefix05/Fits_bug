@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class ClientDAOImpl implements ClientDAO {
 
+    // list of clients
     @Override
     public List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, int trainerId) {
         Map<String, Object> params = new HashMap<>();
@@ -22,6 +23,7 @@ public class ClientDAOImpl implements ClientDAO {
         return session.selectList("dao.ClientMapper.selectClients", params);
     }
 
+    // total client count
     @Override
     public int selectClientCount(SqlSession session, String filter, int trainerId) {
         Map<String, Object> params = new HashMap<>();
@@ -31,12 +33,7 @@ public class ClientDAOImpl implements ClientDAO {
         return session.selectOne("dao.ClientMapper.countClients", params);
     }
 
-    @Override
-    public ClientDTO selectClientDetail(SqlSession session, int clientId) {
-            return session.selectOne("dao.ClientMapper.getClientDetail", clientId);
-    }
-
-    // ID로 단건 조회
+    // client by Id
     public ClientDTO selectClientById(SqlSession session, int clientId) {
             return session.selectOne("dao.ClientMapper.selectClientById", clientId);
     }

@@ -31,6 +31,7 @@
         <typeAlias alias="ReservationDTO"   type="dto.member.ReservationDTO"/>
         <typeAlias alias="SupportDTO"       type="dto.member.SupportDTO"/>
         <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
+		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
 	</typeAliases>
 
 	<environments default="development">
@@ -86,8 +87,11 @@
 		<mapper resource="mapper/trainer/client.xml"/>
 		<mapper resource="mapper/trainer/meal.xml"/>
 		<mapper resource="mapper/trainer/payment.xml"/>
+		<mapper resource="mapper/trainer/user.xml"/>
 		<mapper resource="mapper/trainer/trainer.xml"/>
-		
+		<mapper resource="mapper/trainer/payout_account.xml"/>
+		<mapper resource="mapper/trainer/certification.xml"/>
+		<mapper resource="mapper/trainer/pricing_availability.xml"/>
 
 	</mappers>
 </configuration>

@@ -36,7 +36,7 @@ public class ClientDetail extends HttpServlet {
         String idParam = request.getParameter("clientId");
 
         if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/trainer/clients");
+            response.sendRedirect(request.getContextPath() + "/clients");
             return;
         }
 
@@ -44,11 +44,11 @@ public class ClientDetail extends HttpServlet {
             int clientId = Integer.parseInt(idParam);
 
             // 3. Use Service (NOT DAO)
-            ClientDTO client = clientService.getClientDetail(clientId);
+            ClientDTO client = clientService.getClientById(clientId);
 
             // 🔐 4. Ownership check (VERY IMPORTANT)
             if (client == null || client.getTrainerId() != trainerId) {
-                response.sendRedirect(request.getContextPath() + "/trainer/clients");
+                response.sendRedirect(request.getContextPath() + "/clients");
                 return;
             }
 
