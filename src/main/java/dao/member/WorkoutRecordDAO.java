@@ -2,9 +2,9 @@ package dao.member;
 
 import java.util.List;
 
-import dto.member.WorkoutRecordDTO;
+import dto.member.WorkoutLogDTO;
 
 public interface WorkoutRecordDAO {
-    int insertRecord(WorkoutRecordDTO dto);
-    List<WorkoutRecordDTO> getRecords(String email);
+    int insertRecord(WorkoutLogDTO dto);
+    List<WorkoutLogDTO> getRecords(String email);
 }

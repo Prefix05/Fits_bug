@@ -2,10 +2,10 @@ package dao.member;
 
 import java.util.List;
 
-import dto.member.InbodyRecordDTO;
+import dto.member.InbodyLogDTO;
 
 public interface InbodyRecordDAO {
-    int insert(InbodyRecordDTO dto);
-    List<InbodyRecordDTO> findByEmail(String email);
-    List<InbodyRecordDTO> getRecords(String email);
+    int insert(InbodyLogDTO dto);
+    List<InbodyLogDTO> findByEmail(String email);
+    List<InbodyLogDTO> getRecords(String email);
 }

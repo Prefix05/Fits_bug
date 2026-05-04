@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.member.FoodRecordDTO;
+import dto.member.MealLogDTO;
 import util.MybatisSqlSessionFactory;
 
 public class FoodRecordDAOImpl implements FoodRecordDAO {
 
     @Override
-    public int insert(FoodRecordDTO dto) {
+    public int insert(MealLogDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
@@ -26,9 +26,9 @@ public class FoodRecordDAOImpl implements FoodRecordDAO {
     }
 
     @Override
-    public List<FoodRecordDTO> findByEmail(String email) {
+    public List<MealLogDTO> findByEmail(String email) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        List<FoodRecordDTO> list = null;
+        List<MealLogDTO> list = null;
         try {
             list = sqlSession.selectList("mapper.FoodRecordMapper.findByEmail", email);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class FoodRecordDAOImpl implements FoodRecordDAO {
     }
 
     @Override
-    public List<FoodRecordDTO> getRecords(String email) {
+    public List<MealLogDTO> getRecords(String email) {
         return findByEmail(email);
     }
 }

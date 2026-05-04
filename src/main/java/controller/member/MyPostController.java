@@ -26,6 +26,6 @@ public class MyPostController extends HttpServlet {
 
         req.setAttribute("myPost", post);
 
-        req.getRequestDispatcher("main.jsp").forward(req, resp);
+        req.getRequestDispatcher("/member/main.jsp").forward(req, resp);
 	}
 }

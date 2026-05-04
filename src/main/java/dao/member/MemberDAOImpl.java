@@ -1,130 +1,138 @@
 package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
-
+import org.apache.ibatis.session.SqlSessionFactory;
 import dto.member.MemberDTO;
 import util.MybatisSqlSessionFactory;
 
+import java.util.List;
+
 public class MemberDAOImpl implements MemberDAO {
 
+    private static final String NS = "mapper.MemberMapper.";
+    private SqlSessionFactory factory = MybatisSqlSessionFactory.getSqlSessionFactory();
+
+    // ─── MEMBER INSERT ───────────────────────────────────────────
     @Override
-    public int insertMember(MemberDTO member) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public int insertMember(MemberDTO dto) {
+        SqlSession session = factory.openSession();
         int result = 0;
         try {
-            result = sqlSession.insert("mapper.MemberMapper.insertMember", member);
-            sqlSession.commit();
+            result = session.insert(NS + "insertMember", dto);
+            session.commit();
         } catch (Exception e) {
-            sqlSession.rollback();
+            session.rollback();
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
         return result;
     }
 
+    // ─── USER.id로 MEMBER 조회 ───────────────────────────────────
     @Override
-    public MemberDTO login(String email, String password) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public MemberDTO findByUserId(int userId) {
+        SqlSession session = factory.openSession();
         MemberDTO result = null;
         try {
-            MemberDTO param = new MemberDTO();
-            param.setEmail(email);
-            param.setPassword(password);
-            result = sqlSession.selectOne("mapper.MemberMapper.loginCheck", param);
+            result = session.selectOne(NS + "findByUserId", userId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
         return result;
     }
 
+    // ─── MEMBER.id로 조회 ─────────────────────────────────────────
     @Override
-    public boolean isEmailExists(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        boolean result = false;
+    public MemberDTO findById(int id) {
+        SqlSession session = factory.openSession();
+        MemberDTO result = null;
         try {
-            int count = sqlSession.selectOne("mapper.MemberMapper.isEmailExists", email);
-            result = count > 0;
+            result = session.selectOne(NS + "findById", id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
         return result;
     }
 
+    // ─── 이메일로 MEMBER + USER JOIN 조회 ────────────────────────
     @Override
     public MemberDTO findByEmail(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        SqlSession session = factory.openSession();
         MemberDTO result = null;
         try {
-            result = sqlSession.selectOne("mapper.MemberMapper.findByEmail", email);
+            result = session.selectOne(NS + "findByEmail", email);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
         return result;
     }
 
+    // ─── 이메일로 MEMBER.id 조회 ─────────────────────────────────
     @Override
-    public void insertKakaoUser(MemberDTO dto) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public int findMemberIdByEmail(String email) {
+        SqlSession session = factory.openSession();
+        Integer result = null;
         try {
-            sqlSession.insert("mapper.MemberMapper.insertKakaoUser", dto);
-            sqlSession.commit();
+            result = session.selectOne(NS + "findMemberIdByEmail", email);
         } catch (Exception e) {
-            sqlSession.rollback();
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
+        return result == null ? 0 : result;
     }
 
+    // ─── MEMBER 수정 ─────────────────────────────────────────────
     @Override
-    public MemberDTO loginCheck(MemberDTO dto) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        MemberDTO result = null;
+    public int update(MemberDTO dto) {
+        SqlSession session = factory.openSession();
+        int result = 0;
         try {
-            result = sqlSession.selectOne("mapper.MemberMapper.loginCheck", dto);
+            result = session.update(NS + "update", dto);
+            session.commit();
         } catch (Exception e) {
+            session.rollback();
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
         return result;
     }
 
+    // ─── trainer_id로 회원 목록 ──────────────────────────────────
     @Override
-    public String getNicknameByEmail(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        String result = null;
+    public List<MemberDTO> findByTrainerId(int trainerId) {
+        SqlSession session = factory.openSession();
+        List<MemberDTO> list = null;
         try {
-            result = sqlSession.selectOne("mapper.MemberMapper.getNicknameByEmail", email);
+            list = session.selectList(NS + "findByTrainerId", trainerId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
-        return result;
+        return list;
     }
 
+    // ─── gym_id로 회원 목록 ──────────────────────────────────────
     @Override
-    public boolean update(MemberDTO dto) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        boolean result = false;
+    public List<MemberDTO> findByGymId(int gymId) {
+        SqlSession session = factory.openSession();
+        List<MemberDTO> list = null;
         try {
-            int cnt = sqlSession.update("mapper.MemberMapper.update", dto);
-            sqlSession.commit();
-            result = cnt > 0;
+            list = session.selectList(NS + "findByGymId", gymId);
         } catch (Exception e) {
-            sqlSession.rollback();
             e.printStackTrace();
         } finally {
-            sqlSession.close();
+            session.close();
         }
-        return result;
+        return list;
     }
 }

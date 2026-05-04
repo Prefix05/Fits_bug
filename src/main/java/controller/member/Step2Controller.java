@@ -17,6 +17,6 @@ public class Step2Controller extends HttpServlet {
         session.setAttribute("weight", request.getParameter("weight"));
         session.setAttribute("diet", request.getParameter("diet"));
 
-        response.sendRedirect("step3.jsp");
+        response.sendRedirect("/member/step3");
     }
 }

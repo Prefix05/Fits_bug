@@ -2,16 +2,16 @@ package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.WorkoutPlanDTO;
 import util.MybatisSqlSessionFactory;
 
 public class MyPageDAOImpl implements MyPageDAO {
 
     @Override
-    public MemberDTO selectMember(String email) {
+    public UserDTO selectUser(String email) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        MemberDTO result = null;
+        UserDTO result = null;
         try {
             result = sqlSession.selectOne("mapper.MemberMapper.findByEmail", email);
         } catch (Exception e) {
@@ -37,10 +37,10 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
-    public void updateMember(MemberDTO member) {
+    public void updateUser(UserDTO user) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.update("mapper.MemberMapper.update", member);
+            sqlSession.update("mapper.MemberMapper.update", user);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -65,10 +65,10 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
-    public void updateProfileImg(MemberDTO member) {
+    public void updateProfileImg(UserDTO user) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.update("mapper.MemberMapper.updateProfileImage", member);
+            sqlSession.update("mapper.MemberMapper.updateProfileImage", user);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();

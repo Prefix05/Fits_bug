@@ -33,6 +33,6 @@ public class ReportController extends HttpServlet {
 
         service.insertReport(dto);
 
-        response.sendRedirect("community.jsp");
+        response.sendRedirect("/member/community.jsp");
     }
 }

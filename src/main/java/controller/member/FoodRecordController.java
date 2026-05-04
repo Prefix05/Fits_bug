@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.FoodRecordDTO;
+import dto.member.MealLogDTO;
 import dto.member.LoginDTO;
 import service.member.FoodRecordService;
 import service.member.FoodRecordServiceImpl;
@@ -30,7 +30,7 @@ public class FoodRecordController extends HttpServlet {
             return;
         }
 
-        List<FoodRecordDTO> list = service.getList(user.getEmail());
+        List<MealLogDTO> list = service.getList(user.getEmail());
 
         response.setContentType("application/json;charset=UTF-8");
 
@@ -39,7 +39,7 @@ public class FoodRecordController extends HttpServlet {
 
         for (int i = 0; i < list.size(); i++) {
 
-            FoodRecordDTO f = list.get(i);
+            MealLogDTO f = list.get(i);
 
             json.append("{");
             json.append("\"date\":\"").append(f.getRecordDate()).append("\",");
@@ -67,7 +67,7 @@ public class FoodRecordController extends HttpServlet {
             return;
         }
 
-        FoodRecordDTO dto = new FoodRecordDTO();
+        MealLogDTO dto = new MealLogDTO();
 
         dto.setEmail(user.getEmail());
         dto.setFoodName(request.getParameter("foodName"));

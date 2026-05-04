@@ -37,9 +37,9 @@ public class TrainerController extends HttpServlet {
         String ajax = req.getParameter("ajax");
 
         if ("true".equals(ajax)) {
-            req.getRequestDispatcher("/trainerListFragment.jsp").forward(req, resp);
+            req.getRequestDispatcher("/member/trainerListFragment.jsp").forward(req, resp);
         } else {
-            req.getRequestDispatcher("/trainerList.jsp").forward(req, resp);
+            req.getRequestDispatcher("/member/trainerList.jsp").forward(req, resp);
         }
     }
 }

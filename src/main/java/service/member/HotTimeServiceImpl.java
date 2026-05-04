@@ -7,7 +7,7 @@ import java.util.Map;
 
 import dao.member.WorkoutRecordDAO;
 import dao.member.WorkoutRecordDAOImpl;
-import dto.member.WorkoutRecordDTO;
+import dto.member.WorkoutLogDTO;
 
 public class HotTimeServiceImpl implements HotTimeService {
 
@@ -16,7 +16,7 @@ public class HotTimeServiceImpl implements HotTimeService {
     @Override
     public String getHotTimeData(String email) {
 
-        List<WorkoutRecordDTO> list = dao.getRecords(email);
+        List<WorkoutLogDTO> list = dao.getRecords(email);
 
         Map<String, Integer> dayMap = new LinkedHashMap<>();
         String[] days = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
@@ -26,17 +26,22 @@ public class HotTimeServiceImpl implements HotTimeService {
         Map<Integer, Integer> timeMap = new LinkedHashMap<>();
         for(int i=0;i<24;i++) timeMap.put(i, 0);
 
-        for(WorkoutRecordDTO w : list){
+        for (WorkoutLogDTO w : list) {
 
-            LocalDateTime dt = w.getWorkoutRecordTime();
+            // null 체크
+            if (w.getDate() == null || w.getStartTime() == null) continue;
 
-            if(dt == null) continue;
+            // ✅ 날짜 + 시간 합치기
+            LocalDateTime dt = LocalDateTime.of(w.getDate(), w.getStartTime());
 
+            // 요일 (Mon, Tue...)
             String day = dt.getDayOfWeek().toString().substring(0,3);
+
+            // 시간 (0~23)
             int hour = dt.getHour();
 
-            dayMap.put(day, dayMap.get(day)+1);
-            timeMap.put(hour, timeMap.get(hour)+1);
+            dayMap.put(day, dayMap.get(day) + 1);
+            timeMap.put(hour, timeMap.get(hour) + 1);
         }
 
         // 🔥 JSON 생성

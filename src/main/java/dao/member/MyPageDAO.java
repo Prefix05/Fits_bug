@@ -1,17 +1,16 @@
 package dao.member;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.WorkoutPlanDTO;
 
 public interface MyPageDAO {
-
-    MemberDTO selectMember(String email);
+    UserDTO selectUser(String email);
 
     WorkoutPlanDTO selectWorkoutPlan(String email);
 
-    void updateMember(MemberDTO member);
+    void updateUser(UserDTO user);
 
     void updateWorkoutPlan(WorkoutPlanDTO plan);
 
-    void updateProfileImg(MemberDTO member);
+    void updateProfileImg(UserDTO user);
 }

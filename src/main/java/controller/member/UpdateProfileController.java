@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dto.member.MemberDTO;
+import dao.member.UserDAO;
+import dao.member.UserDAOImpl;
+import dto.member.UserDTO;
 
 @WebServlet("/member/updateProfile")
 @MultipartConfig(
@@ -29,7 +29,7 @@ public class UpdateProfileController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         String nickname = req.getParameter("nickname");
         String password = req.getParameter("password");
@@ -43,14 +43,14 @@ public class UpdateProfileController extends HttpServlet {
 
             fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
 
-            String uploadPath = req.getServletContext().getRealPath("/upload");
+            String uploadPath = req.getServletContext().getRealPath("/member/upload");
 
             File dir = new File(uploadPath);
             if(!dir.exists()) dir.mkdirs();
 
             filePart.write(uploadPath + File.separator + fileName);
 
-            loginUser.setProfileImage(fileName);
+            loginUser.setProfileImg(fileName);
         }
 
         // 🔥 텍스트 값
@@ -60,10 +60,10 @@ public class UpdateProfileController extends HttpServlet {
             loginUser.setPassword(password);
         }
 
-        MemberDAO dao = new MemberDAOImpl();
-        boolean result = dao.update(loginUser);
+        UserDAO dao = new UserDAOImpl();
+        int result = dao.update(loginUser);
 
-        if(result){
+        if(result > 0){
             session.setAttribute("loginUser", loginUser);
             resp.getWriter().write("ok");
         }else{

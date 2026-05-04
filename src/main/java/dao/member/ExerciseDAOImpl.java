@@ -6,12 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.member.ExerciseDTO;
+import dto.member.ExerciseGuideDTO;
 import util.DBUtil;
 
 public class ExerciseDAOImpl implements ExerciseDAO {
-    private ExerciseDTO map(ResultSet rs) throws Exception {
-        ExerciseDTO e = new ExerciseDTO();
+    private ExerciseGuideDTO map(ResultSet rs) throws Exception {
+        ExerciseGuideDTO e = new ExerciseGuideDTO();
 
         e.setExerciseId(rs.getInt("exercise_id"));
         e.setName(rs.getString("name"));
@@ -26,9 +26,9 @@ public class ExerciseDAOImpl implements ExerciseDAO {
     }
 
     @Override
-    public List<ExerciseDTO> getAllExercises() {
+    public List<ExerciseGuideDTO> getAllExercises() {
 
-        List<ExerciseDTO> list = new ArrayList<>();
+        List<ExerciseGuideDTO> list = new ArrayList<>();
 
         String sql = "SELECT * FROM exercise ORDER BY exercise_id DESC";
 
@@ -48,9 +48,9 @@ public class ExerciseDAOImpl implements ExerciseDAO {
     }
 
     @Override
-    public List<ExerciseDTO> searchExercises(String keyword) {
+    public List<ExerciseGuideDTO> searchExercises(String keyword) {
 
-        List<ExerciseDTO> list = new ArrayList<>();
+        List<ExerciseGuideDTO> list = new ArrayList<>();
 
         String sql =
         "SELECT * FROM exercise " +

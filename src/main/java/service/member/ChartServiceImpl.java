@@ -1,7 +1,6 @@
 package service.member;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import dao.member.FoodRecordDAO;
 import dao.member.FoodRecordDAOImpl;
@@ -10,9 +9,10 @@ import dao.member.InbodyRecordDAOImpl;
 import dao.member.WorkoutRecordDAO;
 import dao.member.WorkoutRecordDAOImpl;
 import dto.member.ChartDTO;
-import dto.member.FoodRecordDTO;
-import dto.member.InbodyRecordDTO;
-import dto.member.WorkoutRecordDTO;
+import dto.member.MealLogDTO;
+import dto.member.InbodyLogDTO;
+import dto.member.WorkoutLogDTO;
+import dto.member.WorkoutDetailDTO;
 
 public class ChartServiceImpl implements ChartService {
 
@@ -20,60 +20,87 @@ public class ChartServiceImpl implements ChartService {
     private FoodRecordDAO foodDao = new FoodRecordDAOImpl();
     private InbodyRecordDAO inbodyDao = new InbodyRecordDAOImpl();
 
-    // 운동 → ChartDTO
+    // =========================
+    // 운동 차트 (날짜별 합계)
+    // =========================
     @Override
     public List<ChartDTO> getWorkoutChart(String email) {
 
-        List<WorkoutRecordDTO> records = workoutDao.getRecords(email);
-        List<ChartDTO> list = new ArrayList<>();
+        List<WorkoutLogDTO> records = workoutDao.getRecords(email);
 
-        for(WorkoutRecordDTO r : records){
-            ChartDTO dto = new ChartDTO();
+        Map<String, Double> map = new TreeMap<>();
 
-            dto.setDate(r.getDate());
+        for (WorkoutLogDTO log : records) {
 
-            // 볼륨 계산
-            double volume = r.getWeight() * r.getReps() * r.getSets();
-            dto.setValue(volume);
+            // 🔥 LocalDate → String 변환
+            String date = log.getDate().toString();
 
-            list.add(dto);
+            double totalVolume = 0;
+
+            // 🔥 핵심: detail 반복
+            if (log.getDetails() != null) {
+                for (WorkoutDetailDTO d : log.getDetails()) {
+                    totalVolume += d.getWeight() * d.getRep() * d.getSet();
+                }
+            }
+
+            map.put(date, map.getOrDefault(date, 0.0) + totalVolume);
         }
 
-        return list;
+        return convertMapToChart(map);
     }
 
-    // 식단 → ChartDTO
+    // =========================
+    // 식단 차트 (날짜별 칼로리 합)
+    // =========================
     @Override
     public List<ChartDTO> getFoodChart(String email) {
 
-        List<FoodRecordDTO> records = foodDao.getRecords(email);
-        List<ChartDTO> list = new ArrayList<>();
+        List<MealLogDTO> records = foodDao.getRecords(email);
 
-        for(FoodRecordDTO r : records){
-            ChartDTO dto = new ChartDTO();
+        Map<String, Double> map = new TreeMap<>();
 
-            dto.setDate(r.getRecordDate());
-            dto.setValue(r.getCalorie());
+        for (MealLogDTO r : records) {
 
-            list.add(dto);
+            String date = r.getRecordDate();
+
+            map.put(date, map.getOrDefault(date, 0.0) + r.getCalorie());
         }
 
-        return list;
+        return convertMapToChart(map);
     }
 
-    // 인바디 → ChartDTO (체중 기준)
+    // =========================
+    // 인바디 차트 (날짜별 체중)
+    // =========================
     @Override
     public List<ChartDTO> getInbodyChart(String email) {
 
-        List<InbodyRecordDTO> records = inbodyDao.getRecords(email);
+        List<InbodyLogDTO> records = inbodyDao.getRecords(email);
+
+        Map<String, Double> map = new TreeMap<>();
+
+        for (InbodyLogDTO r : records) {
+
+            String date = r.getRecordDate();
+
+            map.put(date, r.getWeight()); // 마지막 값 유지
+        }
+
+        return convertMapToChart(map);
+    }
+
+    // =========================
+    // 공통 변환 메서드
+    // =========================
+    private List<ChartDTO> convertMapToChart(Map<String, Double> map) {
+
         List<ChartDTO> list = new ArrayList<>();
 
-        for(InbodyRecordDTO r : records){
+        for (String date : map.keySet()) {
             ChartDTO dto = new ChartDTO();
-
-            dto.setDate(r.getRecordDate());
-            dto.setValue(r.getWeight()); // 기본 체중
-
+            dto.setDate(date);
+            dto.setValue(map.get(date));
             list.add(dto);
         }
 

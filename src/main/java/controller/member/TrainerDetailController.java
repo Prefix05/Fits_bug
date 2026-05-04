@@ -70,7 +70,7 @@ public class TrainerDetailController extends HttpServlet {
         req.setAttribute("trainer", dto);
 
         RequestDispatcher rd =
-                req.getRequestDispatcher("/trainerDetail.jsp");
+                req.getRequestDispatcher("/member/trainerDetail.jsp");
         rd.forward(req, resp);
     }
 }

@@ -1,7 +1,7 @@
 package service.member;
 
 import dto.member.LoginDTO;
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.MyPageDTO;
 import dto.member.WorkoutPlanDTO;
 
@@ -11,8 +11,8 @@ public interface MyPageService {
     MyPageDTO getMyPage(String email);
 
     // 마이페이지 통합 수정
-    void updateMyPage(MemberDTO member, WorkoutPlanDTO plan);
+    void updateMyPage(UserDTO user, WorkoutPlanDTO plan);
 
     // 프로필 이미지
-    void updateProfileImg(MemberDTO member);
+    void updateProfileImg(UserDTO user);
 }

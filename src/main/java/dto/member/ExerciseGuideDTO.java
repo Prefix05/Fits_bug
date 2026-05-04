@@ -1,6 +1,6 @@
 package dto.member;
 
-public class ExerciseDTO {
+public class ExerciseGuideDTO {
     private int exerciseId;
     private String name;
     private String description;
@@ -11,12 +11,12 @@ public class ExerciseDTO {
     private String gifUrl;      // 상세 GIF
     private String youtubeUrl;  // 영상
     
-	public ExerciseDTO() {
+	public ExerciseGuideDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ExerciseDTO(int exerciseId, String name, String description, String muscle, String difficulty,
+	public ExerciseGuideDTO(int exerciseId, String name, String description, String muscle, String difficulty,
 			String thumbnail, String gifUrl, String youtubeUrl) {
 		super();
 		this.exerciseId = exerciseId;
