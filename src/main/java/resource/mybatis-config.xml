@@ -47,7 +47,6 @@
 		<mapper resource="mapper/gym/schedule.xml"/>
 
 		<mapper resource="mapper/gym/payment.xml"/>
-		<mapper resource="mapper/member/MemberMapper.xml"/>
 
 		<mapper resource="mapper/member/loginMapper.xml"/>
 

@@ -1,11 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>정산 및 매출관리 - 핏츠버그 Fitness Admin</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -95,229 +99,138 @@
 <p class="text-on-surface-variant text-sm mt-1 nowrap">피트니스 센터의 수익 현황과 강사 정산 내역을 한눈에 확인하세요.</p>
 </div>
 <div class="flex gap-3">
-<button class="px-4 py-2 text-sm font-medium text-on-primary bg-gradient-to-br from-primary to-primary-container rounded-md shadow-sm nowrap">실시간 데이터 갱신</button>
+<button onclick="refreshAllData()" class="px-4 py-2 text-sm font-medium text-on-primary bg-gradient-to-br from-primary to-primary-container rounded-md shadow-sm nowrap">
+    실시간 데이터 갱신
+</button>
 </div>
 </div>
 <!-- Date Range Picker Section -->
-<div class="flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/10 w-fit">
-<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
-<div class="flex items-center gap-2">
-<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface font-medium" type="date" value="2024-01-01"/>
-<span class="text-on-surface-variant font-medium">~</span>
-<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface font-medium" type="date" value="2024-06-30"/>
-</div>
-<button class="ml-2 px-3 py-1.5 bg-white border border-outline-variant/20 rounded-md text-xs font-bold hover:bg-surface-container-highest transition-colors">조회</button>
-</div>
+<form action="${pageContext.request.contextPath}/admin/sales" method="get" id="searchForm">
+    <div class="flex items-center gap-3 bg-surface p-4 rounded-lg shadow-sm">
+        <input type="date" name="startDate" id="startDate" value="${startDate}" class="border rounded-md px-2 py-1">
+        <span>~</span>
+        <input type="date" name="endDate" id="endDate" value="${endDate}" class="border rounded-md px-2 py-1">
+        
+        <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="ID 검색..." class="border rounded-md px-2 py-1">
+        
+        <button type="submit" class="bg-primary text-white px-4 py-2 rounded-md">조회</button>
+        <button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales'" class="bg-gray-500 text-white px-4 py-2 rounded-md">실시간 데이터 갱신</button>
+    </div>
+    <input type="hidden" name="status" value="${status}">
+</form>
+
+<hr class="my-6">
 <!-- Summary Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-primary p-6 rounded-lg text-white shadow-lg transition-transform hover:scale-[1.02]">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined bg-white/20 p-2 rounded-lg">account_balance_wallet</span>
-<span class="text-xs font-bold bg-white/20 px-2 py-1 rounded nowrap">+12.5%</span>
-</div>
-<h3 class="text-xs font-medium opacity-80 uppercase tracking-wider nowrap">총매출 <span class="text-[10px] opacity-70">(최근 1달)</span></h3>
-<p class="text-2xl font-bold mt-1 nowrap text-right">₩ 124,500,000</p>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined text-tertiary bg-tertiary-fixed p-2 rounded-lg">payments</span>
-<span class="text-xs font-bold text-error bg-error-container px-2 py-1 rounded nowrap">+4.1%</span>
-</div>
-<h3 class="text-xs font-medium text-on-surface-variant uppercase tracking-wider nowrap">정산금 <span class="text-[10px] opacity-60">(최근 1달)</span></h3>
-<p class="text-2xl font-bold text-on-surface mt-1 nowrap text-right">₩ 42,300,000</p>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/10 shadow-sm transition-transform hover:scale-[1.02]">
-<div class="flex justify-between items-start mb-4">
-<span class="material-symbols-outlined text-primary bg-primary-fixed p-2 rounded-lg">savings</span>
-<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded nowrap">+8.2%</span>
-</div>
-<h3 class="text-xs font-medium text-on-surface-variant uppercase tracking-wider nowrap">수익(수수료) <span class="text-[10px] opacity-60">(최근 1달)</span></h3>
-<p class="text-2xl font-bold text-on-surface mt-1 nowrap text-right">₩ 82,200,000</p>
-</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-500">총 매출액</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">
+            <fmt:formatNumber value="${data.summary.totalSales}" type="currency" currencySymbol="₩" />
+        </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-500">정산 수수료</p>
+        <p class="text-2xl font-bold text-red-600 mt-1">
+            <fmt:formatNumber value="${data.summary.totalFee}" type="currency" currencySymbol="₩" />
+        </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-500">순수익</p>
+        <p class="text-2xl font-bold text-blue-600 mt-1">
+            <fmt:formatNumber value="${data.summary.netProfit}" type="currency" currencySymbol="₩" />
+        </p>
+    </div>
 </div>
 <!-- Combined Chart Section -->
-<div class="space-y-4">
-<h4 class="text-sm font-semibold nowrap">매출 및 수익 추이</h4>
-<div class="bg-surface-container-lowest p-6 lg:p-8 rounded-lg border border-outline-variant/10 shadow-sm flex flex-col">
-<div class="flex justify-between items-center mb-8">
-<h5 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">월별 통합 지표 (1월 - 6월)</h5>
-<div class="flex gap-4">
-<div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-primary"></div><span class="text-[10px] font-medium text-on-surface-variant">총매출</span></div>
-<div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-error-container"></div><span class="text-[10px] font-medium text-on-surface-variant">정산금</span></div>
-<div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-emerald-500"></div><span class="text-[10px] font-medium text-on-surface-variant">수익</span></div>
-</div>
-</div>
-<div class="flex-1 flex items-end justify-between h-64 gap-4 px-2">
-<!-- Jan -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 60%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 40%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 20%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">1월</span>
-</div>
-<!-- Feb -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 50%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 35%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 15%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">2월</span>
-</div>
-<!-- Mar -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 85%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 55%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 30%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">3월</span>
-</div>
-<!-- Apr -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 75%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 50%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 25%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">4월</span>
-</div>
-<!-- May -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 65%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 42%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 23%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">5월</span>
-</div>
-<!-- Jun -->
-<div class="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-<div class="flex items-end gap-1 w-full justify-center">
-<div class="w-4 bg-primary rounded-t shadow-sm" style="height: 90%"></div>
-<div class="w-4 bg-error-container rounded-t shadow-sm" style="height: 60%"></div>
-<div class="w-4 bg-emerald-500 rounded-t shadow-sm" style="height: 30%"></div>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant">6월</span>
-</div>
-</div>
-</div>
+<div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-sm font-bold text-gray-700 mb-4">매출 및 수익 분석</h3>
+            <canvas id="salesChart" height="150"></canvas>
 </div>
 <!-- Settlement Detail Table Section -->
-<div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
-<div class="px-4 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-surface-container-low">
-<h3 class="text-lg font-semibold nowrap">정산 상세 내역</h3>
-<div class="flex gap-2">
-<button class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-low hover:bg-surface-container rounded-lg text-xs font-semibold text-on-surface-variant transition-colors nowrap">
-<span class="material-symbols-outlined text-sm">schedule</span>
-                기한임박순
-            </button>
-<button class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-low hover:bg-surface-container rounded-lg text-xs font-semibold text-on-surface-variant transition-colors nowrap">
-<span class="material-symbols-outlined text-sm">payments</span>
-                금액 큰 순
-            </button>
-</div>
-</div>
-<div class="px-4 lg:px-8 bg-white flex flex-col md:flex-row items-center justify-between gap-4">
-<div class="flex gap-8 border-b-0">
-<button class="py-4 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors nowrap">정산대기</button>
-<button class="py-4 text-sm font-bold text-primary border-b-2 border-primary nowrap">정산완료</button>
-</div>
-<div class="relative flex-1 md:max-w-xs py-2">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
-<input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low border-none rounded-lg text-sm focus:ring-1 focus:ring-primary/20" placeholder="강사명 또는 지점명 검색" type="text"/>
-</div>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse min-w-[800px]">
-<thead>
-<tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-bold uppercase tracking-wider nowrap">
-<th class="px-4 lg:px-8 py-4">강사/지점명</th>
-<th class="px-4 py-4">정산대상 기간</th>
-<th class="px-4 py-4">정산 기한</th>
-<th class="px-4 py-4 text-right">정산금액</th>
-<th class="px-4 py-4">상태</th>
-<th class="px-4 lg:px-8 py-4 text-right">처리하기</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/10">
-<tr class="hover:bg-surface/50 transition-colors nowrap">
-<td class="px-4 lg:px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary shadow-sm shrink-0">H</div>
-<div>
-<p class="font-semibold text-sm">홍길동 강사</p>
-<p class="text-xs text-on-surface-variant">강남 본점</p>
-</div>
-</div>
-</td>
-<td class="px-4 py-5 text-sm">2023.09.01 - 2023.09.30</td>
-<td class="px-4 py-5 text-sm font-medium">2023.10.05</td>
-<td class="px-4 py-5 text-sm font-bold text-right">₩ 4,500,000</td>
-<td class="px-4 py-5">
-<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[11px] font-bold shadow-sm">정산완료</span>
-</td>
-<td class="px-4 lg:px-8 py-5 text-right">
-<button class="text-on-surface-variant text-xs font-medium px-4 py-2 rounded-md border border-outline-variant/30 hover:bg-surface-container transition-all nowrap">내역보기</button>
-</td>
-</tr>
-<tr class="hover:bg-surface/50 transition-colors nowrap">
-<td class="px-4 lg:px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-primary text-lg">store</span>
-</div>
-<div>
-<p class="font-semibold text-sm">청담 지점</p>
-<p class="text-xs text-on-surface-variant">지점 매출 정산</p>
-</div>
-</div>
-</td>
-<td class="px-4 py-5 text-sm">2023.09.01 - 2023.09.30</td>
-<td class="px-4 py-5 text-sm font-medium">2023.10.05</td>
-<td class="px-4 py-5 text-sm font-bold text-right">₩ 15,200,000</td>
-<td class="px-4 py-5">
-<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[11px] font-bold shadow-sm">정산완료</span>
-</td>
-<td class="px-4 lg:px-8 py-5 text-right">
-<button class="text-on-surface-variant text-xs font-medium px-4 py-2 rounded-md border border-outline-variant/30 hover:bg-surface-container transition-all nowrap">내역보기</button>
-</td>
-</tr>
-<tr class="hover:bg-surface/50 transition-colors nowrap">
-<td class="px-4 lg:px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary shadow-sm shrink-0">C</div>
-<div>
-<p class="font-semibold text-sm">최수지 강사</p>
-<p class="text-xs text-on-surface-variant">서초 지점</p>
-</div>
-</div>
-</td>
-<td class="px-4 py-5 text-sm">2023.09.01 - 2023.09.30</td>
-<td class="px-4 py-5 text-sm font-medium">2023.10.05</td>
-<td class="px-4 py-5 text-sm font-bold text-right">₩ 2,800,000</td>
-<td class="px-4 py-5">
-<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[11px] font-bold shadow-sm">정산완료</span>
-</td>
-<td class="px-4 lg:px-8 py-5 text-right">
-<button class="text-on-surface-variant text-xs font-medium px-4 py-2 rounded-md border border-outline-variant/30 hover:bg-surface-container transition-all nowrap">내역보기</button>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="px-4 lg:px-8 py-5 flex items-center justify-between border-t border-surface-container-low bg-surface-container-lowest nowrap">
-<span class="text-[11px] text-on-surface-variant font-medium">총 85건 중 1-10건 표시 중</span>
-<div class="flex space-x-1">
-<button class="p-1.5 hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
-<button class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-md">1</button>
-<button class="px-3 py-1 text-xs font-medium hover:bg-surface-container rounded-md">2</button>
-<button class="px-3 py-1 text-xs font-medium hover:bg-surface-container rounded-md">3</button>
-<button class="p-1.5 hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
-</div>
-</div>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <form id="listForm" action="${pageContext.request.contextPath}/admin/sales" method="get">
+            <!-- 폼 유지를 위한 히든 필드 -->
+            <input type="hidden" name="startDate" value="${startDate}">
+            <input type="hidden" name="endDate" value="${endDate}">
+            <input type="hidden" name="status" id="currentStatus" value="${status}">
+            <input type="hidden" name="offset" id="currentOffset" value="${param.offset != null ? param.offset : 0}">
+
+            <!-- 테이블 헤더 및 필터 영역 -->
+            <div class="p-4 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex gap-2">
+                    <button type="button" onclick="changeStatus('정산대기')" class="px-4 py-2 rounded-lg text-sm font-medium ${status == '정산대기' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}">정산대기</button>
+                    <button type="button" onclick="changeStatus('정산완료')" class="px-4 py-2 rounded-lg text-sm font-medium ${status == '정산완료' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}">정산완료</button>
+                </div>
+                
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <!-- 정렬 필터 -->
+                    <select name="orderBy" onchange="this.form.submit()" class="border rounded-lg px-3 py-2 text-sm bg-gray-50">
+                        <option value="deadline" ${param.orderBy == 'deadline' ? 'selected' : ''}>기한 임박순</option>
+                        <option value="amountDesc" ${param.orderBy == 'amountDesc' ? 'selected' : ''}>금액 큰 순</option>
+                    </select>
+                    <!-- 섹션 내 검색창 -->
+                    <div class="relative flex-grow">
+                        <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="대상 ID 검색..." class="w-full border rounded-lg pl-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                        <button type="submit" class="absolute right-3 top-2.5 text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold">
+                    <tr>
+                        <th class="px-6 py-4">정산 번호</th>
+                        <th class="px-6 py-4">대상(ID/유형)</th>
+                        <th class="px-6 py-4">정산 기한</th>
+                        <th class="px-6 py-4 text-right">총 매출</th>
+                        <th class="px-6 py-4 text-right">정산 금액</th>
+                        <th class="px-6 py-4 text-center">상태</th>
+                        <th class="px-6 py-4 text-center">액션</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50 text-sm">
+                    <c:forEach var="item" items="${data.settlementList}">
+                        <tr class="hover:bg-blue-50/30 transition-colors">
+                            <td class="px-6 py-4">#${item.settlementNum}</td>
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-gray-900">${item.targetNum}</div>
+                                <div class="text-xs text-gray-400">${item.targetType}</div>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">${item.settlementDeadline}</td>
+                            <td class="px-6 py-4 text-right font-medium">
+                                <fmt:formatNumber value="${item.totalSales}" type="number"/>
+                            </td>
+                            <td class="px-6 py-4 text-right font-bold text-blue-600">
+                                <fmt:formatNumber value="${item.netAmount}" type="number"/>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex px-2 py-1 rounded-md text-xs font-semibold ${item.settlementStatus == '정산완료' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
+                                    ${item.settlementStatus}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <c:if test="${item.settlementStatus == '정산대기'}">
+                                    <button onclick="processSettlement(${item.settlementNum})" class="bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-black transition-colors">승인</button>
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 페이징 영역 -->
+        <div class="p-4 border-t border-gray-100 flex justify-center gap-2">
+            <c:set var="limit" value="10"/>
+            <c:set var="offset" value="${param.offset != null ? param.offset : 0}"/>
+            <button onclick="movePage(${offset - limit})" class="p-2 border rounded-md hover:bg-gray-50 ${offset <= 0 ? 'invisible' : ''}">이전</button>
+            <button onclick="movePage(${offset + limit})" class="p-2 border rounded-md hover:bg-gray-50">다음</button>
+        </div>
+    </div>
 </div>
 <!-- 매출 상세 내역 Section -->
 <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden pt-0">
@@ -484,6 +397,71 @@
 <a class="hover:text-primary" href="#">시스템 상태</a>
 </div>
 </div>
-</div>
 </main>
+<script>
+function refreshAllData() {
+    // 1. JSP에 있는 날짜 입력칸의 값들을 가져옴
+    const start = document.getElementById('startDate').value; 
+    const end = document.getElementById('endDate').value;
+    const status = "${status}"; // 기존에 선택되어 있던 탭 상태
+
+    // 2. 현재 서블릿 주소로 파라미터를 붙여서 이동 (새로고침 효과)
+    //서블릿 주소가 /admin/sales 이므로:
+    location.href = "/admin/sales?startDate=" + start + "&endDate=" + end + "&status=" + status;
+}
+const ctx = document.getElementById('salesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['총 매출액', '정산 수수료', '순수익'],
+        datasets: [{
+            label: '금액(원)',
+            data: [${data.summary.totalSales}, ${data.summary.totalFee}, ${data.summary.netProfit}],
+            backgroundColor: ['#4F46E5', '#EF4444', '#10B981'],
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, grid: { display: false } } }
+    }
+});
+
+// 2. 상태 변경 및 페이징 함수
+function changeStatus(status) {
+    document.getElementById('currentStatus').value = status;
+    document.getElementById('currentOffset').value = 0; // 탭 변경 시 첫 페이지로
+    document.getElementById('listForm').submit();
+}
+
+function movePage(newOffset) {
+    document.getElementById('currentOffset').value = newOffset;
+    document.getElementById('listForm').submit();
+}
+
+// 3. 정산 승인 (기존 doPost 연동)
+function processSettlement(id) {
+    if(!confirm("해당 건을 정산 완료 처리하시겠습니까?")) return;
+    
+    const params = new URLSearchParams();
+    params.append('action', 'completeSettlement');
+    params.append('id', id);
+
+    fetch("${pageContext.request.contextPath}/admin/sales", {
+        method: "POST",
+        body: params
+    })
+    .then(res => res.text())
+    .then(result => {
+        if(result === "success") {
+            alert("정산 처리가 완료되었습니다.");
+            location.reload();
+        } else {
+            alert("오류 발생: " + result);
+        }
+    });
+}
+
+</script>
 </body></html>
