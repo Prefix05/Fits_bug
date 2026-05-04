@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import service.member.CommentService;
 import service.member.CommentServiceImpl;
 
-@WebServlet("/commentList")
+@WebServlet("/member/commentList")
 public class CommentListController extends HttpServlet {
     private CommentService service = new CommentServiceImpl();
 
