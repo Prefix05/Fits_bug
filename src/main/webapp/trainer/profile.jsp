@@ -20,34 +20,122 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
-
-<!-- Sidebar -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex flex-col p-6">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Fitsbug</h1>
+<!-- Mobile Bottom Nav -->
+<nav
+        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
+    <a href="#"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">distance</span>
+        <span class="text-[10px] font-medium">내주변</span>
     </a>
-    <nav class="flex-1 space-y-1">
+    <a href="" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[22px]"
+                  style='font-variation-settings: "FILL" 1;'>dashboard</span>
+        <span class="text-[10px] font-bold text-blue-700">대시보드</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/trainer/clients"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
+        <span class="material-symbols-outlined text-[22px]">group</span>
+        <span class="text-[10px] font-medium">회원관리</span>
+    </a>
+    <a href="${pageContext.request.contextPath}/trainer/calendar"
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
+        <span class="text-[10px] font-medium">일정</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">chat</span>
+        <span class="text-[10px] font-medium">메시지</span>
+    </a>
+    <a href=""
+       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[22px]">payments</span>
+        <span class="text-[10px] font-medium">수익</span>
+    </a>
+</nav>
+
+<!-- SideNavBar Shell -->
+<aside
+        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
+    <a href="" class="flex items-center gap-3 mb-10">
+        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
+    </a>
+    <nav class="flex-1 space-y-1" id="main-nav">
+
+        <!-- 공통 nav item -->
+        <!-- 내주변 -->
+        <div class="relative">
+            <!-- Parent toggle -->
+            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
+               onclick="
+                        this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
+                        this.querySelector('.chevron').classList.toggle('rotate-180');
+                    " href="#">
+                <span class="material-symbols-outlined">distance</span>
+                내주변
+                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
+                      style="font-size:18px">expand_more</span>
+            </a>
+
+            <!-- Dropdown children -->
+            <div class="dropdown hidden flex-col pl-4">
+                <!-- 헬스장 -->
+                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+                   href="#">
+                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
+                    헬스장
+                </a>
+                <!-- 트레이너 -->
+                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+                   href="#">
+                    <span class="material-symbols-outlined" data-icon="">person</span>
+                    트레이너
+                </a>
+            </div>
+        </div>
+
+        <!-- 대시보드 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard">
-            <span class="material-symbols-outlined">dashboard</span>대시보드</a>
+           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
+            대시보드</a>
+
+        <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients">
-            <span class="material-symbols-outlined">group</span>회원 관리</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" href="#">
-            <span class="material-symbols-outlined">calendar_today</span>일정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" href="#">
-            <span class="material-symbols-outlined">chat</span>메시지</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" href="#">
-            <span class="material-symbols-outlined">payments</span>수익</a>
+           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
+            회원
+            관리</a>
+
+        <!-- 일정 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
+            일정</a>
+
+        <!-- 메시지 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="/messages.html" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
+
+        <!-- 수익 -->
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="earnings.html" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
+            수익</a>
     </nav>
-    <div class="mt-auto pt-6 border-slate-200 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" href="#">
-            <span class="material-symbols-outlined">settings</span>설정</a>
-        <div class="border-t border-slate-200 my-2"></div>
+
+    <!--설정, 고객 지원-->
+    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
+            설정</a>
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
+           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
+            지원</a>
+        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
     </div>
+
+    <!-- 마이프로필 -->
     <!-- 마이프로필 nav item (active) -->
     <a href="${pageContext.request.contextPath}/trainer/profile"
        class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200">
@@ -61,6 +149,7 @@
         </div>
     </a>
 </aside>
+
 
 <!-- Main -->
 <main class="lg:pl-64 min-h-screen">
