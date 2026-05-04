@@ -27,7 +27,7 @@ public class CommunityController extends HttpServlet {
 
             req.setAttribute("postList", postList);
 
-            req.getRequestDispatcher("/community.jsp")
+            req.getRequestDispatcher("/member/community.jsp")
                .forward(req, resp);
 
         } catch (Exception e) {

@@ -42,7 +42,7 @@ public class JoinController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getRequestDispatcher("join.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/join.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,6 +59,6 @@ public class JoinController extends HttpServlet {
         session.setAttribute("phone", request.getParameter("phone"));
         session.setAttribute("role", request.getParameter("role"));
 
-        response.sendRedirect("step2.jsp");
+        response.sendRedirect("/member/step2.jsp");
     }
 }

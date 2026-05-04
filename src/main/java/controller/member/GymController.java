@@ -46,10 +46,10 @@ public class GymController extends HttpServlet {
 
         // AJAX 요청이면 카드 부분만 반환
         if ("true".equals(req.getParameter("ajax"))) {
-            RequestDispatcher rd = req.getRequestDispatcher("/gymListFragment.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("/member/gymListFragment.jsp");
             rd.forward(req, resp);
         } else {
-            RequestDispatcher rd = req.getRequestDispatcher("/gymList.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("/member/gymList.jsp");
             rd.forward(req, resp);
         }
     }
