@@ -21,10 +21,10 @@
          MemberDAOImpl.loginCheck(MemberDTO dto)
          → param: MemberDTO  (dto.getEmail(), dto.getPassword())
          ────────────────────────────────────────────────────── -->
-    <select id="loginCheck" parameterType="MemberDTO" resultMap="memberResultMap">
-        SELECT email, password, nickname, phone,
-               profile_image, email_verified, social_type
-        FROM member
+    <select id="loginCheck" parameterType="MemberDTO" resultType="MemberDTO">
+        SELECT email, password, nickname, phone, role,
+               profile_image
+        FROM user
         WHERE email    = #{email}
           AND password = #{password}
     </select>

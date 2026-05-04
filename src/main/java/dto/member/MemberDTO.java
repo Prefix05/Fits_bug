@@ -83,5 +83,11 @@ public class MemberDTO {
 		this.socialType = socialType;
 	}
 
+	@Override
+	public String toString() {
+		return "MemberDTO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", phone=" + phone
+				+ ", profileImage=" + profileImage + ", emailVerified=" + emailVerified + ", socialType=" + socialType
+				+ "]";
+	}
     
 }

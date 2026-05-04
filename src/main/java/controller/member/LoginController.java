@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.LoginDTO;
 import dto.member.MemberDTO;
 import service.member.MemberService;
 import service.member.MemberServiceImpl;
@@ -41,10 +40,10 @@ public class LoginController extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", loginUser);
 
-            response.sendRedirect("main.jsp"); // ⭐ 로그인 성공
+            response.sendRedirect(request.getContextPath() +"/member/main.jsp"); // ⭐ 로그인 성공
         } else {
             request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/member/login.jsp").forward(request, response);
         }
     }
 }

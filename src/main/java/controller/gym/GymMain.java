@@ -51,7 +51,7 @@ public class GymMain extends HttpServlet {
 			HttpSession session = request.getSession(false);
 
 			if (session == null || session.getAttribute("gymId") == null) {
-				response.sendRedirect(request.getContextPath() + "/login.jsp");
+				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
 
@@ -60,6 +60,7 @@ public class GymMain extends HttpServlet {
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 
+			
 			Gym gym = service.getGymMainInfo(gymId);
 			List<Review> reviewList = service.getReviewList(gymId);
 			List<Membership> membershipList = service.getMembershipList(gymId);

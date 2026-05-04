@@ -31,7 +31,7 @@ public class MyPageController extends HttpServlet {
 
         // 로그인 체크
         if (loginUser == null) {
-        	response.sendRedirect(request.getContextPath() + "/login.jsp");
+        	response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
         
@@ -62,7 +62,7 @@ public class MyPageController extends HttpServlet {
         request.setAttribute("member", dto.getMember());
         request.setAttribute("plan", dto.getPlan());
 
-        request.getRequestDispatcher("mypage.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/mypage.jsp").forward(request, response);
     }
 
     /**

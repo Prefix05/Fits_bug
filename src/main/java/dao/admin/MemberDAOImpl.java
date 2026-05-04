@@ -122,6 +122,8 @@ public class MemberDAOImpl implements MemberDAO {
 		List<MemberDTO> trainerList = null;
 		try {
 			trainerList = sqlSession.selectList("mapper.admin.member.selectTrainerList", paramMap);
+			System.out.println("+++++++++++++++++");
+			System.out.println(trainerList);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;

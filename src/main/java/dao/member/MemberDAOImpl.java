@@ -31,6 +31,7 @@ public class MemberDAOImpl implements MemberDAO {
             MemberDTO param = new MemberDTO();
             param.setEmail(email);
             param.setPassword(password);
+            System.out.println(param);
             result = sqlSession.selectOne("mapper.MemberMapper.loginCheck", param);
         } catch (Exception e) {
             e.printStackTrace();

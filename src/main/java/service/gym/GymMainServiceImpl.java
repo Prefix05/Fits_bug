@@ -23,6 +23,7 @@ import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
+import dto.trainer.UserDTO;
 
 public class GymMainServiceImpl implements GymMainService {
 
@@ -32,7 +33,7 @@ public class GymMainServiceImpl implements GymMainService {
     private GymMainMembershipDao membershipDao = new GymMainMembershipDaoImpl();
     private GymMainScheduleDao scheduleDao = new GymMainScheduleDaoImpl();
     private GymMainTrainerViewDao trainerViewDao = new GymMainTrainerViewDaoImpl();
-
+    
     @Override
     public Gym getGymMainInfo(int gymId) throws Exception {
         return gymMainDao.selectGymMainInfo(gymId);
@@ -69,6 +70,14 @@ public class GymMainServiceImpl implements GymMainService {
 	    param.put("gymId", gymId);
 
 	    return gymMainDao.selectTodayHotTime(param);
+	}
+
+	@Override
+	public void joinGym(UserDTO user, Gym gym) throws Exception {
+		gymMainDao.insertUserByGym(user);
+		gym.setUserId(user.getId());
+		gymMainDao.insertGym(gym);
+		
 	}
 
 }

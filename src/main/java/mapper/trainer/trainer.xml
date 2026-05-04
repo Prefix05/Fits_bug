@@ -109,7 +109,7 @@
 
     <!-- PROFILE IMAGE (stored on user table) -->
     <update id="updateProfileImage" parameterType="map">
-        UPDATE `user` SET profileImg = #{fileName}
+        UPDATE `user` SET profile_image = #{fileName}
         WHERE id = (SELECT user_id FROM trainer WHERE id = #{trainerId})
     </update>
 

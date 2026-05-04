@@ -1,9 +1,17 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.*;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dto.gym.Gym;
+import dto.trainer.UserDTO;
+import service.gym.GymMainService;
+import service.gym.GymMainServiceImpl;
 
 @WebServlet("/member/gymJoin")
 public class GymJoinController extends HttpServlet {
@@ -13,16 +21,29 @@ public class GymJoinController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
         String gymName = request.getParameter("gymName");
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         String ceo = request.getParameter("ceo");
-
-        // 👉 DB 저장 처리
-
-        // 완료 후 인증 페이지 이동
-        response.sendRedirect("/member/gymVerify.jsp");
+        
+        UserDTO user = new UserDTO();
+        user.setEmail(email);
+        user.setName(ceo);
+        user.setPassword(password);
+        
+        Gym gym = new Gym();
+        gym.setName(gymName);
+        gym.setAddress(address);
+        gym.setPhoneNum(phone);
+ 
+        try {
+        	GymMainService service = new GymMainServiceImpl();
+        	service.joinGym(user, gym);
+        	response.sendRedirect(request.getContextPath()+"/member/login");
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
     }
 }

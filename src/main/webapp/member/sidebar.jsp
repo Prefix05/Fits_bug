@@ -59,7 +59,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/member/main.jsp" class="sb-link">
+    <a href="<%=contextPath%>/member/main" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -82,15 +82,15 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/support" class="sb-link">
+    <a href="<%=contextPath%>/member/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/logout'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
     </button>
     <% } else { %>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인
     </button>
     <% } %>

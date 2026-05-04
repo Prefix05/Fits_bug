@@ -87,7 +87,7 @@
 <body class="bg-background text-on-surface">
 <!-- SideNavBar Shell -->
 <div class="flex">
-<jsp:include page="../member/sidebar.jsp"></jsp:include>
+<<jsp:include page="sidebar.jsp"></jsp:include>
 </div>
 <!-- Main Content -->
 <main class="ml-64 pt-16 p-6 lg:p-10 min-h-screen">

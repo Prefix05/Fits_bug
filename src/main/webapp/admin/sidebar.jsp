@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.trainer.UserDTO"%>
 <%
     String contextPath = request.getContextPath();
-    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 %>
 
 <!-- 핏불 사이드바 -->
@@ -74,9 +74,19 @@
     <a href="<%=contextPath%>/member/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
-    <a href="<%=contextPath%>/admin/mypage" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>마이페이지</span>
+    <a href="<%=contextPath%>/admin/memberAuth" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>회원 관리</span>
     </a>
+    <a href="<%=contextPath%>/admin/exGuideList" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>운동가이드 관리</span>
+    </a>
+    <a href="<%=contextPath%>/admin/reportList" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>신고 및 문의내역 관리</span>
+    </a>
+    <a href="<%=contextPath%>/admin/sales" class="sb-link">
+      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>정산 및 매출내역 관리</span>
+    </a>
+
 
   </nav>
 

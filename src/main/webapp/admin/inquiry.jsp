@@ -35,7 +35,7 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface">
-<div class="flex"><jsp:include page="../member/sidebar.jsp"></jsp:include></div>
+<div class="flex"><jsp:include page="sidebar.jsp"></jsp:include></div>
 
 <main class="ml-64 min-h-screen">
     <div class="pt-24 px-10 pb-10 space-y-8">
