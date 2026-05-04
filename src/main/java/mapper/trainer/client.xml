@@ -21,7 +21,7 @@
     </resultMap>
 
     <select id="selectClients" resultMap="clientResultMap">
-        SELECT * FROM clients
+        SELECT * FROM member
         <where>
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
