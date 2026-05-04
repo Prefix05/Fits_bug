@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ page import="java.util.*, dto.SupportDTO"%>
+<%@ page import="java.util.*, dto.member.SupportDTO"%>
 <%  List<SupportDTO> list = (List<SupportDTO>) request.getAttribute("list"); %>
 <!DOCTYPE html>
 <html lang="ko">

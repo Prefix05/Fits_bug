@@ -1,4 +1,4 @@
-<%@ page import="java.util.*, dto.ExerciseDTO" %>
+<%@ page import="java.util.*, dto.member.ExerciseDTO" %>
 <%
 List<ExerciseDTO> list = (List<ExerciseDTO>) request.getAttribute("exerciseList");
 for(ExerciseDTO e : list) {
