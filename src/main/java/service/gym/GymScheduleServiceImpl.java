@@ -16,11 +16,11 @@ import dto.gym.TrainerChoose;
 public class GymScheduleServiceImpl implements GymScheduleService {
 	private GymScheduleDao dao = new GymScheduleDaoImpl();
 	@Override
-	public Map<String, Object> getSchedulePageData(int gymId) throws Exception {
+	public Map<String, Object> getSchedulePageData(int gymId, int weekOffset) throws Exception {
 
 		LocalDate today = LocalDate.now();
 
-		LocalDate weekStart = today.with(DayOfWeek.MONDAY);
+		LocalDate weekStart = today.with(DayOfWeek.MONDAY).plusWeeks(weekOffset);
 		LocalDate weekEnd = weekStart.plusDays(7);
 
 		String weekRangeText = weekStart.getYear() + "년 " + weekStart.getMonthValue() + "월 " + weekStart.getDayOfMonth()
@@ -35,8 +35,8 @@ public class GymScheduleServiceImpl implements GymScheduleService {
 
 		Map<String, Object> param = new HashMap<>();
 		param.put("gymId", gymId);
-		param.put("weekStart", weekStart.atStartOfDay());
-		param.put("weekEnd", weekEnd.atStartOfDay());
+		param.put("weekStart", weekStart.toString());
+		param.put("weekEnd", weekEnd.toString());
 
 		List<PtSessionView> ptSessionList = dao.selectPtSessionListByGymAndWeek(param);
 

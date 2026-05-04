@@ -74,4 +74,6 @@ public class GymSalesDaoImpl implements GymSalesDao {
 		}
 	}
 
+	
+
 }

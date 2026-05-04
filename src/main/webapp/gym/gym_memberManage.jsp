@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -111,7 +112,7 @@ body {
 	<!-- Main Canvas -->
 	<main class="ml-64 min-h-screen">
 		<!-- Content Area -->
-		<div class="flex-1 p-6 pt-20 pb-20 bg-background space-y-4">
+		<div class="flex-1 p-5 pt-6 pb-8 bg-background space-y-2">
 			<!-- Page Title -->
 			<div class="flex items-center justify-between mb-2 px-1">
 				<h3 class="text-xl font-bold text-on-surface tracking-tight"
@@ -317,7 +318,7 @@ body {
 				</div>
 
 			</div>
-		</div>
+		
 
 		<!-- Refund Request Section -->
 		<div
@@ -368,23 +369,24 @@ body {
 									${payment.membershipName}</td>
 
 								<td class="px-6 py-3 text-sm font-bold text-on-surface">
-									${payment.paymentPrice}원</td>
+									<fmt:formatNumber value="${payment.paymentPrice}" type="number"/>원</td>
 
 								<td class="px-6 py-3 text-xs text-on-surface-variant">
 									${payment.reason}</td>
 
 								<td class="px-6 py-3 text-xs text-on-surface-variant">
-									${fn:substring(payment.paymentDate, 0, 16)}</td>
+									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm"/></td>
 
 								<td class="px-6 py-3">
 									<div class="flex justify-center gap-2">
+									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm" var="formattedDate"/>
 										<button type="button" onclick="openModal(this)"
-											class="px-3 py-1 bg-primary text-white rounded text-xs font-bold hover:opacity-90"
+											class="px-3 py-1 bg-error text-white rounded text-xs font-bold hover:opacity-90"
 											data-name="${payment.memberName}"
 											data-membership="${payment.membershipName}"
 											data-price="${payment.paymentPrice}"
-											data-date="${fn:substring(payment.paymentDate, 0, 16)}"
 											data-payment-num="${payment.paymentNum}"
+											data-date="${formattedDate}"
 											data-reason="${payment.reason}">승인</button>
 									</div>
 								</td>
@@ -426,10 +428,124 @@ body {
 				</div>
 			</div>
 		</div>
-		<div class="h-40"></div>
-		</div>
-		<!-- Content Area 닫기 -->
+		
+		
+		<!-- Payment Cancel Request Section -->
+<div
+	class="bg-surface-container-lowest rounded-lg shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-outline-variant/10 overflow-hidden mt-4">
 
+	<div
+		class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
+		<div>
+			<h4 class="text-sm font-bold text-on-surface">결제 취소 요청 처리</h4>
+			<p class="text-xs text-on-surface-variant mt-1">
+				회원의 결제 취소 요청을 승인 처리할 수 있습니다.
+			</p>
+		</div>
+
+		<span
+			class="text-[11px] font-bold text-error bg-error/10 px-3 py-1 rounded-full">
+			미처리 ${pendingCancelCount}건
+		</span>
+	</div>
+
+	<div class="overflow-x-auto">
+		<table class="w-full text-left table-fixed">
+			<thead>
+				<tr class="bg-surface-container-low/40 border-b border-outline-variant/10">
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">회원명</th>
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">이용권</th>
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">결제 금액</th>
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">취소 사유</th>
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">결제일</th>
+					<th class="px-6 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-widest text-center">처리</th>
+				</tr>
+			</thead>
+
+			<tbody class="divide-y divide-outline-variant/5">
+				<c:forEach var="cancel" items="${cancelPaymentList}">
+					<tr id="cancelRow-${cancel.paymentNum}"
+						class="hover:bg-surface-container-low/30 transition-colors">
+
+						<td class="px-6 py-3 text-sm font-bold text-on-surface">
+							${cancel.memberName}
+						</td>
+
+						<td class="px-6 py-3 text-xs font-semibold text-on-surface-variant">
+							${cancel.membershipName}
+						</td>
+
+						<td class="px-6 py-3 text-sm font-bold text-on-surface">
+							<fmt:formatNumber value="${cancel.paymentPrice}" type="number"/>원
+						</td>
+
+						<td class="px-6 py-3 text-xs text-on-surface-variant">
+							${cancel.reason}
+						</td>
+
+						<td class="px-6 py-3 text-xs text-on-surface-variant">
+							<fmt:formatDate value="${cancel.paymentDate}" pattern="yyyy-MM-dd HH:mm"/>
+						</td>
+
+						<td class="px-6 py-3">
+							<div class="flex justify-center gap-2">
+							<fmt:formatDate value="${cancel.paymentDate}" pattern="yyyy-MM-dd HH:mm" var="cancelFormattedDate"/>
+								<button type="button"
+									onclick="openCancelModal(this)"
+									class="px-3 py-1 bg-error text-white rounded text-xs font-bold hover:opacity-90"
+									data-name="${cancel.memberName}"
+									data-membership="${cancel.membershipName}"
+									data-price="${cancel.paymentPrice}"
+									data-payment-num="${cancel.paymentNum}"
+									data-date="${cancelFormattedDate}"
+									data-reason="${cancel.reason}">
+									승인
+								</button>
+							</div>
+						</td>
+					</tr>
+				</c:forEach>
+
+				<c:if test="${empty cancelPaymentList}">
+					<tr>
+						<td colspan="6"
+							class="px-6 py-8 text-center text-sm text-on-surface-variant">
+							결제 취소 요청이 없습니다.
+						</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
+		<div class="flex justify-center mt-3 mb-3 gap-1 text-sm">
+
+    <c:if test="${cancelPage > 1}">
+        <a
+            href="${pageContext.request.contextPath}/gym/memberManage?page=${page}&refundPage=${refundPage}&cancelPage=${cancelPage - 1}&type=${type}&status=${status}&keyword=${keyword}"
+            class="px-3 py-1 rounded bg-surface-container hover:bg-outline-variant/30">
+            이전
+        </a>
+    </c:if>
+
+    <c:forEach var="i" begin="1" end="${cancelTotalPage}">
+        <a
+            href="${pageContext.request.contextPath}/gym/memberManage?page=${page}&refundPage=${refundPage}&cancelPage=${i}&type=${type}&status=${status}&keyword=${keyword}"
+            class="px-3 py-1 rounded ${i == cancelPage ? 'bg-primary text-white font-bold' : 'bg-surface-container hover:bg-outline-variant/30'}">
+            ${i}
+        </a>
+    </c:forEach>
+
+    <c:if test="${cancelPage < cancelTotalPage}">
+        <a
+            href="${pageContext.request.contextPath}/gym/memberManage?page=${page}&refundPage=${refundPage}&cancelPage=${cancelPage + 1}&type=${type}&status=${status}&keyword=${keyword}"
+            class="px-3 py-1 rounded bg-surface-container hover:bg-outline-variant/30">
+            다음
+        </a>
+    </c:if>
+
+</div>
+	</div>
+</div>
+</div>
 	</main>
 
 	<!-- 🔥 환불 모달 -->
@@ -518,21 +634,21 @@ body {
         <!-- 푸터 -->
         <div class="px-6 py-5 flex justify-end gap-3 border-t border-outline-variant/10 bg-surface-container-lowest">
 
-            <button type="button"
-                    onclick="closeModal()"
-                    class="px-5 py-2.5 bg-surface-container text-on-surface-variant rounded-lg text-sm font-bold">
-                취소
-            </button>
+    <button type="button"
+            onclick="closeModal()"
+            class="px-5 py-2.5 bg-surface-container text-on-surface-variant rounded-lg text-sm font-bold">
+        취소
+    </button>
 
-            <form action="${pageContext.request.contextPath}/gym/refundApprove" method="post">
-                <input type="hidden" id="modalPaymentNum" name="paymentNum">
+    
 
-					<button type="button" onclick="approveRefund()"
-						class="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold shadow-md hover:opacity-90">
-						환불 처리하기</button>
-				</form>
+    <button type="button"
+            onclick="approveRefund()"
+            class="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold shadow-md hover:opacity-90">
+        환불 처리하기
+    </button>
 
-        </div>
+</div>
     </div>
 </div>
 
@@ -551,7 +667,10 @@ body {
             확인
         </button>
     </div>
+    
 </div>
+
+
 <script>
 let selectedPaymentNum = null;
 
@@ -564,7 +683,6 @@ function openModal(btn) {
     document.getElementById("modalPrice").innerText = btn.dataset.price + "원";
     document.getElementById("modalReason").innerText = btn.dataset.reason;
     document.getElementById("modalRefundPrice").innerText = btn.dataset.price;
-    document.getElementById("modalPaymentNum").value = btn.dataset.paymentNum;
 
     document.getElementById("refundModal").classList.remove("hidden");
 }
@@ -604,6 +722,144 @@ function closeSuccessModal() {
         row.remove();
     }
 }
+
+let selectedCancelPaymentNum = null;
+
+function openCancelModal(btn) {
+    selectedCancelPaymentNum = btn.dataset.paymentNum;
+
+    document.getElementById("cancelModalName").innerText = btn.dataset.name;
+    document.getElementById("cancelModalMembership").innerText = btn.dataset.membership;
+    document.getElementById("cancelModalDate").innerText = btn.dataset.date;
+    document.getElementById("cancelModalPrice").innerText = btn.dataset.price + "원";
+    document.getElementById("cancelModalReason").innerText = btn.dataset.reason;
+    document.getElementById("cancelModalCancelPrice").innerText = btn.dataset.price;
+
+    document.getElementById("cancelModal").classList.remove("hidden");
+}
+
+function closeCancelModal() {
+    document.getElementById("cancelModal").classList.add("hidden");
+}
+
+function approveCancel() {
+    fetch("${pageContext.request.contextPath}/gym/paymentCancelApprove", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: "paymentNum=" + encodeURIComponent(selectedCancelPaymentNum)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("결제 취소 처리 실패");
+        }
+
+        closeCancelModal();
+        alert("결제 취소 처리가 완료되었습니다.");
+
+        const row = document.getElementById("cancelRow-" + selectedCancelPaymentNum);
+        if (row) {
+            row.remove();
+        }
+    })
+    .catch(error => {
+        alert("결제 취소 처리 중 오류가 발생했습니다.");
+        console.error(error);
+    });
+}
 </script>
+
+<!-- 결제 취소 모달 -->
+<div id="cancelModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+
+	<div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+	<div class="relative bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden">
+
+		<div class="px-6 py-5 flex justify-between items-start border-b border-outline-variant/10">
+			<div>
+				<h2 class="text-lg font-black text-on-surface">결제 내역 및 취소 처리</h2>
+				<p class="text-xs text-on-surface-variant mt-1">
+					<span id="cancelModalName"></span> 회원
+				</p>
+			</div>
+
+			<button type="button" onclick="closeCancelModal()"
+				class="text-on-surface-variant hover:text-on-surface text-xl">
+				×
+			</button>
+		</div>
+
+		<div class="p-6 space-y-6">
+			<div>
+				<h3 class="text-xs font-bold text-on-surface mb-3">결제 상세 내역</h3>
+
+				<table class="w-full text-left rounded-lg overflow-hidden">
+					<thead>
+						<tr class="bg-surface-container-low border-b border-outline-variant/10">
+							<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant">상품명</th>
+							<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant text-center">결제일자</th>
+							<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant text-right">결제금액</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="border-b border-outline-variant/10">
+							<td class="px-4 py-4 text-sm font-bold text-on-surface">
+								<span id="cancelModalMembership"></span>
+							</td>
+							<td class="px-4 py-4 text-sm text-on-surface-variant text-center">
+								<span id="cancelModalDate"></span>
+							</td>
+							<td class="px-4 py-4 text-sm font-black text-on-surface text-right">
+								<span id="cancelModalPrice"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+				<div>
+					<h3 class="text-xs font-bold text-on-surface mb-3">취소 사유</h3>
+
+					<div class="bg-surface-container-low p-4 rounded-lg min-h-[150px]">
+						<p id="cancelModalReason"
+							class="text-sm text-on-surface-variant leading-relaxed"></p>
+					</div>
+				</div>
+
+				<div class="bg-error/5 border border-error/20 rounded-lg p-6 flex flex-col justify-center items-center text-center min-h-[150px]">
+					<p class="text-[11px] font-bold text-error mb-3">최종 취소 금액</p>
+
+					<p class="text-3xl font-black text-error">
+						<span id="cancelModalCancelPrice"></span>원
+					</p>
+
+					<p class="text-xs text-on-surface-variant mt-3">
+						승인 시 결제 취소 완료 상태로 변경됩니다.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="px-6 py-5 flex justify-end gap-3 border-t border-outline-variant/10 bg-surface-container-lowest">
+
+			<button type="button"
+				onclick="closeCancelModal()"
+				class="px-5 py-2.5 bg-surface-container text-on-surface-variant rounded-lg text-sm font-bold">
+				취소
+			</button>
+
+
+			<button type="button"
+				onclick="approveCancel()"
+				class="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold shadow-md hover:opacity-90">
+				결제 취소 처리하기
+			</button>
+		</div>
+	</div>
+</div>
 </body>
 </html>

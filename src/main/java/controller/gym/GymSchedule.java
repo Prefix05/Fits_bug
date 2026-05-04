@@ -1,9 +1,6 @@
 package controller.gym;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,6 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import service.gym.GymScheduleService;
+import service.gym.GymScheduleServiceImpl;
 
 /**
  * Servlet implementation class GymSchedule
@@ -18,114 +19,61 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/gym/schedule")
 public class GymSchedule extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GymSchedule() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		GymScheduleService service = new GymScheduleServiceImpl();
-		
+	public GymSchedule() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+
 		try {
-//            HttpSession session = request.getSession();
+			HttpSession session = request.getSession(false);
 
-//            Integer gymId = (Integer) session.getAttribute("gymId");
-//
-//            if (gymId == null) {
-//                response.sendRedirect(request.getContextPath() + "/login.jsp");
-//                return;
-//            }
+			if (session == null || session.getAttribute("gymId") == null) {
+				response.sendRedirect(request.getContextPath() + "/login.jsp");
+				return;
+			}
 
-//            Map<String, Object> data = service.getSchedulePageData(gymId);
-//
-//            request.setAttribute("trainerList", data.get("trainerList"));
-//            request.setAttribute("dayList", data.get("dayList"));
-//            request.setAttribute("hourList", data.get("hourList"));
-//            request.setAttribute("scheduleMap", data.get("scheduleMap"));
-//            request.setAttribute("weekRangeText", data.get("weekRangeText"));
-			
+			Integer gymId = (Integer) session.getAttribute("gymId");
+
 			String weekOffsetStr = request.getParameter("weekOffset");
 
-            int weekOffset = 0;
-            if (weekOffsetStr != null) {
-                weekOffset = Integer.parseInt(weekOffsetStr);
-            }
+			int weekOffset = 0;
+			if (weekOffsetStr != null && !weekOffsetStr.trim().isEmpty()) {
+				weekOffset = Integer.parseInt(weekOffsetStr);
+			}
 
-            LocalDate today = LocalDate.now().plusWeeks(weekOffset);
+			GymScheduleService service = new GymScheduleServiceImpl();
 
-            LocalDate weekStart = today.with(DayOfWeek.MONDAY);
-            LocalDate weekEnd = weekStart.plusDays(7);
-            
-            //더미 데이터
-            List<dto.gym.TrainerChoose> trainerList = new java.util.ArrayList<>();
-            trainerList.add(new dto.gym.TrainerChoose(1, "김민수"));
-            trainerList.add(new dto.gym.TrainerChoose(2, "이현우"));
+			Map<String, Object> data = service.getSchedulePageData(gymId, weekOffset);
 
-            List<dto.gym.ScheduleDay> dayList = new java.util.ArrayList<>();
-            String[] dayNames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+			request.setAttribute("trainerList", data.get("trainerList"));
+			request.setAttribute("dayList", data.get("dayList"));
+			request.setAttribute("hourList", data.get("hourList"));
+			request.setAttribute("scheduleMap", data.get("scheduleMap"));
+			request.setAttribute("weekRangeText", data.get("weekRangeText"));
+			request.setAttribute("weekOffset", weekOffset);
 
-            for (int i = 0; i < 7; i++) {
-                LocalDate date = weekStart.plusDays(i);
+			request.getRequestDispatcher("/gym/gym_schedule.jsp").forward(request, response);
 
-                dayList.add(new dto.gym.ScheduleDay(
-                    date.getDayOfWeek().getValue(),
-                    dayNames[i],
-                    date.getMonthValue() + "/" + date.getDayOfMonth()
-                ));
-            }
+		} catch (NumberFormatException e) {
+			response.sendRedirect(request.getContextPath() + "/gym/schedule");
 
-            List<Integer> hourList = new java.util.ArrayList<>();
-            for (int i = 13; i <= 18; i++) hourList.add(i);
-
-            Map<Integer, Map<Integer, java.util.List<dto.gym.PtSessionView>>> scheduleMap = new java.util.HashMap<>();
-
-            for (Integer hour : hourList) {
-                Map<Integer, java.util.List<dto.gym.PtSessionView>> dayMap = new java.util.HashMap<>();
-                for (dto.gym.ScheduleDay d : dayList) {
-                    dayMap.put(d.getValue(), new java.util.ArrayList<>());
-                }
-                scheduleMap.put(hour, dayMap);
-            }
-
-            // 샘플 예약 하나
-            dto.gym.PtSessionView s = new dto.gym.PtSessionView();
-            s.setTrainerId(1);
-            s.setTrainerName("김민수");
-            s.setClientName("홍길동");
-            s.setStartTime("14:00");
-            s.setSpecialization("식단");
-            s.setStartHour(14);
-            s.setDayOfWeek(1);
-
-            scheduleMap.get(14).get(1).add(s);
-
-            request.setAttribute("trainerList", trainerList);
-            request.setAttribute("dayList", dayList);
-            request.setAttribute("hourList", hourList);
-            request.setAttribute("scheduleMap", scheduleMap);
-            LocalDate weekLastDay = weekStart.plusDays(6);
-
-            String weekRangeText =
-                weekStart.getYear() + "년 " + weekStart.getMonthValue() + "월 " + weekStart.getDayOfMonth() + "일 - "
-              + weekLastDay.getYear() + "년 " + weekLastDay.getMonthValue() + "월 " + weekLastDay.getDayOfMonth() + "일";
-
-            request.setAttribute("weekRangeText", weekRangeText);
-
-            // 🟢 더미 데이터 끝
-
-            request.getRequestDispatcher("/gym/gym_schedule.jsp").forward(request, response);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServletException(e);
-        } 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException(e);
+		}
 	}
 
 }

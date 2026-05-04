@@ -1,15 +1,18 @@
 package dto.gym;
 
+import java.math.BigDecimal;
+
 public class SalesTopTrainer {
 	private int trainerId;
     private String trainerName;
     private String profileImg;
-    private int totalSales;
+    private BigDecimal totalSales;
     private int sessionCount;
 	public SalesTopTrainer() {
 		super();
 	}
-	public SalesTopTrainer(int trainerId, String trainerName, String profileImg, int totalSales, int sessionCount) {
+	public SalesTopTrainer(int trainerId, String trainerName, String profileImg, BigDecimal totalSales,
+			int sessionCount) {
 		super();
 		this.trainerId = trainerId;
 		this.trainerName = trainerName;
@@ -35,10 +38,10 @@ public class SalesTopTrainer {
 	public void setProfileImg(String profileImg) {
 		this.profileImg = profileImg;
 	}
-	public int getTotalSales() {
+	public BigDecimal getTotalSales() {
 		return totalSales;
 	}
-	public void setTotalSales(int totalSales) {
+	public void setTotalSales(BigDecimal totalSales) {
 		this.totalSales = totalSales;
 	}
 	public int getSessionCount() {
@@ -47,5 +50,6 @@ public class SalesTopTrainer {
 	public void setSessionCount(int sessionCount) {
 		this.sessionCount = sessionCount;
 	}
+	
     
 }

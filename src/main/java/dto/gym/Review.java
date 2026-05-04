@@ -1,5 +1,6 @@
 package dto.gym;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Review {
@@ -7,24 +8,22 @@ public class Review {
 	private int gymId;
 	private int clientId;
 	private String clientName;
-	private int star;
-	private double rating;
+	private Double rating;
 	private String comment;
-	private Date createdAt;
+	private Timestamp createdAt;
 	private String file;
 	
 	public Review() {
 		super();
 	}
 
-	public Review(int reviewNum, int gymId, int clientId, String clientName, int star, double rating, String comment, Date createdAt,
-			String file) {
+	public Review(int reviewNum, int gymId, int clientId, String clientName, Double rating, String comment,
+			Timestamp createdAt, String file) {
 		super();
 		this.reviewNum = reviewNum;
 		this.gymId = gymId;
 		this.clientId = clientId;
 		this.clientName = clientName;
-		this.star = star;
 		this.rating = rating;
 		this.comment = comment;
 		this.createdAt = createdAt;
@@ -63,12 +62,14 @@ public class Review {
 		this.clientName = clientName;
 	}
 
-	public int getStar() {
-		return star;
+	
+
+	public Double getRating() {
+		return rating;
 	}
 
-	public void setStar(int star) {
-		this.star = star;
+	public void setRating(Double rating) {
+		this.rating = rating;
 	}
 
 	public String getComment() {
@@ -79,11 +80,11 @@ public class Review {
 		this.comment = comment;
 	}
 
-	public Date getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -95,20 +96,7 @@ public class Review {
 		this.file = file;
 	}
 
-	public double getRating() {
-		return rating;
-	}
-
-	public void setRating(double rating) {
-		this.rating = rating;
-	}
-
-	@Override
-	public String toString() {
-		return "Review [reviewNum=" + reviewNum + ", gymId=" + gymId + ", clientId=" + clientId + ", clientName="
-				+ clientName + ", star=" + star + ", rating=" + rating + ", comment=" + comment + ", createdAt="
-				+ createdAt + ", file=" + file + "]";
-	}
+	
 
 
 	

@@ -15,17 +15,17 @@ public class GymTrainerManageServiceImpl implements GymTrainerManageService {
 	private TrainerManageDao dao = new TrainerManageDaoImpl();
 
     @Override
-    public List<TrainerMemberView> getCurrentMembers(int trainerId) {
+    public List<TrainerMemberView> getCurrentMembers(int trainerId) throws Exception{
         return dao.selectCurrentMembers(trainerId);
     }
 
     @Override
-    public List<TrainerMemberView> getPastMembers(int trainerId) {
+    public List<TrainerMemberView> getPastMembers(int trainerId) throws Exception{
         return dao.selectPastMembers(trainerId);
     }
 
     @Override
-    public List<TrainerMemberView> getMembers(int trainerId, String type) {
+    public List<TrainerMemberView> getMembers(int trainerId, String type) throws Exception{
         if ("past".equals(type)) {
             return getPastMembers(trainerId);
         }
@@ -34,7 +34,7 @@ public class GymTrainerManageServiceImpl implements GymTrainerManageService {
     }
 
 	@Override
-	public List<TrainerList> getTrainerList(int gymId, String keyword) {
+	public List<TrainerList> getTrainerList(int gymId, String keyword) throws Exception{
 		Map<String, Object> param = new HashMap<>();
         param.put("gymId", gymId);
         param.put("keyword", keyword);
@@ -43,7 +43,7 @@ public class GymTrainerManageServiceImpl implements GymTrainerManageService {
 	}
 
 	@Override
-	public List<TrainerAssign> getTrainerAssignList(int gymId) {
+	public List<TrainerAssign> getTrainerAssignList(int gymId) throws Exception{
 		return dao.selectTrainerAssignList(gymId);
 	}
 

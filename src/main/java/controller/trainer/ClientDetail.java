@@ -36,7 +36,7 @@ public class ClientDetail extends HttpServlet {
         String idParam = request.getParameter("clientId");
 
         if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/clients");
+            response.sendRedirect(request.getContextPath() + "/trainer/clients");
             return;
         }
 
@@ -48,7 +48,7 @@ public class ClientDetail extends HttpServlet {
 
             // 🔐 4. Ownership check (VERY IMPORTANT)
             if (client == null || client.getTrainerId() != trainerId) {
-                response.sendRedirect(request.getContextPath() + "/clients");
+                response.sendRedirect(request.getContextPath() + "/trainer/clients");
                 return;
             }
 

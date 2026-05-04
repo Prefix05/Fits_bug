@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import dto.gym.Gym;
-import dto.gym.GymPeakTime;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 
@@ -20,7 +19,5 @@ public interface InfoEditDao {
     int updateMembership(Membership membership);
     int insertMembership(Membership membership);
     int deleteMembership(int membershipNum);
-    List<GymPeakTime> selectPeakTimeList(int gymId);
-    int deletePeakTimeByGymId(int gymId);
-    int insertPeakTime(GymPeakTime peakTime);
+    
 }

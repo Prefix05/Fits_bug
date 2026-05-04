@@ -3,54 +3,57 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-  <mapper namespace="mapper.memberManage">
+<mapper namespace="mapper.memberManage">
 
     <!-- 회원 목록 -->
-    <select id="selectMemberList" parameterType="map" resultType="dto.gym.MemberManage">
+    <select id="selectMemberList"
+            parameterType="map"
+            resultType="dto.gym.MemberManage">
 
         SELECT
             m.id AS memberId,
             u.name AS memberName,
             u.tel AS tel,
 
-            ms.membership_num AS membershipNum,
+            ms.id AS membershipNum,
             ms.type AS membershipType,
             ms.type_rep AS typeRep,
 
-            -- 날짜는 문자열로 변환
             DATE_FORMAT(mr.start_date, '%Y.%m.%d') AS startDate,
             DATE_FORMAT(mr.end_date, '%Y.%m.%d') AS endDate,
 
-            -- 상태 계산
             CASE
-                WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
-                WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
+                WHEN mr.end_date &lt; CURDATE() THEN 'expired'
+                WHEN DATEDIFF(mr.end_date, CURDATE()) &lt;= 7 THEN 'soon'
                 ELSE 'active'
             END AS status,
 
-            -- 사용된 PT 횟수
             IFNULL(pp.sessions_used, 0) AS usedPtCount,
 
-
-            -- 남은 PT 횟수
             CASE
-    			WHEN ms.type = 'pt' THEN IFNULL(pp.total_sessions, 0) - IFNULL(pp.sessions_used, 0)
-    			ELSE 0
-			END AS remainPtCount
+                WHEN ms.type = 'pt'
+                    THEN IFNULL(pp.total_sessions, 0) - IFNULL(pp.sessions_used, 0)
+                ELSE 0
+            END AS remainPtCount
 
-        FROM member m
-        JOIN user u
+        FROM MEMBER m
+        JOIN `USER` u
           ON m.user_id = u.id
 
-        JOIN membership_registration mr
-          ON mr.member_num = m.id
+        LEFT JOIN MEMBERSHIP_REGISTRATION mr
+  		  ON mr.id = (
+      		SELECT mr2.id
+      		FROM MEMBERSHIP_REGISTRATION mr2
+      		WHERE mr2.member_id = m.id
+      		ORDER BY mr2.end_date DESC, mr2.id DESC
+      		LIMIT 1
+  )
 
-        JOIN membership ms
-          ON mr.membership_num = ms.membership_num
+        LEFT JOIN MEMBERSHIP ms
+          ON mr.membership_id = ms.id
 
-       	LEFT JOIN pt_package pp
-  		  ON pp.client_id = m.id
- 		 AND pp.trainer_id = m.trainer_id
+        LEFT JOIN PT_PACKAGE pp
+  		  ON pp.mr_id = mr.id
 
         WHERE m.gym_id = #{gymId}
           AND u.is_deleted = false
@@ -63,32 +66,31 @@
             )
         </if>
 
-        <!-- 이용권 타입 필터 -->
+        <!-- 이용권 타입 -->
         <if test="type != null and type != ''">
-    		<choose>
-        		<when test="type == 'pt'">
-            		AND ms.type = 'pt'
-        		</when>
-        		<when test="type == 'health'">
-            		AND ms.type != 'pt'
-        		</when>
-    		</choose>
-		</if>
+            <choose>
+                <when test="type == 'pt'">
+                    AND ms.type = 'pt'
+                </when>
+                <when test="type == 'health'">
+                    AND ms.type != 'pt'
+                </when>
+            </choose>
+        </if>
 
         <!-- 상태 필터 -->
         <if test="status != null and status != ''">
             AND (
                 CASE
-                    WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
-                    WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
+                    WHEN mr.end_date &lt; CURDATE() THEN 'expired'
+                    WHEN DATEDIFF(mr.end_date, CURDATE()) &lt;= 7 THEN 'soon'
                     ELSE 'active'
                 END
             ) = #{status}
         </if>
 
-        GROUP BY mr.mr_num
 
-        ORDER BY mr.end_date ASC
+        ORDER BY mr.end_date IS NULL, mr.end_date ASC
         
         LIMIT #{start}, #{pageSize}
 
@@ -100,9 +102,9 @@
             parameterType="int"
             resultType="int">
 
-        SELECT COUNT(*)
-        FROM member m
-        JOIN user u ON m.user_id = u.id
+        SELECT COUNT(DISTINCT m.id)
+        FROM MEMBER m
+        JOIN `USER` u ON m.user_id = u.id
         WHERE m.gym_id = #{value}
           AND u.is_deleted = false
 
@@ -115,50 +117,67 @@
             resultType="int">
 
         SELECT COUNT(*)
-        FROM member m
-        JOIN user u ON m.user_id = u.id
+        FROM MEMBER m
+        JOIN `USER` u ON m.user_id = u.id
         WHERE m.gym_id = #{value}
           AND u.is_deleted = false
           AND DATE_FORMAT(u.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
 
     </select>
-    
-    <select id="countMemberList" parameterType="map" resultType="int">
-    	SELECT COUNT(*)
-    	FROM membership_registration mr
-    	JOIN member m ON mr.member_num = m.id
-    	JOIN user u ON m.user_id = u.id
-    	JOIN membership ms ON mr.membership_num = ms.membership_num
-    	WHERE m.gym_id = #{gymId}
-      		AND u.is_deleted = false
 
-    	<if test="keyword != null and keyword != ''">
-        	AND (
-            	u.name LIKE CONCAT('%', #{keyword}, '%')
-            	OR u.tel LIKE CONCAT('%', #{keyword}, '%')
-        	)
-    	</if>
 
-    	<if test="type != null and type != ''">
-        	<choose>
-            	<when test="type == 'pt'">
-                	AND ms.type = 'pt'
-            	</when>
-            	<when test="type == 'health'">
-                	AND ms.type != 'pt'
-            	</when>
-        	</choose>
-    	</if>
+    <!-- 페이징용 카운트 -->
+    <select id="countMemberList"
+        parameterType="map"
+        resultType="int">
 
-    	<if test="status != null and status != ''">
-        	AND (
-            	CASE
-                	WHEN <![CDATA[mr.end_date < CURDATE()]]> THEN 'expired'
-                	WHEN <![CDATA[DATEDIFF(mr.end_date, CURDATE()) <= 7]]> THEN 'soon'
-                	ELSE 'active'
-            	END
-        	) = #{status}
-    	</if>
-	</select>
+    SELECT COUNT(DISTINCT m.id)
+    FROM MEMBER m
+    JOIN `USER` u ON m.user_id = u.id
+
+    LEFT JOIN MEMBERSHIP_REGISTRATION mr
+      ON mr.id = (
+          SELECT mr2.id
+          FROM MEMBERSHIP_REGISTRATION mr2
+          WHERE mr2.member_id = m.id
+          ORDER BY mr2.end_date DESC, mr2.id DESC
+          LIMIT 1
+      )
+
+    LEFT JOIN MEMBERSHIP ms
+      ON mr.membership_id = ms.id
+
+    WHERE m.gym_id = #{gymId}
+      AND u.is_deleted = false
+
+    <if test="keyword != null and keyword != ''">
+        AND (
+            u.name LIKE CONCAT('%', #{keyword}, '%')
+            OR u.tel LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </if>
+
+    <if test="type != null and type != ''">
+        <choose>
+            <when test="type == 'pt'">
+                AND ms.type = 'pt'
+            </when>
+            <when test="type == 'health'">
+                AND ms.type != 'pt'
+            </when>
+        </choose>
+    </if>
+
+    <if test="status != null and status != ''">
+        AND (
+            CASE
+                WHEN mr.end_date &lt; CURDATE() THEN 'expired'
+                WHEN DATEDIFF(mr.end_date, CURDATE()) &lt;= 7 THEN 'soon'
+                ELSE 'active'
+            END
+        ) = #{status}
+    </if>
+
+</select>
 
 </mapper>

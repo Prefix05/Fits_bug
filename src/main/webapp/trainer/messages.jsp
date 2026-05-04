@@ -143,7 +143,7 @@
 
         <!-- 회원관리 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200"
-           href="${pageContext.request.contextPath}/clients" style=""><span class="material-symbols-outlined"
+           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined"
                                                                             data-icon="" style="">group</span>
             회원
             관리</a>

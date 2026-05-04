@@ -1,6 +1,7 @@
 package dao.gym;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -12,88 +13,144 @@ import util.MybatisSqlSessionFactory;
 public class GymPaymentDaoImpl implements GymPaymentDao {
 
 	@Override
-	public int insertMembershipRegistration(MembershipRegistration membershipRegistration) {
+	public int insertMembershipRegistration(MembershipRegistration membershipRegistration) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int result =  session.insert("mapper.payment.insertMembershipRegistration", membershipRegistration);
+			int result = session.insert("mapper.payment.insertMembershipRegistration", membershipRegistration);
 			session.commit();
 			return result;
-		}finally {
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
+
+		} finally {
 			session.close();
 		}
 	}
 
 	@Override
-	public int insertPayment(Payment payment) {
+	public int insertPayment(Payment payment) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			int result = session.insert("mapper.payment.insertPayment", payment);
 			session.commit();
 			return result;
-		}finally {
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
+		} finally {
 			session.close();
 		}
 	}
 
 	@Override
-	public MembershipRegistration selectMembershipRegistration(int mrNum) {
+	public MembershipRegistration selectMembershipRegistration(int mrNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return session.selectOne("mapper.payment.selectMembershipRegistration", mrNum);
-		}finally {
+		} finally {
 			session.close();
 		}
 	}
 
 	@Override
-	public Payment selectPayment(int paymentNum) {
+	public Payment selectPayment(int paymentNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return session.selectOne("mapper.payment.selectPayment", paymentNum);
-		}finally {
+		} finally {
 			session.close();
 		}
 	}
 
 	@Override
-	public Membership selectMembership(int membershipNum) {
+	public Membership selectMembership(int membershipNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        return session.selectOne("mapper.payment.selectMembership", membershipNum);
-	    } finally {
-	        session.close();
-	    }
+		try {
+			return session.selectOne("mapper.payment.selectMembership", membershipNum);
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public List<Payment> selectRefundRequestList(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        return session.selectList("mapper.payment.selectRefundRequestList", gymId);
-	    } finally {
-	        session.close();
-	    }
+		try {
+			return session.selectList("mapper.payment.selectRefundRequestList", gymId);
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public int countRefundRequest(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        return session.selectOne("mapper.payment.countRefundRequest", gymId);
-	    } finally {
-	        session.close();
-	    }
+		try {
+			return session.selectOne("mapper.payment.countRefundRequest", gymId);
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public void approveRefund(int paymentNum) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-	    try {
-	        session.update("mapper.payment.approveRefund", paymentNum);
-	        session.commit();
-	    } finally {
-	        session.close();
-	    }
+		try {
+			session.update("mapper.payment.approveRefund", paymentNum);
+			session.commit();
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public List<Payment> selectCancelRequestList(Map<String, Object> param) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			return session.selectList("mapper.payment.selectCancelRequestList", param);
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public int countCancelRequest(int gymId) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			return session.selectOne("mapper.payment.countCancelRequest", gymId);
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public void updateCancelApprove(int paymentNum) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			session.update("mapper.payment.updateCancelApprove", paymentNum);
+			session.commit();
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public void cancelPtSessionByPayment(int paymentNum) throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			session.update("mapper.payment.cancelPtSessionByPayment", paymentNum);
+			session.commit();
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+
 	}
 
 }

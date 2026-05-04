@@ -1,20 +1,23 @@
 package dto.gym;
 
+import java.sql.Timestamp;
+
 public class TrainerMemberView {
 	private String memberName;
     private String membershipName;
     private int remainingSession;
-    private String startDate;
+    private Timestamp startDate;
 	public TrainerMemberView() {
 		super();
 	}
-	public TrainerMemberView(String memberName, String membershipName, int remainingSession, String startDate) {
+	public TrainerMemberView(String memberName, String membershipName, int remainingSession, Timestamp startDate) {
 		super();
 		this.memberName = memberName;
 		this.membershipName = membershipName;
 		this.remainingSession = remainingSession;
 		this.startDate = startDate;
 	}
+//	
 	public String getMemberName() {
 		return memberName;
 	}
@@ -33,16 +36,11 @@ public class TrainerMemberView {
 	public void setRemainingSession(int remainingSession) {
 		this.remainingSession = remainingSession;
 	}
-	public String getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(String startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
-	}
-	@Override
-	public String toString() {
-		return "TrainerMemberView [memberName=" + memberName + ", membershipName=" + membershipName
-				+ ", remainingSession=" + remainingSession + ", startDate=" + startDate + "]";
 	}
     
     

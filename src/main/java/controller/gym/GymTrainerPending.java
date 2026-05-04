@@ -1,49 +1,43 @@
 package controller.gym;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import dto.gym.TrainerApprove;
+import service.gym.GymTrainerApproveService;
+import service.gym.GymTrainerApproveServiceImpl;
 
-/**
- * Servlet implementation class GymTrainerPending
- */
 @WebServlet("/gym/trainerPending")
 public class GymTrainerPending extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    private static final long serialVersionUID = 1L;
+
     public GymTrainerPending() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
-		
-		try {
-//            HttpSession session = request.getSession();
-//            int gymId = (int) session.getAttribute("gymId"); // 로그인 시 넣어둔 값
-//
-//            List<TrainerApprove> trainerList = service.selectPendingTrainerList(gymId);
-			//더미 데이터
-			List<TrainerApprove> trainerList = new ArrayList<>();
-			trainerList.add(new TrainerApprove(1, "강태호", "010-1111-1111", "trainer1.jpg", "PENDING"));
-	        trainerList.add(new TrainerApprove(2, "이민서", "010-2222-2222", "trainer2.jpg", "PENDING"));
-	        trainerList.add(new TrainerApprove(3, "박준영", "010-3333-3333", "trainer3.jpg", "PENDING"));
-	        //더미 데이터
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
+        try {
+            HttpSession session = request.getSession(false);
+
+            if (session == null || session.getAttribute("gymId") == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            int gymId = (int) session.getAttribute("gymId");
+
+            GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
+
+            List<TrainerApprove> trainerList = service.selectPendingTrainerList(gymId);
 
             request.setAttribute("trainerList", trainerList);
 
@@ -52,9 +46,7 @@ public class GymTrainerPending extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/gym/trainerPending");
+            throw new ServletException("승인 대기 트레이너 조회 중 오류", e);
         }
-		
-	}
-
+    }
 }

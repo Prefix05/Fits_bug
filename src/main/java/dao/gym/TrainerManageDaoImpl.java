@@ -13,7 +13,7 @@ import util.MybatisSqlSessionFactory;
 public class TrainerManageDaoImpl implements TrainerManageDao {
 
 	@Override
-	public List<TrainerMemberView> selectCurrentMembers(int trainerId) {
+	public List<TrainerMemberView> selectCurrentMembers(int trainerId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return session.selectList("mapper.trainerManage.selectCurrentMembers", trainerId);
@@ -23,7 +23,7 @@ public class TrainerManageDaoImpl implements TrainerManageDao {
 	}
 
 	@Override
-	public List<TrainerMemberView> selectPastMembers(int trainerId) {
+	public List<TrainerMemberView> selectPastMembers(int trainerId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return session.selectList("mapper.trainerManage.selectPastMembers", trainerId);
@@ -33,7 +33,7 @@ public class TrainerManageDaoImpl implements TrainerManageDao {
 	}
 
 	@Override
-	public List<TrainerList> selectTrainerList(Map<String, Object> param) {
+	public List<TrainerList> selectTrainerList(Map<String, Object> param) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return session.selectList("mapper.trainerManage.selectTrainerList", param);
@@ -43,10 +43,10 @@ public class TrainerManageDaoImpl implements TrainerManageDao {
 	}
 
 	@Override
-	public List<TrainerAssign> selectTrainerAssignList(int gymId) {
+	public List<TrainerAssign> selectTrainerAssignList(int gymId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.gym.trainerManage.selectTrainerAssignList", gymId);
+			return session.selectList("mapper.trainerManage.selectTrainerAssignList", gymId);
 		}finally {
 			session.close();
 		}

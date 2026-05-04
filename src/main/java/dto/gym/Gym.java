@@ -7,7 +7,7 @@ public class Gym {
     private String description;
     private String address;
     private String file;
-    private double rating;      // 평균 평점
+    private Double rating;      // 평균 평점
     private int reviewCount;
     private String backgroundImg;
     private String brFile;

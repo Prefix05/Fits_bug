@@ -1,5 +1,7 @@
 package service.gym;
 
+import java.util.List;
+
 import dao.gym.GymReviewDao;
 import dao.gym.GymReviewDaoImpl;
 import dto.gym.Review;
@@ -33,6 +35,11 @@ public class GymReviewServiceImpl implements GymReviewService {
 		if(origin == null) throw new RuntimeException("리뷰가 존재하지 않습니다.");
 		if(origin.getClientId() != loginUserId) throw new RuntimeException("본인 리뷰만 삭제 가능합니다.");
 		dao.deleteReview(reviewNum);
+	}
+
+	@Override
+	public List<Review> getReviewListByGymId(int gymId) throws Exception {
+		return dao.selectReviewListByGymId(gymId);
 	}
 
 }

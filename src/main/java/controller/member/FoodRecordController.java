@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.member.FoodRecordDTO;
-import dto.member.MemberDTO;
+import dto.member.LoginDTO;
 import service.member.FoodRecordService;
 import service.member.FoodRecordServiceImpl;
 
@@ -23,7 +23,7 @@ public class FoodRecordController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -60,7 +60,7 @@ public class FoodRecordController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

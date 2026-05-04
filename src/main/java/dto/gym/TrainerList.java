@@ -1,23 +1,23 @@
 package dto.gym;
 
 public class TrainerList {
-	private int id;
+	private int trainerId;
     private int userId;
     private String name;
     private String phoneNum;
     private String profileImg;
     private String trainerType;
     private String approvalStatus;
-    private int memberCount;
+    private Integer memberCount;
 	
     public TrainerList() {
 		super();
 	}
 
-	public TrainerList(int id, int userId, String name, String phoneNum, String profileImg, String trainerType,
-			String approvalStatus, int memberCount) {
+	public TrainerList(int trainerId, int userId, String name, String phoneNum, String profileImg, String trainerType,
+			String approvalStatus, Integer memberCount) {
 		super();
-		this.id = id;
+		this.trainerId = trainerId;
 		this.userId = userId;
 		this.name = name;
 		this.phoneNum = phoneNum;
@@ -27,12 +27,12 @@ public class TrainerList {
 		this.memberCount = memberCount;
 	}
 
-	public int getId() {
-		return id;
+	public int getTrainerId() {
+		return trainerId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setTrainerId(int trainerId) {
+		this.trainerId = trainerId;
 	}
 
 	public int getUserId() {
@@ -83,21 +83,15 @@ public class TrainerList {
 		this.approvalStatus = approvalStatus;
 	}
 
-	public int getMemberCount() {
+	public Integer getMemberCount() {
 		return memberCount;
 	}
 
-	public void setMemberCount(int memberCount) {
+	public void setMemberCount(Integer memberCount) {
 		this.memberCount = memberCount;
 	}
 
-	@Override
-	public String toString() {
-		return "GymTrainerList [id=" + id + ", userId=" + userId + ", name=" + name + ", phoneNum=" + phoneNum
-				+ ", profileImg=" + profileImg + ", trainerType=" + trainerType + ", approvalStatus=" + approvalStatus
-				+ ", memberCount=" + memberCount + "]";
-	}
-    
+	
     
     
 }

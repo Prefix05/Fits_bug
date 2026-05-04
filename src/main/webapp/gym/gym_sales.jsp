@@ -199,7 +199,14 @@
 
                     <div class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                         <span class="material-symbols-outlined text-sm">trending_up</span>
-                        전월 대비 ${salesSummary.growthRate}% 증가
+                        <c:choose>
+    <c:when test="${empty salesSummary || empty salesSummary.growthRate}">
+        전월 대비 데이터 없음
+    </c:when>
+    <c:otherwise>
+        전월 대비 ${salesSummary.growthRate}% 증가
+    </c:otherwise>
+</c:choose>
                     </div>
                 </div>
             </div>
@@ -307,11 +314,13 @@
             <label class="text-[11px] font-bold text-on-surface-variant uppercase ml-1">결제 상태</label>
             <select name="status"
                     class="w-full bg-surface-container-low border-none rounded-lg text-sm py-2.5 focus:ring-2 focus:ring-primary/20">
-                <option value="">전체</option>
-                <option value="PAID" ${status == 'PAID' ? 'selected' : ''}>결제완료</option>
-                <option value="CANCELLED" ${status == 'CANCELLED' ? 'selected' : ''}>결제취소</option>
-                <option value="REFUNDED" ${status == 'REFUNDED' ? 'selected' : ''}>환불</option>
-            </select>
+                		<option value="">전체</option>
+						<option value="결제완료" ${status == '결제완료' ? 'selected' : ''}>결제완료</option>
+						<option value="취소요청" ${status == '취소요청' ? 'selected' : ''}>취소요청</option>
+						<option value="취소완료" ${status == '취소완료' ? 'selected' : ''}>취소완료</option>
+						<option value="환불요청" ${status == '환불요청' ? 'selected' : ''}>환불요청</option>
+						<option value="환불완료" ${status == '환불완료' ? 'selected' : ''}>환불완료</option>
+					</select>
         </div>
 
         <div class="space-y-1.5 md:col-span-1">
@@ -342,6 +351,8 @@
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">담당 트레이너</th>
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">결제일</th>
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">상태</th>
+                        <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">처리일</th>
+						<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">사유</th>
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">결제금액</th>
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">수수료</th>
                         <th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">순매출</th>
@@ -400,27 +411,50 @@
                                 <fmt:formatDate value="${sales.paymentDate}" pattern="yyyy.MM.dd"/>
                             </td>
 
-                            <td class="px-6 py-4">
-                                <c:choose>
-                                    <c:when test="${fn:toUpperCase(sales.status) == 'PAID'}">
-                                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full">
-                                            결제완료
-                                        </span>
-                                    </c:when>
-                                    <c:when test="${sales.status == 'CANCELLED'}">
-                                        <span class="px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full">
-                                            취소
-                                        </span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-[10px] font-bold rounded-full">
-                                            ${sales.status}
-                                        </span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
+							<td class="px-6 py-4">
+								<c:choose>
+									<c:when test="${sales.status == '결제완료'}">
+										<span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full">결제완료</span>
+									</c:when>
 
-                            <td class="px-6 py-4 text-sm font-bold text-on-surface text-right">
+									<c:when test="${sales.status == '취소요청'}">
+										<span class="px-2 py-1 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full">취소요청 </span>
+									</c:when>
+
+									<c:when test="${sales.status == '취소완료'}">
+										<span class="px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full">취소완료 </span>
+									</c:when>
+
+									<c:when test="${sales.status == '환불요청'}">
+										<span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full">환불요청 </span>
+									</c:when>
+
+									<c:when test="${sales.status == '환불완료'}">
+										<span class="px-2 py-1 bg-purple-100 text-purple-700 text-[10px] font-bold rounded-full">환불완료 </span>
+									</c:when>
+
+									<c:otherwise>
+										<span class="px-2 py-1 bg-gray-100 text-gray-700 text-[10px] font-bold rounded-full">${sales.status} </span>
+									</c:otherwise>
+								</c:choose>
+							</td>
+							
+							<td class="px-6 py-4 text-sm text-on-surface-variant whitespace-nowrap">
+    							<c:choose>
+        							<c:when test="${empty sales.canceledAt}">
+            							-
+        							</c:when>
+        							<c:otherwise>
+            							<fmt:formatDate value="${sales.canceledAt}" pattern="yyyy.MM.dd HH:mm"/>
+        							</c:otherwise>
+    							</c:choose>
+							</td>
+
+<td class="px-6 py-4 text-sm text-on-surface-variant max-w-[220px] truncate">
+    ${empty sales.reason ? '-' : sales.reason}
+</td>
+
+									<td class="px-6 py-4 text-sm font-bold text-on-surface text-right">
                                 ₩<fmt:formatNumber value="${sales.paymentPrice}" pattern="#,###"/>
                             </td>
 
@@ -436,7 +470,7 @@
 
                     <c:if test="${empty salesList}">
                         <tr>
-                            <td colspan="9" class="px-6 py-10 text-center text-sm text-on-surface-variant">
+                            <td colspan="11" class="px-6 py-10 text-center text-sm text-on-surface-variant">
                                 조회된 매출 내역이 없습니다.
                             </td>
                         </tr>
@@ -453,11 +487,11 @@
 
             <div class="flex items-center gap-2">
             	<c:if test="${totalPage > 0}">
-                	<c:forEach var="page" begin="1" end="${totalPage}">
-                    	<a href="${pageContext.request.contextPath}/gym/sales?page=${page}&startDate=${startDate}&endDate=${endDate}&membershipType=${membershipType}&trainerId=${trainerId}&status=${status}&keyword=${keyword}"
+                	<c:forEach var="p" begin="1" end="${totalPage}">
+                    	<a href="${pageContext.request.contextPath}/gym/sales?page=${p}&startDate=${startDate}&endDate=${endDate}&membershipType=${membershipType}&trainerId=${trainerId}&status=${status}&keyword=${keyword}"
                        	   class="w-8 h-8 text-xs font-bold rounded flex items-center justify-center
-                       		${page == currentPage ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'}">
-                        	${page}
+                       		${p == currentPage ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'}">
+                        	${p}
                     	</a>
                 	</c:forEach>
                 </c:if>

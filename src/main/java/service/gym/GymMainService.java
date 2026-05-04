@@ -1,10 +1,12 @@
 package service.gym;
 
 import java.util.List;
+import java.util.Map;
 
 import dto.gym.Gym;
 import dto.gym.GymNotice;
 import dto.gym.GymTrainerView;
+import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
@@ -16,4 +18,5 @@ public interface GymMainService {
     List<Membership> getMembershipList(int gymId) throws Exception;
     Schedule getSchedule(int gymId) throws Exception;
     List<GymTrainerView> getGymTrainerViewList(int gymId) throws Exception;
+    HotTime getTodayHotTime(int gymId) throws Exception;
 }

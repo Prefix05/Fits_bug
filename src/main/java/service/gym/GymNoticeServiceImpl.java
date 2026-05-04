@@ -41,10 +41,6 @@ public class GymNoticeServiceImpl implements GymNoticeService {
 		gymNoticeDao.updateNotice(notice);
 	}
 	
-	@Override
-	public List<NoticeImages> getImagesBtNoticeId(int noticeId) throws Exception {
-		return gymNoticeDao.selectImagesByNoticeId(noticeId);
-	}
 	
 	@Override
 	public void addImage(NoticeImages image) throws Exception {
@@ -63,7 +59,8 @@ public class GymNoticeServiceImpl implements GymNoticeService {
 
 	@Override
 	public void deleteNotice(int noticeId) throws Exception {
-		gymNoticeDao.deleteNotice(noticeId);
+		gymNoticeDao.deleteImagesByNoticeId(noticeId);
+	    gymNoticeDao.deleteNotice(noticeId);
 	}
 
 	@Override

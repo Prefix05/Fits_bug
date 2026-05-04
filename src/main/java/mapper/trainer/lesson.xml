@@ -16,19 +16,18 @@
     </resultMap>
 
     <select id="findLessonsByDate" parameterType="map" resultMap="lessonMap">
-        SELECT
-            l.id,
-            l.goal,
-            l.member_name,
-            l.client_id,
-            l.status,
-            DATE_FORMAT(l.start_time, '%H:%i') AS start_time,
-            DATE_FORMAT(l.end_time, '%H:%i') AS end_time,
-            TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes
+        SELECT l.id,
+               l.goal,
+               l.member_name,
+               l.client_id,
+               l.status,
+               DATE_FORMAT(l.start_time, '%H:%i')              AS start_time,
+               DATE_FORMAT(l.end_time, '%H:%i')                AS end_time,
+               TIMESTAMPDIFF(MINUTE, l.start_time, l.end_time) AS duration_minutes
         FROM lesson l
                  JOIN member m ON l.client_id = m.id
         WHERE l.lesson_date = #{date}
-          AND c.trainer_id = #{trainerId}
+          AND m.trainer_id = #{trainerId}
         ORDER BY l.start_time ASC
     </select>
 </mapper>

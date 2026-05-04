@@ -187,7 +187,7 @@ tailwind.config = {
                             <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm">
                                 <img class="w-full h-full object-cover"
                                      src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
-                                     onerror="this.src='${pageContext.request.contextPath}/resources/images/default-profile.png'">
+ 									 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                             </div>
                             <button type="button" onclick="openModal('profileModal')"
         							class="absolute -bottom-0.5 -right-0.5 p-1 bg-primary text-white rounded-full shadow cursor-pointer">
@@ -201,8 +201,8 @@ tailwind.config = {
                         <div class="relative">
                             <div class="w-20 h-14 rounded overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm bg-slate-200">
                                 <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
-                                     onerror="this.src='${pageContext.request.contextPath}/resources/images/default-bg.png'">
+     								 src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+ 									 onerror="this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                             </div>
                             <button type="button" onclick="openModal('backgroundModal')"
         							class="absolute -bottom-0.5 -right-0.5 p-1 bg-primary text-white rounded-full shadow cursor-pointer">
@@ -213,10 +213,10 @@ tailwind.config = {
                     </div>
                 </div>
 
-				<button type="button" onclick="openModal('galleryModal')"
+<!-- 				<button type="button" onclick="openModal('galleryModal')"
         					class="text-[10px] font-bold text-primary flex items-center gap-1 hover:underline">
     					<span class="material-symbols-outlined text-xs">edit</span> 수정
-				</button>	
+				</button>	 -->
 				
                 <div class="grid grid-cols-4 gap-2">
                     <c:set var="images" value="${fn:split(gym.file, ',')}" />
@@ -317,214 +317,158 @@ tailwind.config = {
                     </div>
                 </div>
          	</section>
+         	
+         	
         </div>
+        
+        
 
         <!-- 오른쪽 영역 -->
-        <div class="col-span-12 lg:col-span-4 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+<div class="col-span-12 lg:col-span-4 space-y-4">
 
-                <!-- 편의시설 -->
-                <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
-                    <div class="flex items-center gap-2 mb-3">
-                        <div class="p-1.5 rounded bg-primary/10 text-primary">
-                            <span class="material-symbols-outlined text-lg">room_service</span>
-                        </div>
-                        <h3 class="text-base font-bold">편의 시설</h3>
-                    </div>
+    <!-- 편의시설 -->
+     <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
+    <div class="flex items-center gap-2 mb-3">
+        <div class="p-1.5 rounded bg-primary/10 text-primary">
+            <span class="material-symbols-outlined text-lg">room_service</span>
+        </div>
+        <h3 class="text-base font-bold">편의 시설</h3>
+    </div>
 
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base text-on-surface-variant">lock</span>
-                                <span class="text-[11px] font-bold">개인 락커</span>
-                            </div>
-                            <div class="relative inline-block w-7 h-3.5">
-                                <input type="checkbox" name="facility" value="개인락커" id="f-locker"
-                                       class="toggle-checkbox hidden"
-                                       ${fn:contains(gym.facility, '개인락커') ? 'checked' : ''}/>
-                                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-locker"></label>
-                            </div>
-                        </div>
+    <div class="space-y-1.5">
 
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base text-on-surface-variant">shower</span>
-                                <span class="text-[11px] font-bold">샤워실</span>
-                            </div>
-                            <div class="relative inline-block w-7 h-3.5">
-                                <input type="checkbox" name="facility" value="샤워실" id="f-shower"
-                                       class="toggle-checkbox hidden"
-                                       ${fn:contains(gym.facility, '샤워실') ? 'checked' : ''}/>
-                                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-shower"></label>
-                            </div>
-                        </div>
+        <!-- 개인 락커 -->
+        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-on-surface-variant">lock</span>
+                <span class="text-[11px] font-bold">개인 락커</span>
+            </div>
+            <div class="relative inline-block w-7 h-3.5">
+                <input type="checkbox" name="facility" value="개인락커" id="f-locker"
+                       class="toggle-checkbox hidden"
+                       ${fn:contains(gym.facility, '개인락커') ? 'checked' : ''}/>
+                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-locker"></label>
+            </div>
+        </div>
 
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base text-on-surface-variant">local_parking</span>
-                                <span class="text-[11px] font-bold">무료 주차</span>
-                            </div>
-                            <div class="relative inline-block w-7 h-3.5">
-                                <input type="checkbox" name="facility" value="주차장" id="f-parking"
-                                       class="toggle-checkbox hidden"
-                                       ${fn:contains(gym.facility, '주차장') ? 'checked' : ''}/>
-                                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-parking"></label>
-                            </div>
-                        </div>
+        <!-- 샤워실 -->
+        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-on-surface-variant">shower</span>
+                <span class="text-[11px] font-bold">샤워실</span>
+            </div>
+            <div class="relative inline-block w-7 h-3.5">
+                <input type="checkbox" name="facility" value="샤워실" id="f-shower"
+                       class="toggle-checkbox hidden"
+                       ${fn:contains(gym.facility, '샤워실') ? 'checked' : ''}/>
+                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-shower"></label>
+            </div>
+        </div>
 
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base text-on-surface-variant">checkroom</span>
-                                <span class="text-[11px] font-bold">운동복</span>
-                            </div>
-                            <div class="relative inline-block w-7 h-3.5">
-                                <input type="checkbox" name="facility" value="운동복" id="f-clothes"
-                                       class="toggle-checkbox hidden"
-                                       ${fn:contains(gym.facility, '운동복') ? 'checked' : ''}/>
-                                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-clothes"></label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <!-- 주차 -->
+        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-on-surface-variant">local_parking</span>
+                <span class="text-[11px] font-bold">무료 주차</span>
+            </div>
+            <div class="relative inline-block w-7 h-3.5">
+                <input type="checkbox" name="facility" value="주차장" id="f-parking"
+                       class="toggle-checkbox hidden"
+                       ${fn:contains(gym.facility, '주차장') ? 'checked' : ''}/>
+                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-parking"></label>
+            </div>
+        </div>
 
-                <!-- 운영 시간 -->
-                <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-2">
-                            <div class="p-1.5 rounded bg-primary/10 text-primary">
-                                <span class="material-symbols-outlined text-lg">schedule</span>
-                            </div>
-                            <h3 class="text-base font-bold">운영 시간</h3>
-                        </div>
-                        <button type="button" onclick="toggleHourEdit()" class="p-1 text-primary hover:bg-primary/5 rounded">
-                            <span class="material-symbols-outlined text-xs">edit</span>
-                        </button>
-                    </div>
+        <!-- 운동복 -->
+        <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-on-surface-variant">checkroom</span>
+                <span class="text-[11px] font-bold">운동복</span>
+            </div>
+            <div class="relative inline-block w-7 h-3.5">
+                <input type="checkbox" name="facility" value="운동복" id="f-clothes"
+                       class="toggle-checkbox hidden"
+                       ${fn:contains(gym.facility, '운동복') ? 'checked' : ''}/>
+                <label class="toggle-label block w-full h-full bg-outline-variant rounded-full cursor-pointer relative" for="f-clothes"></label>
+            </div>
+        </div>
 
-                    <div id="hourText" class="space-y-1.5">
-                        <div class="flex justify-between text-[11px]">
-                            <span class="text-on-surface-variant">평일 월-금</span>
-                            <span class="font-bold">${schedule.availableWeekdayStart} - ${schedule.availableWeekdayEnd}</span>
-                        </div>
-                        <div class="flex justify-between text-[11px]">
-                            <span class="text-on-surface-variant">토·일·공휴일</span>
-                            <span class="font-bold">${schedule.availableWeekendStart} - ${schedule.availableWeekendEnd}</span>
-                        </div>
-                    </div>
+    </div>
+</section>
 
-                    <div id="hourEdit" class="hidden space-y-2">
-                        <p class="text-[10px] font-bold text-on-surface-variant">평일</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="time" name="weekdayStart" value="${schedule.availableWeekdayStart}" class="bg-surface-container-low rounded-lg text-xs border-0">
-                            <input type="time" name="weekdayEnd" value="${schedule.availableWeekdayEnd}" class="bg-surface-container-low rounded-lg text-xs border-0">
-                        </div>
+    <!-- 운영 시간 -->
+    <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <div class="p-1.5 rounded bg-primary/10 text-primary">
+                    <span class="material-symbols-outlined text-lg">schedule</span>
+                </div>
+                <h3 class="text-base font-bold">운영 시간</h3>
+            </div>
+            <button type="button" onclick="toggleHourEdit()" class="p-1 text-primary hover:bg-primary/5 rounded">
+                <span class="material-symbols-outlined text-xs">edit</span>
+            </button>
+        </div>
 
-                        <p class="text-[10px] font-bold text-on-surface-variant">주말/공휴일</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="time" name="weekendStart" value="${schedule.availableWeekendStart}" class="bg-surface-container-low rounded-lg text-xs border-0">
-                            <input type="time" name="weekendEnd" value="${schedule.availableWeekendEnd}" class="bg-surface-container-low rounded-lg text-xs border-0">
-                        </div>
-                    </div>
-                </section>
+        <div id="hourText" class="space-y-1.5">
+            <div class="flex justify-between text-[11px]">
+                <span class="text-on-surface-variant">평일 월-금</span>
+                <span class="font-bold">${schedule.availableWeekdayStart} - ${schedule.availableWeekdayEnd}</span>
+            </div>
+            <div class="flex justify-between text-[11px]">
+                <span class="text-on-surface-variant">토·일·공휴일</span>
+                <span class="font-bold">${schedule.availableWeekendStart} - ${schedule.availableWeekendEnd}</span>
+            </div>
+        </div>
+
+        <div id="hourEdit" class="hidden space-y-2">
+            <p class="text-[10px] font-bold text-on-surface-variant">평일</p>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="time" name="weekdayStart" value="${schedule.availableWeekdayStart}" class="bg-surface-container-low rounded-lg text-xs border-0">
+                <input type="time" name="weekdayEnd" value="${schedule.availableWeekdayEnd}" class="bg-surface-container-low rounded-lg text-xs border-0">
             </div>
 
-            <!-- 혼잡 시간대 -->
-            <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
-                <div class="flex items-center gap-2 mb-1">
-                    <div class="p-1.5 rounded bg-primary/10 text-primary">
-                        <span class="material-symbols-outlined text-lg">groups_2</span>
-                    </div>
-                    <h3 class="text-base font-bold">혼잡 시간대</h3>
-                </div>
-
-                <p class="text-[10px] text-on-surface-variant mb-3">회원 결제 시 날짜 선택 화면과 연동됩니다.</p>
-
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-2">
-                        <select id="peakStart" class="w-full bg-surface-container-low border-0 rounded-lg px-2 py-1.5 text-[10px]">
-                            <c:forEach var="h" begin="0" end="23">
-                                <option value="<fmt:formatNumber value='${h}' pattern='00'/>:00">
-        							<fmt:formatNumber value="${h}" pattern="00"/>:00
-    							</option>
-                            </c:forEach>
-                        </select>
-
-                        <select id="peakEnd" class="w-full bg-surface-container-low border-0 rounded-lg px-2 py-1.5 text-[10px]">
-                            <c:forEach var="h" begin="1" end="24">
-                                <option value="<fmt:formatNumber value='${h}' pattern='00'/>:00">
-        							<fmt:formatNumber value="${h}" pattern="00"/>:00
-    							</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="flex gap-2 items-center">
-                        <select id="peakDay" class="flex-1 bg-surface-container-low border-0 rounded-lg px-2 py-1.5 text-[10px]">
-                            <option value="MON">월요일</option>
-                            <option value="TUE">화요일</option>
-                            <option value="WED">수요일</option>
-                            <option value="THU">목요일</option>
-                            <option value="FRI">금요일</option>
-                            <option value="SAT">토요일</option>
-                            <option value="SUN">일요일</option>
-                        </select>
-
-                        <button type="button" onclick="addPeakTime()" class="px-2 py-1.5 bg-secondary-container text-on-secondary-container rounded-lg">
-                            <span class="material-symbols-outlined text-xs">add</span>
-                        </button>
-                    </div>
-
-                    <div id="peakList" class="space-y-1.5">
-                        <c:forEach var="peak" items="${peakTimeList}">
-                            <div class="flex items-center justify-between px-2 py-1.5 rounded bg-primary/5 border border-primary/10">
-                                <span class="text-[10px] font-bold">${peak.dayOfWeek} ${peak.startTime} - ${peak.endTime}</span>
-
-                                <input type="hidden" name="peakDay" value="${peak.dayOfWeek}">
-                                <input type="hidden" name="peakStart" value="${peak.startTime}">
-                                <input type="hidden" name="peakEnd" value="${peak.endTime}">
-
-                                <button type="button" onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-error">
-                                    <span class="material-symbols-outlined text-xs">delete</span>
-                                </button>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 이용권 관리 -->
-            <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                        <div class="p-1.5 rounded bg-primary/10 text-primary">
-                            <span class="material-symbols-outlined text-lg">sell</span>
-                        </div>
-                        <h3 class="text-base font-bold">이용권 관리</h3>
-                    </div>
-                    <button type="button" onclick="openModal('membershipModal')"
-        				class="p-1 text-primary hover:bg-primary/5 rounded">
-    				<span class="material-symbols-outlined text-xs">edit</span>
-				</button>
-                </div>
-
-                <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                    <c:forEach var="m" items="${membershipList}">
-                        <div class="px-3 py-2 rounded bg-surface-container-low flex justify-between items-center">
-                            <span class="text-[11px] font-bold">
-                                <c:choose>
-                                    <c:when test="${m.type == 'day'}">${m.typeRep}일 이용권</c:when>
-                                    <c:when test="${m.type == 'month'}">${m.typeRep}개월 회원권</c:when>
-                                    <c:otherwise>PT ${m.typeRep}회</c:otherwise>
-                                </c:choose>
-                            </span>
-                            <p class="text-[11px] font-black">
-                                ₩<fmt:formatNumber value="${m.price}" pattern="#,###"/>
-                            </p>
-                        </div>
-                    </c:forEach>
-                </div>
-            </section>
+            <p class="text-[10px] font-bold text-on-surface-variant">주말/공휴일</p>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="time" name="weekendStart" value="${schedule.availableWeekendStart}" class="bg-surface-container-low rounded-lg text-xs border-0">
+                <input type="time" name="weekendEnd" value="${schedule.availableWeekendEnd}" class="bg-surface-container-low rounded-lg text-xs border-0">
+            </div>
         </div>
+    </section>
+
+    <!-- 이용권 관리 -->
+    <section class="bg-surface-container-lowest p-5 rounded-lg tonal-depth min-h-[430px]">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <div class="p-1.5 rounded bg-primary/10 text-primary">
+                    <span class="material-symbols-outlined text-lg">sell</span>
+                </div>
+                <h3 class="text-base font-bold">이용권 관리</h3>
+            </div>
+            <button type="button" onclick="openModal('membershipModal')" class="p-1 text-primary hover:bg-primary/5 rounded">
+                <span class="material-symbols-outlined text-xs">edit</span>
+            </button>
+        </div>
+
+        <div class="space-y-2">
+            <c:forEach var="m" items="${membershipList}">
+                <div class="px-3 py-2 rounded bg-surface-container-low flex justify-between items-center">
+                    <span class="text-[11px] font-bold">
+                        <c:choose>
+                            <c:when test="${m.type == 'day'}">${m.typeRep}일 이용권</c:when>
+                            <c:when test="${m.type == 'month'}">${m.typeRep}개월 회원권</c:when>
+                            <c:otherwise>PT ${m.typeRep}회</c:otherwise>
+                        </c:choose>
+                    </span>
+                    <p class="text-[11px] font-black">
+                        ₩<fmt:formatNumber value="${m.price}" pattern="#,###"/>
+                    </p>
+                </div>
+            </c:forEach>
+        </div>
+    </section>
+
+</div>
     </div>
 </main>
 </form>
@@ -543,7 +487,8 @@ tailwind.config = {
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container shadow">
                     <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}">
+                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
+						 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                 </div>
                 <p class="mt-3 text-sm text-on-surface-variant">현재 등록된 로고</p>
             </div>
@@ -578,7 +523,8 @@ tailwind.config = {
                 <p class="text-xs font-bold mb-2">현재 배경 사진</p>
                 <div class="aspect-[21/9] rounded-lg overflow-hidden">
                     <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}">
+                         src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+						 onerror="this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                 </div>
             </div>
 
@@ -782,41 +728,7 @@ function toggleHourEdit() {
     document.getElementById("hourEdit").classList.toggle("hidden");
 }
 
-function addPeakTime() {
-    const day = document.getElementById("peakDay").value;
-    const start = document.getElementById("peakStart").value;
-    const end = document.getElementById("peakEnd").value;
-    const list = document.getElementById("peakList");
 
-    if (start >= end) {
-        alert("종료 시간은 시작 시간보다 늦어야 합니다.");
-        return;
-    }
-
-    const dayName = {
-        MON: "월요일",
-        TUE: "화요일",
-        WED: "수요일",
-        THU: "목요일",
-        FRI: "금요일",
-        SAT: "토요일",
-        SUN: "일요일"
-    };
-
-    const div = document.createElement("div");
-    div.className = "flex items-center justify-between px-2 py-1.5 rounded bg-primary/5 border border-primary/10";
-
-    div.innerHTML =
-        '<span class="text-[10px] font-bold">' + dayName[day] + ' ' + start + ' - ' + end + '</span>' +
-        '<input type="hidden" name="peakDay" value="' + day + '">' +
-        '<input type="hidden" name="peakStart" value="' + start + '">' +
-        '<input type="hidden" name="peakEnd" value="' + end + '">' +
-        '<button type="button" onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-error">' +
-        '<span class="material-symbols-outlined text-xs">delete</span>' +
-        '</button>';
-
-    list.appendChild(div);
-}
 
 function openKakaoAddress() {
     new daum.Postcode({
