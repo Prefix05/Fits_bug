@@ -142,11 +142,11 @@
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td class="px-6 py-4 text-sm font-medium text-on-surface">TR-${trainer.id}</td>
+						<td class="px-6 py-4 text-sm font-medium text-on-surface">TR-${trainer.trainerId}</td>
 						<td class="px-6 py-4 text-sm font-bold text-primary group-hover:underline">${trainer.name}</td>
 						<td class="px-6 py-4 text-sm text-on-surface-variant">${trainer.phoneNum}</td>
 						<td class="px-6 py-4 text-sm font-medium text-primary">
-							<button onclick="openMemberModal(${trainer.id}, '${trainer.name}', '${trainer.profileImg}')"
+							<button onclick="openMemberModal(${trainer.trainerId}, '${trainer.name}', '${trainer.profileImg}')"
         							class="hover:underline font-bold">
         							${trainer.memberCount}명
         					</button>
@@ -192,7 +192,7 @@
 	<td class="px-6 py-4 text-sm font-bold text-primary">${assign.memberName}</td> 
 	<td class="px-6 py-4 text-sm text-on-surface-variant">${assign.assignedAt}</td>
 	<td class="px-6 py-4 text-sm text-on-surface">${assign.membershipName}</td>
-	<td class="px-6 py-4 text-sm font-bold text-error">${assign.remainingInfo}</td>
+	<td class="px-6 py-4 text-sm font-bold text-error">${assign.remainingCount}회</td>
 	<td class="px-6 py-4">
 		<span class="text-xs font-bold text-primary">${assign.status}</span>
 	</td>

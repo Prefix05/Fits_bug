@@ -261,13 +261,20 @@
 
                         <div class="flex items-center">
                             <div class="flex text-yellow-400 scale-75 origin-right mr-1">
-                                <c:forEach begin="1" end="${review.rating}">
-                                    <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
-                                </c:forEach>
-                                <c:forEach begin="${review.rating + 1}" end="5">
-                                    <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
-                                </c:forEach>
-                            </div>
+
+    <!-- 채워진 별 -->
+    <c:forEach begin="1" end="${review.rating}">
+        <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
+    </c:forEach>
+
+    <!-- 빈 별 (안전 처리) -->
+    <c:if test="${review.rating < 5}">
+        <c:forEach begin="${review.rating + 1}" end="5">
+            <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
+        </c:forEach>
+    </c:if>
+
+</div>
 
                             <!-- 신고 버튼 -->
                             <c:if test="${not empty sessionScope.loginUser or not empty sessionScope.loginGym}">
@@ -278,7 +285,9 @@
                             </c:if>
 
                             <!-- 본인 리뷰 -->
-                            <c:if test="${sessionScope.loginUser.id == review.clientId}">
+                        
+                            <c:if test="${not empty sessionScope.loginUser 
+             and sessionScope.loginUser.id == review.clientId}">
                                 <button onclick="editReview(${review.reviewNum})" class="ml-2">
                                     <span class="material-symbols-outlined text-sm">edit</span>
                                 </button>
@@ -319,14 +328,21 @@
                             <div class="text-[9px] text-outline">${review.createdAt}</div>
                         </div>
 
-                        <div class="flex text-yellow-400 scale-75 origin-right">
-                            <c:forEach begin="1" end="${review.rating}">
-                                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
-                            </c:forEach>
-                            <c:forEach begin="${review.rating + 1}" end="5">
-                                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
-                            </c:forEach>
-                        </div>
+                        <div class="flex text-yellow-400 scale-75 origin-right mr-1">
+
+    <!-- 채워진 별 -->
+    <c:forEach begin="1" end="${review.rating}">
+        <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>star</span>
+    </c:forEach>
+
+    <!-- 빈 별 (안전 처리) -->
+    <c:if test="${review.rating < 5}">
+        <c:forEach begin="${review.rating + 1}" end="5">
+            <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 0;'>star</span>
+        </c:forEach>
+    </c:if>
+
+</div>
                     </div>
 
                     <p class="text-[11px] text-on-surface-variant leading-relaxed">

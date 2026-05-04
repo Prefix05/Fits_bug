@@ -55,5 +55,19 @@
           AND ps.status != '취소'
         ORDER BY ps.lesson_date, ps.start_time
     </select>
+    
+    <select id="selectTrainerListByGym"
+        parameterType="int"
+        resultType="dto.gym.TrainerChoose">
+    SELECT
+        t.id AS trainerId,
+        u.name AS trainerName
+    FROM TRAINER t
+    JOIN `USER` u
+      ON t.user_id = u.id
+    WHERE t.gym_id = #{value}
+      AND t.approval_status = 'APPROVED'
+    ORDER BY u.name
+    </select>
 
 </mapper>

@@ -15,7 +15,7 @@ public class GymScheduleDaoImpl implements GymScheduleDao{
 	public List<TrainerChoose> selectTrainerListByGym(int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.gymSchedule.selectTrainerListByGym", gymId);
+			return session.selectList("mapper.schedule.selectTrainerListByGym", gymId);
 		}finally {
 			session.close();
 		}
@@ -25,7 +25,7 @@ public class GymScheduleDaoImpl implements GymScheduleDao{
 	public List<PtSessionView> selectPtSessionListByGymAndWeek(Map<String, Object> param) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			return session.selectList("mapper.gymSchedule.selectPtSessionListByGymAndWeek", param);
+			return session.selectList("mapper.schedule.selectPtSessionListByGymAndWeek", param);
 		}finally {
 			session.close();
 		}

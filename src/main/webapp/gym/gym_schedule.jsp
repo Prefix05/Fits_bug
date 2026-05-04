@@ -180,6 +180,7 @@ body {
                         <c:forEach var="day" items="${dayList}">
                             <div class="border-l border-b border-outline-variant/20 p-2 space-y-1">
 
+							<c:if test="${not empty scheduleMap[hour][day.value]}">
                                 <c:forEach var="session" items="${scheduleMap[hour][day.value]}">
                                     <div class="session-badge rounded flex flex-col justify-center text-white text-[10px] p-1.5 leading-tight"
                                          data-trainer-id="${session.trainerId}">
@@ -191,7 +192,7 @@ body {
                                         </span>
                                     </div>
                                 </c:forEach>
-
+							</c:if>
                             </div>
                         </c:forEach>
 

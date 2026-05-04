@@ -473,7 +473,7 @@ data-day="SUN">SUN</button>
 
 <div class="flex justify-between mt-4 text-[10px] font-bold text-on-surface-variant uppercase">
 <c:forEach var="rev" items="${dashboard.revenueTrendList}">
-    <span>${rev.month}</span>
+    <span>${rev.month}월</span>
 </c:forEach>
 </div>
 </div>
