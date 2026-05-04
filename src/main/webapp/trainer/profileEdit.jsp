@@ -16,45 +16,9 @@
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
 
-<!-- Sidebar -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 z-20 flex flex-col p-6">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard">
-            <span class="material-symbols-outlined">dashboard</span>대시보드</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients">
-            <span class="material-symbols-outlined">group</span>회원 관리</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">calendar_today</span>일정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">chat</span>메시지</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">payments</span>수익</a>
-    </nav>
-    <div class="mt-auto pt-6 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">settings</span>설정</a>
-        <div class="border-t border-slate-200 my-2"></div>
-    </div>
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50">
-        <img alt="프로필" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg
-                     ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg)
-                     : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-blue-700 truncate">${sessionScope.loginUser.name}</p>
-            <p class="text-xs text-blue-500 truncate">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="profile" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <!-- Main -->
 <main class="lg:pl-64 min-h-screen">

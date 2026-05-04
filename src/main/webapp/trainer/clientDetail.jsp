@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -166,101 +167,8 @@
 </nav>
 
 <!-- SideNavBar -->
-<aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1" id="main-nav">
-
-        <!-- 공통 nav item -->
-
-        <!-- 내주변 -->
-        <div class="relative">
-            <!-- Parent toggle -->
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="
-                            this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                            this.querySelector('.chevron').classList.toggle('rotate-180');
-                        " href="#">
-                <span class="material-symbols-outlined">distance</span>
-                내주변
-                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
-                      style="font-size:18px">expand_more</span>
-            </a>
-
-            <!-- Dropdown children -->
-            <div class="dropdown hidden flex-col pl-4">
-                <!-- 헬스장 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
-                    헬스장
-                </a>
-                <!-- 트레이너 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">person</span>
-                    트레이너
-                </a>
-            </div>
-        </div>
-
-        <!-- 트레이너  nav item-->
-
-        <!-- 대시보드 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드</a>
-
-        <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
-
-        <!-- 일정 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정</a>
-
-        <!-- 메시지 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
-
-        <!-- 수익 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
-    </nav>
-
-    <!-- 공통 nav item -->
-    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
-            설정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
-            지원</a>
-        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
-    </div>
-
-
-    <!-- 마이프로필 nav item -->
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
-        <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
-             style=""/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
-            <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<c:set var="activePage" value="clients" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <div class="lg:ml-64 min-h-screen flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0">
     <!-- Top Navigation -->
