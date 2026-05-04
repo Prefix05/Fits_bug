@@ -49,7 +49,7 @@ public class PostController extends HttpServlet {
         request.setAttribute("streak", completeDAO.getStreak(userId));
         request.setAttribute("best", completeDAO.getBestStreak(userId));
 
-        request.getRequestDispatcher("community.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/community.jsp").forward(request, response);
     }
 
     @Override

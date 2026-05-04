@@ -2,10 +2,10 @@ package service.member;
 
 import java.util.List;
 
-import dto.member.ExerciseDTO;
+import dto.member.ExerciseGuideDTO;
 
 public interface ExerciseService {
-    List<ExerciseDTO> getAllExercises();
+    List<ExerciseGuideDTO> getAllExercises();
 
-    List<ExerciseDTO> searchExercises(String keyword);
+    List<ExerciseGuideDTO> searchExercises(String keyword);
 }

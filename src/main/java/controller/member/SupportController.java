@@ -29,14 +29,14 @@ public class SupportController extends HttpServlet {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/member/login.jsp");
             return;
         }
 
         List<SupportDTO> list = service.getList(loginUser.getEmail());
 
         request.setAttribute("list", list);
-        request.getRequestDispatcher("support.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/support.jsp").forward(request, response);
     }
 
     // 문의 등록

@@ -4,7 +4,7 @@
 <%
 MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 if(loginUser == null){
-    response.sendRedirect("login.jsp");
+    response.sendRedirect("/member/login.jsp");
     return;
 }
 %>

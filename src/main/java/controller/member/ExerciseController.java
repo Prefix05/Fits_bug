@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.ExerciseDTO;
+import dto.member.ExerciseGuideDTO;
 import service.member.ExerciseService;
 import service.member.ExerciseServiceImpl;
 
@@ -23,7 +23,7 @@ public class ExerciseController extends HttpServlet {
         String keyword = req.getParameter("keyword");
         String isAjax = req.getParameter("ajax");
 
-        List<ExerciseDTO> list;
+        List<ExerciseGuideDTO> list;
 
         if(keyword != null && !keyword.trim().isEmpty()) {
             list = service.searchExercises(keyword);

@@ -1,6 +1,6 @@
 package dto.member;
 
-public class FoodRecordDTO {
+public class MealLogDTO {
 	private int id;
     private String email;
     private String foodName;
@@ -8,12 +8,12 @@ public class FoodRecordDTO {
     private double calorie;
     private String recordDate;
     
-	public FoodRecordDTO() {
+	public MealLogDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public FoodRecordDTO(int id, String email, String foodName, double gram, double calorie, String recordDate) {
+	public MealLogDTO(int id, String email, String foodName, double gram, double calorie, String recordDate) {
 		super();
 		this.id = id;
 		this.email = email;

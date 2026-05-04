@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.ChartMapper">
+
+    <!-- 운동 차트 -->
+    <select id="getWorkoutChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT 
+            DATE(w.date) AS date,
+            SUM(d.weight * d.rep * d.set) AS value
+        FROM workout_log w
+        JOIN workout_detail d ON w.id = d.workout_id
+        WHERE w.member_id = (
+            SELECT id FROM user WHERE email = #{email}
+        )
+        GROUP BY DATE(w.date)
+        ORDER BY date ASC
+    </select>
+
+    <!-- 식단 차트 -->
+    <select id="getFoodChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT 
+            DATE(record_date) AS date,
+            SUM(calorie) AS value
+        FROM food_record
+        WHERE email = #{email}
+        GROUP BY DATE(record_date)
+        ORDER BY date ASC
+    </select>
+
+    <!-- 인바디 차트 -->
+    <select id="getInbodyChart" parameterType="string" resultType="dto.member.ChartDTO">
+        SELECT 
+            DATE(record_date) AS date,
+            weight AS value
+        FROM inbody_record
+        WHERE email = #{email}
+        ORDER BY record_date ASC
+    </select>
+
+</mapper>

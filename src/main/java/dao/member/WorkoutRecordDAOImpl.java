@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.member.WorkoutRecordDTO;
+import dto.member.WorkoutLogDTO;
 import util.MybatisSqlSessionFactory;
 
 public class WorkoutRecordDAOImpl implements WorkoutRecordDAO {
 
     @Override
-    public int insertRecord(WorkoutRecordDTO dto) {
+    public int insertRecord(WorkoutLogDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
@@ -26,9 +26,9 @@ public class WorkoutRecordDAOImpl implements WorkoutRecordDAO {
     }
 
     @Override
-    public List<WorkoutRecordDTO> getRecords(String email) {
+    public List<WorkoutLogDTO> getRecords(String email) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        List<WorkoutRecordDTO> list = null;
+        List<WorkoutLogDTO> list = null;
         try {
             list = sqlSession.selectList("mapper.WorkoutRecordMapper.getRecords", email);
         } catch (Exception e) {

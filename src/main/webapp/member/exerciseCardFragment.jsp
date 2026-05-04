@@ -1,8 +1,8 @@
-<%@ page import="java.util.*, dto.member.ExerciseDTO" %>
+<%@ page import="java.util.*,dto.member.ExerciseGuideDTO" %>
 <%
-List<ExerciseDTO> list = (List<ExerciseDTO>) request.getAttribute("exerciseList");
+List<ExerciseGuideDTO> list = (List<ExerciseGuideDTO>) request.getAttribute("exerciseList");
 
-for(ExerciseDTO e : list){
+for(ExerciseGuideDTO e : list){
 %>
 
 <div class="ex-card"

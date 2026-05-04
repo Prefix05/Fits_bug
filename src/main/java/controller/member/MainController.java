@@ -40,7 +40,7 @@ public class MainController extends HttpServlet {
         }
 
         // main.jsp로 포워드 (URL은 /main 유지)
-        request.getRequestDispatcher("/main.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/main.jsp").forward(request, response);
     }
 
     @Override

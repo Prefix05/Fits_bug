@@ -11,7 +11,7 @@ import dto.member.NotificationDTO;
 public class MessageServiceImpl implements MessageService {
 
     private MessageDAO dao = new MessageDAOImpl();
-    private MemberService memberService = new MemberServiceImpl();
+    private UserService userService = new UserServiceImpl();
     
     MessageRoomDTO dto = new MessageRoomDTO();
   
@@ -56,7 +56,7 @@ public class MessageServiceImpl implements MessageService {
 	    List<MessageRoomDTO> list = dao.getMessageRoomList(email);
 
 	    for(MessageRoomDTO dto : list){
-	        String nickname = memberService.getNickname(dto.getEmail());
+	    	String nickname = userService.findByEmail(dto.getEmail()).getNickname();
 	        dto.setNickname(nickname);
 	    }
 

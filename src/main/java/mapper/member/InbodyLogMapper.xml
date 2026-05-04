@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.InbodyRecordMapper">
 
-    <resultMap id="inbodyResultMap" type="dto.member.InbodyRecordDTO">
+    <resultMap id="inbodyResultMap" type="dto.member.InbodyLogDTO">
         <id     property="id"         column="id"/>
         <result property="email"      column="email"/>
         <result property="weight"     column="weight"/>
@@ -18,7 +18,7 @@
          InbodyRecordDAOImpl.insert(InbodyRecordDTO dto)
          → param: InbodyRecordDTO
          ────────────────────────────────────────────────────── -->
-    <insert id="insert" parameterType="InbodyRecordDTO">
+    <insert id="insert" parameterType="InbodyLogDTO">
         INSERT INTO inbody_record (email, weight, muscle, fat, image_path)
         VALUES (#{email}, #{weight}, #{muscle}, #{fat}, #{imagePath})
     </insert>

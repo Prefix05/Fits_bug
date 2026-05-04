@@ -2,10 +2,10 @@ package service.member;
 
 import java.util.List;
 
-import dto.member.FoodRecordDTO;
+import dto.member.MealLogDTO;
 
 public interface FoodRecordService {
-    int save(FoodRecordDTO dto);
-    List<FoodRecordDTO> getList(String email);
+    int save(MealLogDTO dto);
+    List<MealLogDTO> getList(String email);
     double calculateCalorie(double baseCal, double baseGram, double intakeGram);
 }

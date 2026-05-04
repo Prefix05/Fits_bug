@@ -4,19 +4,88 @@
 
 <mapper namespace="mapper.MemberMapper">
 
-    <!-- ======================================================
-         ResultMap : DB 컬럼 ↔ DTO 필드 매핑
-         ====================================================== -->
+    <!-- ============================================================
+         ResultMap : MEMBER 테이블 컬럼 ↔ MemberDTO 필드
+         핵심: exerciseCount_goal (DB 컬럼명 그대로)
+         ============================================================ -->
     <resultMap id="memberResultMap" type="dto.member.MemberDTO">
-        <id     property="email"         column="email"/>
-        <result property="password"      column="password"/>
-        <result property="nickname"      column="nickname"/>
-        <result property="phone"         column="phone"/>
-        <result property="profileImage"  column="profile_image"/>
-        <result property="emailVerified" column="email_verified"/>
-        <result property="socialType"    column="social_type"/>
+        <id     property="id"                column="id"/>
+        <result property="userId"            column="user_id"/>
+        <result property="trainerId"         column="trainer_id"/>
+        <result property="gymId"             column="gym_id"/>
+        <result property="purpose"           column="purpose"/>
+        <result property="experience"        column="experience"/>
+        <result property="height"            column="height"/>
+        <result property="weight"            column="weight"/>
+        <result property="diet"              column="diet"/>
+        <result property="exerciseCountGoal" column="exerciseCount_goal"/>
+        <result property="address"           column="address"/>
+        <result property="latitude"          column="latitude"/>
+        <result property="longitude"         column="longitude"/>
+        <result property="name"              column="NAME"/>
+        <result property="goals"             column="goals"/>
+        <result property="nextSession"       column="next_session"/>
+        <result property="lessonCount"       column="lesson_count"/>
+        <result property="totalLessons"      column="total_lessons"/>
+        <result property="lastSession"       column="last_session"/>
+        <result property="status"            column="STATUS"/>
+        <result property="age"               column="age"/>
     </resultMap>
 
+
+    <!-- JOIN 조회용 ResultMap (USER 테이블 정보 포함) -->
+    <resultMap id="memberWithUserResultMap" type="dto.member.MemberDTO"
+               extends="memberResultMap">
+        <result property="email"         column="email"/>
+        <result property="nickname"      column="nickname"/>
+        <result property="profileImg"    column="profileImg"/>
+        <result property="role"          column="role"/>
+        <result property="emailVerified" column="email_verified"/>
+        <result property="socialType"    column="provider"/>
+    </resultMap>
+
+    <!-- ============================================================
+         MEMBER INSERT (회원가입 step3 완료 시)
+         → USER INSERT 이후 auto_increment id를 user_id로 사용
+         MemberDAOImpl.insertMember(MemberDTO dto)
+         ============================================================ -->
+    <insert id="insertMember" parameterType="dto.member.MemberDTO">
+        INSERT INTO MEMBER (
+            user_id, trainer_id, gym_id,
+            purpose, experience,
+            height, weight,
+            diet, exerciseCount_goal,
+            address, latitude, longitude,
+            NAME, goals, next_session,
+            lesson_count, total_lessons,
+            last_session, STATUS, age
+        ) VALUES (
+            #{userId}, #{trainerId}, #{gymId},
+            #{purpose}, #{experience},
+            #{height}, #{weight},
+            #{diet}, #{exerciseCountGoal},
+            #{address}, #{latitude}, #{longitude},
+            #{name}, #{goals}, #{nextSession},
+            #{lessonCount}, #{totalLessons},
+            #{lastSession}, #{status}, #{age}
+        )
+    </insert>
+
+    <!-- ============================================================
+         USER.id로 MEMBER 조회
+         MemberDAOImpl.findByUserId(int userId)
+         ============================================================ -->
+    <select id="findByUserId" parameterType="int" resultMap="memberResultMap">
+        SELECT id, user_id, trainer_id, gym_id,
+               purpose, experience, height, weight,
+               diet, exerciseCount_goal,
+               address, latitude, longitude,
+               NAME, goals, next_session,
+               lesson_count, total_lessons,
+               last_session, STATUS, age
+        FROM MEMBER
+        WHERE user_id = #{userId}
+=======
     <!-- ──────────────────────────────────────────────────────
          MemberDAOImpl.loginCheck(MemberDTO dto)
          → param: MemberDTO  (dto.getEmail(), dto.getPassword())
@@ -27,76 +96,122 @@
         FROM user
         WHERE email    = #{email}
           AND password = #{password}
+>>>>>>> 7f2c02f926c40b66df277c21344e819780aab63e
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
+    <!-- ============================================================
+         MEMBER.id로 MEMBER 조회
+         MemberDAOImpl.findById(int id)
+         ============================================================ -->
+    <select id="findById" parameterType="int" resultMap="memberResultMap">
+        SELECT id, user_id, trainer_id, gym_id,
+               purpose, experience, height, weight,
+               diet, exerciseCount_goal,
+               address, latitude, longitude,
+               NAME, goals, next_session,
+               lesson_count, total_lessons,
+               last_session, STATUS, age
+        FROM MEMBER
+        WHERE id = #{id}
+    </select>
+
+    <!-- ============================================================
+         이메일로 MEMBER + USER JOIN 조회
+         (세션에 저장된 email로 member 정보 조회)
          MemberDAOImpl.findByEmail(String email)
-         → param: string (단일 값)
-         ────────────────────────────────────────────────────── -->
-    <select id="findByEmail" parameterType="string" resultMap="memberResultMap">
-        SELECT email, password, nickname, phone,
-               profile_image, email_verified, social_type
-        FROM member
-        WHERE email = #{email}
+         ============================================================ -->
+    <select id="findByEmail" parameterType="string" resultMap="memberWithUserResultMap">
+        SELECT
+            m.id, m.user_id, m.trainer_id, m.gym_id,
+            m.purpose, m.experience, m.height, m.weight,
+            m.diet, m.exerciseCount_goal,
+            m.address, m.latitude, m.longitude,
+            m.NAME, m.goals, m.next_session,
+            m.lesson_count, m.total_lessons,
+            m.last_session, m.STATUS, m.age,
+            u.email, u.nickname, u.profileImg,
+            u.role, u.email_verified, u.provider
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         MemberDAOImpl.isEmailExists(String email)
-         → param: string, return: int (COUNT)
-         ────────────────────────────────────────────────────── -->
-    <select id="isEmailExists" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM member WHERE email = #{email}
+    <!-- ============================================================
+         USER.email로 MEMBER.id 조회
+         MemberDAOImpl.findMemberIdByEmail(String email)
+         ============================================================ -->
+    <select id="findMemberIdByEmail" parameterType="string" resultType="int">
+        SELECT m.id
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        WHERE u.email = #{email}
+          AND u.is_deleted = 0
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         MemberDAOImpl.getNicknameByEmail(String email)
-         → param: string, return: string
-         ────────────────────────────────────────────────────── -->
-    <select id="getNicknameByEmail" parameterType="string" resultType="string">
-        SELECT nickname FROM member WHERE email = #{email}
-    </select>
-
-    <!-- ──────────────────────────────────────────────────────
-         MemberDAOImpl.insertMember(MemberDTO member)
-         → param: MemberDTO
-         ────────────────────────────────────────────────────── -->
-    <insert id="insertMember" parameterType="MemberDTO">
-        INSERT INTO member
-            (email, password, nickname, phone, profile_image, email_verified, social_type)
-        VALUES
-            (#{email}, #{password}, #{nickname}, #{phone},
-             #{profileImage}, #{emailVerified}, #{socialType})
-    </insert>
-
-    <!-- ──────────────────────────────────────────────────────
-         MemberDAOImpl.insertKakaoUser(MemberDTO dto)
-         → param: MemberDTO
-         ────────────────────────────────────────────────────── -->
-    <insert id="insertKakaoUser" parameterType="MemberDTO">
-        INSERT INTO member (email, nickname, email_verified, social_type)
-        VALUES (#{email}, #{nickname}, #{emailVerified}, #{socialType})
-    </insert>
-
-    <!-- ──────────────────────────────────────────────────────
+    <!-- ============================================================
+         MEMBER 정보 수정
          MemberDAOImpl.update(MemberDTO dto)
-         MyPageDAOImpl.updateMember(MemberDTO member)
-         → param: MemberDTO
-         ────────────────────────────────────────────────────── -->
-    <update id="update" parameterType="MemberDTO">
-        UPDATE member
-        SET nickname = #{nickname},
-            password = #{password}
-        WHERE email  = #{email}
+         ============================================================ -->
+    <update id="update" parameterType="dto.member.MemberDTO">
+        UPDATE MEMBER SET
+            trainer_id         = #{trainerId},
+            gym_id             = #{gymId},
+            purpose            = #{purpose},
+            experience         = #{experience},
+            height             = #{height},
+            weight             = #{weight},
+            diet               = #{diet},
+            exerciseCount_goal = #{exerciseCountGoal},
+            address            = #{address},
+            latitude           = #{latitude},
+            longitude          = #{longitude},
+            NAME               = #{name},
+            goals              = #{goals},
+            next_session       = #{nextSession},
+            lesson_count       = #{lessonCount},
+            total_lessons      = #{totalLessons},
+            last_session       = #{lastSession},
+            STATUS             = #{status},
+            age                = #{age}
+        WHERE id = #{id}
     </update>
 
-    <!-- ──────────────────────────────────────────────────────
-         MyPageDAOImpl.updateProfileImg(MemberDTO member)
-         → param: MemberDTO
-         ────────────────────────────────────────────────────── -->
-    <update id="updateProfileImage" parameterType="MemberDTO">
-        UPDATE member
-        SET profile_image = #{profileImage}
-        WHERE email = #{email}
-    </update>
+    <!-- ============================================================
+         trainer_id에 속한 회원 목록 (트레이너 대시보드용)
+         ============================================================ -->
+    <select id="findByTrainerId" parameterType="int" resultMap="memberWithUserResultMap">
+        SELECT
+            m.id, m.user_id, m.trainer_id, m.gym_id,
+            m.purpose, m.experience, m.height, m.weight,
+            m.diet, m.exerciseCount_goal,
+            m.address, m.latitude, m.longitude,
+            m.NAME, m.goals, m.next_session,
+            m.lesson_count, m.total_lessons,
+            m.last_session, m.STATUS, m.age,
+            u.email, u.nickname, u.profileImg, u.role
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        WHERE m.trainer_id = #{trainerId}
+          AND u.is_deleted = 0
+        ORDER BY m.id DESC
+    </select>
+
+    <!-- ============================================================
+         gym_id에 속한 회원 목록 (헬스장 대시보드용)
+         ============================================================ -->
+    <select id="findByGymId" parameterType="int" resultMap="memberWithUserResultMap">
+        SELECT
+            m.id, m.user_id, m.trainer_id, m.gym_id,
+            m.NAME, m.goals, m.next_session,
+            m.lesson_count, m.total_lessons,
+            m.last_session, m.STATUS, m.age,
+            u.email, u.nickname, u.profileImg, u.role
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        WHERE m.gym_id = #{gymId}
+          AND u.is_deleted = 0
+        ORDER BY m.id DESC
+    </select>
 
 </mapper>

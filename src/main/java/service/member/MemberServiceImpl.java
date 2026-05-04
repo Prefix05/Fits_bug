@@ -4,30 +4,49 @@ import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 
+import java.util.List;
+
 public class MemberServiceImpl implements MemberService {
 
-    private MemberDAO dao = new MemberDAOImpl();
+    private MemberDAO memberDAO = new MemberDAOImpl();
 
     @Override
-    public int join(MemberDTO m){
-        return dao.insertMember(m);
+    public int insertMember(MemberDTO dto) {
+        return memberDAO.insertMember(dto);
     }
 
     @Override
-    public MemberDTO login(String email, String password){
-        return dao.login(email, password);
+    public MemberDTO findByEmail(String email) {
+        return memberDAO.findByEmail(email);
     }
 
     @Override
-    public String getNickname(String email) {
-        return dao.getNicknameByEmail(email);
+    public MemberDTO findById(int id) {
+        return memberDAO.findById(id);
     }
 
     @Override
-    public boolean isEmailExists(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            return false;
-        }
-        return dao.isEmailExists(email);
+    public MemberDTO findByUserId(int userId) {
+        return memberDAO.findByUserId(userId);
+    }
+
+    @Override
+    public int findMemberIdByEmail(String email) {
+        return memberDAO.findMemberIdByEmail(email);
+    }
+
+    @Override
+    public int update(MemberDTO dto) {
+        return memberDAO.update(dto);
+    }
+
+    @Override
+    public List<MemberDTO> findByTrainerId(int trainerId) {
+        return memberDAO.findByTrainerId(trainerId);
+    }
+
+    @Override
+    public List<MemberDTO> findByGymId(int gymId) {
+        return memberDAO.findByGymId(gymId);
     }
 }

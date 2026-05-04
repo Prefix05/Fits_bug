@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.FoodRecordMapper">
 
-    <resultMap id="foodResultMap" type="dto.member.FoodRecordDTO">
+    <resultMap id="foodResultMap" type="dto.member.MealLogDTO">
         <id     property="id"         column="id"/>
         <result property="email"      column="email"/>
         <result property="foodName"   column="food_name"/>
@@ -17,7 +17,7 @@
          FoodRecordDAOImpl.insert(FoodRecordDTO dto)
          → param: FoodRecordDTO
          ────────────────────────────────────────────────────── -->
-    <insert id="insert" parameterType="FoodRecordDTO">
+    <insert id="insert" parameterType="MealLogDTO">
         INSERT INTO food_record (email, food_name, gram, calorie)
         VALUES (#{email}, #{foodName}, #{gram}, #{calorie})
     </insert>

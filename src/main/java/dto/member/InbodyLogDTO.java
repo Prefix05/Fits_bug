@@ -1,6 +1,6 @@
 package dto.member;
 
-public class InbodyRecordDTO {
+public class InbodyLogDTO {
 	private int id;
     private String email;
     private double weight;       // 체중
@@ -9,12 +9,12 @@ public class InbodyRecordDTO {
     private String imagePath;    
     private String recordDate;
     
-	public InbodyRecordDTO() {
+	public InbodyLogDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public InbodyRecordDTO(int id, String email, double weight, double muscle, double fat, String imagePath,
+	public InbodyLogDTO(int id, String email, double weight, double muscle, double fat, String imagePath,
 			String recordDate) {
 		super();
 		this.id = id;

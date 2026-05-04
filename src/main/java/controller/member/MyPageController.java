@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.MyPageDTO;
 import dto.member.WorkoutPlanDTO;
 import service.member.MyPageService;
@@ -27,7 +27,7 @@ public class MyPageController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         // 로그인 체크
         if (loginUser == null) {
@@ -44,7 +44,7 @@ public class MyPageController extends HttpServlet {
         // null 방어
         if (dto == null) {
             dto = new MyPageDTO();
-            dto.setMember(loginUser);
+            dto.setUser(loginUser);
             
             // 운동 계획
             WorkoutPlanDTO plan = new WorkoutPlanDTO(
@@ -59,7 +59,7 @@ public class MyPageController extends HttpServlet {
             dto.setPlan(plan);
         }
 
-        request.setAttribute("member", dto.getMember());
+        request.setAttribute("user", dto.getUser());
         request.setAttribute("plan", dto.getPlan());
 
         request.getRequestDispatcher("/member/mypage.jsp").forward(request, response);
@@ -75,7 +75,7 @@ public class MyPageController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -85,12 +85,12 @@ public class MyPageController extends HttpServlet {
         String email = loginUser.getEmail();
 
         // ======================
-        // 1. MemberDTO
+        // 1. UserDTO
         // ======================
-        MemberDTO member = new MemberDTO();
-        member.setEmail(email);
-        member.setNickname(request.getParameter("nickname"));
-        member.setPhone(request.getParameter("phone"));
+        UserDTO user = new UserDTO();
+        user.setId(loginUser.getId());
+        user.setNickname(request.getParameter("nickname"));
+        user.setPhone(request.getParameter("phone"));
 
         // ======================
         // 2. WorkoutPlanDTO
@@ -114,13 +114,13 @@ public class MyPageController extends HttpServlet {
         // ======================
         // 3. DB 업데이트
         // ======================
-        service.updateMyPage(member, plan);
+        service.updateMyPage(user, plan);
 
         // ======================
         // 4. 세션 동기화
         // ======================
-        loginUser.setNickname(member.getNickname());
-        loginUser.setPhone(member.getPhone());
+        loginUser.setNickname(user.getNickname());
+        loginUser.setPhone(user.getPhone());
 
         session.setAttribute("loginUser", loginUser);
 

@@ -4,18 +4,18 @@ import java.util.List;
 
 import dao.member.FoodRecordDAO;
 import dao.member.FoodRecordDAOImpl;
-import dto.member.FoodRecordDTO;
+import dto.member.MealLogDTO;
 
 public class FoodRecordServiceImpl implements FoodRecordService {
     private FoodRecordDAO dao = new FoodRecordDAOImpl();
 
     @Override
-    public int save(FoodRecordDTO dto) {
+    public int save(MealLogDTO dto) {
         return dao.insert(dto);
     }
 
     @Override
-    public List<FoodRecordDTO> getList(String email) {
+    public List<MealLogDTO> getList(String email) {
         return dao.findByEmail(email);
     }
 

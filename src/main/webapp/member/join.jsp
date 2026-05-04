@@ -99,7 +99,7 @@ document.querySelectorAll(".role-btn").forEach(btn=>{
 function checkEmail(){
   const email = document.getElementById("username").value;
 
-  fetch("<%=request.getContextPath()%>/checkEmail?email="+email)
+  fetch("<%=request.getContextPath()%>/member/checkEmail?email="+email)
   .then(r=>r.json())
   .then(res=>{
     if(res.exists){
