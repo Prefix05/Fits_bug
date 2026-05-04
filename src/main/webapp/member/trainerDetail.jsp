@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ page import="dto.member.LoginDTO"%>
+<%@ page import="dto.member.MemberDTO"%>
 <%@ page import="dto.member.TrainerDTO" %>
 
 <%

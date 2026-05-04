@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.LoginDTO"%>
+<%@ page import="dto.member.MemberDTO"%>
 <%@ page import="dto.member.WorkoutPlanDTO"%>
 <%
-LoginDTO user = (LoginDTO) request.getAttribute("member");
+MemberDTO user = (MemberDTO) request.getAttribute("member");
 WorkoutPlanDTO plan = (WorkoutPlanDTO) request.getAttribute("plan");
 if (user == null) { response.sendRedirect("login.jsp"); return; }
 if (plan == null) { plan = new WorkoutPlanDTO(); }
@@ -640,7 +640,7 @@ function loadPaymentData() {
   const active = {
     orderId: "ORD1234",
     productName: "PT 20회권 VIP",
-    remain: 8,
+    remain: 20,
     total: 20,
     used: true,          // 🔥 true = 환불 버튼 / false = 취소 버튼
     status: "DONE",      // 🔥 여기 바꿔가면서 테스트
@@ -675,12 +675,14 @@ function drawMembership(data) {
 
 	    case "DONE":
 	    case "USING":
-	      if(data.used){
-	        actionBtn = '<button onclick="refundPayment(\''+data.orderId+'\')">💸 환불하기</button>';
-	      }else{
-	        actionBtn = '<button onclick="cancelPayment(\''+data.orderId+'\')">❌ 취소하기</button>';
-	      }
-	      break;
+	    	if(data.remain === data.total){
+	    		  actionBtn = '<button onclick="refundPayment(\'' + data.orderId + '\')">💸 100% 환불</button>';
+	    		}else if(data.remain > 0){
+	    		  actionBtn = '<button onclick="refundPayment(\'' + data.orderId + '\')">💸 부분 환불</button>';
+	    		}else{
+	    		  actionBtn = '<button disabled>환불 불가</button>';
+	    		}
+	    		break;
 
 	    case "CANCEL_REQ":
 	    case "REFUND_REQ":
@@ -739,7 +741,7 @@ function cancelPayment(orderId){
 	  .then(()=>location.reload());
 	}
 
-	function refundPayment(orderId){
+	/* function refundPayment(orderId){
 	  if(!confirm("환불 요청하시겠습니까?")) return;
 
 	  fetch("paymentAction",{
@@ -749,7 +751,27 @@ function cancelPayment(orderId){
 	  })
 	  .then(res=>res.text())
 	  .then(()=>location.reload());
-	}
+	} */
+	
+	function refundPayment(orderId){
+
+		  if(!confirm("환불 요청하시겠습니까?")) return;
+
+		  fetch("refund", {
+		    method:"POST",
+		    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+		    body: "orderId=" + orderId + "&paymentKey=PAYMENT_KEY&amount=10000"
+		  })
+		  .then(function(res){ return res.json(); })
+		  .then(function(data){
+			  console.log(data);
+			    if(data.code){ 
+			      alert("환불 실패: " + data.message);
+			    }else{
+			      alert("환불 성공");
+			    }
+		  });
+		}
 
 // ── 피드백 ──
 function loadRecentFeedback() {

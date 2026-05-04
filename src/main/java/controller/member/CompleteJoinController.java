@@ -15,16 +15,13 @@ public class CompleteJoinController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String workout = request.getParameter("workout");
-
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
 
-        String height = (String) session.getAttribute("height");
-        String weight = (String) session.getAttribute("weight");
-        String diet = (String) session.getAttribute("diet");
+        String workout = request.getParameter("workout");
+        session.setAttribute("workout", workout);
 
-        // TODO: DB 저장
-
-        response.sendRedirect("main.jsp");
+        // ✅ /main 컨트롤러로 리다이렉트
+        response.sendRedirect(request.getContextPath() + "/main");
     }
 }

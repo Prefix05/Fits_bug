@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.*, dto.member.TrainerDTO" %>
+<%@ page import="java.util.*, dto.TrainerDTO" %>
 <%
 List<TrainerDTO> list = (List<TrainerDTO>) request.getAttribute("trainerList.jsp");
 if(list == null) {

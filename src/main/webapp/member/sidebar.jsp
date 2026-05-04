@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.member.LoginDTO"%>
+<%@ page import="dto.member.MemberDTO"%>
 <%
     String contextPath = request.getContextPath();
-    LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 %>
 
 <!-- 핏불 사이드바 -->
@@ -59,22 +59,22 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/member/main.jsp" class="sb-link">
+    <a href="<%=contextPath%>/main.jsp" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
-    <a href="<%=contextPath%>/member/guide" class="sb-link">
+    <a href="<%=contextPath%>/guide" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
     </a>
-    <a href="<%=contextPath%>/member/trainerList" class="sb-link">
+    <a href="<%=contextPath%>/trainerList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
     </a>
-   <a href="<%=contextPath%>/member/gymList" class="sb-link">
+   <a href="<%=contextPath%>/gymList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
     </a>
-    <a href="<%=contextPath%>/member/community" class="sb-link">
+    <a href="<%=contextPath%>/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
-    <a href="<%=contextPath%>/member/mypage" class="sb-link">
+    <a href="<%=contextPath%>/mypage" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>마이페이지</span>
     </a>
 

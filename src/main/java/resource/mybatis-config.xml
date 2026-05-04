@@ -14,6 +14,22 @@
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
+		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
+        <typeAlias alias="WorkoutPlanDTO"   type="dto.member.WorkoutPlanDTO"/>
+        <typeAlias alias="WorkoutRecordDTO" type="dto.member.WorkoutRecordDTO"/>
+        <typeAlias alias="FoodRecordDTO"    type="dto.member.FoodRecordDTO"/>
+        <typeAlias alias="InbodyRecordDTO"  type="dto.member.InbodyRecordDTO"/>
+        <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
+        <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
+        <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
+        <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
+        <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
+        <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
+        <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
+        <typeAlias alias="ReservationDTO"   type="dto.member.ReservationDTO"/>
+        <typeAlias alias="SupportDTO"       type="dto.member.SupportDTO"/>
+        <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
 	</typeAliases>
 
 	<environments default="development">
@@ -45,12 +61,31 @@
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
 		<mapper resource="mapper/member/loginMapper.xml"/>
+		<mapper resource="mapper/member/MemberMapper.xml"/>
+        <mapper resource="mapper/member/WorkoutPlanMapper.xml"/>
+        <mapper resource="mapper/member/WorkoutRecordMapper.xml"/>
+        <mapper resource="mapper/member/FoodRecordMapper.xml"/>
+        <mapper resource="mapper/member/InbodyRecordMapper.xml"/>
+        <mapper resource="mapper/member/PostMapper.xml"/>
+        <mapper resource="mapper/member/PostReactionMapper.xml"/>
+        <mapper resource="mapper/member/CommentMapper.xml"/>
+        <mapper resource="mapper/member/MessageMapper.xml"/>
+        <mapper resource="mapper/member/NotificationMapper.xml"/>
+        <mapper resource="mapper/member/PaymentMapper.xml"/>
+        <mapper resource="mapper/member/PtFeedbackMapper.xml"/>
+        <mapper resource="mapper/member/ReportMapper.xml"/>
+        <mapper resource="mapper/member/ReservationMapper.xml"/>
+        <mapper resource="mapper/member/SupportMapper.xml"/>
+        <mapper resource="mapper/member/TrainerReviewMapper.xml"/>
+        <mapper resource="mapper/member/CompleteMapper.xml"/>
+        <mapper resource="mapper/member/MembershipMapper.xml"/>
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
 		<mapper resource="mapper/trainer/meal.xml"/>
 		<mapper resource="mapper/trainer/payment.xml"/>
 		<mapper resource="mapper/trainer/trainer.xml"/>
+		
 
 	</mappers>
 </configuration>

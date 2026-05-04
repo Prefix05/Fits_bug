@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.*, dto.member.GymDTO" %>
+<%@ page import="java.util.*, dto.GymDTO" %>
 <%
 List<GymDTO> list = (List<GymDTO>) request.getAttribute("gymList");
 GymDTO g1 = new GymDTO();

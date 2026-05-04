@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.member.ChartDTO;
-import dto.member.LoginDTO;
+import dto.member.MemberDTO;
 import service.member.ChartService;
 import service.member.ChartServiceImpl;
 
-@WebServlet("/member/chart")
+@WebServlet("/chart")
 public class ChartController extends HttpServlet {
 
     private ChartService service = new ChartServiceImpl();
@@ -24,7 +24,7 @@ public class ChartController extends HttpServlet {
 
         String type = req.getParameter("type");
 
-        LoginDTO user = (LoginDTO) req.getSession().getAttribute("loginUser");
+        MemberDTO user = (MemberDTO) req.getSession().getAttribute("loginUser");
 
         // ✅ 로그인 체크
         if(user == null){
