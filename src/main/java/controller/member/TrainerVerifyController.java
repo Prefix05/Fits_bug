@@ -11,7 +11,7 @@ public class TrainerVerifyController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        req.getRequestDispatcher("/trainerVerify.jsp").forward(req, resp);
+        req.getRequestDispatcher("/member/trainerVerify.jsp").forward(req, resp);
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -23,6 +23,6 @@ public class TrainerVerifyController extends HttpServlet {
 
         // TODO: DAO 저장
 
-        resp.sendRedirect("main.jsp");
+        resp.sendRedirect("/member/main.jsp");
     }
 }

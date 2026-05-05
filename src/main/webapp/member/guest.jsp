@@ -50,17 +50,17 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
   </div>
 
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
-    <a href="<%=contextPath%>/guide" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span>운동 가이드</a>
-    <a href="<%=contextPath%>/trainer" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">badge</span>트레이너</a>
-    <a href="<%=contextPath%>/gym" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">store</span>헬스장</a>
-    <a href="<%=contextPath%>/community.jsp" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">groups</span>커뮤니티</a>
+    <a href="<%=contextPath%>/member/guide" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span>운동 가이드</a>
+    <a href="<%=contextPath%>/member/trainerList" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">badge</span>트레이너</a>
+    <a href="<%=contextPath%>/member/gymList" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">store</span>헬스장</a>
+    <a href="<%=contextPath%>/member/community" class="sb-link"><span class="material-symbols-outlined" style="font-size:20px;">groups</span>커뮤니티</a>
   </nav>
 
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;display:flex;flex-direction:column;gap:8px;">
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-weight:800;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+    <button onclick="location.href='<%=contextPath%>/member/login'" style="width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-weight:800;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
       🔥 로그인
     </button>
-    <button onclick="location.href='<%=contextPath%>/join.jsp'" style="width:100%;padding:11px;border-radius:12px;border:2px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-weight:700;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">
+    <button onclick="location.href='<%=contextPath%>/member/join'" style="width:100%;padding:11px;border-radius:12px;border:2px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-weight:700;font-size:14px;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">
       회원가입
     </button>
   </div>
@@ -85,10 +85,10 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
           핏츠버그와 함께 건강한 라이프스타일을 만들어보세요
         </p>
         <div style="display:flex;gap:12px;">
-          <button onclick="location.href='<%=contextPath%>/join.jsp'" style="padding:14px 32px;border-radius:99px;border:none;cursor:pointer;background:white;color:#FF6B35;font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,0.15);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <button onclick="location.href='<%=contextPath%>/member/join'" style="padding:14px 32px;border-radius:99px;border:none;cursor:pointer;background:white;color:#FF6B35;font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(0,0,0,0.15);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
             🚀 무료 시작하기
           </button>
-          <button onclick="location.href='<%=contextPath%>/login.jsp'" style="padding:14px 32px;border-radius:99px;border:2px solid rgba(255,255,255,0.6);cursor:pointer;background:transparent;color:white;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
+          <button onclick="location.href='<%=contextPath%>/member/login'" style="padding:14px 32px;border-radius:99px;border:2px solid rgba(255,255,255,0.6);cursor:pointer;background:transparent;color:white;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
             로그인
           </button>
         </div>
@@ -234,8 +234,8 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
   </div>
   <div style="display:flex;gap:10px;align-items:center;">
     <span style="font-size:11px;font-weight:800;color:#C4CEDE;letter-spacing:2px;">FITSBUG</span>
-    <button onclick="location.href='<%=contextPath%>/join.jsp'" style="padding:12px 28px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">무료 회원가입</button>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="padding:12px 28px;border-radius:99px;border:2px solid #FF6B35;cursor:pointer;background:white;color:#FF6B35;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#FFF3EE'" onmouseout="this.style.background='white'">로그인</button>
+    <button onclick="location.href='<%=contextPath%>/member/join'" style="padding:12px 28px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">무료 회원가입</button>
+    <button onclick="location.href='<%=contextPath%>/member/login'" style="padding:12px 28px;border-radius:99px;border:2px solid #FF6B35;cursor:pointer;background:white;color:#FF6B35;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#FFF3EE'" onmouseout="this.style.background='white'">로그인</button>
   </div>
 </div>
 
@@ -247,9 +247,9 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
     <p style="font-size:14px;color:#9DA8C0;line-height:1.6;margin-bottom:28px;">이 기능은 회원만 사용 가능해요.<br>지금 가입하면 모든 기능을 무료로 이용할 수 있어요 🐾</p>
     <div style="display:flex;gap:10px;">
       <button onclick="closeLoginModal()" style="flex:1;padding:13px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">취소</button>
-      <button onclick="location.href='<%=contextPath%>/join.jsp'" style="flex:1;padding:13px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(255,107,53,0.3);">회원가입</button>
+      <button onclick="location.href='<%=contextPath%>/member/join'" style="flex:1;padding:13px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(255,107,53,0.3);">회원가입</button>
     </div>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" style="width:100%;margin-top:10px;padding:11px;border-radius:99px;border:none;background:none;color:#FF6B35;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">이미 계정이 있어요 →</button>
+    <button onclick="location.href='<%=contextPath%>/member/login'" style="width:100%;margin-top:10px;padding:11px;border-radius:99px;border:none;background:none;color:#FF6B35;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">이미 계정이 있어요 →</button>
   </div>
 </div>
 

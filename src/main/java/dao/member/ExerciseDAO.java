@@ -2,12 +2,12 @@ package dao.member;
 
 import java.util.List;
 
-import dto.member.ExerciseDTO;
+import dto.member.ExerciseGuideDTO;
 
 public interface ExerciseDAO {
     // 전체 조회
-    List<ExerciseDTO> getAllExercises();
+    List<ExerciseGuideDTO> getAllExercises();
 
     // 검색 (AJAX)
-    List<ExerciseDTO> searchExercises(String keyword);
+    List<ExerciseGuideDTO> searchExercises(String keyword);
 }

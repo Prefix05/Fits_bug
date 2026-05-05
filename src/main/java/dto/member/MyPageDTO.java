@@ -2,22 +2,22 @@ package dto.member;
 
 public class MyPageDTO {
 
-    private MemberDTO member;
+    private UserDTO user;
     private WorkoutPlanDTO plan;
 
     public MyPageDTO() {}
 
-    public MyPageDTO(MemberDTO member, WorkoutPlanDTO plan) {
-        this.member = member;
+    public MyPageDTO(UserDTO user, WorkoutPlanDTO plan) {
+        this.user = user;
         this.plan = plan;
     }
 
-    public MemberDTO getMember() {
-        return member;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setMember(MemberDTO member) {
-        this.member = member;
+    public void setUser(UserDTO loginUser) {
+        this.user = loginUser;
     }
 
     public WorkoutPlanDTO getPlan() {

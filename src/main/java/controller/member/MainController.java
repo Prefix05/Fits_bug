@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 
 import dao.member.WorkoutPlanDAO;
 import dao.member.WorkoutPlanDAOImpl;
-import dto.member.MemberDTO;
 import dto.member.WorkoutPlanDTO;
+import dto.trainer.UserDTO;
 
 @WebServlet("/member/main")
 public class MainController extends HttpServlet {
@@ -22,11 +22,11 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         // 로그인 안 되어 있으면 로그인 페이지로
         if (loginUser == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -40,7 +40,7 @@ public class MainController extends HttpServlet {
         }
 
         // main.jsp로 포워드 (URL은 /main 유지)
-        request.getRequestDispatcher("/main.jsp").forward(request, response);
+        request.getRequestDispatcher("/member/main.jsp").forward(request, response);
     }
 
     @Override

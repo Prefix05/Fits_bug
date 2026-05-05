@@ -5,18 +5,9 @@
 
 <mapper namespace="mapper.gymMain">
 
-    <resultMap id="gymMap" type="dto.gym.Gym">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="phoneNum" column="phone_num"/>
-        <result property="description" column="description"/>
-        <result property="address" column="address"/>
-        <result property="file" column="file"/>
-        <result property="rating" column="rating"/>
-        <result property="reviewCount" column="review_count"/>
-    </resultMap>
 
-    <select id="selectGymMainInfo" parameterType="int" resultMap="gymMap">
+
+    <select id="selectGymMainInfo" parameterType="int" resultType="map">
     SELECT
         g.id,
         g.name,
@@ -54,5 +45,53 @@
         ORDER BY visitCount DESC
         LIMIT 1
     </select>
+    
+
+<insert id="insertGym" parameterType="gym" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO gym (
+        user_id,
+        name,
+        background_img,
+        business_registration_num,
+        br_file,
+        phone_num,
+        address,
+        address_detail,
+        postcode,
+        latitude,
+        longitude,
+        description,
+        file,
+        facility,
+        approval_status,
+        gym_code,
+        bank_name,
+        account_number
+    ) VALUES (
+        #{userId},
+        #{name},
+        #{backgroundImg},
+        #{businessRegistrationNum},
+        #{brFile},
+        #{phoneNum},
+        #{address},
+        #{addressDetail},
+        #{postcode},
+        #{latitude},
+        #{longitude},
+        #{description},
+        #{file},
+        #{facility},
+        #{approvalStatus},
+        #{gymCode},
+        #{bankName},
+        #{accountNumber}
+    )
+</insert>
+
+	<insert id="insertUserByGym" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+		insert into user (email,password,name,role)
+		values (#{email},#{password},#{name},'GYM')
+	</insert>
 
 </mapper>

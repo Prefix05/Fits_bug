@@ -34,14 +34,14 @@ public class PaymentSuccessController extends HttpServlet {
         // 2. 로그인 체크
         HttpSession session = req.getSession(false);
         if(session == null){
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect("/member/login.jsp");
             return;
         }
 
         MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
 
         if(user == null){
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect("/member/login.jsp");
             return;
         }
 
@@ -50,7 +50,7 @@ public class PaymentSuccessController extends HttpServlet {
             service.success(orderId, user.getEmail());
 
             // 4. 성공 페이지로 이동
-            resp.sendRedirect("main.jsp");
+            resp.sendRedirect("/member/main.jsp");
 
         } catch(Exception e){
             e.printStackTrace();

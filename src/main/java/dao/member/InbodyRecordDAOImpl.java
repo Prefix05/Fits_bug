@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import dto.member.InbodyRecordDTO;
+import dto.member.InbodyLogDTO;
 import util.MybatisSqlSessionFactory;
 
 public class InbodyRecordDAOImpl implements InbodyRecordDAO {
 
     @Override
-    public int insert(InbodyRecordDTO dto) {
+    public int insert(InbodyLogDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
@@ -26,9 +26,9 @@ public class InbodyRecordDAOImpl implements InbodyRecordDAO {
     }
 
     @Override
-    public List<InbodyRecordDTO> findByEmail(String email) {
+    public List<InbodyLogDTO> findByEmail(String email) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        List<InbodyRecordDTO> list = null;
+        List<InbodyLogDTO> list = null;
         try {
             list = sqlSession.selectList("mapper.InbodyRecordMapper.findByEmail", email);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class InbodyRecordDAOImpl implements InbodyRecordDAO {
     }
 
     @Override
-    public List<InbodyRecordDTO> getRecords(String email) {
+    public List<InbodyLogDTO> getRecords(String email) {
         return findByEmail(email);
     }
 }

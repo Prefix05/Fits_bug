@@ -50,16 +50,19 @@ public class GymMain extends HttpServlet {
 
 			String gymIdStr = request.getParameter("gymId");
 
+
 	        if (gymIdStr == null) {
 	            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "gymId 없음");
 	            return;
 	        }
+
 
 	        int gymId = Integer.parseInt(gymIdStr);
 
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 
+			
 			Gym gym = service.getGymMainInfo(gymId);
 			List<Review> reviewList = service.getReviewList(gymId);
 			List<Membership> membershipList = service.getMembershipList(gymId);

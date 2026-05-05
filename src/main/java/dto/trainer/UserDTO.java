@@ -9,7 +9,7 @@ public class UserDTO {
     private String name;
     private String tel;
     private String nickname;
-    private String profileImg;
+    private String profileImage;
     private UserRole role;
     private LocalDateTime createdAt;
     private boolean deleted;
@@ -71,15 +71,17 @@ public class UserDTO {
         this.nickname = nickname;
     }
 
-    public String getProfileImg() {
-        return profileImg;
-    }
 
-    public void setProfileImg(String profileImg) {
-        this.profileImg = profileImg;
-    }
 
-    public UserRole getRole() {
+    public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
+	public UserRole getRole() {
         return role;
     }
 
@@ -118,4 +120,13 @@ public class UserDTO {
     public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
+
+	@Override
+	public String toString() {
+		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", tel=" + tel
+				+ ", nickname=" + nickname + ", profileImage=" + profileImage + ", role=" + role + ", createdAt="
+				+ createdAt + ", deleted=" + deleted + ", provider=" + provider + ", providerId=" + providerId + "]";
+	}
+    
+    
 }

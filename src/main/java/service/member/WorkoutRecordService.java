@@ -2,9 +2,9 @@ package service.member;
 
 import java.util.List;
 
-import dto.member.WorkoutRecordDTO;
+import dto.member.WorkoutLogDTO;
 
 public interface WorkoutRecordService {
-    int insertRecord(WorkoutRecordDTO dto);
-    List<WorkoutRecordDTO> getRecords(String email);
+    int insertRecord(WorkoutLogDTO dto);
+    List<WorkoutLogDTO> getRecords(String email);
 }

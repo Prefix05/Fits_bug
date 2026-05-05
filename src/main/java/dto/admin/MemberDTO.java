@@ -22,14 +22,21 @@ public class MemberDTO {
 	private String ptTrainer;
 	private Double payment;
 	
+	private String profileImage;
+	
 	public MemberDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MemberDTO(String regDate, String gymName, String gymTel, Integer gymClientCount, Double gymCal, String trainerName,
-			String trainerTel, Integer trainerClientCount, Double trainerCal, String clientName, String clientTel,
-			String ptTrainer, Double payment) {
+
+
+
+
+
+	public MemberDTO(String regDate, String gymName, String gymTel, Integer gymClientCount, Double gymCal,
+			String trainerName, String trainerTel, Integer trainerClientCount, Double trainerCal, String clientName,
+			String clientTel, String ptTrainer, Double payment, String profileImage) {
 		super();
 		this.regDate = regDate;
 		this.gymName = gymName;
@@ -44,7 +51,13 @@ public class MemberDTO {
 		this.clientTel = clientTel;
 		this.ptTrainer = ptTrainer;
 		this.payment = payment;
+		this.profileImage = profileImage;
 	}
+
+
+
+
+
 
 	public String getRegDate() {
 		return regDate;
@@ -150,12 +163,31 @@ public class MemberDTO {
 		this.payment = payment;
 	}
 
+	
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
+
+
+
+
+
 	@Override
 	public String toString() {
 		return "MemberDTO [regDate=" + regDate + ", gymName=" + gymName + ", gymTel=" + gymTel + ", gymClientCount="
 				+ gymClientCount + ", gymCal=" + gymCal + ", trainerName=" + trainerName + ", trainerTel=" + trainerTel
 				+ ", trainerClientCount=" + trainerClientCount + ", trainerCal=" + trainerCal + ", clientName="
-				+ clientName + ", clientTel=" + clientTel + ", ptTrainer=" + ptTrainer + ", payment=" + payment + "]";
+				+ clientName + ", clientTel=" + clientTel + ", ptTrainer=" + ptTrainer + ", payment=" + payment
+				+ ", profileImage=" + profileImage + "]";
 	}
+
+
+
 
 }

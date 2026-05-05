@@ -11,7 +11,7 @@ public class TrainerJoinController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        req.getRequestDispatcher("/trainerJoin.jsp").forward(req, resp);
+        req.getRequestDispatcher("/member/trainerJoin.jsp").forward(req, resp);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -27,6 +27,6 @@ public class TrainerJoinController extends HttpServlet {
         // ⭐ 여기서 DB 저장 처리
 
         // 완료 후 인증 페이지 이동
-        response.sendRedirect("trainerVerify.jsp");
+        response.sendRedirect("/member/trainerVerify.jsp");
     }
 }

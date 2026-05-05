@@ -2,9 +2,9 @@ package service.member;
 
 import java.util.List;
 
-import dto.member.InbodyRecordDTO;
+import dto.member.InbodyLogDTO;
 
 public interface InbodyRecordService {
-    int save(InbodyRecordDTO dto);
-    List<InbodyRecordDTO> getList(String email);
+    int save(InbodyLogDTO dto);
+    List<InbodyLogDTO> getList(String email);
 }

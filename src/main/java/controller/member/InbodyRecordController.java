@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.member.InbodyRecordDTO;
+import dto.member.InbodyLogDTO;
 import dto.member.LoginDTO;
 import service.member.InbodyRecordService;
 import service.member.InbodyRecordServiceImpl;
@@ -30,7 +30,7 @@ public class InbodyRecordController extends HttpServlet {
             return;
         }
 
-        List<InbodyRecordDTO> list = service.getList(user.getEmail());
+        List<InbodyLogDTO> list = service.getList(user.getEmail());
 
         response.setContentType("application/json;charset=UTF-8");
 
@@ -39,7 +39,7 @@ public class InbodyRecordController extends HttpServlet {
 
         for (int i = 0; i < list.size(); i++) {
 
-            InbodyRecordDTO d = list.get(i);
+            InbodyLogDTO d = list.get(i);
 
             json.append("{");
             json.append("\"date\":\"").append(d.getRecordDate()).append("\",");
@@ -68,7 +68,7 @@ public class InbodyRecordController extends HttpServlet {
             return;
         }
 
-        InbodyRecordDTO dto = new InbodyRecordDTO();
+        InbodyLogDTO dto = new InbodyLogDTO();
 
         dto.setEmail(user.getEmail());
         dto.setWeight(Double.parseDouble(request.getParameter("weight")));

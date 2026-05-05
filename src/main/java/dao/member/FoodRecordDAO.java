@@ -2,10 +2,10 @@ package dao.member;
 
 import java.util.List;
 
-import dto.member.FoodRecordDTO;
+import dto.member.MealLogDTO;
 
 public interface FoodRecordDAO {
-    int insert(FoodRecordDTO dto);
-    List<FoodRecordDTO> findByEmail(String email);
-	List<FoodRecordDTO> getRecords(String email);
+    int insert(MealLogDTO dto);
+    List<MealLogDTO> findByEmail(String email);
+	List<MealLogDTO> getRecords(String email);
 }

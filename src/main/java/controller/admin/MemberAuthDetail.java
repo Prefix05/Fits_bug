@@ -37,16 +37,20 @@ public class MemberAuthDetail extends HttpServlet {
         try {
         MemberService service = new MemberServiceImpl();
         Map<String, Object> m = service.getAuthDetail(userId, authType);
-
+        System.out.println(m);
         StringBuilder json = new StringBuilder();
         json.append("{");
         json.append("\"name\":\"").append(m.get("name")).append("\",");
         json.append("\"email\":\"").append(m.get("email")).append("\",");
         json.append("\"tel\":\"").append(m.get("tel")).append("\",");
         json.append("\"address\":\"").append(m.get("address")).append("\",");
+        json.append("\"profileImg\":\"").append(m.get("profileImg")).append("\",");
+        json.append("\"certFile\":\"").append(m.get("certFile")).append("\",");
         json.append("\"address_detail\":\"").append(m.get("address_detail") != null ? m.get("address_detail") : "").append("\",");
         json.append("\"bizNum\":\"").append(m.get("business_registration_num")).append("\"");
         json.append("}");
+        
+        System.out.println(json.toString());
 
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().print(json.toString());

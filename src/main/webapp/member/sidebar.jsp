@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImage() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
+    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -59,7 +59,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/main.jsp" class="sb-link">
+    <a href="<%=contextPath%>/member/main" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -68,13 +68,13 @@
     <a href="<%=contextPath%>/member/trainerList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
     </a>
-   <a href="<%=contextPath%>/gymList" class="sb-link">
+   <a href="<%=contextPath%>/member/gymList" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
     </a>
-    <a href="<%=contextPath%>/community" class="sb-link">
+    <a href="<%=contextPath%>/member/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
-    <a href="<%=contextPath%>/mypage" class="sb-link">
+    <a href="<%=contextPath%>/member/mypage" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>마이페이지</span>
     </a>
 
@@ -82,15 +82,15 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/support" class="sb-link">
+    <a href="<%=contextPath%>/member/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/logout'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
     </button>
     <% } else { %>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인
     </button>
     <% } %>

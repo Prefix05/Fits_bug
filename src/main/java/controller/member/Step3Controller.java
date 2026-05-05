@@ -11,10 +11,10 @@ import javax.servlet.http.HttpSession;
 
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
-import dao.member.WorkoutPlanDAO;
-import dao.member.WorkoutPlanDAOImpl;
+import dao.member.UserDAO;
+import dao.member.UserDAOImpl;
 import dto.member.MemberDTO;
-import dto.member.WorkoutPlanDTO;
+import dto.member.UserDTO;
 
 @WebServlet("/member/step3")
 public class Step3Controller extends HttpServlet {
@@ -25,61 +25,58 @@ public class Step3Controller extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
 
-        // ── step1 데이터 (session) ──
-        String username = (String) session.getAttribute("username");
+        // ── step1 세션 데이터 ──────────────────────────────────────
+        String email    = (String) session.getAttribute("username");  // 이메일
         String password = (String) session.getAttribute("password");
         String nickname = (String) session.getAttribute("nickname");
         String name     = (String) session.getAttribute("name");
-        String phone    = (String) session.getAttribute("phone");
+        String phone    = (String) session.getAttribute("phone");     // phone (tel 아님)
 
-        // ── step2 데이터 (session or request) ──
-        // Step2Controller 에서 세션에 저장한 값 우선, 없으면 request 파라미터
-        String height = session.getAttribute("height") != null
-                ? (String) session.getAttribute("height")
-                : request.getParameter("height");
-        String weight = session.getAttribute("weight") != null
-                ? (String) session.getAttribute("weight")
-                : request.getParameter("weight");
-        String diet   = session.getAttribute("diet") != null
-                ? (String) session.getAttribute("diet")
-                : request.getParameter("diet");
+        // ── step2 세션 데이터 ──────────────────────────────────────
+        String heightStr = (String) session.getAttribute("height");
+        String weightStr = (String) session.getAttribute("weight");
+        String diet      = (String) session.getAttribute("diet");
 
-        // ── step3 데이터 ──
-        String goal      = request.getParameter("goal");      // 운동 목표 (step3.jsp)
-        String level     = request.getParameter("level");     // 운동 레벨
-        String frequency = request.getParameter("workout");   // 주간 운동 횟수
+        // ── step3 파라미터 ─────────────────────────────────────────
+        String purpose   = request.getParameter("goal");    // 운동 목표
+        String level     = request.getParameter("level");   // 운동 레벨
+        String frequency = request.getParameter("workout"); // 주간 운동 횟수
 
-        // ── null 방어 ──
-        int h = 0, w = 0;
-        try { h = Integer.parseInt(height); } catch (Exception ignored) {}
-        try { w = Integer.parseInt(weight); } catch (Exception ignored) {}
+        // ── null 방어 ───────────────────────────────────────────────
+        int height = 0, weight = 0;
+        try { height = Integer.parseInt(heightStr); } catch (Exception ignored) {}
+        try { weight = Integer.parseInt(weightStr); } catch (Exception ignored) {}
 
-        // ── MemberDTO 구성 ──
-        MemberDTO user = new MemberDTO();
-        user.setEmail(username);
+        // ── Step1: USER 테이블 INSERT ──────────────────────────────
+        UserDTO user = new UserDTO();
+        user.setEmail(email);
         user.setPassword(password);
         user.setNickname(nickname);
-        user.setPhone(phone);
-        user.setEmailVerified(true);   // 이메일 인증 완료 후 가입이므로 true
+        user.setName(name);
+        user.setPhone(phone);           // phone 필드 (tel 아님)
+        user.setEmailVerified(true);    // 이메일 인증 완료
+        user.setRole("MEMBER");
 
-        // ── WorkoutPlanDTO 구성 ──
-        WorkoutPlanDTO plan = new WorkoutPlanDTO();
-        plan.setEmail(username);
-        plan.setGoal(goal);
-        plan.setLevel(level);
-        plan.setHeight(h);
-        plan.setWeight(w);
-        plan.setDiet(diet);
-        plan.setFrequency(frequency);
+        UserDAO userDao = new UserDAOImpl();
+        userDao.insert(user);
 
-        // ── DB 저장 ──
+        // ── 방금 INSERT한 USER의 id 조회 (MEMBER FK용) ─────────────
+        UserDTO insertedUser = userDao.findByEmail(email);
+        int userId = (insertedUser != null) ? insertedUser.getId() : 0;
+
+        // ── Step2: MEMBER 테이블 INSERT ────────────────────────────
+        MemberDTO member = new MemberDTO();
+        member.setUserId(userId);
+        member.setHeight(height);
+        member.setWeight(weight);
+        member.setDiet(diet);
+        member.setPurpose(purpose);
+        member.setStatus("active");
+
         MemberDAO memberDao = new MemberDAOImpl();
-        memberDao.insertMember(user);
+        memberDao.insertMember(member);
 
-        WorkoutPlanDAO planDao = new WorkoutPlanDAOImpl();
-        planDao.savePlan(plan);
-
-        // ── 세션 정리 (회원가입용 임시 데이터 제거) ──
+        // ── 세션 정리 ───────────────────────────────────────────────
         session.removeAttribute("username");
         session.removeAttribute("password");
         session.removeAttribute("nickname");
@@ -93,10 +90,12 @@ public class Step3Controller extends HttpServlet {
         session.removeAttribute("authTime");
         session.removeAttribute("authEmail");
 
-        // ── 로그인 처리 ──
-        session.setAttribute("loginUser", user);
+        // ── 로그인 세션 저장 (UserDTO 기준) ────────────────────────
+        if (insertedUser != null) {
+            session.setAttribute("loginUser",  insertedUser);
+            session.setAttribute("loginEmail", email);
+        }
 
-        // ✅ /main 컨트롤러로 리다이렉트 (URL: localhost:8080/Fitsbug/main)
-        response.sendRedirect(request.getContextPath() + "/main");
+        response.sendRedirect(request.getContextPath() + "/member/main");
     }
 }

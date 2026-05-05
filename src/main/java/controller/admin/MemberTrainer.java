@@ -80,6 +80,7 @@ public class MemberTrainer extends HttpServlet {
 		try {
 			MemberService service = new MemberServiceImpl();
 			List<MemberDTO> trainerList = service.trainerList(pageInfo, null);
+			System.out.println(trainerList);
 			int totalCount = service.totalCnt();
 			int gymCount = service.gymCnt();
 			int trainerCount = service.trainerCnt();

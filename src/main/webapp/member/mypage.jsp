@@ -166,7 +166,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
       <!-- 프로필 이미지 -->
       <div style="text-align:center;">
         <img id="profileImg"
-          src="upload/<%= user.getProfileImage() == null ? "default.png" : user.getProfileImage() %>"
+          src="upload/<%= user.getProfileImg() == null ? "default.png" : user.getProfileImg() %>"
           onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.getNickname() %>'"
           style="width:90px;height:90px;border-radius:50%;border:3px solid #FF6B35;object-fit:cover;" alt="프로필">
         <form id="uploadForm">

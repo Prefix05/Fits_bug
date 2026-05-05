@@ -4,6 +4,9 @@
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+	<settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
 	<typeAliases>
 		<typeAlias type="dto.admin.MemberDTO" alias="member"/>
 		<typeAlias type="dto.admin.ExerciseDTO" alias="exercise"/>
@@ -15,10 +18,12 @@
 		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
+		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
         <typeAlias alias="WorkoutPlanDTO"   type="dto.member.WorkoutPlanDTO"/>
-        <typeAlias alias="WorkoutRecordDTO" type="dto.member.WorkoutRecordDTO"/>
-        <typeAlias alias="FoodRecordDTO"    type="dto.member.FoodRecordDTO"/>
-        <typeAlias alias="InbodyRecordDTO"  type="dto.member.InbodyRecordDTO"/>
+    	<typeAlias alias="WorkoutLogDTO" 	type="dto.member.WorkoutLogDTO"/>
+    	<typeAlias alias="WorkoutDetailDTO" type="dto.member.WorkoutDetailDTO"/>
+        <typeAlias alias="MealLogDTO"    	type="dto.member.MealLogDTO"/>
+        <typeAlias alias="InbodyLogDTO"  	type="dto.member.InbodyLogDTO"/>
         <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
         <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
         <typeAlias alias="CommunityDTO"     type="dto.member.CommunityDTO"/>
@@ -32,6 +37,7 @@
         <typeAlias alias="SupportDTO"       type="dto.member.SupportDTO"/>
         <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
 		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
+		<typeAlias type="dto.gym.Gym"  alias="gym"/>
 	</typeAliases>
 
 	<environments default="development">
@@ -77,10 +83,11 @@
 
 		<mapper resource="mapper/member/loginMapper.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/>
+		<mapper resource="mapper/member/UserMapper.xml"/>
         <mapper resource="mapper/member/WorkoutPlanMapper.xml"/>
-        <mapper resource="mapper/member/WorkoutRecordMapper.xml"/>
-        <mapper resource="mapper/member/FoodRecordMapper.xml"/>
-        <mapper resource="mapper/member/InbodyRecordMapper.xml"/>
+		<mapper resource="mapper/member/WorkoutRecordMapper.xml"/>
+        <mapper resource="mapper/member/MealLogMapper.xml"/>
+        <mapper resource="mapper/member/InbodyLogMapper.xml"/>
         <mapper resource="mapper/member/PostMapper.xml"/>
         <mapper resource="mapper/member/CommunityMapper.xml"/>
         <mapper resource="mapper/member/PostReactionMapper.xml"/>
