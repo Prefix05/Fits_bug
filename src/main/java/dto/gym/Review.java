@@ -4,6 +4,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class Review {
+	@Override
+	public String toString() {
+		return "Review [reviewNum=" + reviewNum + ", gymId=" + gymId + ", clientId=" + clientId + ", clientName="
+				+ clientName + ", rating=" + rating + ", comment=" + comment + ", createdAt=" + createdAt + ", file="
+				+ file + "]";
+	}
+
 	private int reviewNum;
 	private int gymId;
 	private int clientId;

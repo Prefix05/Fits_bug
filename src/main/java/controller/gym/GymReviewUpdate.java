@@ -25,8 +25,8 @@ public class GymReviewUpdate extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -38,6 +38,13 @@ public class GymReviewUpdate extends HttpServlet {
             String comment = request.getParameter("comment");
 
             GymReviewService service = new GymReviewServiceImpl();
+            
+            Review origin = service.getReview(reviewNum);
+
+            if (origin == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
 
             Review review = new Review();
             review.setReviewNum(reviewNum);
@@ -47,7 +54,7 @@ public class GymReviewUpdate extends HttpServlet {
 
             service.updateReview(review, loginUserId);
 
-            response.sendRedirect(request.getContextPath() + "/gym/main");
+            response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + origin.getGymId());
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);

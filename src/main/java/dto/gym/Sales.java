@@ -125,5 +125,13 @@ public class Sales {
 			this.reason = reason;
 		}
 
+		@Override
+		public String toString() {
+			return "Sales [memberName=" + memberName + ", membershipType=" + membershipType + ", typeRep=" + typeRep
+					+ ", trainerName=" + trainerName + ", paymentDate=" + paymentDate + ", paymentPrice=" + paymentPrice
+					+ ", paymentFee=" + paymentFee + ", netPrice=" + netPrice + ", status=" + status + ", canceledAt="
+					+ canceledAt + ", reason=" + reason + "]";
+		}
+
 	    
 }

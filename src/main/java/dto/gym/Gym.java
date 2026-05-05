@@ -231,4 +231,14 @@ public class Gym {
 	public void setProfileImg(String profileImg) {
 		this.profileImg = profileImg;
 	}
+	@Override
+	public String toString() {
+		return "Gym [id=" + id + ", name=" + name + ", phoneNum=" + phoneNum + ", description=" + description
+				+ ", address=" + address + ", file=" + file + ", rating=" + rating + ", reviewCount=" + reviewCount
+				+ ", backgroundImg=" + backgroundImg + ", brFile=" + brFile + ", addressDetail=" + addressDetail
+				+ ", postcode=" + postcode + ", latitude=" + latitude + ", longitude=" + longitude + ", facility="
+				+ facility + ", userId=" + userId + ", emailId=" + emailId + ", userName=" + userName + ", tel=" + tel
+				+ ", profileImg=" + profileImg + "]";
+	}
+	
 }

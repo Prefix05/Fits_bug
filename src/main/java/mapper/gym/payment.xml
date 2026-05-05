@@ -163,6 +163,7 @@
         SET status = '환불완료',
             canceled_at = NOW()
         WHERE id = #{paymentNum}
+         AND gym_id = #{gymId}
     </update>
 
     <select id="selectCancelRequestList" parameterType="map" resultType="dto.gym.Payment">
@@ -214,12 +215,12 @@
           AND p.status = '취소요청'
     </select>
 
-    <update id="updateCancelApprove" parameterType="int">
-        UPDATE PAYMENT
-        SET status = '취소완료',
-            canceled_at = NOW()
-        WHERE id = #{paymentNum}
-    </update>
+    <update id="updateCancelApprove" parameterType="map">
+    UPDATE PAYMENT
+    SET status = '취소완료'
+    WHERE id = #{paymentNum}
+      AND gym_id = #{gymId}
+</update>
 
     <update id="cancelPtSessionByPayment" parameterType="int">
         UPDATE PT_SESSION ps

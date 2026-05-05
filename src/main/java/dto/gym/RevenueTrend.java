@@ -31,6 +31,11 @@ public class RevenueTrend {
 	public void setMembershipPercent(int membershipPercent) {
 		this.membershipPercent = membershipPercent;
 	}
+	@Override
+	public String toString() {
+		return "RevenueTrend [month=" + month + ", totalPercent=" + totalPercent + ", membershipPercent="
+				+ membershipPercent + "]";
+	}
 	
     
 }

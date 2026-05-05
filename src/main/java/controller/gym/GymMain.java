@@ -48,14 +48,14 @@ public class GymMain extends HttpServlet {
 
 		try {
 
-			HttpSession session = request.getSession(false);
+			String gymIdStr = request.getParameter("gymId");
 
-			if (session == null || session.getAttribute("gymId") == null) {
-				response.sendRedirect(request.getContextPath() + "/login.jsp");
-				return;
-			}
+	        if (gymIdStr == null) {
+	            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "gymId 없음");
+	            return;
+	        }
 
-			int gymId = (int) session.getAttribute("gymId");
+	        int gymId = Integer.parseInt(gymIdStr);
 
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();

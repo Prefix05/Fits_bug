@@ -27,11 +27,13 @@ public class GymTrainerMembers extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("gymId") == null) {
+        if (session == null || session.getAttribute("loginUser") == null ||session.getAttribute("gymId") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("[]");
             return;
         }
+        
+        int gymId = (int) session.getAttribute("gymId");
 
         String trainerIdStr = request.getParameter("trainerId");
 
@@ -59,7 +61,7 @@ public class GymTrainerMembers extends HttpServlet {
         try {
             GymTrainerManageService service = new GymTrainerManageServiceImpl();
 
-            List<TrainerMemberView> list = service.getMembers(trainerId, type);
+            List<TrainerMemberView> list = service.getMembers(trainerId, gymId, type);
 
             if (list == null) {
                 list = java.util.Collections.emptyList();

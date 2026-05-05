@@ -30,7 +30,8 @@ public class GymChangePassword extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("userId") == null) {
+        if (session == null || session.getAttribute("userId") == null ||session.getAttribute("loginUser") == null ||
+        	    session.getAttribute("gymId") == null ) {
             response.getWriter().write("login_required");
             return;
         }

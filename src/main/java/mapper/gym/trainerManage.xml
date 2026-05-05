@@ -96,54 +96,60 @@
 
 
     <!-- 현재 트레이너 회원 목록 -->
-    <select id="selectCurrentTrainerMembers"
-            parameterType="int"
-            resultType="dto.gym.TrainerMemberView">
-        SELECT
-            u.name AS memberName,
-            CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-            (p.total_sessions - p.sessions_used) AS remainingSession,
-            DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-        FROM PT_PACKAGE p
-        JOIN MEMBER m
-          ON p.client_id = m.id
-        JOIN `USER` u
-          ON m.user_id = u.id
-        LEFT JOIN PT_SESSION s
-          ON p.id = s.package_id
-        WHERE p.trainer_id = #{value}
-          AND (p.expires_at IS NULL OR p.expires_at >= NOW())
-        GROUP BY
-            p.id,
-            u.name,
-            p.total_sessions,
-            p.sessions_used
-    </select>
+    <select id="selectCurrentMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+    SELECT
+        u.name AS memberName,
+        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+        (p.total_sessions - p.sessions_used) AS remainingSession,
+        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
+    FROM PT_PACKAGE p
+    JOIN TRAINER t
+      ON p.trainer_id = t.id
+    JOIN MEMBER m
+      ON p.client_id = m.id
+    JOIN `USER` u
+      ON m.user_id = u.id
+    LEFT JOIN PT_SESSION s
+      ON p.id = s.package_id
+    WHERE p.trainer_id = #{trainerId}
+      AND t.gym_id = #{gymId}
+      AND (p.expires_at IS NULL OR p.expires_at >= NOW())
+    GROUP BY
+        p.id,
+        u.name,
+        p.total_sessions,
+        p.sessions_used
+</select>
 
 
     <!-- 과거 트레이너 회원 목록 -->
-    <select id="selectPastTrainerMembers"
-            parameterType="int"
-            resultType="dto.gym.TrainerMemberView">
-        SELECT
-            u.name AS memberName,
-            CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-            (p.total_sessions - p.sessions_used) AS remainingSession,
-            DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-        FROM PT_PACKAGE p
-        JOIN MEMBER m
-          ON p.client_id = m.id
-        JOIN `USER` u
-          ON m.user_id = u.id
-        LEFT JOIN PT_SESSION s
-          ON p.id = s.package_id
-        WHERE p.trainer_id = #{value}
-          AND p.expires_at &lt; NOW()
-        GROUP BY
-            p.id,
-            u.name,
-            p.total_sessions,
-            p.sessions_used
-    </select>
+    <select id="selectPastMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+    SELECT
+        u.name AS memberName,
+        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+        (p.total_sessions - p.sessions_used) AS remainingSession,
+        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
+    FROM PT_PACKAGE p
+    JOIN TRAINER t
+      ON p.trainer_id = t.id
+    JOIN MEMBER m
+      ON p.client_id = m.id
+    JOIN `USER` u
+      ON m.user_id = u.id
+    LEFT JOIN PT_SESSION s
+      ON p.id = s.package_id
+    WHERE p.trainer_id = #{trainerId}
+      AND t.gym_id = #{gymId}
+      AND p.expires_at &lt; NOW()
+    GROUP BY
+        p.id,
+        u.name,
+        p.total_sessions,
+        p.sessions_used
+</select>
 
 </mapper>

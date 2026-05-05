@@ -27,8 +27,9 @@ public class GymDashboard extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("gymId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("gymId") == null ||
+        	    session.getAttribute("loginUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -65,7 +66,7 @@ public class GymDashboard extends HttpServlet {
             e.printStackTrace();
 
             request.setAttribute("msg", "대시보드 조회 중 오류가 발생했습니다.");
-            request.setAttribute("url", request.getContextPath() + "/gym/main");
+            request.setAttribute("url", request.getContextPath() + "/gym/dashboard");
 
             request.getRequestDispatcher("/common/alert.jsp")
                    .forward(request, response);

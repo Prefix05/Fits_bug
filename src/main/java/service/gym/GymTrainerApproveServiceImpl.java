@@ -15,8 +15,8 @@ public class GymTrainerApproveServiceImpl implements GymTrainerApproveService{
 	}
 
 	@Override
-	public void approveTrainer(int trainerId) throws Exception {
-		dao.approveTrainer(trainerId);
+	public void approveTrainer(int trainerId, int gymId) throws Exception {
+		dao.approveTrainer(trainerId, gymId);
 	}
 
 	@Override

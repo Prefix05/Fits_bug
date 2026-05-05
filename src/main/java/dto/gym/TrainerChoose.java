@@ -23,6 +23,10 @@ public class TrainerChoose {
 	public void setTrainerName(String trainerName) {
 		this.trainerName = trainerName;
 	}
+	@Override
+	public String toString() {
+		return "TrainerChoose [trainerId=" + trainerId + ", trainerName=" + trainerName + "]";
+	}
     
 
 }

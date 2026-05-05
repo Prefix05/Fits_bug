@@ -23,5 +23,9 @@ public class MembershipDistribution {
 	public void setPercent(int percent) {
 		this.percent = percent;
 	}
+	@Override
+	public String toString() {
+		return "MembershipDistribution [month=" + month + ", percent=" + percent + "]";
+	}
     
 }

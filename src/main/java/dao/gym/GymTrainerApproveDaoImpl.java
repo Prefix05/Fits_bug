@@ -1,6 +1,8 @@
 package dao.gym;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -20,17 +22,24 @@ public class GymTrainerApproveDaoImpl implements GymTrainerApproveDao{
 	}
 
 	@Override
-	public void approveTrainer(int trainerId) throws Exception {
+	public void approveTrainer(int trainerId, int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			session.update("mapper.trainerApprove.approveTrainer", trainerId);
-			session.commit();
-		} catch (Exception e) {
-	        session.rollback(); 
+
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("trainerId", trainerId);
+	        param.put("gymId", gymId);
+
+	        session.update("mapper.trainerApprove.approveTrainer", param);
+	        session.commit();
+
+	    } catch (Exception e) {
+	        session.rollback();
 	        throw e;
-		}finally {
-			session.close();
-		}
+
+	    } finally {
+	        session.close();
+	    }
 		
 	}
 

@@ -22,10 +22,11 @@
     ORDER BY t.id DESC
 </select>
 
-<update id="approveTrainer" parameterType="int">
+<update id="approveTrainer" parameterType="map">
     UPDATE TRAINER
     SET approval_status = 'APPROVED'
-    WHERE id = #{value}
+    WHERE id = #{trainerId}
+      AND gym_id = #{gymId}
 </update>
 
 <select id="selectApprovedTrainerList"

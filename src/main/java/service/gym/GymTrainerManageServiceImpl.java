@@ -15,22 +15,22 @@ public class GymTrainerManageServiceImpl implements GymTrainerManageService {
 	private TrainerManageDao dao = new TrainerManageDaoImpl();
 
     @Override
-    public List<TrainerMemberView> getCurrentMembers(int trainerId) throws Exception{
-        return dao.selectCurrentMembers(trainerId);
+    public List<TrainerMemberView> getCurrentMembers(int trainerId, int gymId) throws Exception{
+        return dao.selectCurrentMembers(trainerId,gymId);
     }
 
     @Override
-    public List<TrainerMemberView> getPastMembers(int trainerId) throws Exception{
-        return dao.selectPastMembers(trainerId);
+    public List<TrainerMemberView> getPastMembers(int trainerId, int gymId) throws Exception{
+        return dao.selectPastMembers(trainerId, gymId);
     }
 
     @Override
-    public List<TrainerMemberView> getMembers(int trainerId, String type) throws Exception{
-        if ("past".equals(type)) {
-            return getPastMembers(trainerId);
+    public List<TrainerMemberView> getMembers(int trainerId, int gymId, String type) throws Exception{
+    	if ("past".equals(type)) {
+            return dao.selectPastMembers(trainerId, gymId);
         }
 
-        return getCurrentMembers(trainerId);
+        return dao.selectCurrentMembers(trainerId, gymId);
     }
 
 	@Override

@@ -156,6 +156,17 @@ public class Dashboard {
 	public void setHotTimeList(List<HotTime> hotTimeList) {
 		this.hotTimeList = hotTimeList;
 	}
+	@Override
+	public String toString() {
+		return "Dashboard [newMemberCount=" + newMemberCount + ", totalRevenue=" + totalRevenue + ", membershipRevenue="
+				+ membershipRevenue + ", ptRevenue=" + ptRevenue + ", todayScheduleList=" + todayScheduleList
+				+ ", weeklyVisitList=" + weeklyVisitList + ", topTrainerList=" + topTrainerList
+				+ ", newMemberGrowthRate=" + newMemberGrowthRate + ", totalRevenueGrowthRate=" + totalRevenueGrowthRate
+				+ ", membershipGrowthRate=" + membershipGrowthRate + ", ptGrowthRate=" + ptGrowthRate + ", todayDate="
+				+ todayDate + ", weekStart=" + weekStart + ", weekEnd=" + weekEnd + ", membershipDistributionList="
+				+ membershipDistributionList + ", revenueTrendList=" + revenueTrendList + ", hotTimeList=" + hotTimeList
+				+ "]";
+	}
 	
 	
     

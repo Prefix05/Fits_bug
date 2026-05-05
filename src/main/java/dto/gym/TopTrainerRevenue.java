@@ -41,6 +41,11 @@ public class TopTrainerRevenue {
 	public void setTrainerId(Integer trainerId) {
 		this.trainerId = trainerId;
 	}
+	@Override
+	public String toString() {
+		return "TopTrainerRevenue [trainerName=" + trainerName + ", sessionCount=" + sessionCount + ", revenue="
+				+ revenue + ", trainerId=" + trainerId + "]";
+	}
 	
 	 
 	 
