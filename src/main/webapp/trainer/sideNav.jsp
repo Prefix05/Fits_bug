@@ -3,7 +3,7 @@
 <c:set var="ap" value="${activePage}"/>
 
 <aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
+    <a href="javascript:void(0)" class="flex items-center gap-3 mb-10">
         <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
             <span class="material-symbols-outlined text-white text-2xl">exercise</span>
         </div>
@@ -34,14 +34,14 @@
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm transition-colors duration-200 rounded-lg
                   ${ap == 'messages' ? 'font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50' : 'font-medium text-slate-500 hover:bg-slate-200/50'}"
-           href="">
+           href="javascript:void(0)">
             <span class="material-symbols-outlined">chat</span>메시지
         </a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm transition-colors duration-200 rounded-lg
                   ${ap == 'payments' ? 'font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50' : 'font-medium text-slate-500 hover:bg-slate-200/50'}"
-           href="">
+           href="${pageContext.request.contextPath}/trainer/earnings">
             <span class="material-symbols-outlined">payments</span>수익
         </a>
 
@@ -49,32 +49,27 @@
 
         <!-- 홈 -->
         <div class="relative">
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="this.parentElement.querySelector('.dropdown').classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180');"
-               href="#">
+            <button class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer"
+                    onclick="var d=this.parentElement.querySelector('.dropdown');var open=d.style.maxHeight&&d.style.maxHeight!='0px';d.style.maxHeight=open?'0px':d.scrollHeight+'px';this.querySelector('.chevron').style.transform=open?'':'rotate(180deg)';">
                 <span class="material-symbols-outlined">home</span>
                 홈
                 <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron" style="font-size:18px">expand_more</span>
-            </a>
-            <div class="dropdown hidden flex-col pl-4">
+            </button>
+            <div class="dropdown flex-col pl-4 overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0px">
                 <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-<%--                   href="${pageContext.request.contextPath}/member/guide"--%>
-                >
+                   href="${pageContext.request.contextPath}/member/guide">
                     <span class="material-symbols-outlined">info</span>운동가이드
                 </a>
                 <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-<%--                   href="${pageContext.request.contextPath}/member/gymList"--%>
-                >
+                   href="${pageContext.request.contextPath}/member/gymList">
                     <span class="material-symbols-outlined">fitness_center</span>헬스장
                 </a>
                 <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-<%--                   href="${pageContext.request.contextPath}/member/trainerList"--%>
-                >
+                   href="${pageContext.request.contextPath}/member/trainerList">
                     <span class="material-symbols-outlined">badge</span>트레이너
                 </a>
                 <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-<%--                   href="${pageContext.request.contextPath}/member/community"--%>
-                >
+                   href="${pageContext.request.contextPath}/member/community">
                     <span class="material-symbols-outlined">groups</span>커뮤니티
                 </a>
             </div>

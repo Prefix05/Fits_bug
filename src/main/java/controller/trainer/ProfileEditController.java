@@ -103,7 +103,7 @@ public class ProfileEditController extends HttpServlet {
                 String original = Paths.get(profileImagePart.getSubmittedFileName()).getFileName().toString();
                 profileImageFileName = "profile_" + loginUser.getId() + "_" + original;
                 profileImagePart.write(uploadDir + File.separator + profileImageFileName);
-                loginUser.setProfileImg(profileImageFileName);
+//                loginUser.setProfileImg(profileImageFileName);
             }
 
             // 3. Update trainer description + specializations + traits + profile image
