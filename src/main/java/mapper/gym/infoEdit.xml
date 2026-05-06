@@ -24,7 +24,7 @@
         u.email AS emailId,
         u.name AS userName,
         u.tel,
-        u.profile_img AS profileImg
+        u.profile_image AS profileImg
     FROM GYM g
     JOIN `USER` u ON g.user_id = u.id
     WHERE g.id = #{gymId}
@@ -53,8 +53,8 @@
     SET
         email = #{emailId},
         name = #{userName},
-        tel = #{tel},
-        profile_img = #{profileImg}
+        phone = #{phone},
+        profile_image = #{profileImg}
     WHERE id = #{userId}
 </update>
 

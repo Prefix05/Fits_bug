@@ -1,85 +1,61 @@
 package dto.member;
 
+/**
+ * ↔ INBODY_LOG 테이블
+ * id, member_id, record_date, weight, muscle_mass, body_fat, img
+ *
+ * 변경: email → memberId (FK 기준)
+ *       muscle → muscleMass (DB: muscle_mass)
+ *       fat → bodyFat (DB: body_fat)
+ *       imagePath → img (DB: img)
+ */
 public class InbodyLogDTO {
-	private int id;
-    private String email;
-    private double weight;       // 체중
-    private double muscle;       // 골격근량
-    private double fat;          // 체지방량
-    private String imagePath;    
-    private String recordDate;
-    
-	public InbodyLogDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
-	public InbodyLogDTO(int id, String email, double weight, double muscle, double fat, String imagePath,
-			String recordDate) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.weight = weight;
-		this.muscle = muscle;
-		this.fat = fat;
-		this.imagePath = imagePath;
-		this.recordDate = recordDate;
-	}
+    private int    id;
+    private int    memberId;    // member_id (FK → MEMBER.id)
+    private String recordDate;  // record_date (DATE)
+    private double weight;
+    private double muscleMass;  // DB: muscle_mass
+    private double bodyFat;     // DB: body_fat
+    private String img;         // DB: img
 
-	public int getId() {
-		return id;
-	}
+    // ── 화면 표시용 (JOIN용) ─────────────────────────────────────
+    private String email;       // USER.email (JOIN용)
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public InbodyLogDTO() {}
 
-	public String getEmail() {
-		return email;
-	}
+    public InbodyLogDTO(int id, int memberId, String recordDate,
+                        double weight, double muscleMass, double bodyFat, String img) {
+        this.id         = id;
+        this.memberId   = memberId;
+        this.recordDate = recordDate;
+        this.weight     = weight;
+        this.muscleMass = muscleMass;
+        this.bodyFat    = bodyFat;
+        this.img        = img;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-	public double getWeight() {
-		return weight;
-	}
+    public int getMemberId() { return memberId; }
+    public void setMemberId(int memberId) { this.memberId = memberId; }
 
-	public void setWeight(double weight) {
-		this.weight = weight;
-	}
+    public String getRecordDate() { return recordDate; }
+    public void setRecordDate(String recordDate) { this.recordDate = recordDate; }
 
-	public double getMuscle() {
-		return muscle;
-	}
+    public double getWeight() { return weight; }
+    public void setWeight(double weight) { this.weight = weight; }
 
-	public void setMuscle(double muscle) {
-		this.muscle = muscle;
-	}
+    public double getMuscleMass() { return muscleMass; }
+    public void setMuscleMass(double muscleMass) { this.muscleMass = muscleMass; }
 
-	public double getFat() {
-		return fat;
-	}
+    public double getBodyFat() { return bodyFat; }
+    public void setBodyFat(double bodyFat) { this.bodyFat = bodyFat; }
 
-	public void setFat(double fat) {
-		this.fat = fat;
-	}
+    public String getImg() { return img; }
+    public void setImg(String img) { this.img = img; }
 
-	public String getImagePath() {
-		return imagePath;
-	}
-
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
-	}
-
-	public String getRecordDate() {
-		return recordDate;
-	}
-
-	public void setRecordDate(String recordDate) {
-		this.recordDate = recordDate;
-	}
-    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

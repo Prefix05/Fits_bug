@@ -19,14 +19,12 @@
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
-        <typeAlias alias="WorkoutPlanDTO"   type="dto.member.WorkoutPlanDTO"/>
     	<typeAlias alias="WorkoutLogDTO" 	type="dto.member.WorkoutLogDTO"/>
     	<typeAlias alias="WorkoutDetailDTO" type="dto.member.WorkoutDetailDTO"/>
         <typeAlias alias="MealLogDTO"    	type="dto.member.MealLogDTO"/>
         <typeAlias alias="InbodyLogDTO"  	type="dto.member.InbodyLogDTO"/>
         <typeAlias alias="PostDTO"          type="dto.member.PostDTO"/>
         <typeAlias alias="CommentDTO"       type="dto.member.CommentDTO"/>
-        <typeAlias alias="CommunityDTO"     type="dto.member.CommunityDTO"/>
         <typeAlias alias="MessageDTO"       type="dto.member.MessageDTO"/>
         <typeAlias alias="MessageRoomDTO"   type="dto.member.MessageRoomDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
@@ -77,18 +75,16 @@
 		<mapper resource="mapper/gym/infoEdit.xml"/>
 
 		<mapper resource="mapper/gym/payment.xml"/>
-		<mapper resource="mapper/member/MemberMapper.xml"/> 
+		<mapper resource="mapper/gym/gymDetailCard.xml"/>
+		<mapper resource="mapper/member/MemberMapper.xml"/>
 
 
-		<mapper resource="mapper/member/loginMapper.xml"/>
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/member/UserMapper.xml"/>
-        <mapper resource="mapper/member/WorkoutPlanMapper.xml"/>
-		<mapper resource="mapper/member/WorkoutRecordMapper.xml"/>
+		<mapper resource="mapper/member/WorkoutLogMapper.xml"/>
         <mapper resource="mapper/member/MealLogMapper.xml"/>
         <mapper resource="mapper/member/InbodyLogMapper.xml"/>
         <mapper resource="mapper/member/PostMapper.xml"/>
-        <mapper resource="mapper/member/CommunityMapper.xml"/>
         <mapper resource="mapper/member/PostReactionMapper.xml"/>
         <mapper resource="mapper/member/CommentMapper.xml"/>
         <mapper resource="mapper/member/MessageMapper.xml"/>
@@ -111,6 +107,8 @@
 		<mapper resource="mapper/trainer/payout_account.xml"/>
 		<mapper resource="mapper/trainer/certification.xml"/>
 		<mapper resource="mapper/trainer/pricing_availability.xml"/>
+		<mapper resource="mapper/trainer/settlement.xml"/>
+		<mapper resource="mapper/trainer/order.xml"/>
 
 	</mappers>
 </configuration>

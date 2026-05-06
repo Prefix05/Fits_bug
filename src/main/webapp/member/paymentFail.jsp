@@ -68,7 +68,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
     <button onclick="location.href='main'" style="width:100%;padding:12px;border-radius:99px;border:1.5px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">
       홈으로 돌아가기
     </button>
-    <a href="support.jsp" style="display:block;font-size:13px;color:#FF6B35;text-decoration:none;font-weight:700;margin-top:4px;">고객센터에 문의하기 →</a>
+    <a href="<%=request.getContextPath()%>/member/support" style="display:block;font-size:13px;color:#FF6B35;text-decoration:none;font-weight:700;margin-top:4px;">고객센터에 문의하기 →</a>
   </div>
 
 </div>

@@ -4,31 +4,65 @@
 
 <mapper namespace="mapper.PaymentMapper">
 
+    <!--
+        PAYMENT 테이블 컬럼:
+        id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+        payment_date, payment_price, payment_fee, method,
+        status, payment_type, canceled_at, reason
+
+        수정: 이전 orderId/email/amount/productName 구조 → 전체 컬럼으로 재작성
+    -->
     <resultMap id="paymentResultMap" type="dto.member.PaymentDTO">
-        <id     property="orderId"     column="order_id"/>
-        <result property="email"       column="email"/>
-        <result property="amount"      column="amount"/>
-        <result property="productName" column="product_name"/>
-        <result property="status"      column="status"/>
+        <id     property="id"           column="id"/>
+        <result property="userId"       column="user_id"/>
+        <result property="userName"     column="user_name"/>
+        <result property="membershipId" column="membership_id"/>
+        <result property="mrId"         column="mr_id"/>
+        <result property="gymId"        column="gym_id"/>
+        <result property="trainerId"    column="trainer_id"/>
+        <result property="paymentDate"  column="payment_date"/>
+        <result property="paymentPrice" column="payment_price"/>
+        <result property="paymentFee"   column="payment_fee"/>
+        <result property="method"       column="method"/>
+        <result property="status"       column="status"/>
+        <result property="paymentType"  column="payment_type"/>
+        <result property="canceledAt"   column="canceled_at"/>
+        <result property="reason"       column="reason"/>
     </resultMap>
 
-    <!-- ──────────────────────────────────────────────────────
-         PaymentDAOImpl.insert(PaymentDTO dto)
-         → param: PaymentDTO
-         ────────────────────────────────────────────────────── -->
-    <insert id="insert" parameterType="PaymentDTO">
-        INSERT INTO payment (order_id, email, amount, product_name, status)
-        VALUES (#{orderId}, #{email}, #{amount}, #{productName}, #{status})
+    <!-- 결제 저장 -->
+    <insert id="insert" parameterType="dto.member.PaymentDTO">
+        INSERT INTO PAYMENT (
+            user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+            payment_date, payment_price, payment_fee, method, status, payment_type
+        ) VALUES (
+            #{userId}, #{userName}, #{membershipId}, #{mrId}, #{gymId}, #{trainerId},
+            NOW(), #{paymentPrice}, #{paymentFee}, #{method}, #{status}, #{paymentType}
+        )
     </insert>
 
-    <!-- ──────────────────────────────────────────────────────
-         PaymentDAOImpl.updateStatus(String orderId, String status)
-         → Map 키: orderId / status
-         ────────────────────────────────────────────────────── -->
+    <!-- 결제 상태 변경 -->
     <update id="updateStatus" parameterType="map">
-        UPDATE payment
-        SET status   = #{status}
-        WHERE order_id = #{orderId}
+        UPDATE PAYMENT SET status = #{status} WHERE id = #{id}
     </update>
+
+    <!-- 취소 처리 -->
+    <update id="cancel" parameterType="map">
+        UPDATE PAYMENT
+        SET status     = '취소완료',
+            canceled_at = NOW(),
+            reason      = #{reason}
+        WHERE id = #{id}
+    </update>
+
+    <!-- user_id로 결제 내역 조회 -->
+    <select id="findByUserId" parameterType="int" resultMap="paymentResultMap">
+        SELECT id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+               payment_date, payment_price, payment_fee, method, status, payment_type,
+               canceled_at, reason
+        FROM PAYMENT
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+    </select>
 
 </mapper>

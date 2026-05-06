@@ -16,45 +16,9 @@
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
 
-<!-- Sidebar -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 z-20 flex flex-col p-6">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard">
-            <span class="material-symbols-outlined">dashboard</span>대시보드</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients">
-            <span class="material-symbols-outlined">group</span>회원 관리</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">calendar_today</span>일정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">chat</span>메시지</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">payments</span>수익</a>
-    </nav>
-    <div class="mt-auto pt-6 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">settings</span>설정</a>
-        <div class="border-t border-slate-200 my-2"></div>
-    </div>
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50">
-        <img alt="프로필" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg
-                     ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg)
-                     : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-blue-700 truncate">${sessionScope.loginUser.name}</p>
-            <p class="text-xs text-blue-500 truncate">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="profile" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <!-- Main -->
 <main class="lg:pl-64 min-h-screen">
@@ -128,6 +92,95 @@
                     <input type="tel" name="tel" value="${sessionScope.loginUser.tel}"
                            class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
                            placeholder="010-0000-0000"/>
+                </div>
+
+            </section>
+
+            <!-- Section 1b: Trainer Type & Gym/Address -->
+            <section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm space-y-5 border border-surface-variant/30">
+                <h3 class="text-base font-bold text-on-surface flex items-center gap-2 pb-4 border-b border-surface-container">
+                    <span class="material-symbols-outlined text-primary">badge</span>활동 유형 및 위치
+                </h3>
+
+                <!-- Trainer Type -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">트레이너 유형</label>
+                    <div class="flex gap-2">
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="GYM_EMPLOYED" class="hidden type-radio"
+                                   ${trainer.trainerType == 'GYM_EMPLOYED' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">apartment</span>헬스장 소속
+                            </span>
+                        </label>
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="GYM_RENTAL" class="hidden type-radio"
+                                   ${trainer.trainerType == 'GYM_RENTAL' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">store</span>독립 운영 (임대)
+                            </span>
+                        </label>
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="FREELANCE" class="hidden type-radio"
+                                   ${trainer.trainerType == 'FREELANCE' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">person_pin</span>프리랜서
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gym section (GYM_EMPLOYED / GYM_RENTAL) -->
+                <div id="gym-section" class="space-y-3">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">헬스장 코드</label>
+
+                    <c:if test="${not empty currentGym}">
+                        <div class="flex items-center gap-3 px-4 py-3 bg-primary/5 rounded-xl border border-primary/20">
+                            <span class="material-symbols-outlined text-primary text-base">fitness_center</span>
+                            <div>
+                                <p class="text-sm font-bold text-on-surface">${currentGym.name}</p>
+                                <p class="text-xs text-on-surface-variant">현재 소속 · 코드: <span class="font-mono font-bold">${currentGym.gymCode}</span></p>
+                            </div>
+                        </div>
+                    </c:if>
+
+                    <div class="flex gap-2">
+                        <input type="text" id="gymCodeInput" name="gymCode"
+                               class="flex-1 px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 font-mono"
+                               placeholder="새 헬스장 코드 입력"/>
+                        <button type="button" onclick="lookupGym()"
+                                class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors">
+                            확인
+                        </button>
+                    </div>
+                    <div id="gym-lookup-result" class="hidden"></div>
+
+                    <!-- Address (filled from gym, read-only) -->
+                    <div class="space-y-2 pt-1">
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">헬스장 주소 (자동 입력)</label>
+                        <input type="text" id="addressInput" name="address" value="${trainer.address}" readonly
+                               class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-sm text-on-surface-variant outline-none cursor-not-allowed"
+                               placeholder="헬스장 코드 확인 시 자동 입력"/>
+                        <input type="text" id="addressDetailInput" name="addressDetail" value="${trainer.addressDetail}" readonly
+                               class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-sm text-on-surface-variant outline-none cursor-not-allowed"
+                               placeholder="상세 주소"/>
+                    </div>
+                    <input type="hidden" id="gymLatInput"  name="latitude"  value="${trainer.latitude}"/>
+                    <input type="hidden" id="gymLngInput"  name="longitude" value="${trainer.longitude}"/>
+                </div>
+
+                <!-- Address section (FREELANCE) -->
+                <div id="freelance-section" class="space-y-2">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">활동 주소</label>
+                    <input type="text" id="freelanceAddress" name="address" value="${trainer.address}"
+                           class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
+                           placeholder="도로명 주소"/>
+                    <input type="text" id="freelanceAddressDetail" name="addressDetail" value="${trainer.addressDetail}"
+                           class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
+                           placeholder="상세 주소 (동, 호수 등)"/>
                 </div>
             </section>
 
@@ -302,6 +355,72 @@
 </template>
 
 <script>
+    // ── Trainer type toggle ────────────────────────────────────────────────
+    const typeRadios = document.querySelectorAll('.type-radio');
+    const gymSection = document.getElementById('gym-section');
+    const freelanceSection = document.getElementById('freelance-section');
+
+    function updateTypeUI() {
+        const selected = document.querySelector('.type-radio:checked');
+        const val = selected ? selected.value : '';
+        const isGymBased = val === 'GYM_EMPLOYED' || val === 'GYM_RENTAL';
+
+        gymSection.style.display = isGymBased ? '' : 'none';
+        freelanceSection.style.display = isGymBased ? 'none' : '';
+
+        // Disable inputs in the hidden section so they don't submit
+        gymSection.querySelectorAll('input[name="address"], input[name="addressDetail"]')
+            .forEach(i => i.disabled = !isGymBased);
+        freelanceSection.querySelectorAll('input[name="address"], input[name="addressDetail"]')
+            .forEach(i => i.disabled = isGymBased);
+
+        // Style radio labels
+        document.querySelectorAll('.type-radio').forEach(r => {
+            const label = r.nextElementSibling;
+            if (r.checked) {
+                label.classList.add('bg-primary', 'text-white', 'border-primary');
+                label.classList.remove('border-outline-variant/40', 'text-on-surface-variant', 'bg-surface-container-low');
+                label.querySelector('.material-symbols-outlined').style.color = 'white';
+            } else {
+                label.classList.remove('bg-primary', 'text-white', 'border-primary');
+                label.classList.add('border-outline-variant/40', 'text-on-surface-variant', 'bg-surface-container-low');
+                label.querySelector('.material-symbols-outlined').style.color = '';
+            }
+        });
+    }
+
+    typeRadios.forEach(r => r.addEventListener('change', updateTypeUI));
+    updateTypeUI(); // init on page load
+
+    // ── Gym code lookup ────────────────────────────────────────────────────
+    function lookupGym() {
+        const code = document.getElementById('gymCodeInput').value.trim();
+        const result = document.getElementById('gym-lookup-result');
+        if (!code) return;
+
+        fetch('${pageContext.request.contextPath}/trainer/gymLookup?code=' + encodeURIComponent(code))
+            .then(r => r.json())
+            .then(data => {
+                if (data.found) {
+                    document.getElementById('addressInput').value = data.address || '';
+                    document.getElementById('addressDetailInput').value = data.addressDetail || '';
+                    document.getElementById('gymLatInput').value = data.latitude || '';
+                    document.getElementById('gymLngInput').value = data.longitude || '';
+                    result.className = 'flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-700';
+                    result.innerHTML = '<span class="material-symbols-outlined text-base">check_circle</span><span><strong>' + data.name + '</strong> 확인됨</span>';
+                } else {
+                    result.className = 'flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700';
+                    result.innerHTML = '<span class="material-symbols-outlined text-base">error</span>유효하지 않은 헬스장 코드입니다.';
+                }
+                result.classList.remove('hidden');
+            });
+    }
+
+    // Also trigger lookup on Enter key in gym code input
+    document.getElementById('gymCodeInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); lookupGym(); }
+    });
+
     // ── Checkbox toggle styling ────────────────────────────────────────────
     function initCheckboxes(cbClass, labelClass, selectedList) {
         const selected = new Set(selectedList);

@@ -203,7 +203,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;color:#1A
   <div class="section">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
       <div class="section-title">🔥 핫한 오운완</div>
-      <a href="<%=contextPath%>/community.jsp" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;">커뮤니티 →</a>
+      <a href="<%=contextPath%>/member/community" style="font-size:13px;font-weight:700;color:#FF6B35;text-decoration:none;">커뮤니티 →</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
       <% String[][] posts={{"벤치 100kg 달성! 🔥","근육왕철수","34","12"},{"스쿼트 120kg 오운완 💪","헬창여왕","28","9"},{"다이어트 -10kg 성공 🥗","날씬해져요","52","21"}};

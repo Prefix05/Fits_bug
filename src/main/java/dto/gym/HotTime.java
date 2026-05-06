@@ -49,4 +49,11 @@ public class HotTime {
     public void setHeightPercent(int heightPercent) {
         this.heightPercent = heightPercent;
     }
+
+	@Override
+	public String toString() {
+		return "HotTime [dayName=" + dayName + ", hour=" + hour + ", visitCount=" + visitCount + ", heightPercent="
+				+ heightPercent + "]";
+	}
+    
 }

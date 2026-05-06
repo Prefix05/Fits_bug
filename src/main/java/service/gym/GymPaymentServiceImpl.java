@@ -47,8 +47,8 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	}
 
 	@Override
-	public void approveRefund(int paymentNum) throws Exception {
-		dao.approveRefund(paymentNum);
+	public void approveRefund(int paymentNum, int gymId) throws Exception {
+		dao.approveRefund(paymentNum, gymId);
 	    dao.cancelPtSessionByPayment(paymentNum);
 	}
 
@@ -68,8 +68,8 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 	}
 
 	@Override
-	public void approveCancel(int paymentNum) throws Exception {
-		dao.updateCancelApprove(paymentNum);
+	public void approveCancel(int paymentNum, int gymId) throws Exception {
+		dao.updateCancelApprove(paymentNum, gymId);
 		dao.cancelPtSessionByPayment(paymentNum);
 	}
 

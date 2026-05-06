@@ -96,5 +96,12 @@ public class MemberManage {
 	public void setRemainPtCount(int remainPtCount) {
 		this.remainPtCount = remainPtCount;
 	}
+	@Override
+	public String toString() {
+		return "MemberManage [memberId=" + memberId + ", memberName=" + memberName + ", tel=" + tel + ", membershipNum="
+				+ membershipNum + ", membershipType=" + membershipType + ", typeRep=" + typeRep + ", startDate="
+				+ startDate + ", endDate=" + endDate + ", status=" + status + ", usedPtCount=" + usedPtCount
+				+ ", remainPtCount=" + remainPtCount + "]";
+	}
     
 }

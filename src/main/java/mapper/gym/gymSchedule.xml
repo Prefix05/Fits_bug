@@ -48,7 +48,7 @@
             ),
             ''
         ) AS specialization
-    FROM PT_SESSION ps
+    FROM Lesson ps
     JOIN TRAINER t
       ON ps.trainer_id = t.id
     JOIN `USER` trainer_user
@@ -57,7 +57,7 @@
       ON ps.client_id = m.id
     JOIN `USER` client_user
       ON m.user_id = client_user.id
-    LEFT JOIN SPECIALIZATION s
+    LEFT JOIN TRAINER_SPECIALIZATION s
       ON ps.trainer_id = s.trainer_id
     WHERE t.gym_id = #{gymId}
       AND ps.lesson_date >= #{weekStart}

@@ -189,98 +189,9 @@
     </a>
 </nav>
 
-<!-- SideNavBar Shell -->
-<aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1" id="main-nav">
-
-        <!-- 공통 nav item -->
-        <!-- 내주변 -->
-        <div class="relative">
-            <!-- Parent toggle -->
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="
-                        this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                        this.querySelector('.chevron').classList.toggle('rotate-180');
-                    " href="#">
-                <span class="material-symbols-outlined">distance</span>
-                내주변
-                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
-                      style="font-size:18px">expand_more</span>
-            </a>
-
-            <!-- Dropdown children -->
-            <div class="dropdown hidden flex-col pl-4">
-                <!-- 헬스장 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
-                    헬스장
-                </a>
-                <!-- 트레이너 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">person</span>
-                    트레이너
-                </a>
-            </div>
-        </div>
-
-        <!-- 대시보드 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드</a>
-
-        <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200"
-           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
-
-        <!-- 일정 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정</a>
-
-        <!-- 메시지 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
-
-        <!-- 수익 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
-    </nav>
-
-    <!--설정, 고객 지원-->
-    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
-            설정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
-            지원</a>
-        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
-    </div>
-
-    <!-- 마이프로필 -->
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
-        <img alt="profile image" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
-             style=""/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">${sessionScope.loginTrainer.name}</p>
-            <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="dashboard" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <!-- Main Content Shell -->
 <main class="lg:ml-64 min-h-screen flex flex-col pt-20 lg:pt-8 pb-20 lg:pb-0">
@@ -385,14 +296,14 @@
             </div>
         </section>
         <!-- Grid Layout for Tools & Stats -->
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 min-h-0 items-start w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1 min-h-0 w-full">
             <!-- 2. Today's Schedule (2/3 width) -->
             <div class="lg:col-span-2 flex flex-col">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-xl font-semibold text-on-surface">오늘의 일정</h3>
                     <a class="text-xs font-bold text-primary hover:underline" href="#">캘린더 보기</a>
                 </div>
-                <div class="space-y-3 overflow-y-auto schedule-scrollbar h-[250px] md:h-[280px] lg:h-[320px] xl:h-[535px]">
+                <div class="space-y-3 overflow-y-auto schedule-scrollbar max-h-[250px] md:max-h-[280px] lg:h-[320px] xl:h-[535px]">
                     <c:choose>
                         <%-- 수업이 없을 때 빈 상태 표시 --%>
                         <c:when test="${empty todayLessons}">
@@ -443,13 +354,13 @@
             <!-- 3. Sidebar Tools & Notifications (1/3 width) -->
             <div class="flex flex-col space-y-8">
                 <!-- Notifications Panel -->
-                <section class="flex flex-col flex-1 min-h-0 w-full">
+                <section class="flex flex-col flex-1 min-h-0 w-full h-full">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-on-surface">알림</h3>
                         <button id="notifications-mark-all" class="text-xs font-bold text-primary hover:underline">모두 읽음으로 표시</button>
                     </div>
                     <div
-                            class="bg-surface-container-low rounded-2xl overflow-hidden flex flex-col shadow-sm max-h-[540px]">
+                            class="bg-surface-container-low rounded-2xl overflow-hidden flex flex-col shadow-sm flex-1 max-h-[540px]">
                         <div id="notifications-list" class="overflow-y-auto schedule-scrollbar">
                             <c:choose>
                                 <c:when test="${empty notifications}">

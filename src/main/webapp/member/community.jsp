@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dto.member.MemberDTO" %>
+<%@ page import="dto.member.UserDTO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-  MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+  UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
   String nickname = (loginUser != null) ? loginUser.getNickname() : "";
 %>
 <!DOCTYPE html>
@@ -99,24 +99,37 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </div>
   </div>
 
-  <!-- 오운완 스트릭 카드 -->
+  <!-- 오운완 스트릭 카드 (DB 기반 - CompleteController에서 weekLog/streak/best attribute 제공) -->
+  <%
+    int[] weekLog = (int[]) request.getAttribute("weekLog");   // 7칸 배열 (0=월~6=일)
+    int streak    = request.getAttribute("streak") != null ? (int) request.getAttribute("streak") : 0;
+    int best      = request.getAttribute("best")   != null ? (int) request.getAttribute("best")   : 0;
+    if (weekLog == null) weekLog = new int[7];
+    int remaining = Math.max(0, 7 - streak);
+  %>
   <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
     <div style="display:flex;align-items:center;gap:18px;">
       <div style="width:52px;height:52px;background:linear-gradient(135deg,#FFF3EE,#FFE5D5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">🔥</div>
       <div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-size:17px;font-weight:900;color:#FF6B35;">5일 연속 오운완!</span>
-          <span style="font-size:12px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">최고 기록: 14일</span>
+          <span style="font-size:17px;font-weight:900;color:#FF6B35;">
+            <%=streak%>일 연속 오운완!
+          </span>
+          <span style="font-size:12px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">
+            최고 기록: <%=best%>일
+          </span>
         </div>
         <div style="display:flex;gap:10px;margin-top:12px;">
-          <% String[] daysKR = {"월","화","수","목","금","토","일"};
-             boolean[] done  = {true,true,true,true,true,false,false};
-             for(int i=0;i<7;i++){ %>
+          <%
+            String[] daysKR = {"월","화","수","목","금","토","일"};
+            for (int i = 0; i < 7; i++) {
+              boolean done = weekLog[i] > 0;
+          %>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div class="streak-dot <%= done[i] ? "done" : "empty" %>">
-              <%= done[i] ? "✔" : "" %>
+            <div class="streak-dot <%=done ? "done" : "empty"%>">
+              <%=done ? "✔" : ""%>
             </div>
-            <span style="font-size:10px;color:#9DA8C0;font-weight:600;"><%= daysKR[i] %></span>
+            <span style="font-size:10px;color:#9DA8C0;font-weight:600;"><%=daysKR[i]%></span>
           </div>
           <% } %>
         </div>
@@ -124,7 +137,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </div>
     <div style="text-align:right;">
       <div style="font-size:13px;color:#9DA8C0;">이번주 목표까지</div>
-      <div style="font-size:20px;font-weight:900;color:#FF6B35;margin-top:2px;">2일 남음</div>
+      <div style="font-size:20px;font-weight:900;color:#FF6B35;margin-top:2px;"><%=remaining%>일 남음</div>
     </div>
   </div>
 

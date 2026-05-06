@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.LoginDTO;
+import dto.member.UserDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
@@ -28,7 +28,7 @@ public class PaymentActionController extends HttpServlet {
             return;
         }
 
-        LoginDTO user = (LoginDTO) session.getAttribute("loginUser");
+        UserDTO user = (UserDTO) session.getAttribute("loginUser");
         if(user == null){
             resp.getWriter().write("not_login");
             return;

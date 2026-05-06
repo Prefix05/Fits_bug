@@ -10,8 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <%-- Kakao Maps JS SDK — replace YOUR_KAKAO_APPKEY with your JavaScript key from developers.kakao.com --%>
-    <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_APPKEY&autoload=false"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?19743c7131c8d369e6b723f116371fa7"></script>
+
+<%--    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_APPKEY&autoload=false"></script>--%>
     <script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-container": "#c64f00", "error-container": "#ffdad6", "primary-fixed": "#d8e2ff", "on-primary-fixed-variant": "#004493", surface: "#f9f9fe", "secondary-fixed-dim": "#adc6ff", "secondary-fixed": "#d8e2ff", "on-background": "#1a1c1f", "surface-container-high": "#e8e8ed", "surface-container-lowest": "#ffffff", "surface-variant": "#e2e2e7", "surface-dim": "#d9dade", "on-error": "#ffffff", "surface-tint": "#005bc1", "on-surface": "#1a1c1f", "inverse-on-surface": "#f0f0f5", tertiary: "#9e3d00", primary: "#0058bc", "on-tertiary-container": "#fffbff", "on-tertiary": "#ffffff", "on-error-container": "#93000a", error: "#ba1a1a", "surface-container-highest": "#e2e2e7", "primary-container": "#0070eb", "on-secondary-container": "#2d4c83", "on-tertiary-fixed": "#351000", "on-primary": "#ffffff", "surface-container-low": "#f3f3f8", "outline-variant": "#c1c6d7", "on-secondary-fixed": "#001a41", "on-primary-container": "#fefcff", "on-primary-fixed": "#001a41", secondary: "#405e96", "on-surface-variant": "#414755", "tertiary-fixed": "#ffdbcc", "surface-container": "#ededf2", "tertiary-fixed-dim": "#ffb595", "primary-fixed-dim": "#adc6ff", outline: "#717786", "on-tertiary-fixed-variant": "#7c2e00", "surface-bright": "#f9f9fe", "secondary-container": "#a1befd", "on-secondary": "#ffffff", "inverse-surface": "#2e3034", "on-secondary-fixed-variant": "#26467d", "inverse-primary": "#adc6ff", background: "#f9f9fe" }, borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" }, fontFamily: { headline: ["Inter"], body: ["Inter"], label: ["Inter"], display: "Inter" } } } };</script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -55,100 +56,9 @@
     </a>
 </nav>
 
-<!-- SideNavBar Shell -->
-<aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1" id="main-nav">
-
-        <!-- 공통 nav item -->
-        <!-- 내주변 -->
-        <div class="relative">
-            <!-- Parent toggle -->
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="
-                        this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                        this.querySelector('.chevron').classList.toggle('rotate-180');
-                    " href="#">
-                <span class="material-symbols-outlined">distance</span>
-                내주변
-                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
-                      style="font-size:18px">expand_more</span>
-            </a>
-
-            <!-- Dropdown children -->
-            <div class="dropdown hidden flex-col pl-4">
-                <!-- 헬스장 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
-                    헬스장
-                </a>
-                <!-- 트레이너 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">person</span>
-                    트레이너
-                </a>
-            </div>
-        </div>
-
-        <!-- 대시보드 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드</a>
-
-        <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
-
-        <!-- 일정 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정</a>
-
-        <!-- 메시지 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
-
-        <!-- 수익 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
-    </nav>
-
-    <!--설정, 고객 지원-->
-    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
-            설정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
-            지원</a>
-        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
-    </div>
-
-    <!-- 마이프로필 -->
-    <!-- 마이프로필 nav item (active) -->
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200">
-        <img alt="프로필" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg
-                     ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg)
-                     : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-blue-700 truncate">${sessionScope.loginUser.name}</p>
-            <p class="text-xs text-blue-500 truncate">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="profile" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 
 <!-- Main -->
@@ -440,6 +350,7 @@
         </c:choose>
     </div>
 </main>
+
 
 <script>
     // Map enum values to Korean display labels

@@ -47,6 +47,8 @@ public class GymNoticeDetail extends HttpServlet {
             }
             
             service.increaseViewCount(noticeId);
+            
+            notice = service.getNoticeDetail(noticeId);
 
             List<NoticeImages> imageList = service.getImagesByNoticeId(noticeId);
 

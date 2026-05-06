@@ -1,18 +1,12 @@
 package dao.member;
 
+import dto.member.NotificationDTO;
 import java.util.List;
 
-import dto.member.NotificationDTO;
-
 public interface NotificationDAO {
-
-    List<NotificationDTO> findByEmail(String email);
-
-    int countUnread(String email);
-
+    List<NotificationDTO> findByRecvId(String recvId);
+    int countUnread(String recvId);
     int insert(NotificationDTO dto);
-
-    int updateReadAll(String email);
-    
+    int updateReadAll(String recvId);
     int updateReadOne(int id);
 }

@@ -1,74 +1,61 @@
 package dto.member;
 
+/**
+ * ↔ MEAL_LOG 테이블
+ * id, member_id, meal_date, meal, totcalorie
+ *
+ * 변경: 기존 email/foodName/gram 구조 → DB 컬럼 기준으로 수정
+ *       meal_date(DATE), meal(LONGTEXT), totcalorie(INTEGER)
+ */
 public class MealLogDTO {
-	private int id;
-    private String email;
-    private String foodName;
-    private double gram;
-    private double calorie;
-    private String recordDate;
-    
-	public MealLogDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
-	public MealLogDTO(int id, String email, String foodName, double gram, double calorie, String recordDate) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.foodName = foodName;
-		this.gram = gram;
-		this.calorie = calorie;
-		this.recordDate = recordDate;
-	}
+    private int    id;
+    private int    memberId;    // member_id (FK → MEMBER.id)
+    private String mealDate;   // meal_date (DATE)
+    private String meal;       // 식단 내용 전체 텍스트 (LONGTEXT)
+    private int    totCalorie; // totcalorie
 
-	public int getId() {
-		return id;
-	}
+    // ── 화면 표시용 (JOIN용, DB 컬럼 아님) ──────────────────────
+    private String email;      // USER.email (JOIN용)
+    private String foodName;   // 개별 식품명 (상세 입력 시 사용)
+    private double gram;       // 섭취량 (g)
+    private double calorie;    // 단일 식품 칼로리
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public MealLogDTO() {}
 
-	public String getEmail() {
-		return email;
-	}
+    public MealLogDTO(int id, int memberId, String mealDate, String meal, int totCalorie) {
+        this.id         = id;
+        this.memberId   = memberId;
+        this.mealDate   = mealDate;
+        this.meal       = meal;
+        this.totCalorie = totCalorie;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-	public String getFoodName() {
-		return foodName;
-	}
+    public int getMemberId() { return memberId; }
+    public void setMemberId(int memberId) { this.memberId = memberId; }
 
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
-	}
+    public String getMealDate() { return mealDate; }
+    public void setMealDate(String mealDate) { this.mealDate = mealDate; }
 
-	public double getGram() {
-		return gram;
-	}
+    public String getMeal() { return meal; }
+    public void setMeal(String meal) { this.meal = meal; }
 
-	public void setGram(double gram) {
-		this.gram = gram;
-	}
+    public int getTotCalorie() { return totCalorie; }
+    public void setTotCalorie(int totCalorie) { this.totCalorie = totCalorie; }
 
-	public double getCalorie() {
-		return calorie;
-	}
+    // 화면용
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-	public void setCalorie(double calorie) {
-		this.calorie = calorie;
-	}
+    public String getFoodName() { return foodName; }
+    public void setFoodName(String foodName) { this.foodName = foodName; }
 
-	public String getRecordDate() {
-		return recordDate;
-	}
+    public double getGram() { return gram; }
+    public void setGram(double gram) { this.gram = gram; }
 
-	public void setRecordDate(String recordDate) {
-		this.recordDate = recordDate;
-	}
-    
+    public double getCalorie() { return calorie; }
+    public void setCalorie(double calorie) { this.calorie = calorie; }
 }

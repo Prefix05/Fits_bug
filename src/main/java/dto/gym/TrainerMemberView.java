@@ -42,6 +42,11 @@ public class TrainerMemberView {
 	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
+	@Override
+	public String toString() {
+		return "TrainerMemberView [memberName=" + memberName + ", membershipName=" + membershipName
+				+ ", remainingSession=" + remainingSession + ", startDate=" + startDate + "]";
+	}
     
     
 }

@@ -54,6 +54,10 @@ public class ProfileEditController extends HttpServlet {
             request.setAttribute("specializations", trainerService.getSpecializationsByTrainerId(tid));
             request.setAttribute("traits",          trainerService.getTraitsByTrainerId(tid));
             request.setAttribute("certifications",  trainerService.getCertificationsByTrainerId(tid));
+            if (trainer.getGymId() != null) {
+                dto.gym.Gym currentGym = trainerService.getGymInfoById(trainer.getGymId());
+                request.setAttribute("currentGym", currentGym);
+            }
         }
 
         request.getRequestDispatcher("/trainer/profileEdit.jsp").forward(request, response);
@@ -103,11 +107,58 @@ public class ProfileEditController extends HttpServlet {
                 String original = Paths.get(profileImagePart.getSubmittedFileName()).getFileName().toString();
                 profileImageFileName = "profile_" + loginUser.getId() + "_" + original;
                 profileImagePart.write(uploadDir + File.separator + profileImageFileName);
-                loginUser.setProfileImg(profileImageFileName);
+//                loginUser.setProfileImg(profileImageFileName);
             }
 
-            // 3. Update trainer description + specializations + traits + profile image
+            // 3. Update trainer type, gym, address, description
+            String trainerType = request.getParameter("trainerType");
+            if (trainerType != null && !trainerType.isEmpty()) {
+                trainer.setTrainerType(trainerType);
+            }
+
             trainer.setDescription(request.getParameter("description"));
+
+            String gymCode = request.getParameter("gymCode");
+            boolean isGymBased = "GYM_EMPLOYED".equals(trainerType) || "GYM_RENTAL".equals(trainerType);
+
+            if (isGymBased && gymCode != null && !gymCode.trim().isEmpty()) {
+                Integer newGymId = trainerService.findGymIdByGymCode(gymCode.trim());
+                if (newGymId == null) {
+                    request.setAttribute("error", "유효하지 않은 헬스장 코드입니다. 다시 확인해 주세요.");
+                    request.setAttribute("trainer", trainer);
+                    int tid = trainer.getTrainerId();
+                    request.setAttribute("specializations", trainerService.getSpecializationsByTrainerId(tid));
+                    request.setAttribute("traits",          trainerService.getTraitsByTrainerId(tid));
+                    request.setAttribute("certifications",  trainerService.getCertificationsByTrainerId(tid));
+                    if (trainer.getGymId() != null)
+                        request.setAttribute("currentGym", trainerService.getGymInfoById(trainer.getGymId()));
+                    request.getRequestDispatcher("/trainer/profileEdit.jsp").forward(request, response);
+                    return;
+                }
+                trainer.setGymId(newGymId);
+                // Copy gym address + coordinates onto trainer record
+                dto.gym.Gym gym = trainerService.getGymInfoById(newGymId);
+                if (gym != null) {
+                    trainer.setAddress(gym.getAddress());
+                    trainer.setAddressDetail(gym.getAddressDetail());
+                    trainer.setPostcode(gym.getPostcode());
+                    trainer.setLatitude(gym.getLatitude());
+                    trainer.setLongitude(gym.getLongitude());
+                }
+            } else if (isGymBased) {
+                // Gym-based but no new code entered — carry existing lat/lng from hidden inputs
+                String lat = request.getParameter("latitude");
+                String lng = request.getParameter("longitude");
+                if (lat != null && !lat.isEmpty()) trainer.setLatitude(new java.math.BigDecimal(lat));
+                if (lng != null && !lng.isEmpty()) trainer.setLongitude(new java.math.BigDecimal(lng));
+            } else {
+                // Freelance — use trainer's own address and clear gym
+                trainer.setGymId(null);
+                trainer.setLatitude(null);
+                trainer.setLongitude(null);
+                trainer.setAddress(request.getParameter("address"));
+                trainer.setAddressDetail(request.getParameter("addressDetail"));
+            }
             String[] specializations = request.getParameterValues("specializations");
             String[] traits = request.getParameterValues("traits");
             if (specializations == null) specializations = new String[0];

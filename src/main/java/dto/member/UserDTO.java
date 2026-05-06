@@ -2,26 +2,33 @@ package dto.member;
 
 import java.time.LocalDateTime;
 
+/**
+ * ↔ USER 테이블
+ * id, email, password, name, phone, email_verified,
+ * nickname, profileImg, role(ENUM), created_at, is_deleted, provider, provider_id
+ *
+ * 변경: tel → phone (DB 컬럼명 일치)
+ *       UserRole enum 제거 → String (MyBatis 매핑 단순화)
+ *       emailVerified 필드 추가
+ */
 public class UserDTO {
 
-    private int    id;
-    private String email;
-    private String password;
-    private String name;
-    private String phone;          // DB 컬럼: phone  (이전 tel → phone 통일)
-    private boolean emailVerified; // DB 컬럼: email_verified
-    private String nickname;
-    private String profileImg;     // DB 컬럼: profileImg
-    private String role;           // ENUM → String으로 MyBatis 처리 간편화
-    private LocalDateTime createdAt;
-    private boolean deleted;       // DB 컬럼: is_deleted
-    private String provider;       // ENUM('kakao','naver')
-    private String providerId;     // DB 컬럼: provider_id
+    private int           id;
+    private String        email;
+    private String        password;
+    private String        name;
+    private String        phone;          // DB: phone (이전 tel → 수정)
+    private boolean       emailVerified;  // DB: email_verified
+    private String        nickname;
+    private String        profileImg;     // DB: profileImg
+    private String        role;           // ENUM('MEMBER','TRAINER','GYM','ADMIN') → String
+    private LocalDateTime createdAt;      // DB: created_at
+    private boolean       deleted;        // DB: is_deleted
+    private String        provider;       // ENUM('kakao','naver')
+    private String        providerId;     // DB: provider_id
 
-    // ─── 기본 생성자 ───────────────────────────────────────────
     public UserDTO() {}
 
-    // ─── 회원가입용 생성자 ─────────────────────────────────────
     public UserDTO(String email, String password, String name, String phone,
                    boolean emailVerified, String nickname, String role) {
         this.email         = email;
@@ -32,8 +39,6 @@ public class UserDTO {
         this.nickname      = nickname;
         this.role          = role;
     }
-
-    // ─── getter / setter ───────────────────────────────────────
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -76,7 +81,6 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDTO{id=" + id + ", email='" + email + "', nickname='" + nickname
-                + "', role='" + role + "'}";
+        return "UserDTO{id=" + id + ", email='" + email + "', role='" + role + "'}";
     }
 }

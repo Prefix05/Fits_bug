@@ -27,6 +27,9 @@
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
             </if>
+            <if test="search != null and search != ''">
+                AND name LIKE CONCAT('%', #{search}, '%')
+            </if>
         </where>
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -37,6 +40,9 @@
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
+            </if>
+            <if test="search != null and search != ''">
+                AND name LIKE CONCAT('%', #{search}, '%')
             </if>
         </where>
     </select>

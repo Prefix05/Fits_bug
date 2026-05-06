@@ -30,8 +30,8 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
 <div style="margin:20px 0;">
   <button class="role-btn active" data-role="member">회원</button>
-  <button class="role-btn" data-role="trainer" onclick="location.href='trainerJoin.jsp'">트레이너</button>
-  <button class="role-btn" data-role="gym" onclick="location.href='gymJoin.jsp'">헬스장</button>
+  <button class="role-btn" data-role="trainer" onclick="location.href="<%=request.getContextPath()%>/member/trainerJoin"">트레이너</button>
+  <button class="role-btn" data-role="gym" onclick="location.href="<%=request.getContextPath()%>/member/gymJoin"">헬스장</button>
 </div>
 
 <form action="join" method="post">
@@ -87,8 +87,8 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 document.querySelectorAll(".role-btn").forEach(btn=>{
   btn.onclick=()=>{
     const role = btn.dataset.role;
-    if(role==="trainer") location.href="trainerJoin.jsp";
-    if(role==="gym") location.href="gymJoin.jsp";
+    if(role==="trainer") location.href="<%=request.getContextPath()%>/member/trainerJoin";
+    if(role==="gym") location.href="<%=request.getContextPath()%>/member/gymJoin";
     document.querySelectorAll(".role-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById("role").value=role;
@@ -99,7 +99,7 @@ document.querySelectorAll(".role-btn").forEach(btn=>{
 function checkEmail(){
   const email = document.getElementById("username").value;
 
-  fetch("<%=request.getContextPath()%>/member/checkEmail?email="+email)
+  fetch("<%=request.getContextPath()%>/checkEmail?email="+email)
   .then(r=>r.json())
   .then(res=>{
     if(res.exists){

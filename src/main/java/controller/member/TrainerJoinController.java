@@ -27,6 +27,6 @@ public class TrainerJoinController extends HttpServlet {
         // ⭐ 여기서 DB 저장 처리
 
         // 완료 후 인증 페이지 이동
-        response.sendRedirect("/member/trainerVerify.jsp");
+        response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/member/trainerVerify"));
     }
 }

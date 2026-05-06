@@ -12,7 +12,7 @@ import dto.member.TrainerDTO;
 public class TrainerDAOImpl implements TrainerDAO {
     private Connection getConn() throws Exception {
         return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/fitsbug?serverTimezone=Asia/Seoul",
+            "jdbc:mysql://localhost:3306/fitsbug",
             "root",
             "1234"
         );
@@ -75,7 +75,7 @@ public class TrainerDAOImpl implements TrainerDAO {
             while (rs.next()) {
                 TrainerDTO t = new TrainerDTO();
 
-                t.setTrainerId(rs.getInt("trainer_id"));
+                t.setId(rs.getInt("id"));
                 t.setName(rs.getString("name"));
                 t.setProfileImg(rs.getString("profile_img"));
                 t.setSpecialty(rs.getString("specialty"));
@@ -112,7 +112,7 @@ public class TrainerDAOImpl implements TrainerDAO {
             if (rs.next()) {
                 t = new TrainerDTO();
 
-                t.setTrainerId(rs.getInt("trainer_id"));
+                t.setId(rs.getInt("id"));
                 t.setName(rs.getString("name"));
                 t.setProfileImg(rs.getString("profile_img"));
                 t.setSpecialty(rs.getString("specialty"));

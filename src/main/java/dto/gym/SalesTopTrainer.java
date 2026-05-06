@@ -50,6 +50,11 @@ public class SalesTopTrainer {
 	public void setSessionCount(int sessionCount) {
 		this.sessionCount = sessionCount;
 	}
+	@Override
+	public String toString() {
+		return "SalesTopTrainer [trainerId=" + trainerId + ", trainerName=" + trainerName + ", profileImg=" + profileImg
+				+ ", totalSales=" + totalSales + ", sessionCount=" + sessionCount + "]";
+	}
 	
     
 }

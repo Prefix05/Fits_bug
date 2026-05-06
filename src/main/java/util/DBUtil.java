@@ -10,7 +10,7 @@ public class DBUtil {
             Class.forName("org.mariadb.jdbc.Driver");
 
             return DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/fitsbug",
+                "jdbc:mariadb://localhost:3306/fits_bug",
                 "root",
                 "7564"
             );

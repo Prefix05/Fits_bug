@@ -63,6 +63,12 @@ public class TodayPtSchedule {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "TodayPtSchedule [startTime=" + startTime + ", trainerName=" + trainerName + ", memberName=" + memberName
+				+ ", membershipName=" + membershipName + ", status=" + status + "]";
+	}
+
 	
 
 }

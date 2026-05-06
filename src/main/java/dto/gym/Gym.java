@@ -204,11 +204,16 @@ public class Gym {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+
+	@Override
+	public String toString() {
+		return "Gym [id=" + id + ", userId=" + userId + ", name=" + name + ", backgroundImg=" + backgroundImg
+				+ ", businessRegistrationNum=" + businessRegistrationNum + ", brFile=" + brFile + ", phoneNum="
+				+ phoneNum + ", address=" + address + ", addressDetail=" + addressDetail + ", postcode=" + postcode
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", description=" + description + ", file="
+				+ file + ", facility=" + facility + ", approvalStatus=" + approvalStatus + ", gymCode=" + gymCode
+				+ ", bankName=" + bankName + ", accountNumber=" + accountNumber + "]";
+	}
+
 	
-
-
-
-
-
-
 }

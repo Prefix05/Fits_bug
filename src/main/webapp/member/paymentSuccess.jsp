@@ -72,7 +72,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
   </div>
 
   <div style="display:flex;flex-direction:column;gap:10px;position:relative;z-index:1;">
-    <button onclick="location.href='mypage.jsp'" style="width:100%;padding:14px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+    <button onclick="location.href="<%=request.getContextPath()%>/member/mypage"" style="width:100%;padding:14px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
       마이페이지에서 확인하기 →
     </button>
     <button onclick="location.href='main'" style="width:100%;padding:12px;border-radius:99px;border:1.5px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">

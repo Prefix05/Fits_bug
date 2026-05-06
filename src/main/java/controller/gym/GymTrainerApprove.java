@@ -25,16 +25,18 @@ public class GymTrainerApprove extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("gymId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
+        
+        int gymId = (int) session.getAttribute("gymId");
 
         try {
             int trainerId = Integer.parseInt(request.getParameter("trainerId"));
 
             GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
-            service.approveTrainer(trainerId);
+            service.approveTrainer(trainerId, gymId);
 
             response.sendRedirect(request.getContextPath() + "/gym/trainer");
 
