@@ -85,9 +85,6 @@
     </style>
 </head>
 
-<c:set var="currentViewType" value="${empty param.viewType ? 'all' : param.viewType}" />
-<c:set var="currentStatus" value="${empty param.status ? '전체' : param.status}" />
-
 <body class="bg-background text-on-surface">
 <!-- SideNavBar Shell -->
 <div class="flex">
@@ -118,10 +115,12 @@
             class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors">초기화</button>
     
     <!-- 필터 상태 유지를 위한 Hidden 필드들 -->
-    <input type="hidden" name="status" value="${currentStatus}">
-    <input type="hidden" name="viewType" value="${currentViewType}">
+    <input type="hidden" name="status" id="hiddenStatus" value="${currentStatus}">
+    <input type="hidden" name="viewType" id="hiddenViewType" value="${currentViewType}">
     <input type="hidden" name="salesSearch" value="${param.salesSearch}">
     <input type="hidden" name="paymentSearch" value="${param.paymentSearch}">
+    <input type="hidden" name="salesPage" id="salesPage" value="${empty param.salesPage ? 1 : param.salesPage}">
+    <input type="hidden" name="paymentPage" id="paymentPage" value="${empty param.paymentPage ? 1 : param.paymentPage}">
 </form>
 
 <!-- Summary Cards (정산 테이블 상단 디자인 적용) -->
@@ -158,7 +157,7 @@
                        onkeypress="if(event.keyCode==13){ updateSearch('sales'); return false; }"
                        class="w-full pl-9 pr-4 py-1.5 border-gray-200 rounded-lg text-xs focus:ring-primary">
             </div>
-        <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+        <div id="salesFilterButtons" class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
                     <%-- [변경 포인트 2] 선언된 변수(currentViewType)로 단순 비교 --%>
                     <button onclick="changeViewType('all')" class="px-4 py-1.5 text-xs font-bold ${currentViewType == 'all' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">전체 내역</button>
                     <button onclick="changeViewType('gym')" class="px-4 py-1.5 text-xs font-bold ${currentViewType == 'gym' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">헬스장별</button>
@@ -184,13 +183,13 @@
                     <c:forEach var="item" items="${data.details}">
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <!-- viewType이 'all'일 때만 ID와 날짜 출력, 나머지는 '-' 표시 -->
-                        <td class="px-6 py-4 font-mono text-xs text-gray-400">${not empty item.salesId ? item.salesId : '-'}</td>
-                        <td class="px-6 py-4 text-gray-600">${not empty item.payDate ? item.payDate : '-'}</td>
+                        <td class="px-6 py-4 font-mono text-xs text-gray-400">${not empty item.paymentNum ? item.paymentNum : '-'}</td>
+                        <td class="px-6 py-4 text-gray-600">${not empty item.paymentDate ? item.paymentDate : '-'}</td>
                         <td class="px-6 py-4 font-medium text-gray-900">${item.gymName}</td>
                         <td class="px-6 py-4 text-gray-700">${not empty item.trainerName ? item.trainerName : '전체'}</td>
-                        <td class="px-6 py-4 text-right font-bold text-gray-900">₩<fmt:formatNumber value="${item.payAmount}" pattern="#,###"/></td>
-                        <td class="px-6 py-4 text-right text-red-400">₩<fmt:formatNumber value="${item.settlementAmount}" pattern="#,###"/></td>
-                        <td class="px-6 py-4 text-right font-semibold text-primary">₩<fmt:formatNumber value="${item.fee}" pattern="#,###"/></td>
+                        <td class="px-6 py-4 text-right font-bold text-gray-900">₩<fmt:formatNumber value="${item.paymentPrice}" pattern="#,###"/></td>
+                        <td class="px-6 py-4 text-right text-red-400">₩<fmt:formatNumber value="${item.netProfit}" pattern="#,###"/></td>
+                        <td class="px-6 py-4 text-right font-semibold text-primary">₩<fmt:formatNumber value="${item.paymentFee}" pattern="#,###"/></td>
                     </tr>
                     </c:forEach>
                 </c:if>
@@ -205,15 +204,58 @@
                 <tr class="font-bold text-gray-900">
                     <td colspan="4" class="px-6 py-8 text-right text-lg">합계</td>
                     <td class="px-6 py-8 text-right text-lg">₩ <fmt:formatNumber value="${data.summary.totalSales}" pattern="#,###"/></td>
-                    <td class="px-6 py-8 text-right text-lg text-red-400">₩ <fmt:formatNumber value="${data.summary.totalSettlement}" pattern="#,###"/></td>
+                    <td class="px-6 py-8 text-right text-lg text-red-400">₩ <fmt:formatNumber value="${data.summary.netProfit}" pattern="#,###"/></td>
                     <td class="px-6 py-8 text-right text-2xl text-primary">₩ <fmt:formatNumber value="${data.summary.totalFee}" pattern="#,###"/></td>
                 </tr>
             </tfoot>
         </table>
     </div>
+<!-- 매출 상세 내역 페이징 -->
+<div id="salesPagination" class="px-8 py-8 border-t border-gray-50 flex justify-center">
+    <div class="flex items-center gap-1">
+        <c:set var="sp" value="${data.salesPager}" />
+        
+        <%-- 이전 화살표: 데이터가 없거나 첫 페이지 블록이면 비활성화 --%>
+        <button type="button" 
+                <c:choose>
+                    <c:when test="${not empty sp && sp.startPage > 1}">onclick="movePage('sales', ${sp.startPage - 1})"</c:when>
+                    <c:otherwise>disabled</c:otherwise>
+                </c:choose>
+                class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${not empty sp && sp.startPage > 1 ? 'text-gray-400 hover:bg-gray-100' : 'text-gray-200 cursor-not-allowed'}">
+            <span class="material-symbols-outlined text-xl">chevron_left</span>
+        </button>
+
+        <%-- 숫자 버튼 영역 --%>
+        <c:choose>
+            <c:when test="${not empty sp && sp.allPage > 0}">
+                <c:forEach var="num" begin="${sp.startPage}" end="${sp.endPage}">
+                    <button type="button" onclick="movePage('sales', ${num})" 
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold transition-all
+                                   ${sp.curPage == num ? 'bg-primary text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-100'}">
+                        ${num}
+                    </button>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <button type="button" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold bg-primary text-white shadow-md shadow-blue-200">1</button>
+            </c:otherwise>
+        </c:choose>
+
+        <%-- 다음 화살표: 데이터가 없거나 마지막 페이지 블록이면 비활성화 --%>
+        <button type="button" 
+                <c:choose>
+                    <c:when test="${not empty sp && endPage < sp.allPage}">onclick="movePage('sales', ${sp.endPage + 1})"</c:when>
+                    <c:otherwise>disabled</c:otherwise>
+                </c:choose>
+                class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${not empty sp && sp.endPage < sp.allPage ? 'text-gray-400 hover:bg-gray-100' : 'text-gray-200 cursor-not-allowed'}">
+            <span class="material-symbols-outlined text-xl">chevron_right</span>
+        </button>
+    </div>
+</div>
 </div>
 
-<!-- 결제 내역 (하단 섹션) -->
+
+<!-- 결제 내역 -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <!-- 헤더: 제목 및 필터 버튼 -->
     <div class="px-6 py-5 border-b border-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -226,7 +268,7 @@
                        onkeypress="if(event.keyCode==13){ updateSearch('payment'); return false; }"
                        class="w-full pl-9 pr-4 py-1.5 border-gray-200 rounded-lg text-xs focus:ring-primary">
             </div>
-        <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+        <div id="paymentFilterButtons" class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
                     <%-- [변경 포인트 3] 선언된 변수(currentStatus)로 단순 비교 --%>
                     <button onclick="changeStatus('전체')" class="px-4 py-1.5 text-xs font-bold ${currentStatus == '전체' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">전체</button>
                     <button onclick="changeStatus('결제완료')" class="px-4 py-1.5 text-xs font-bold ${currentStatus == '결제완료' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">결제완료</button>
@@ -251,30 +293,30 @@
                 <c:if test="${not empty data.payments}">
                     <c:forEach var="pay" items="${data.payments}">
                     <tr class="hover:bg-gray-50/30 transition-colors">
-                        <td class="px-8 py-5 font-mono text-[11px] text-gray-400">${pay.payId}</td>
+                        <td class="px-8 py-5 font-mono text-[11px] text-gray-400">${pay.paymentNum}</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[11px] font-bold text-primary">
-                                    ${not empty pay.memberName ? pay.memberName.substring(0,1) : '?'}
+                                    ${not empty pay.userName ? pay.userName.substring(0,1) : '?'}
                                 </div>
-                                <span class="font-semibold text-gray-700">${pay.memberName}</span>
+                                <span class="font-semibold text-gray-700">${pay.userName}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 text-center text-gray-600">${pay.payDate}</td>
+                        <td class="px-6 py-5 text-center text-gray-600">${pay.paymentDate}</td>
                         <td class="px-6 py-5 text-right font-bold text-gray-900">
-                            ₩ <fmt:formatNumber value="${pay.amount}" pattern="#,###"/>
+                            ₩ <fmt:formatNumber value="${pay.paymentPrice}" pattern="#,###"/>
                         </td>
                         <td class="px-8 py-5 text-center">
                             <!-- 상태별 색상 매핑 보정 -->
                             <c:choose>
-                                <c:when test="${pay.status == '결제완료'}">
+                                <c:when test="${pay.paymentStatus == '결제완료'}">
                                     <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[11px] font-bold border border-blue-100">결제완료</span>
                                 </c:when>
-                                <c:when test="${pay.status == '환불완료' || pay.status == '환불요청'}">
-                                    <span class="bg-red-50 text-red-600 px-3 py-1 rounded-full text-[11px] font-bold border border-red-100">${pay.status}</span>
+                                <c:when test="${pay.paymentStatus == '환불완료' || pay.paymentStatus == '환불요청'}">
+                                    <span class="bg-red-50 text-red-600 px-3 py-1 rounded-full text-[11px] font-bold border border-red-100">${pay.paymentStatus}</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-[11px] font-bold">${pay.status}</span>
+                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-[11px] font-bold">${pay.paymentStatus}</span>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -289,134 +331,166 @@
             </tbody>
         </table>
     </div>
-</div>
+<!-- 결제 내역 페이징 -->
+<div id="paymentPagination" class="px-8 py-8 border-t border-gray-50 flex justify-center">
+    <div class="flex items-center gap-1">
+        <c:set var="pp" value="${data.paymentPager}" />
 
-    <!-- 페이징 처리 (사진 하단과 동일하게) -->
-    <div class="px-8 py-6 border-t border-gray-50 flex justify-center">
-        <div class="flex items-center gap-2">
-            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors">
-                <span class="material-symbols-outlined text-sm">chevron_left</span>
-            </button>
-            <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-white text-xs font-bold shadow-sm">1</button>
-            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 text-xs font-medium hover:bg-gray-100 transition-colors">2</button>
-            <button class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors">
-                <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </button>
-        </div>
+        <%-- 이전 화살표 --%>
+        <button type="button" 
+                <c:choose>
+                    <c:when test="${not empty pp && pp.startPage > 1}">onclick="movePage('payment', ${pp.startPage - 1})"</c:when>
+                    <c:otherwise>disabled</c:otherwise>
+                </c:choose>
+                class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${not empty pp && pp.startPage > 1 ? 'text-gray-400 hover:bg-gray-100' : 'text-gray-200 cursor-not-allowed'}">
+            <span class="material-symbols-outlined text-xl">chevron_left</span>
+        </button>
+
+        <%-- 숫자 버튼 영역 --%>
+        <c:choose>
+            <c:when test="${not empty pp && pp.allPage > 0}">
+                <c:forEach var="num" begin="${pp.startPage}" end="${pp.endPage}">
+                    <button type="button" onclick="movePage('payment', ${num})" 
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold transition-all
+                                   ${pp.curPage == num ? 'bg-primary text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-100'}">
+                        ${num}
+                    </button>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <button type="button" class="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold bg-primary text-white shadow-md shadow-blue-200">1</button>
+            </c:otherwise>
+        </c:choose>
+
+        <%-- 다음 화살표 --%>
+        <button type="button" 
+                <c:choose>
+                    <c:when test="${not empty pp && pp.endPage < pp.allPage}">onclick="movePage('payment', ${pp.endPage + 1})"</c:when>
+                    <c:otherwise>disabled</c:otherwise>
+                </c:choose>
+                class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${not empty pp && pp.endPage < pp.allPage ? 'text-gray-400 hover:bg-gray-100' : 'text-gray-200 cursor-not-allowed'}">
+            <span class="material-symbols-outlined text-xl">chevron_right</span>
+        </button>
     </div>
 </div>
+</div>
+
+</div>
 </main>
+
 <script>
-//공통 데이터 요청 함수
+const pageState = {
+	    startDate: '${startDate}',
+	    endDate: '${endDate}',
+	    viewType: '${currentViewType}',
+	    status: '${currentStatus}',
+	    salesSearch: '${param.salesSearch}',
+	    paymentSearch: '${param.paymentSearch}',
+	    salesPage: ${empty param.salesPage ? 1 : param.salesPage},
+	    paymentPage: ${empty param.paymentPage ? 1 : param.paymentPage}
+	};
+	
 async function refreshData() {
-    const form = document.getElementById('searchForm');
-    const formData = new FormData(form);
-    const queryString = new URLSearchParams(formData).toString();
+    const params = new URLSearchParams();
     
+    // state 객체에 있는 모든 값을 쿼리스트링으로 변환
+    Object.keys(pageState).forEach(key => {
+        if(pageState[key]) params.append(key, pageState[key]);
+    });
+    params.append('_t', new Date().getTime());
+
+    console.log("==> 서버 전송 최종 상태:", pageState);
+
     try {
-        // 서버에 비동기 요청 (현재 페이지 URL + 파라미터)
-        const response = await fetch(`${form.action}?${queryString}`, {
+        const response = await fetch(`${pageContext.request.contextPath}/admin/sales?` + params.toString(), {
+            method: 'GET',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
-        
-        if (!response.ok) throw new Error('네트워크 응답 에러');
-        
+
+        if (!response.ok) throw new Error('데이터 로드 실패');
+
         const htmlText = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
+        const doc = new DOMParser().parseFromString(htmlText, 'text/html');
 
-        // 1. 매출 내역 교체
-        document.getElementById('salesTableBody').innerHTML = doc.getElementById('salesTableBody').innerHTML;
-        document.getElementById('salesTableFoot').innerHTML = doc.getElementById('salesTableFoot').innerHTML;
-        
-        // 2. 결제 내역 교체
-        document.getElementById('paymentTableBody').innerHTML = doc.getElementById('paymentTableBody').innerHTML;
-        
-        // 3. (필요 시) 상단 요약 카드 데이터도 교체 가능
-        // document.querySelector('.grid-cols-3').innerHTML = doc.querySelector('.grid-cols-3').innerHTML;
+        // 갈아끼울 영역 리스트
+        const targetIds = [
+            'salesTableBody', 'salesTableFoot', 'salesPagination', 
+            'salesFilterButtons', 'paymentTableBody', 'paymentPagination', 
+            'paymentFilterButtons'
+        ];
 
-        // 4. URL 업데이트 (새로고침 시 현재 필터 유지용, 실제 페이지 이동은 없음)
-        history.pushState(null, '', `?${queryString}`);
+        targetIds.forEach(id => {
+            const newEl = doc.getElementById(id);
+            const oldEl = document.getElementById(id);
+            if (newEl && oldEl) oldEl.innerHTML = newEl.innerHTML;
+        });
         
-        // 5. 버튼 활성화 스타일 업데이트
-        updateButtonStyles(queryString);
+        if (document.getElementById('salesSearchInput')) {
+            document.getElementById('salesSearchInput').value = pageState.salesSearch || '';
+        }
+        if (document.getElementById('paymentSearchInput')) {
+            document.getElementById('paymentSearchInput').value = pageState.paymentSearch || '';
+        }
+
+        // 브라우저 주소창 업데이트 (뒤로가기 지원)
+        history.pushState(null, '', '?' + params.toString());
 
     } catch (error) {
-        console.error('데이터 로드 실패:', error);
-        alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error(error);
     }
 }
 
 // 매출 필터 변경
 function changeViewType(type) {
-    let viewInput = document.querySelector('input[name="viewType"]');
-    viewInput.value = type;
-    refreshData(); // 비동기 요청 호출
+    pageState.viewType = type;
+    pageState.salesPage = 1;
+    refreshData();
 }
 
 // 결제 상태 변경
 function changeStatus(status) {
-    let statusInput = document.querySelector('input[name="status"]');
-    statusInput.value = status;
-    refreshData(); // 비동기 요청 호출
+    pageState.status = status;
+    pageState.paymentPage = 1;
+    refreshData();
 }
 
-// 버튼 스타일 업데이트 (선택된 버튼 강조)
-function updateButtonStyles(queryString) {
-    const params = new URLSearchParams(queryString);
-    const viewType = params.get('viewType') || 'all';
-    const status = params.get('status') || '전체';
-
-    // 매출 필터 버튼 스타일 변경
-    const viewButtons = document.querySelectorAll('button[onclick^="changeViewType"]');
-    viewButtons.forEach(btn => {
-        if (btn.getAttribute('onclick').includes(viewType)) {
-            btn.className = "px-4 py-1.5 text-xs font-bold bg-white shadow-sm text-primary rounded-md transition-all";
-        } else {
-            btn.className = "px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md transition-all";
-        }
-    });
-
-    // 결제 상태 버튼 스타일 변경
-    const statusButtons = document.querySelectorAll('button[onclick^="changeStatus"]');
-    statusButtons.forEach(btn => {
-        if (btn.getAttribute('onclick').includes(status)) {
-            btn.className = "px-4 py-1.5 text-xs font-bold bg-white shadow-sm text-primary rounded-md transition-all";
-        } else {
-            btn.className = "px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md transition-all";
-        }
-    });
-    
- 	// 추가: 검색창 텍스트 유지 (비동기 로드 시 입력창이 초기화되는 것 방지)
-    if (params.has('salesSearch')) {
-        document.getElementById('salesSearchInput').value = params.get('salesSearch');
-    }
-    if (params.has('paymentSearch')) {
-        document.getElementById('paymentSearchInput').value = params.get('paymentSearch');
-    }
+// 페이지 이동 함수
+function movePage(type, pageNum) {
+    if (type === 'sales') pageState.salesPage = pageNum;
+    else pageState.paymentPage = pageNum;
+    refreshData();
 }
 
-// "조회" 버튼 클릭 시 기본 제출 막고 비동기 처리
+// 검색어 입력 시 호출 (엔터 키)
+function updateSearch(type) {
+	if (type === 'sales') {
+        const val = document.getElementById('salesSearchInput').value;
+        pageState.salesSearch = val;
+        // 매출 검색 시 결제 검색어는 초기화 (간섭 방지)
+        pageState.paymentSearch = ''; 
+        document.querySelector('input[name="salesSearch"]').value = val;
+        document.querySelector('input[name="paymentSearch"]').value = '';
+        pageState.salesPage = 1;
+    } else {
+        const val = document.getElementById('paymentSearchInput').value;
+        pageState.paymentSearch = val;
+        // 결제 검색 시 매출 검색어는 초기화 (간섭 방지)
+        pageState.salesSearch = ''; 
+        document.querySelector('input[name="paymentSearch"]').value = val;
+        document.querySelector('input[name="salesSearch"]').value = '';
+        pageState.paymentPage = 1;
+    }
+    refreshData();
+}
+
+// 조회 폼 submit 기본 동작 막기
 document.getElementById('searchForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    pageState.startDate = this.querySelector('input[name="startDate"]').value;
+    pageState.endDate = this.querySelector('input[name="endDate"]').value;
+    pageState.salesPage = 1;
+    pageState.paymentPage = 1;
     refreshData();
 });
-
-function movePage(newOffset) {
-    document.getElementById('currentOffset').value = newOffset;
-    document.getElementById('listForm').submit();
-}
-//검색어 입력 시 호출 (엔터 키 대응)
-function updateSearch(type) {
-    if (type === 'sales') {
-        const val = document.getElementById('salesSearchInput').value;
-        document.querySelector('input[name="salesSearch"]').value = val;
-    } else if (type === 'payment') {
-        const val = document.getElementById('paymentSearchInput').value;
-        document.querySelector('input[name="paymentSearch"]').value = val;
-    }
-    refreshData();
-}
-
 </script>
 </body></html>
