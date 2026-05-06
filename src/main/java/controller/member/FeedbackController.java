@@ -24,7 +24,7 @@ public class FeedbackController extends HttpServlet {
         f.setDate("2026-04-20");
         f.setTrainerName("김태훈 트레이너");
         f.setSummary("하체 운동 자세 교정 필요");
-        f.setContent("스쿼트 시 무릎이 안쪽으로 모이는 경향 있음. "
+        f.setComment("스쿼트 시 무릎이 안쪽으로 모이는 경향 있음. "
                    + "발 넓이 유지하고 코어 잡기 중요.");
         list.add(f);
 

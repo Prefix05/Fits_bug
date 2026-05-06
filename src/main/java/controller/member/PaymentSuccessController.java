@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import service.member.PaymentService;
 import service.member.PaymentServiceImpl;
 
@@ -23,39 +23,35 @@ public class PaymentSuccessController extends HttpServlet {
 
         resp.setContentType("text/html;charset=UTF-8");
 
-        // 1. orderId 체크
         String orderId = req.getParameter("orderId");
 
-        if(orderId == null || orderId.trim().isEmpty()){
+        if (orderId == null || orderId.trim().isEmpty()) {
             resp.getWriter().write("잘못된 접근입니다 (orderId 없음)");
             return;
         }
 
-        // 2. 로그인 체크
         HttpSession session = req.getSession(false);
-        if(session == null){
-            resp.sendRedirect("/member/login.jsp");
+        if (session == null) {
+            // ✅ .jsp 직접 참조 제거 → 컨트롤러 경로
+            resp.sendRedirect(req.getContextPath() + "/member/login");
             return;
         }
 
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        // ✅ MemberDTO → UserDTO
+        UserDTO user = (UserDTO) session.getAttribute("loginUser");
 
-        if(user == null){
-            resp.sendRedirect("/member/login.jsp");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/member/login");
             return;
         }
 
-        // 3. 결제 성공 처리 (DB + 예약 + 알림)
         try {
             service.success(orderId, user.getEmail());
+            // ✅ /member/main.jsp → /member/main 컨트롤러 경로
+            resp.sendRedirect(req.getContextPath() + "/member/main");
 
-            // 4. 성공 페이지로 이동
-            resp.sendRedirect("/member/main.jsp");
-
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-
-            // 실패 처리
             resp.getWriter().write("결제 처리 중 오류 발생");
         }
     }

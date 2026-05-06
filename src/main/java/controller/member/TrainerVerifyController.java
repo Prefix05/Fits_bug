@@ -23,6 +23,6 @@ public class TrainerVerifyController extends HttpServlet {
 
         // TODO: DAO 저장
 
-        resp.sendRedirect("/member/main.jsp");
+        resp.sendRedirect(req.getContextPath() + "/member/main");
     }
 }

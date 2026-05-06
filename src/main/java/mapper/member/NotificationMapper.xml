@@ -4,65 +4,61 @@
 
 <mapper namespace="mapper.NotificationMapper">
 
-    <!-- DB 컬럼 member_email ↔ DTO 필드 email 불일치 → resultMap으로 해소 -->
+    <!--
+        NOTIFICATION 테이블 컬럼:
+        id, sendType, sendName, title, text, sendId, recvId,
+        is_read, create_date, notification_img
+
+        수정: 이전 member_email/type/message/url 구조 → 새 구조로 전면 변경
+    -->
     <resultMap id="notiResultMap" type="dto.member.NotificationDTO">
-        <id     property="id"        column="id"/>
-        <result property="email"     column="member_email"/>
-        <result property="type"      column="type"/>
-        <result property="message"   column="message"/>
-        <result property="url"       column="url"/>
-        <result property="isRead"    column="is_read"/>
-        <result property="createdAt" column="created_at"/>
+        <id     property="id"              column="id"/>
+        <result property="sendType"        column="sendType"/>
+        <result property="sendName"        column="sendName"/>
+        <result property="title"           column="title"/>
+        <result property="text"            column="text"/>
+        <result property="sendId"          column="sendId"/>
+        <result property="recvId"          column="recvId"/>
+        <result property="isRead"          column="is_read"/>
+        <result property="createDate"      column="create_date"/>
+        <result property="notificationImg" column="notification_img"/>
     </resultMap>
 
-    <!-- ──────────────────────────────────────────────────────
-         NotificationDAOImpl.findByEmail(String email)
-         → param: string
-         ────────────────────────────────────────────────────── -->
-    <select id="findByEmail" parameterType="string" resultMap="notiResultMap">
-        SELECT id, member_email, type, message, url, is_read, created_at
-        FROM notification
-        WHERE member_email = #{email}
+    <!-- recvId(=수신자)로 알림 목록 조회 -->
+    <select id="findByRecvId" parameterType="string" resultMap="notiResultMap">
+        SELECT id, sendType, sendName, title, text,
+               sendId, recvId, is_read, create_date, notification_img
+        FROM NOTIFICATION
+        WHERE recvId = #{recvId}
         ORDER BY id DESC
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         NotificationDAOImpl.countUnread(String email)
-         → param: string, return: int
-         ────────────────────────────────────────────────────── -->
+    <!-- 안읽은 알림 수 -->
     <select id="countUnread" parameterType="string" resultType="int">
         SELECT COUNT(*)
-        FROM notification
-        WHERE member_email = #{email} AND is_read = false
+        FROM NOTIFICATION
+        WHERE recvId = #{recvId} AND is_read = 0
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         NotificationDAOImpl.insert(NotificationDTO dto)
-         → param: NotificationDTO  (dto.getEmail() → member_email 컬럼)
-         ────────────────────────────────────────────────────── -->
-    <insert id="insert" parameterType="NotificationDTO">
-        INSERT INTO notification (member_email, type, message, url)
-        VALUES (#{email}, #{type}, #{message}, #{url})
+    <!-- 알림 저장 -->
+    <insert id="insert" parameterType="dto.member.NotificationDTO">
+        INSERT INTO NOTIFICATION (
+            sendType, sendName, title, text,
+            sendId, recvId, is_read, notification_img
+        ) VALUES (
+            #{sendType}, #{sendName}, #{title}, #{text},
+            #{sendId}, #{recvId}, 0, #{notificationImg}
+        )
     </insert>
 
-    <!-- ──────────────────────────────────────────────────────
-         NotificationDAOImpl.updateReadAll(String email)
-         → param: string
-         ────────────────────────────────────────────────────── -->
+    <!-- 전체 읽음 처리 -->
     <update id="updateReadAll" parameterType="string">
-        UPDATE notification
-        SET is_read = true
-        WHERE member_email = #{email}
+        UPDATE NOTIFICATION SET is_read = 1 WHERE recvId = #{recvId}
     </update>
 
-    <!-- ──────────────────────────────────────────────────────
-         NotificationDAOImpl.updateReadOne(int id)
-         → param: int (단일 값)
-         ────────────────────────────────────────────────────── -->
+    <!-- 개별 읽음 처리 -->
     <update id="updateReadOne" parameterType="int">
-        UPDATE notification
-        SET is_read = true
-        WHERE id = #{id}
+        UPDATE NOTIFICATION SET is_read = 1 WHERE id = #{id}
     </update>
 
 </mapper>

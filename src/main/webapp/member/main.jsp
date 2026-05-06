@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.UserDTO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 if(loginUser == null){
-    response.sendRedirect("/member/login.jsp");
+    response.sendRedirect(request.getContextPath() + "/member/login");
     return;
 }
 %>
@@ -77,7 +77,7 @@ if(loginUser == null){
     <div style="background:white;border-radius:16px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:#FFF3EE;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔥</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#1A1F36;">5일</div>
+        <div id="statStreak" style="font-size:22px;font-weight:900;color:#1A1F36;">-</div>
         <div style="font-size:12px;color:#9DA8C0;font-weight:600;">오운완 스트릭</div>
       </div>
     </div>
@@ -85,15 +85,15 @@ if(loginUser == null){
     <div style="background:white;border-radius:16px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:#E8F8F6;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">💪</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#1A1F36;">95kg</div>
-        <div style="font-size:12px;color:#9DA8C0;font-weight:600;">벤치프레스 최고</div>
+        <div id="statBestWorkout" style="font-size:22px;font-weight:900;color:#1A1F36;">-</div>
+        <div style="font-size:12px;color:#9DA8C0;font-weight:600;">최근 운동 기록</div>
       </div>
     </div>
 
     <div style="background:white;border-radius:16px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:#FFF9E6;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🥗</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#1A1F36;">1,820</div>
+        <div id="statCalorie" style="font-size:22px;font-weight:900;color:#1A1F36;">-</div>
         <div style="font-size:12px;color:#9DA8C0;font-weight:600;">오늘 칼로리(kcal)</div>
       </div>
     </div>
@@ -101,8 +101,8 @@ if(loginUser == null){
     <div style="background:linear-gradient(135deg,#FF6B35,#FF8C5A);border-radius:16px;padding:20px;border:none;box-shadow:0 4px 20px rgba(255,107,53,0.25);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🏅</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:white;">VIP PT</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;">남은 횟수: 8회</div>
+        <div id="statMembership" style="font-size:22px;font-weight:900;color:white;">-</div>
+        <div id="statMembershipSub" style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;">멤버십 정보</div>
       </div>
     </div>
 
@@ -160,8 +160,8 @@ if(loginUser == null){
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div>
-            <div style="font-weight:700;font-size:14px;color:#1A1F36;">김태훈 트레이너</div>
-            <div style="font-size:12px;color:#9DA8C0;margin-top:3px;">4월 9일 12:00</div>
+            <div id="ptTrainerName" style="font-weight:700;font-size:14px;color:#1A1F36;">-</div>
+            <div id="ptNextDate" style="font-size:12px;color:#9DA8C0;margin-top:3px;">-</div>
           </div>
           <button onclick="openReviewModal()" style="
             padding:7px 14px;border-radius:99px;border:none;cursor:pointer;
@@ -178,10 +178,10 @@ if(loginUser == null){
           <h3 style="font-size:15px;font-weight:800;color:white;">🏆 멤버십</h3>
           <a href="mypage?tab=membership" style="font-size:12px;color:rgba(255,255,255,0.8);text-decoration:underline;font-weight:600;">상세보기</a>
         </div>
-        <div style="font-size:14px;color:white;font-weight:600;">VIP 1:1 PT 20회</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;">남은 횟수: <strong>8회</strong></div>
+        <div id="membershipName" style="font-size:14px;color:white;font-weight:600;">-</div>
+        <div id="membershipRemain" style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;">-</div>
         <div style="margin-top:12px;background:rgba(255,255,255,0.25);border-radius:99px;height:8px;overflow:hidden;">
-          <div style="width:40%;height:100%;background:white;border-radius:99px;"></div>
+          <div id="membershipBar" style="width:0%;height:100%;background:white;border-radius:99px;"></div>
         </div>
       </div>
 
@@ -197,15 +197,8 @@ if(loginUser == null){
         <h3 style="font-size:15px;font-weight:800;color:#1A1F36;">💪 운동 기록</h3>
         <span style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">오늘</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF3EE;border-radius:10px;">
-          <span style="font-size:13px;font-weight:600;color:#1A1F36;">#1 벤치프레스</span>
-          <span style="font-size:13px;color:#FF6B35;font-weight:700;">95kg × 5회</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF3EE;border-radius:10px;">
-          <span style="font-size:13px;font-weight:600;color:#1A1F36;">#2 스쿼트</span>
-          <span style="font-size:13px;color:#FF6B35;font-weight:700;">100kg × 5회</span>
-        </div>
+      <div id="workoutList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+        <p style="font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;">오늘 운동 기록이 없습니다</p>
       </div>
       <button onclick="openWorkoutModal()" style="
         width:100%;padding:10px;border-radius:10px;
@@ -224,11 +217,10 @@ if(loginUser == null){
         <h3 style="font-size:15px;font-weight:800;color:#1A1F36;">🥗 식단 기록</h3>
         <span style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">오늘</span>
       </div>
-      <div style="padding:10px 12px;background:#E8F8F6;border-radius:10px;margin-bottom:8px;">
-        <div style="font-size:13px;font-weight:600;color:#1A1F36;">닭가슴살 200g + 고구마 150g</div>
-        <div style="font-size:12px;color:#00897B;margin-top:3px;font-weight:600;">약 580 kcal</div>
+      <div id="foodToday" style="padding:10px 12px;background:#E8F8F6;border-radius:10px;margin-bottom:8px;">
+        <p style="font-size:13px;color:#9DA8C0;text-align:center;padding:4px 0;">오늘 식단 기록이 없습니다</p>
       </div>
-      <div style="font-size:12px;color:#9DA8C0;margin-bottom:14px;">총 2끼 · 약 1,820 kcal</div>
+      <div id="foodSummary" style="font-size:12px;color:#9DA8C0;margin-bottom:14px;"></div>
       <button onclick="openFoodModal()" style="
         width:100%;padding:10px;border-radius:10px;
         border:2px dashed #E8EDF5;background:white;cursor:pointer;

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.SupportDTO;
 import service.member.SupportService;
 import service.member.SupportServiceImpl;
@@ -26,10 +26,10 @@ public class SupportController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            response.sendRedirect("/member/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -47,7 +47,7 @@ public class SupportController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             response.setStatus(401);

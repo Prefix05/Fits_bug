@@ -54,7 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.MemberDTO;
+import dto.member.UserDTO;
 import dto.member.MessageRoomDTO;
 
 @WebServlet("/member/messageList")
@@ -64,7 +64,7 @@ public class MessageListController extends HttpServlet {
             throws IOException {
 
         HttpSession session = req.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        UserDTO user = (UserDTO) session.getAttribute("loginUser");
 
         if(user == null){
             resp.getWriter().write("[]");

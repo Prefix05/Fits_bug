@@ -1,69 +1,82 @@
 package service.member;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.member.WorkoutRecordDAO;
-import dao.member.WorkoutRecordDAOImpl;
+
+import dao.member.WorkoutLogDAO;
+import dao.member.WorkoutLogDAOImpl;
 import dto.member.WorkoutLogDTO;
 
 public class HotTimeServiceImpl implements HotTimeService {
 
-    private WorkoutRecordDAO dao = new WorkoutRecordDAOImpl();
+    
+    private WorkoutLogDAO dao = new WorkoutLogDAOImpl();
 
     @Override
     public String getHotTimeData(String email) {
 
-        List<WorkoutLogDTO> list = dao.getRecords(email);
+        
+        List<WorkoutLogDTO> list = dao.findByEmail(email);
+        if (list == null) list = new ArrayList<>();
 
+        // 요일 카운트 맵
         Map<String, Integer> dayMap = new LinkedHashMap<>();
-        String[] days = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
+        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        for (String d : days) dayMap.put(d, 0);
 
-        for(String d : days) dayMap.put(d, 0);
-
+        // 시간대 카운트 맵 (0~23)
         Map<Integer, Integer> timeMap = new LinkedHashMap<>();
-        for(int i=0;i<24;i++) timeMap.put(i, 0);
+        for (int i = 0; i < 24; i++) timeMap.put(i, 0);
 
         for (WorkoutLogDTO w : list) {
 
             // null 체크
             if (w.getDate() == null || w.getStartTime() == null) continue;
 
-            // ✅ 날짜 + 시간 합치기
+            // LocalDate + LocalTime → LocalDateTime
             LocalDateTime dt = LocalDateTime.of(w.getDate(), w.getStartTime());
 
-            // 요일 (Mon, Tue...)
-            String day = dt.getDayOfWeek().toString().substring(0,3);
+            // 요일 (Mon, Tue ...)
+            // getDayOfWeek() 반환값: "MONDAY", "TUESDAY" → 앞 3자리 추출 후 첫자 대문자
+            String rawDay = dt.getDayOfWeek().toString(); // e.g. "MONDAY"
+            String day = rawDay.charAt(0)
+                       + rawDay.substring(1, 3).toLowerCase(); // "Mon"
 
             // 시간 (0~23)
             int hour = dt.getHour();
 
-            dayMap.put(day, dayMap.get(day) + 1);
+            if (dayMap.containsKey(day)) {
+                dayMap.put(day, dayMap.get(day) + 1);
+            }
             timeMap.put(hour, timeMap.get(hour) + 1);
         }
 
-        // 🔥 JSON 생성
+        // JSON 생성
         StringBuilder json = new StringBuilder();
         json.append("{");
 
         json.append("\"dayData\":[");
-        for(String d : dayMap.keySet()){
-            json.append("{\"day\":\"").append(d)
-                .append("\",\"count\":").append(dayMap.get(d))
-                .append("},");
+        String[] dayKeys = dayMap.keySet().toArray(new String[0]);
+        for (int i = 0; i < dayKeys.length; i++) {
+            json.append("{\"day\":\"").append(dayKeys[i])
+                .append("\",\"count\":").append(dayMap.get(dayKeys[i]))
+                .append("}");
+            if (i < dayKeys.length - 1) json.append(",");
         }
-        json.deleteCharAt(json.length()-1);
         json.append("],");
 
         json.append("\"timeData\":[");
-        for(Integer t : timeMap.keySet()){
-            json.append("{\"time\":\"").append(t)
-                .append("\",\"count\":").append(timeMap.get(t))
-                .append("},");
+        Integer[] timeKeys = timeMap.keySet().toArray(new Integer[0]);
+        for (int i = 0; i < timeKeys.length; i++) {
+            json.append("{\"time\":\"").append(timeKeys[i])
+                .append("\",\"count\":").append(timeMap.get(timeKeys[i]))
+                .append("}");
+            if (i < timeKeys.length - 1) json.append(",");
         }
-        json.deleteCharAt(json.length()-1);
         json.append("]");
 
         json.append("}");

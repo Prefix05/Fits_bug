@@ -1,50 +1,83 @@
 package dto.member;
 
+/**
+ * ↔ MEMBER 테이블 (회원 기본 정보 + 운동 계획 통합)
+ *
+ * CREATE TABLE MEMBER (
+ *   id               INTEGER AUTO_INCREMENT PRIMARY KEY,
+ *   user_id          INTEGER,
+ *   trainer_id       INTEGER,
+ *   gym_id           INTEGER,
+ *   purpose          ENUM('diet','balance','bulk-up'),
+ *   experience       ENUM('first(0)','beginner(<1)','intermediate(1~3)','high(>3)'),
+ *   height           INTEGER,
+ *   weight           INTEGER,
+ *   diet             ENUM('YES','Intermediate','NO'),
+ *   exerciseCount_goal ENUM('<=2','3~4','>5'),
+ *   address          VARCHAR(255),
+ *   latitude         DECIMAL(10,7),
+ *   longitude        DECIMAL(10,7),
+ *   NAME             VARCHAR(50),
+ *   goals            VARCHAR(50),
+ *   next_session     VARCHAR(100),
+ *   lesson_count     INTEGER DEFAULT 0,
+ *   total_lessons    INTEGER DEFAULT 10,
+ *   last_session     VARCHAR(50),
+ *   STATUS           VARCHAR(50) DEFAULT 'all',
+ *   age              INTEGER
+ * );
+ *
+ * ✅ WorkoutPlanDTO 통합: height, weight, diet, exerciseCountGoal
+ *    + goals, experience, purpose → MEMBER 테이블 직접 관리
+ *
+ * + JOIN용 필드 (USER 테이블): email, nickname, profileImg, role
+ * + 화면용 추가 필드: level, frequency (WorkoutPlanDTO 호환)
+ */
 public class MemberDTO {
 
-    // ── MEMBER 테이블 컬럼 ──────────────────────────────────────
+    // ── MEMBER 테이블 컬럼 ─────────────────────────────────────
     private int     id;
-    private Integer userId;         // user_id (FK)
-    private Integer trainerId;      // trainer_id
-    private Integer gymId;          // gym_id
+    private Integer userId;              // user_id  (FK → USER.id)
+    private Integer trainerId;           // trainer_id
+    private Integer gymId;              // gym_id
 
-    private String  purpose;
-    private String  experience;
+    private String  purpose;            // ENUM('diet','balance','bulk-up')
+    private String  experience;         // ENUM('first(0)','beginner(<1)',...)
 
-    private int     height;
-    private int     weight;
-
-    private String  diet;
-    private String  exerciseCountGoal; // DB 컬럼: exerciseCount_goal
+    // ✅ WorkoutPlanDTO에서 통합된 필드
+    private int     height;             // height INTEGER
+    private int     weight;             // weight INTEGER
+    private String  diet;               // ENUM('YES','Intermediate','NO')
+    private String  exerciseCountGoal;  // DB: exerciseCount_goal
 
     private String  address;
     private double  latitude;
     private double  longitude;
 
-    private String  name;
-    private String  goals;
-    private String  nextSession;    // next_session
-
-    private int     lessonCount;    // lesson_count
-    private int     totalLessons;   // total_lessons
-
-    private String  lastSession;    // last_session
-    private String  status;
-
+    private String  name;               // DB: NAME
+    private String  goals;              // goals VARCHAR(50) ← 운동 목표
+    private String  nextSession;        // DB: next_session
+    private int     lessonCount;        // DB: lesson_count  DEFAULT 0
+    private int     totalLessons;       // DB: total_lessons DEFAULT 10
+    private String  lastSession;        // DB: last_session
+    private String  status;             // DB: STATUS  DEFAULT 'all'
     private int     age;
 
-    // ── JOIN용 transient 필드 (USER 테이블에서 가져옴) ──────────
-    private String  email;          // USER.email (세션 키로도 사용)
-    private String  nickname;       // USER.nickname
-    private String  profileImg;     // USER.profileImg
-    private String  role;           // USER.role
-    private boolean emailVerified;  // USER.email_verified
-    private String  socialType;     // USER.provider (카카오 등)
+    // ── 화면/세션용 추가 필드 (WorkoutPlanDTO 호환) ───────────
+    private String  level;              // 운동 수준 (초급/중급/고급) - 화면 표시용
+    private String  frequency;          // 운동 빈도 (주 3회 등) - 화면 표시용
 
-    // ─── 기본 생성자 ────────────────────────────────────────────
+    // ── JOIN용 필드 (USER 테이블, DB 컬럼 아님) ───────────────
+    private String  email;
+    private String  nickname;
+    private String  profileImg;
+    private String  role;
+    private boolean emailVerified;
+    private String  socialType;         // USER.provider
+
     public MemberDTO() {}
 
-    // ─── getter / setter ────────────────────────────────────────
+    // ── getter / setter ──────────────────────────────────────
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -57,7 +90,6 @@ public class MemberDTO {
 
     public Integer getGymId() { return gymId; }
     public void setGymId(Integer gymId) { this.gymId = gymId; }
-
 
     public String getPurpose() { return purpose; }
     public void setPurpose(String purpose) { this.purpose = purpose; }
@@ -94,6 +126,10 @@ public class MemberDTO {
     public String getGoals() { return goals; }
     public void setGoals(String goals) { this.goals = goals; }
 
+    // WorkoutPlanDTO.getGoal() 호환
+    public String getGoal() { return goals; }
+    public void setGoal(String goal) { this.goals = goal; }
+
     public String getNextSession() { return nextSession; }
     public void setNextSession(String nextSession) { this.nextSession = nextSession; }
 
@@ -112,8 +148,14 @@ public class MemberDTO {
     public int getAge() { return age; }
     public void setAge(int age) { this.age = age; }
 
-    // ── JOIN용 필드 getter/setter ────────────────────────────────
+    // 화면용 (WorkoutPlanDTO 호환)
+    public String getLevel() { return level; }
+    public void setLevel(String level) { this.level = level; }
 
+    public String getFrequency() { return frequency; }
+    public void setFrequency(String frequency) { this.frequency = frequency; }
+
+    // JOIN용
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
@@ -132,10 +174,9 @@ public class MemberDTO {
     public String getSocialType() { return socialType; }
     public void setSocialType(String socialType) { this.socialType = socialType; }
 
-	@Override
-	public String toString() {
-		return "MemberDTO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", phone=" + phone
-				+ ", profileImage=" + profileImage + ", emailVerified=" + emailVerified + ", socialType=" + socialType
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "MemberDTO{id=" + id + ", email='" + email
+                + "', nickname='" + nickname + "', goals='" + goals + "'}";
+    }
 }

@@ -2,37 +2,24 @@ package controller.member;
 
 import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import dto.member.CommunityDTO;
-import service.member.CommunityService;
-import service.member.CommunityServiceImpl;
+import javax.servlet.http.*;
+import dto.member.PostDTO;
+import service.member.PostService;
+import service.member.PostServiceImpl;
 
 @WebServlet("/member/community")
 public class CommunityController extends HttpServlet {
 
-    private CommunityService service = new CommunityServiceImpl();
+    private PostService postService = new PostServiceImpl();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
-            List<CommunityDTO> postList = service.getPostList();
-
-            req.setAttribute("postList", postList);
-
-            req.getRequestDispatcher("/member/community.jsp")
-               .forward(req, resp);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServletException("community load fail");
-        }
+        List<PostDTO> postList = postService.getPosts();
+        request.setAttribute("postList", postList);
+        request.getRequestDispatcher("/member/community.jsp").forward(request, response);
     }
 }

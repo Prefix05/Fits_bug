@@ -21,24 +21,13 @@ public class TrainerDetailController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-		/*
-		 * int trainerId = Integer.parseInt(req.getParameter("trainerId"));
-		 * 
-		 * TrainerDTO dto = service.getTrainerDetail(trainerId);
-		 * 
-		 * req.setAttribute("trainer", dto);
-		 * 
-		 * RequestDispatcher rd = req.getRequestDispatcher("/trainerDetail.jsp");
-		 * 
-		 * rd.forward(req, resp);
-		 */
-    	String trainerId = req.getParameter("trainerId");
+        String trainerId = req.getParameter("trainerId");
 
-        // 🔥 더미 데이터 (DB 없이 테스트)
         TrainerDTO dto = new TrainerDTO();
 
         if ("1".equals(trainerId)) {
-            dto.setTrainerId(1);
+            // ✅ setTrainerId() → setId() (TrainerDTO 필드명은 id)
+            dto.setId(1);
             dto.setName("김트레이너");
             dto.setSpecialty("근력 강화");
             dto.setCareer("스포애니 7년");
@@ -46,10 +35,8 @@ public class TrainerDetailController extends HttpServlet {
             dto.setProfileImg("https://api.dicebear.com/7.x/avataaars/svg?seed=trainer1");
             dto.setPrice1(40000);
             dto.setPrice10(300000);
-        }
-
-        else if ("2".equals(trainerId)) {
-            dto.setTrainerId(2);
+        } else if ("2".equals(trainerId)) {
+            dto.setId(2);
             dto.setName("이코치");
             dto.setSpecialty("다이어트");
             dto.setCareer("커브스 5년");
@@ -57,10 +44,8 @@ public class TrainerDetailController extends HttpServlet {
             dto.setProfileImg("https://api.dicebear.com/7.x/avataaars/svg?seed=trainer2");
             dto.setPrice1(35000);
             dto.setPrice10(280000);
-        }
-
-        else {
-            dto.setTrainerId(0);
+        } else {
+            dto.setId(0);
             dto.setName("기본 트레이너");
             dto.setSpecialty("운동");
             dto.setCareer("경력 없음");
@@ -69,8 +54,7 @@ public class TrainerDetailController extends HttpServlet {
 
         req.setAttribute("trainer", dto);
 
-        RequestDispatcher rd =
-                req.getRequestDispatcher("/member/trainerDetail.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher("/member/trainerDetail.jsp");
         rd.forward(req, resp);
     }
 }

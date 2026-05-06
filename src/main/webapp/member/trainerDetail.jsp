@@ -251,15 +251,15 @@ function pay(){
     amount,
     orderId: "ORDER_" + Date.now(),
     orderName: productName,
-    successUrl: window.location.origin + "<%=contextPath%>/paymentSuccess.jsp",
-    failUrl:    window.location.origin + "<%=contextPath%>/paymentFail.jsp"
+    successUrl: window.location.origin + "<%=contextPath%>/member/paymentSuccess",
+    failUrl:    window.location.origin + "<%=contextPath%>/member/paymentFail"
   });
 }
 
 function goChat(){
   fetch("trainerInfo?trainerId=" + trainerId).then(r=>r.json()).then(data=>{
-    location.href = "<%=contextPath%>/chat.jsp?receiver=" + (data.email || "trainer");
-  }).catch(()=>{ location.href="<%=contextPath%>/chat.jsp"; });
+    location.href = "<%=contextPath%>/member/chat?receiver=" + (data.email || "trainer");
+  }).catch(()=>{ location.href="<%=contextPath%>/member/chat"; });
 }
 </script>
 </body>

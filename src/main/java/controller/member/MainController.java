@@ -1,18 +1,13 @@
 package controller.member;
 
 import java.io.IOException;
-
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import dao.member.WorkoutPlanDAO;
-import dao.member.WorkoutPlanDAOImpl;
-import dto.member.WorkoutPlanDTO;
-import dto.trainer.UserDTO;
+import javax.servlet.http.*;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dto.member.MemberDTO;
+import dto.member.UserDTO;
 
 @WebServlet("/member/main")
 public class MainController extends HttpServlet {
@@ -24,22 +19,24 @@ public class MainController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로
         if (loginUser == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
-        // 운동 계획이 세션에 없으면 DB에서 조회해 세팅
-        if (session.getAttribute("plan") == null) {
-            WorkoutPlanDAO planDao = new WorkoutPlanDAOImpl();
-            WorkoutPlanDTO plan = planDao.getPlan(loginUser.getEmail());
-            if (plan != null) {
-                session.setAttribute("plan", plan);
+        /*
+         * ✅ WorkoutPlanDAO 완전 제거
+         *    MemberDAO.findByEmail 로 MEMBER 테이블에서
+         *    회원 기본정보 + 운동계획(height/weight/diet/goals) 한 번에 조회
+         */
+        if (session.getAttribute("memberInfo") == null) {
+            MemberDAO memberDao = new MemberDAOImpl();
+            MemberDTO memberInfo = memberDao.findByEmail(loginUser.getEmail());
+            if (memberInfo != null) {
+                session.setAttribute("memberInfo", memberInfo);
             }
         }
 
-        // main.jsp로 포워드 (URL은 /main 유지)
         request.getRequestDispatcher("/member/main.jsp").forward(request, response);
     }
 
