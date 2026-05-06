@@ -11,10 +11,11 @@ import dto.member.TrainerDTO;
 
 public class TrainerDAOImpl implements TrainerDAO {
     private Connection getConn() throws Exception {
+    	Class.forName("org.mariadb.jdbc.Driver");
         return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/fitsbug",
+            "jdbc:mariadb://localhost:3306/fitsbug",
             "root",
-            "1234"
+            "7564"
         );
     }
 
@@ -80,7 +81,6 @@ public class TrainerDAOImpl implements TrainerDAO {
                 t.setProfileImg(rs.getString("profile_img"));
                 t.setSpecialty(rs.getString("specialty"));
                 t.setRating(rs.getDouble("rating"));
-                t.setSimilarity(rs.getDouble("similarity"));
                 t.setPrice10(rs.getInt("price10"));
                 t.setPrice1(rs.getInt("price1"));
                 t.setCareer(rs.getString("career"));
@@ -117,7 +117,6 @@ public class TrainerDAOImpl implements TrainerDAO {
                 t.setProfileImg(rs.getString("profile_img"));
                 t.setSpecialty(rs.getString("specialty"));
                 t.setRating(rs.getDouble("rating"));
-                t.setSimilarity(rs.getDouble("similarity"));
                 t.setPrice10(rs.getInt("price10"));
                 t.setPrice1(rs.getInt("price1"));
                 t.setCareer(rs.getString("career"));
