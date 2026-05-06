@@ -50,6 +50,11 @@
         ORDER BY l.lesson_date ASC, l.start_time ASC
     </select>
 
+    <insert id="insertLesson" parameterType="map">
+        INSERT INTO LESSON (trainer_id, client_id, lesson_date, start_time, end_time, status, goal)
+        VALUES (#{trainerId}, #{clientId}, #{lessonDate}, #{startTime}, #{endTime}, '예약완료', #{goal})
+    </insert>
+
     <!-- Returns [{lesson_date: "YYYY-MM-DD", cnt: N}, ...] for month overview dots -->
     <select id="findLessonCountsByMonth" parameterType="map" resultType="map">
         SELECT DATE_FORMAT(l.lesson_date, '%Y-%m-%d') AS lesson_date,
