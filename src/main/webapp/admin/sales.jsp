@@ -105,28 +105,26 @@
             </div>
         </div>
 
-        <!-- Search & Filter Form -->
-        <form id="searchForm" action="${pageContext.request.contextPath}/admin/sales" method="get" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-wrap items-center gap-4 mb-8">
+<!-- Search & Filter Form -->
+<form id="searchForm" action="${pageContext.request.contextPath}/admin/sales" method="get" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-wrap items-center gap-4 mb-8">
     <div class="flex items-center gap-2">
         <input type="date" name="startDate" value="${startDate}" class="border-gray-200 rounded-lg text-sm focus:ring-primary">
         <span class="text-gray-400">~</span>
         <input type="date" name="endDate" value="${endDate}" class="border-gray-200 rounded-lg text-sm focus:ring-primary">
     </div>
-    <div class="relative flex-1 min-w-[200px]">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
-        <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="회원명, 헬스장 검색..." 
-               class="w-full pl-10 pr-4 py-2 border-gray-200 rounded-lg text-sm focus:ring-primary">
-    </div>
-    <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">조회</button>
+    <div class="flex-1"></div> <!-- 여백용 -->
+    <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">기간 적용</button>
     <button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/sales'" 
             class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors">초기화</button>
     
     <!-- 필터 상태 유지를 위한 Hidden 필드들 -->
-    <input type="hidden" name="status" value="${status}">
-	<input type="hidden" name="viewType" value="${param.viewType}">
+    <input type="hidden" name="status" value="${currentStatus}">
+    <input type="hidden" name="viewType" value="${currentViewType}">
+    <input type="hidden" name="salesSearch" value="${param.salesSearch}">
+    <input type="hidden" name="paymentSearch" value="${param.paymentSearch}">
 </form>
 
-        <!-- Summary Cards (정산 테이블 상단 디자인 적용) -->
+<!-- Summary Cards (정산 테이블 상단 디자인 적용) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <p class="text-sm font-medium text-gray-500">총 매출액</p>
@@ -152,12 +150,21 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
     <div class="px-6 py-5 border-b border-gray-50 flex justify-between items-center">
         <h3 class="text-lg font-bold text-gray-800">매출 내역</h3>
+        <div class="flex items-center gap-3">
+            <!-- 매출 전용 검색창 -->
+            <div class="relative w-64">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+                <input type="text" id="salesSearchInput" value="${param.salesSearch}" placeholder="지점명, 트레이너 검색..." 
+                       onkeypress="if(event.keyCode==13){ updateSearch('sales'); return false; }"
+                       class="w-full pl-9 pr-4 py-1.5 border-gray-200 rounded-lg text-xs focus:ring-primary">
+            </div>
         <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
                     <%-- [변경 포인트 2] 선언된 변수(currentViewType)로 단순 비교 --%>
                     <button onclick="changeViewType('all')" class="px-4 py-1.5 text-xs font-bold ${currentViewType == 'all' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">전체 내역</button>
                     <button onclick="changeViewType('gym')" class="px-4 py-1.5 text-xs font-bold ${currentViewType == 'gym' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">헬스장별</button>
                     <button onclick="changeViewType('trainer')" class="px-4 py-1.5 text-xs font-bold ${currentViewType == 'trainer' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">트레이너별</button>
         </div>
+    	</div>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
@@ -211,6 +218,14 @@
     <!-- 헤더: 제목 및 필터 버튼 -->
     <div class="px-6 py-5 border-b border-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h3 class="text-lg font-bold text-gray-800">결제 내역</h3>
+        <div class="flex items-center gap-3">
+            <!-- 결제 전용 검색창 -->
+            <div class="relative w-64">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+                <input type="text" id="paymentSearchInput" value="${param.paymentSearch}" placeholder="회원명 검색..." 
+                       onkeypress="if(event.keyCode==13){ updateSearch('payment'); return false; }"
+                       class="w-full pl-9 pr-4 py-1.5 border-gray-200 rounded-lg text-xs focus:ring-primary">
+            </div>
         <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
                     <%-- [변경 포인트 3] 선언된 변수(currentStatus)로 단순 비교 --%>
                     <button onclick="changeStatus('전체')" class="px-4 py-1.5 text-xs font-bold ${currentStatus == '전체' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">전체</button>
@@ -219,7 +234,7 @@
                     <button onclick="changeStatus('환불완료')" class="px-4 py-1.5 text-xs font-bold ${currentStatus == '환불완료' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'} rounded-md transition-all">환불완료</button>
         </div>
     </div>
-
+	</div>
   <!-- 테이블 영역 -->
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left border-collapse">
@@ -371,6 +386,14 @@ function updateButtonStyles(queryString) {
             btn.className = "px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md transition-all";
         }
     });
+    
+ 	// 추가: 검색창 텍스트 유지 (비동기 로드 시 입력창이 초기화되는 것 방지)
+    if (params.has('salesSearch')) {
+        document.getElementById('salesSearchInput').value = params.get('salesSearch');
+    }
+    if (params.has('paymentSearch')) {
+        document.getElementById('paymentSearchInput').value = params.get('paymentSearch');
+    }
 }
 
 // "조회" 버튼 클릭 시 기본 제출 막고 비동기 처리
@@ -383,7 +406,17 @@ function movePage(newOffset) {
     document.getElementById('currentOffset').value = newOffset;
     document.getElementById('listForm').submit();
 }
-
+//검색어 입력 시 호출 (엔터 키 대응)
+function updateSearch(type) {
+    if (type === 'sales') {
+        const val = document.getElementById('salesSearchInput').value;
+        document.querySelector('input[name="salesSearch"]').value = val;
+    } else if (type === 'payment') {
+        const val = document.getElementById('paymentSearchInput').value;
+        document.querySelector('input[name="paymentSearch"]').value = val;
+    }
+    refreshData();
+}
 
 </script>
 </body></html>
