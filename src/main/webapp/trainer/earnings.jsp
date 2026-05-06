@@ -169,7 +169,13 @@
         <!-- ── 3. Settlement History Table ──────────────────────────── -->
         <c:if test="${not empty settlementHistory}">
         <section class="space-y-3">
-            <h3 class="text-base font-bold px-1">월별 수익 내역</h3>
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-base font-bold">월별 수익 내역</h3>
+                <a href="${pageContext.request.contextPath}/trainer/earnings/settlement"
+                   class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5">
+                    더보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+            </div>
             <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden">
                 <table class="w-full text-sm">
                     <thead class="bg-surface-container-low text-on-surface-variant text-xs font-bold uppercase tracking-wider">
@@ -182,7 +188,8 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-outline-variant/10">
-                        <c:forEach var="s" items="${settlementHistory}">
+                        <c:forEach var="s" items="${settlementHistory}" varStatus="st">
+                            <c:if test="${st.count <= 5}">
                             <tr class="hover:bg-surface-container-low transition-colors">
                                 <td class="px-5 py-4 font-semibold text-on-surface">${s.settlementMonth}</td>
                                 <td class="px-5 py-4 text-center text-on-surface-variant">${s.txCount}건</td>
@@ -196,16 +203,34 @@
                                     ₩<fmt:formatNumber value="${s.netAmount}" pattern="#,###"/>
                                 </td>
                             </tr>
+                            </c:if>
                         </c:forEach>
                     </tbody>
                 </table>
+                <c:if test="${settlementHistory.size() >= 5}">
+                <div class="border-t border-outline-variant/10">
+                    <a href="${pageContext.request.contextPath}/trainer/earnings/settlement"
+                       class="flex items-center justify-center gap-1.5 py-3 text-sm text-primary font-semibold hover:bg-surface-container-low transition-colors">
+                        <span class="material-symbols-outlined text-base">expand_more</span>
+                        전체 월별 내역 보기
+                    </a>
+                </div>
+                </c:if>
             </div>
         </section>
         </c:if>
 
-        <!-- ── 4. Transaction List (orders) ─────────────────────────── -->
+        <!-- ── 4. Transaction List ────────────────────────────────────── -->
         <section class="space-y-3">
-            <h3 class="text-base font-bold px-1">결제 내역</h3>
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-base font-bold">결제 내역</h3>
+                <c:if test="${not empty transactions}">
+                <a href="${pageContext.request.contextPath}/trainer/earnings/transactions"
+                   class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5">
+                    더보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+                </c:if>
+            </div>
             <c:choose>
                 <c:when test="${empty transactions}">
                     <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 p-10 flex flex-col items-center gap-3 text-center">
@@ -221,6 +246,7 @@
                                 <tr>
                                     <th class="text-left px-5 py-3">회원</th>
                                     <th class="text-left px-5 py-3">결제일</th>
+                                    <th class="text-left px-5 py-3">시간</th>
                                     <th class="text-left px-5 py-3">수단</th>
                                     <th class="text-right px-5 py-3">결제 금액</th>
                                     <th class="text-right px-5 py-3">수수료</th>
@@ -229,10 +255,12 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-outline-variant/10">
-                                <c:forEach var="tx" items="${transactions}">
+                                <c:forEach var="tx" items="${transactions}" varStatus="st">
+                                    <c:if test="${st.count <= 5}">
                                     <tr class="hover:bg-surface-container-low transition-colors">
                                         <td class="px-5 py-4 font-semibold text-on-surface">${tx.clientName}</td>
                                         <td class="px-5 py-4 text-on-surface-variant text-sm">${tx.paymentDate}</td>
+                                        <td class="px-5 py-4 text-on-surface-variant text-sm">${tx.paymentTime}</td>
                                         <td class="px-5 py-4 text-on-surface-variant text-sm">${tx.method}</td>
                                         <td class="px-5 py-4 text-right text-on-surface">
                                             ₩<fmt:formatNumber value="${tx.price}" pattern="#,###"/>
@@ -263,9 +291,19 @@
                                             </c:choose>
                                         </td>
                                     </tr>
+                                    </c:if>
                                 </c:forEach>
                             </tbody>
                         </table>
+                        <c:if test="${transactions.size() >= 5}">
+                        <div class="border-t border-outline-variant/10">
+                            <a href="${pageContext.request.contextPath}/trainer/earnings/transactions"
+                               class="flex items-center justify-center gap-1.5 py-3 text-sm text-primary font-semibold hover:bg-surface-container-low transition-colors">
+                                <span class="material-symbols-outlined text-base">expand_more</span>
+                                전체 결제 내역 보기
+                            </a>
+                        </div>
+                        </c:if>
                     </div>
                 </c:otherwise>
             </c:choose>

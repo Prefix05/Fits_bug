@@ -44,18 +44,53 @@
     <!-- Earnings: PT payments for a trainer from PAYMENT table -->
     <select id="findByTrainerId" parameterType="int" resultType="map">
         SELECT
-            p.id                                AS paymentId,
-            p.user_name                         AS clientName,
-            p.payment_price                     AS price,
-            p.payment_fee                       AS platformFee,
-            (p.payment_price - p.payment_fee)   AS netAmount,
-            p.status                            AS status,
-            p.method                            AS method,
-            p.payment_date                      AS paymentDate
+            p.id                                        AS paymentId,
+            p.user_name                                 AS clientName,
+            p.payment_price                             AS price,
+            p.payment_fee                               AS platformFee,
+            (p.payment_price - p.payment_fee)           AS netAmount,
+            p.status                                    AS status,
+            p.method                                    AS method,
+            DATE_FORMAT(p.payment_date, '%Y-%m-%d')    AS paymentDate,
+            DATE_FORMAT(p.payment_date, '%H:%i')       AS paymentTime
         FROM PAYMENT p
         WHERE p.trainer_id = #{trainerId}
           AND p.payment_type = 'PT'
         ORDER BY p.payment_date DESC
+    </select>
+
+    <!-- Paginated version for full transaction history page (supports dynamic sort) -->
+    <select id="findByTrainerIdPaged" parameterType="map" resultType="map">
+        SELECT
+            p.id                                        AS paymentId,
+            p.user_name                                 AS clientName,
+            p.payment_price                             AS price,
+            p.payment_fee                               AS platformFee,
+            (p.payment_price - p.payment_fee)           AS netAmount,
+            p.status                                    AS status,
+            p.method                                    AS method,
+            DATE_FORMAT(p.payment_date, '%Y-%m-%d')    AS paymentDate,
+            DATE_FORMAT(p.payment_date, '%H:%i')       AS paymentTime
+        FROM PAYMENT p
+        WHERE p.trainer_id = #{trainerId}
+          AND p.payment_type = 'PT'
+        ORDER BY
+        <choose>
+            <when test="sortBy == 'clientName'">p.user_name</when>
+            <when test="sortBy == 'price'">p.payment_price</when>
+            <when test="sortBy == 'netAmount'">(p.payment_price - p.payment_fee)</when>
+            <when test="sortBy == 'status'">p.status</when>
+            <otherwise>p.payment_date</otherwise>
+        </choose>
+        ${sortDir}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- Total count for pagination -->
+    <select id="countByTrainerId" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM PAYMENT p
+        WHERE p.trainer_id = #{trainerId}
+          AND p.payment_type = 'PT'
     </select>
 
 </mapper>

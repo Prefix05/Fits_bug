@@ -5,22 +5,6 @@
 
 <mapper namespace="mapper.trainer.settlement">
 
-    <resultMap id="settlementMap" type="settlement">
-        <id property="id" column="id"/>
-        <result property="targetId" column="target_id"/>
-        <result property="targetType" column="target_type"/>
-        <result property="settlementMonth" column="settlement_month"/>
-        <result property="settlementDeadline" column="settlement_deadline"/>
-        <result property="totalSales" column="total_sales"/>
-        <result property="totalFee" column="total_fee"/>
-        <result property="netAmount" column="net_amount"/>
-        <result property="bankName" column="bank_name"/>
-        <result property="accountNumber" column="account_number"/>
-        <result property="status" column="status"/>
-        <result property="completedAt" column="completed_at"/>
-        <result property="memo" column="memo"/>
-    </resultMap>
-
     <!-- Current month aggregated from PAYMENT -->
     <select id="findCurrentMonth" parameterType="map" resultType="map">
         SELECT
@@ -37,7 +21,7 @@
         GROUP BY settlementMonth
     </select>
 
-    <!-- Last 12 months aggregated from PAYMENT -->
+    <!-- Last 12 months aggregated from PAYMENT (used for chart on main earnings page) -->
     <select id="findAllByTrainer" parameterType="int" resultType="map">
         SELECT
             DATE_FORMAT(payment_date, '%Y-%m')  AS settlementMonth,
@@ -52,6 +36,39 @@
         GROUP BY settlementMonth
         ORDER BY settlementMonth DESC
         LIMIT 12
+    </select>
+
+    <!-- Paginated version for full settlement history page (supports dynamic sort) -->
+    <select id="findAllByTrainerPaged" parameterType="map" resultType="map">
+        SELECT
+            DATE_FORMAT(payment_date, '%Y-%m')  AS settlementMonth,
+            SUM(payment_price)                  AS totalSales,
+            SUM(payment_fee)                    AS totalFee,
+            SUM(payment_price - payment_fee)    AS netAmount,
+            COUNT(*)                            AS txCount
+        FROM PAYMENT
+        WHERE trainer_id   = #{trainerId}
+          AND payment_type = 'PT'
+          AND status       = '결제완료'
+        GROUP BY settlementMonth
+        ORDER BY
+        <choose>
+            <when test="sortBy == 'totalSales'">totalSales</when>
+            <when test="sortBy == 'netAmount'">netAmount</when>
+            <when test="sortBy == 'txCount'">txCount</when>
+            <otherwise>settlementMonth</otherwise>
+        </choose>
+        ${sortDir}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- Total distinct months count for pagination -->
+    <select id="countAllByTrainer" parameterType="int" resultType="int">
+        SELECT COUNT(DISTINCT DATE_FORMAT(payment_date, '%Y-%m'))
+        FROM PAYMENT
+        WHERE trainer_id   = #{trainerId}
+          AND payment_type = 'PT'
+          AND status       = '결제완료'
     </select>
 
 </mapper>

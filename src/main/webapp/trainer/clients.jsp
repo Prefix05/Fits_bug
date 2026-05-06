@@ -206,12 +206,11 @@
                 <div class="flex flex-col md:flex-row md:items-center gap-4 flex-1">
                     <!-- Integrated Search Bar -->
                     <div class="relative w-full lg:max-w-[300px]">
-                            <span
-                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg"
-                                    data-icon="search" style="">search</span>
-                        <input
-                                class="w-full bg-white border border-outline-variant rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-outline text-on-surface"
-                                placeholder="회원 검색..." type="text"/>
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+                        <input id="searchInput"
+                               class="w-full bg-white border border-outline-variant rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-outline text-on-surface"
+                               placeholder="회원 검색..." type="text"
+                               value="${currentSearch}"/>
                     </div>
                     <!-- Segmented Control Filter -->
                     <div class="flex items-center gap-1 p-1 bg-surface-container-high rounded-2xl w-full">
@@ -338,7 +337,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="clients?page=${currentPage - 1}"
+                        <a href="clients?page=${currentPage - 1}&search=${currentSearch}"
                            class="w-9 h-9 flex items-center justify-center rounded-lg
                       text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
                             <span class="material-symbols-outlined text-xl">chevron_left</span>
@@ -356,7 +355,7 @@
                             </button>
                         </c:when>
                         <c:otherwise>
-                            <a href="clients?page=${i}"
+                            <a href="clients?page=${i}&search=${currentSearch}"
                                class="w-9 h-9 flex items-center justify-center rounded-lg
                           text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors">
                                     ${i}
@@ -374,7 +373,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="clients?page=${currentPage + 1}"
+                        <a href="clients?page=${currentPage + 1}&search=${currentSearch}"
                            class="w-9 h-9 flex items-center justify-center rounded-lg
                       text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
                             <span class="material-symbols-outlined text-xl">chevron_right</span>
@@ -385,6 +384,27 @@
         </div>
     </main>
 </div>
+<script>
+    const searchInput = document.getElementById('searchInput');
+
+    // Re-focus and move cursor to end after page reload
+    if (searchInput.value.length > 0) {
+        searchInput.focus();
+        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    }
+
+    let debounceTimer;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+            const query = searchInput.value.trim();
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', query);
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }, 400);
+    });
+</script>
 </body>
 
 </html>
