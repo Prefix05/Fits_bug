@@ -85,7 +85,8 @@
                last_session, STATUS, age
         FROM MEMBER
         WHERE user_id = #{userId}
-=======
+        </select>
+       
     <!-- ──────────────────────────────────────────────────────
          MemberDAOImpl.loginCheck(MemberDTO dto)
          → param: MemberDTO  (dto.getEmail(), dto.getPassword())
@@ -96,7 +97,6 @@
         FROM user
         WHERE email    = #{email}
           AND password = #{password}
->>>>>>> 7f2c02f926c40b66df277c21344e819780aab63e
     </select>
 
     <!-- ============================================================

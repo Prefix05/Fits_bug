@@ -10,4 +10,7 @@ public interface ReportService {
 	ReportDTO getReportDetail(int reportId) throws Exception;
 	
 	boolean processReport(ReportDTO report) throws Exception;
+	
+	Integer totalCnt() throws Exception;
+	Integer reportCnt() throws Exception;
 }

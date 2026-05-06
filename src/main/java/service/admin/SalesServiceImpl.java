@@ -1,6 +1,7 @@
 package service.admin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import dao.admin.SalesDAO;
@@ -21,7 +22,6 @@ public class SalesServiceImpl implements SalesService {
         data.put("settlementList", salesDAO.selectSettlementList(paramMap));
         data.put("salesList", salesDAO.selectSalesList(paramMap));
         data.put("paymentHistory", salesDAO.selectPaymentHistory(paramMap));
-        
         return data;
 	}
 
@@ -29,5 +29,10 @@ public class SalesServiceImpl implements SalesService {
 	public boolean processSettlement(Integer id) throws Exception {
 		// 매퍼의 updateSettlementStatus 호출 (status='정산완료', completed_at=NOW() 반영)
         return salesDAO.updateSettlementStatus(id) > 0;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSettlementDetail(Integer settlementId) throws Exception {
+		return salesDAO.selectSettlementDetail(settlementId);
 	}
 }

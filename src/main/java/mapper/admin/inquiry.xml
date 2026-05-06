@@ -51,4 +51,8 @@
             process_date = NOW()
         WHERE id = #{inquiryId}
     </update>
+    
+    <select id="selectInquiryCnt" resultType="Integer">
+		select count(*) from inquiry
+	</select>
 </mapper>

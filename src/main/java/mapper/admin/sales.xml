@@ -51,16 +51,24 @@
         ORDER BY settlement_deadline ASC
         LIMIT #{limit} OFFSET #{offset}
     </select>
-
+	<!-- [추가] 정산 상태 업데이트 -->
+    <update id="updateSettlementStatus">
+        UPDATE SETTLEMENT 
+        SET status = '정산완료', 
+            completed_at = NOW() 
+        WHERE id = #{id}
+    </update>
+    
     <!-- [섹션 2] 매출 상세 내역 조회 (PaymentResultMap 사용) -->
     <select id="selectSalesList" resultMap="PaymentResultMap">
         SELECT 
             p.id, p.payment_date, p.payment_price, p.payment_fee,
             p.gym_id, g.name as gym_name, 
-            p.trainer_id, t.name as trainer_name
+            p.trainer_id, u.name as trainer_name
         FROM PAYMENT p
         LEFT JOIN GYM g ON p.gym_id = g.id
         LEFT JOIN TRAINER t ON p.trainer_id = t.id
+        LEFT JOIN USER u ON p.user_id = u.id
         WHERE p.status = '결제완료'
         <if test="startDate != null and endDate != null">
             AND p.payment_date BETWEEN #{startDate} AND #{endDate}
@@ -71,16 +79,17 @@
 
     <!-- [섹션 3] 결제 내역 조회 (PaymentResultMap 사용) -->
     <select id="selectPaymentHistory" resultMap="PaymentResultMap">
-        SELECT * FROM PAYMENT
+        SELECT p.* FROM PAYMENT p
+        LEFT JOIN TOSS T on p.user_id = t.user_id
         <where>
             <if test="status != null and status != '전체'">
-                AND status = #{status}
+                AND p.status = #{status}
             </if>
             <if test="searchKeyword != null and searchKeyword != ''">
-                AND (user_id LIKE CONCAT('%', #{searchKeyword}, '%') OR toss_order_id LIKE CONCAT('%', #{searchKeyword}, '%'))
+                AND (p.user_id LIKE CONCAT('%', #{searchKeyword}, '%') OR t.order_id LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
         </where>
-        ORDER BY payment_date DESC
+        ORDER BY p.payment_date DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
@@ -97,11 +106,31 @@
         </if>
     </select>
     
-    <!-- [추가] 정산 상태 업데이트 -->
-    <update id="updateSettlementStatus">
-        UPDATE SETTLEMENT 
-        SET status = '정산완료', 
-            completed_at = NOW() 
-        WHERE id = #{id}
-    </update>
+    <!-- [추가] 모달창용 정산 세부 내역 조회 (중요) -->
+    <!-- resultType="map"으로 설정하여 Service/Controller에서 Map 형태로 바로 받습니다. -->
+    <select id="selectSettlementDetail" resultType="map">
+        SELECT 
+            u.name AS memberName,
+            p.payment_date AS payDate,
+            p.payment_price AS payAmount,
+            p.payment_fee AS fee,
+            (p.payment_price - p.payment_fee) AS netAmount
+        FROM PAYMENT p
+        JOIN USER u ON p.user_id = u.id
+        WHERE p.status = '결제완료'
+    	<!-- 1. 해당 정산의 대상(헬스장 or 트레이너) 필터링 -->
+    	AND (
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' 
+            	THEN p.gym_id 
+            	ELSE p.trainer_id 
+        	END
+    	) = (SELECT target_id FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	<!-- 2. 해당 정산의 월(Month) 필터링 -->
+    	AND DATE_FORMAT(p.payment_date, '%Y-%m') = (SELECT settlement_month FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	ORDER BY p.payment_date DESC
+    </select>
+    
 </mapper>

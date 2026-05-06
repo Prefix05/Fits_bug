@@ -15,4 +15,6 @@ public interface SalesDAO {
 	public List<SalesDTO> selectPaymentHistory(Map<String, Object> paramMap) throws Exception;
 	
 	public int updateSettlementStatus(Integer id) throws Exception;
+	
+	public List<Map<String, Object>> selectSettlementDetail(Integer settlementId) throws Exception;
 }
