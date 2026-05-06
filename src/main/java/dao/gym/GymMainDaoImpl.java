@@ -12,7 +12,7 @@ import util.MybatisSqlSessionFactory;
 public class GymMainDaoImpl implements GymMainDao {
 	
 	@Override
-	public Gym selectGymMainInfo(int gymId) throws Exception {
+	public Map<String,Object> selectGymMainInfo(int gymId) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			return sqlSession.selectOne("mapper.gymMain.selectGymMainInfo", gymId);
@@ -50,6 +50,18 @@ public class GymMainDaoImpl implements GymMainDao {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Gym selectGymByUserId(Integer userId) throws Exception {
+		Gym gym = null;
+		try(SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			gym = sqlSession.selectOne("mapper.gymMain.selectGymByUserId", userId);
+			sqlSession.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return gym;
 	}
 
 }

@@ -17,6 +17,7 @@ public class UserDTO {
     private boolean deleted;       // DB 컬럼: is_deleted
     private String provider;       // ENUM('kakao','naver')
     private String providerId;     // DB 컬럼: provider_id
+    private Integer otherId;
 
     // ─── 기본 생성자 ───────────────────────────────────────────
     public UserDTO() {}
@@ -74,7 +75,16 @@ public class UserDTO {
     public String getProviderId() { return providerId; }
     public void setProviderId(String providerId) { this.providerId = providerId; }
 
-    @Override
+    
+    public Integer getOtherId() {
+		return otherId;
+	}
+
+	public void setOtherId(Integer otherId) {
+		this.otherId = otherId;
+	}
+
+	@Override
     public String toString() {
         return "UserDTO{id=" + id + ", email='" + email + "', nickname='" + nickname
                 + "', role='" + role + "'}";

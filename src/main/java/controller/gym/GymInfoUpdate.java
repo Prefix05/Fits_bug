@@ -20,6 +20,7 @@ import javax.servlet.http.Part;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
+import dto.trainer.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
@@ -46,32 +47,28 @@ public class GymInfoUpdate extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		
 
 		try {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession();
+			UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 
-			if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null || session.getAttribute("userId") == null) {
+			if (loginUser == null) {
 				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
-
-			int gymId = (int) session.getAttribute("gymId");
-			int userId = (int) session.getAttribute("userId");
+			
+	        UserDTO user = new UserDTO();
+	        user.setId(loginUser.getId());
+	        user.setEmail(request.getParameter("emailId"));
+	        user.setName(request.getParameter("userName"));
+	        user.setPassword(request.getParameter("newPassword"));
 
 			GymInfoEditService service = new GymInfoEditServiceImpl();
 
-			Gym gym = service.selectGymMypage(gymId);
-			if (gym == null) {
-			    throw new ServletException("헬스장 정보 없음");
-			}
-
-			// 기본 정보
+			Integer gymId = Integer.parseInt(request.getParameter("gymId"));		
+			Gym gym = new Gym();
 			gym.setId(gymId);
-			gym.setUserId(userId);
-			gym.setEmailId(request.getParameter("emailId"));
-			gym.setUserName(request.getParameter("userName"));
-			gym.setTel(request.getParameter("tel"));
-
 			gym.setName(request.getParameter("gymName"));
 			gym.setPhoneNum(request.getParameter("phoneNum"));
 			gym.setDescription(request.getParameter("description"));
@@ -121,7 +118,7 @@ public class GymInfoUpdate extends HttpServlet {
 			// 프로필 이미지 업로드
 			String profileFileName = uploadFile(request, "profileImg", "/gym/gymProfile");
 			if (profileFileName != null) {
-			    gym.setProfileImg(profileFileName);
+			    user.setProfileImage(profileFileName);
 			}
 
 			// 배경 이미지 업로드
@@ -160,8 +157,6 @@ public class GymInfoUpdate extends HttpServlet {
 			schedule.setAvailableWeekdayEnd(LocalTime.parse(request.getParameter("weekdayEnd")));
 			schedule.setAvailableWeekendStart(LocalTime.parse(request.getParameter("weekendStart")));
 			schedule.setAvailableWeekendEnd(LocalTime.parse(request.getParameter("weekendEnd")));
-			
-		
 
 			service.updateSchedule(schedule);
 

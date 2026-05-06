@@ -1,14 +1,18 @@
 package service.member;
 
+import java.util.List;
+
+import dao.gym.GymMainDao;
+import dao.gym.GymMainDaoImpl;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
+import dto.gym.Gym;
 import dto.member.UserDTO;
-
-import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO = new UserDAOImpl();
+    private GymMainDao gymMainDAO = new GymMainDaoImpl();
 
     // ─── 일반 회원가입 ───────────────────────────────────────────
     @Override
@@ -37,9 +41,14 @@ public class UserServiceImpl implements UserService {
 
     // ─── 로그인 ──────────────────────────────────────────────────
     @Override
-    public UserDTO login(String email, String password) {
+    public UserDTO login(String email, String password) throws Exception {
         UserDTO user = userDAO.findByEmailAndPassword(email, password);
         if (user != null && !user.isDeleted()) {
+        	String role = user.getRole();
+        	if(role.equals("GYM")) {
+        		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
+        		user.setOtherId(gym.getId()); // gymId  userDTO에 추가
+        	}
             return user;
         }
         return null;

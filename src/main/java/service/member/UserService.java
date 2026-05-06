@@ -12,7 +12,7 @@ public interface UserService {
     int registerSocial(UserDTO dto);
 
     // 로그인
-    UserDTO login(String email, String password);
+    UserDTO login(String email, String password) throws Exception;
 
     // 이메일 중복 체크
     boolean isEmailExists(String email);

@@ -37,23 +37,29 @@ public class LoginController extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        try {
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
 
-        String email    = request.getParameter("email");
-        String password = request.getParameter("password");
+			// USER 테이블 기준 로그인
+			UserDTO loginUser = userService.login(email, password);
 
-        // USER 테이블 기준 로그인
-        UserDTO loginUser = userService.login(email, password);
+			if (loginUser != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("loginUser", loginUser); // UserDTO 저장
+				session.setAttribute("loginEmail", email); // 이메일 별도 저장 (다른 DAO에서 사용)
 
-        if (loginUser != null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("loginUser", loginUser);      // UserDTO 저장
-            session.setAttribute("loginEmail", email);         // 이메일 별도 저장 (다른 DAO에서 사용)
-
-            response.sendRedirect(request.getContextPath() + "/member/main");
-
-        } else {
-            request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
-            request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+				if(loginUser.getRole().equals("GYM")) {
+					response.sendRedirect(request.getContextPath() + "/gym/main");
+				} else if(loginUser.getRole().equals("MEMBER")) {
+					response.sendRedirect(request.getContextPath() + "/member/main");
+				} 
+			} else {
+				request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
+				request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
         }
     }
 }

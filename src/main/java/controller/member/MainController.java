@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 
 import dao.member.WorkoutPlanDAO;
 import dao.member.WorkoutPlanDAOImpl;
+import dto.member.UserDTO;
 import dto.member.WorkoutPlanDTO;
-import dto.trainer.UserDTO;
 
 @WebServlet("/member/main")
 public class MainController extends HttpServlet {

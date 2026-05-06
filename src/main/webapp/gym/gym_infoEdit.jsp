@@ -83,6 +83,7 @@ tailwind.config = {
       method="post"
       enctype="multipart/form-data">
 
+<input type="hidden" id="gymId" name="gymId" value="${gym.id}">
 <input type="hidden" id="postcode" name="postcode" value="${gym.postcode}">
 <input type="hidden" id="latitude" name="latitude" value="${gym.latitude}">
 <input type="hidden" id="longitude" name="longitude" value="${gym.longitude}">

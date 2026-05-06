@@ -14,6 +14,8 @@ public class GymNotice {
 		super();
 	}
 
+
+
 	public GymNotice(int id, int gymId, String title, String content, int viewCount, Date createdAt) {
 		super();
 		this.id = id;
@@ -23,6 +25,8 @@ public class GymNotice {
 		this.viewCount = viewCount;
 		this.createdAt = createdAt;
 	}
+
+
 
 	public int getId() {
 		return id;
@@ -72,13 +76,18 @@ public class GymNotice {
 		this.createdAt = createdAt;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "GymNotice [id=" + id + ", gymId=" + gymId + ", title=" + title + ", content=" + content + ", viewCount="
 				+ viewCount + ", createdAt=" + createdAt + "]";
 	}
 
-	
+
+
+
+
 	
 	
 }
