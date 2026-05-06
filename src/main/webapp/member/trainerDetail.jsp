@@ -110,6 +110,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
                   <div style="display:flex;align-items:center;gap:14px;">
                     <input type="radio" name="ptPkg" value="${pkg.price}"
                            data-name="${fn:escapeXml(pkg.label)}"
+                           data-count="${pkg.sessionCount}"
                            style="accent-color:#FF6B35;width:18px;height:18px;"
                            ${st.first ? 'checked' : ''}/>
                     <div>
@@ -252,12 +253,14 @@ document.querySelectorAll('input[name="ptPkg"]').forEach(radio => {
 function pay() {
   const radio = document.querySelector('input[name="ptPkg"]:checked');
   if (!radio) { alert('이용권을 선택해주세요.'); return; }
-  const amount      = parseInt(radio.value);
-  const productName = radio.dataset.name || 'PT';
+  const amount       = parseInt(radio.value);
+  const productName  = radio.dataset.name || 'PT';
+  const sessionCount = parseInt(radio.dataset.count) || 1;
+  const orderId      = 'PT-' + TRAINER_ID + '-' + sessionCount + '-' + Date.now();
   const tossPayments = TossPayments("test_ck_5OWRapdA8dJO4LMYoZWYVo1zEqZK");
   tossPayments.requestPayment("카드", {
     amount,
-    orderId:   "ORDER_" + Date.now(),
+    orderId,
     orderName: productName,
     successUrl: window.location.origin + CTX + '/member/paymentSuccess',
     failUrl:    window.location.origin + CTX + '/member/paymentFail'

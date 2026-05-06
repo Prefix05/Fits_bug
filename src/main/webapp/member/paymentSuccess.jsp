@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -55,15 +57,25 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
     핏불이 응원해요! 트레이너와 함께<br>최고의 결과를 만들어봐요 💪
   </p>
 
+  <c:if test="${not empty errorMsg}">
+    <div style="background:#FFF0F0;border:1.5px solid #FFB4B4;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#D32F2F;text-align:left;position:relative;z-index:1;">
+      <strong>오류:</strong> ${errorMsg}
+    </div>
+  </c:if>
+
   <!-- 결제 요약 -->
   <div style="background:#F7F9FC;border-radius:16px;padding:20px;margin-bottom:28px;position:relative;z-index:1;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #E8EDF5;">
-      <span style="font-size:13px;color:#9DA8C0;font-weight:600;">상품</span>
-      <span style="font-size:13px;font-weight:700;color:#1A1F36;">PT 더미 상품</span>
+      <span style="font-size:13px;color:#9DA8C0;font-weight:600;">트레이너</span>
+      <span style="font-size:13px;font-weight:700;color:#1A1F36;">${trainerName} 트레이너</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #E8EDF5;">
+      <span style="font-size:13px;color:#9DA8C0;font-weight:600;">수업 횟수</span>
+      <span style="font-size:13px;font-weight:700;color:#1A1F36;">PT ${sessionCount}회권</span>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #E8EDF5;">
       <span style="font-size:13px;color:#9DA8C0;font-weight:600;">결제 금액</span>
-      <span style="font-size:15px;font-weight:900;color:#FF6B35;">50,000원</span>
+      <span style="font-size:15px;font-weight:900;color:#FF6B35;"><fmt:formatNumber value="${amount}" pattern="#,###"/>원</span>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
       <span style="font-size:13px;color:#9DA8C0;font-weight:600;">결제 상태</span>
@@ -72,10 +84,14 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
   </div>
 
   <div style="display:flex;flex-direction:column;gap:10px;position:relative;z-index:1;">
-    <button onclick="location.href="<%=request.getContextPath()%>/member/mypage"" style="width:100%;padding:14px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(255,107,53,0.3);transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+    <button onclick="location.href='${pageContext.request.contextPath}/member/mypage'"
+            style="width:100%;padding:14px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 6px 20px rgba(255,107,53,0.3);transition:all 0.2s;"
+            onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
       마이페이지에서 확인하기 →
     </button>
-    <button onclick="location.href='main'" style="width:100%;padding:12px;border-radius:99px;border:1.5px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">
+    <button onclick="location.href='${pageContext.request.contextPath}/member/main'"
+            style="width:100%;padding:12px;border-radius:99px;border:1.5px solid #E8EDF5;cursor:pointer;background:white;color:#5A6480;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;"
+            onmouseover="this.style.background='#F7F9FC'" onmouseout="this.style.background='white'">
       홈으로 돌아가기
     </button>
   </div>

@@ -186,6 +186,14 @@
         WHERE id = #{id}
     </update>
 
+    <!-- PT 결제 후: trainer_id 설정 + total_lessons 증가 -->
+    <update id="updateTrainerAndLessons" parameterType="map">
+        UPDATE MEMBER
+        SET trainer_id    = #{trainerId},
+            total_lessons = total_lessons + #{sessionCount}
+        WHERE user_id = #{userId}
+    </update>
+
     <!-- MEMBER 삭제 -->
     <delete id="delete" parameterType="int">
         DELETE FROM MEMBER WHERE id = #{id}
