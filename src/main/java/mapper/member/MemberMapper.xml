@@ -181,7 +181,7 @@
     <!-- 예약 후: lesson_count 차감 -->
     <update id="decrementLessonCount" parameterType="int">
         UPDATE MEMBER
-        SET lesson_count = lesson_count - 1
+        SET lesson_count = GREATEST(lesson_count - 1, 0)
         WHERE id = #{value}
     </update>
 
