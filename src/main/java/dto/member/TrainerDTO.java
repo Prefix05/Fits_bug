@@ -46,6 +46,7 @@ public class TrainerDTO {
     private int     price10;        // 10회 패키지 가격
     private int     price1;         // 1회 가격
     private String  career;         // 경력 요약
+    private int     minPrice;       // 최저가 (trainer_pricing 집계)
 
     public TrainerDTO() {}
 
@@ -135,6 +136,9 @@ public class TrainerDTO {
 
     public String getCareer() { return career; }
     public void setCareer(String career) { this.career = career; }
+
+    public int getMinPrice() { return minPrice; }
+    public void setMinPrice(int minPrice) { this.minPrice = minPrice; }
 
     @Override
     public String toString() {

@@ -285,19 +285,108 @@
                 </button>
             </section>
 
-            <!-- Section 6: Pricing & Availability link -->
-            <section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-variant/30">
-                <div class="flex items-center justify-between">
+            <!-- Section 6: Pricing -->
+            <section class="bg-surface-container-lowest rounded-2xl border border-surface-variant/30 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">payments</span>
-                        <h3 class="text-base font-bold text-on-surface">수업 가격 및 가능 일정</h3>
+                        <h3 class="text-base font-bold text-on-surface">1:1 트레이닝 요금</h3>
                     </div>
-                    <a href="${pageContext.request.contextPath}/trainer/pricing"
-                       class="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
-                        수정하기 <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </a>
+                    <button type="button" onclick="addPricingRow()"
+                            class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                        <span class="material-symbols-outlined text-sm">add</span>요금 추가
+                    </button>
                 </div>
-                <p class="text-xs text-on-surface-variant mt-2">요금제와 가능 시간은 별도 페이지에서 관리합니다.</p>
+                <div id="pricing-list" class="space-y-3">
+                    <c:forEach var="p" items="${pricingList}" varStatus="st">
+                        <div class="pricing-row flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div class="flex-1 min-w-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">패키지 이름</label>
+                                <input type="text" name="pricingLabel" value="${p.label}" placeholder="예: 10회 패키지"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="w-24 shrink-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">횟수</label>
+                                <input type="number" name="sessionCount" value="${p.sessionCount}" min="1"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="w-32 shrink-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">가격 (원)</label>
+                                <input type="number" name="price" value="${p.price}" min="0" step="1000"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="flex items-center gap-2 pt-5 shrink-0">
+                                <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                                    <input type="checkbox" name="popularRow" value="${st.index}"
+                                           ${p.popular ? 'checked' : ''}
+                                           class="w-4 h-4 accent-primary popular-check"/>
+                                    <span class="text-xs font-medium text-on-surface-variant">인기</span>
+                                </label>
+                                <button type="button" onclick="removePricingRow(this)"
+                                        class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-colors">
+                                    <span class="material-symbols-outlined text-base">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <c:if test="${empty pricingList}">
+                    <script>document.addEventListener('DOMContentLoaded', addPricingRow);</script>
+                </c:if>
+            </section>
+
+            <!-- Section 7: Availability -->
+            <section class="bg-surface-container-lowest rounded-2xl border border-surface-variant/30 shadow-sm p-6">
+                <div class="flex items-center gap-2 mb-5">
+                    <span class="material-symbols-outlined text-primary">calendar_month</span>
+                    <h3 class="text-base font-bold text-on-surface">운영 시간</h3>
+                </div>
+
+                <c:set var="MON_avail" value=""/>
+                <c:set var="TUE_avail" value=""/>
+                <c:set var="WED_avail" value=""/>
+                <c:set var="THU_avail" value=""/>
+                <c:set var="FRI_avail" value=""/>
+                <c:set var="SAT_avail" value=""/>
+                <c:set var="SUN_avail" value=""/>
+                <c:forEach var="a" items="${availabilityList}">
+                    <c:if test="${a.dayOfWeek == 'MON'}"><c:set var="MON_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'TUE'}"><c:set var="TUE_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'WED'}"><c:set var="WED_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'THU'}"><c:set var="THU_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'FRI'}"><c:set var="FRI_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'SAT'}"><c:set var="SAT_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'SUN'}"><c:set var="SUN_avail" value="${a}"/></c:if>
+                </c:forEach>
+
+                <div class="space-y-2">
+                    <c:forEach var="dayCode" items="MON,TUE,WED,THU,FRI,SAT,SUN" varStatus="ds">
+                        <c:set var="dayLabel" value="${ds.index == 0 ? '월' : ds.index == 1 ? '화' : ds.index == 2 ? '수' : ds.index == 3 ? '목' : ds.index == 4 ? '금' : ds.index == 5 ? '토' : '일'}"/>
+                        <c:set var="avail"    value="${ds.index == 0 ? MON_avail : ds.index == 1 ? TUE_avail : ds.index == 2 ? WED_avail : ds.index == 3 ? THU_avail : ds.index == 4 ? FRI_avail : ds.index == 5 ? SAT_avail : SUN_avail}"/>
+                        <c:set var="enabled"  value="${not empty avail}"/>
+                        <div class="flex items-center gap-4 p-3 rounded-xl border ${enabled ? 'bg-blue-50 border-blue-200' : 'bg-surface-container-low border-outline-variant/20'} avail-row"
+                             id="avail-row-${dayCode}">
+                            <label class="flex items-center gap-2 cursor-pointer w-12 shrink-0">
+                                <input type="checkbox" name="availEnabled_${dayCode}" value="1"
+                                       ${enabled ? 'checked' : ''}
+                                       onchange="toggleDay('${dayCode}', this.checked)"
+                                       class="w-4 h-4 accent-primary"/>
+                                <span class="text-sm font-bold ${enabled ? 'text-primary' : 'text-on-surface-variant'}">${dayLabel}</span>
+                            </label>
+                            <div class="flex items-center gap-2 flex-1 ${enabled ? '' : 'opacity-40'}" id="avail-times-${dayCode}">
+                                <input type="time" name="startTime_${dayCode}"
+                                       value="${not empty avail ? avail.startTime : '09:00'}"
+                                       ${enabled ? '' : 'disabled'}
+                                       class="bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                                <span class="text-on-surface-variant text-sm">~</span>
+                                <input type="time" name="endTime_${dayCode}"
+                                       value="${not empty avail ? avail.endTime : '18:00'}"
+                                       ${enabled ? '' : 'disabled'}
+                                       class="bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
             </section>
 
             <!-- Actions -->
@@ -315,6 +404,38 @@
         </form>
     </div>
 </main>
+
+<!-- Pricing row template -->
+<template id="pricing-row-template">
+    <div class="pricing-row flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+        <div class="flex-1 min-w-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">패키지 이름</label>
+            <input type="text" name="pricingLabel" placeholder="예: 10회 패키지"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="w-24 shrink-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">횟수</label>
+            <input type="number" name="sessionCount" value="1" min="1"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="w-32 shrink-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">가격 (원)</label>
+            <input type="number" name="price" value="0" min="0" step="1000"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="flex items-center gap-2 pt-5 shrink-0">
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input type="checkbox" name="popularRow" value="__IDX__"
+                       class="w-4 h-4 accent-primary popular-check"/>
+                <span class="text-xs font-medium text-on-surface-variant">인기</span>
+            </label>
+            <button type="button" onclick="removePricingRow(this)"
+                    class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-colors">
+                <span class="material-symbols-outlined text-base">delete</span>
+            </button>
+        </div>
+    </div>
+</template>
 
 <!-- New cert row template -->
 <template id="cert-template">
@@ -463,6 +584,49 @@
     function updateFileName(input) {
         const span = input.closest('label').querySelector('.file-name-text');
         span.textContent = input.files.length > 0 ? input.files[0].name : '파일 선택';
+    }
+
+    // ── Pricing rows ───────────────────────────────────────────────────────
+    function addPricingRow() {
+        const list = document.getElementById('pricing-list');
+        const idx  = list.querySelectorAll('.pricing-row').length;
+        const tpl  = document.getElementById('pricing-row-template');
+        const html = tpl.innerHTML.replace('__IDX__', idx);
+        const div  = document.createElement('div');
+        div.innerHTML = html;
+        list.appendChild(div.firstElementChild);
+        reindexPopularCheckboxes();
+    }
+
+    function removePricingRow(btn) {
+        btn.closest('.pricing-row').remove();
+        reindexPopularCheckboxes();
+    }
+
+    function reindexPopularCheckboxes() {
+        document.querySelectorAll('#pricing-list .pricing-row').forEach((row, i) => {
+            const cb = row.querySelector('.popular-check');
+            if (cb) cb.value = i;
+        });
+    }
+
+    // ── Availability toggle ────────────────────────────────────────────────
+    function toggleDay(dayCode, enabled) {
+        const row   = document.getElementById('avail-row-' + dayCode);
+        const times = document.getElementById('avail-times-' + dayCode);
+        const label = row.querySelector('span');
+        times.querySelectorAll('input[type="time"]').forEach(inp => inp.disabled = !enabled);
+        if (enabled) {
+            row.classList.replace('bg-surface-container-low', 'bg-blue-50');
+            row.classList.replace('border-outline-variant/20', 'border-blue-200');
+            times.classList.remove('opacity-40');
+            label.classList.replace('text-on-surface-variant', 'text-primary');
+        } else {
+            row.classList.replace('bg-blue-50', 'bg-surface-container-low');
+            row.classList.replace('border-blue-200', 'border-outline-variant/20');
+            times.classList.add('opacity-40');
+            label.classList.replace('text-primary', 'text-on-surface-variant');
+        }
     }
 
     // ── Profile image preview ──────────────────────────────────────────────

@@ -84,7 +84,9 @@
 <jsp:include page="/trainer/sideNav.jsp"/>
 
 <%-- Helper: build a sort URL toggling direction for a given column --%>
-<c:set var="oppDir" value="${sortDir == 'ASC' ? 'DESC' : 'ASC'}"/>
+<c:set var="oppDir"   value="${sortDir == 'ASC' ? 'DESC' : 'ASC'}"/>
+<%-- Carry date params through sort/pagination links --%>
+<c:set var="drParams" value="&dateFrom=${dateFrom}&dateTo=${dateTo}"/>
 
 <div class="lg:ml-64 pt-16 lg:pt-0 pb-24 lg:pb-0">
     <main class="p-4 md:p-8 max-w-6xl mx-auto space-y-6">
@@ -100,6 +102,53 @@
                 <p class="text-sm text-on-surface-variant mt-0.5">총 ${totalCount}건</p>
             </div>
         </div>
+
+        <!-- Date Range Filter -->
+        <section class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 shadow-sm p-4">
+            <form method="get" action="" class="flex flex-wrap items-end gap-3">
+                <input type="hidden" name="page"    value="1"/>
+                <input type="hidden" name="sortBy"  value="${sortBy}"/>
+                <input type="hidden" name="sortDir" value="${sortDir}"/>
+
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">시작일</label>
+                    <input type="date" name="dateFrom" id="dateFrom" value="${dateFrom}"
+                           class="px-3 py-2 text-sm border border-outline-variant rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+                </div>
+
+                <span class="text-on-surface-variant pb-2">–</span>
+
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">종료일</label>
+                    <input type="date" name="dateTo" id="dateTo" value="${dateTo}"
+                           class="px-3 py-2 text-sm border border-outline-variant rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"/>
+                </div>
+
+                <button type="submit"
+                        class="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-container transition-colors">
+                    조회
+                </button>
+
+                <c:if test="${not empty dateFrom or not empty dateTo}">
+                    <a href="?page=1&sortBy=${sortBy}&sortDir=${sortDir}"
+                       class="px-4 py-2 text-sm font-semibold text-on-surface-variant border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">
+                        초기화
+                    </a>
+                </c:if>
+
+                <!-- Quick presets -->
+                <div class="flex gap-2 ml-auto flex-wrap">
+                    <button type="button" onclick="setPreset('today')"
+                            class="px-3 py-2 text-xs font-semibold rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">오늘</button>
+                    <button type="button" onclick="setPreset('week')"
+                            class="px-3 py-2 text-xs font-semibold rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">이번 주</button>
+                    <button type="button" onclick="setPreset('month')"
+                            class="px-3 py-2 text-xs font-semibold rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">이번 달</button>
+                    <button type="button" onclick="setPreset('3months')"
+                            class="px-3 py-2 text-xs font-semibold rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">3개월</button>
+                </div>
+            </form>
+        </section>
 
         <!-- Transaction Table -->
         <c:choose>
@@ -119,7 +168,7 @@
                                     <%-- 회원 --%>
                                     <c:set var="isActive" value="${sortBy == 'clientName'}"/>
                                     <th class="text-left px-5 py-3 sortable ${isActive ? 'sort-active' : ''}"
-                                        onclick="location.href='?page=1&sortBy=clientName&sortDir=${isActive ? oppDir : 'DESC'}'">
+                                        onclick="location.href='?page=1&sortBy=clientName&sortDir=${isActive ? oppDir : 'DESC'}${drParams}'">
                                         <span class="inline-flex items-center gap-1">
                                             회원
                                             <span class="material-symbols-outlined text-sm">
@@ -135,7 +184,7 @@
                                     <%-- 결제일 (date only, sortable) --%>
                                     <c:set var="isActive" value="${sortBy == 'date' || sortBy == null || sortBy == ''}"/>
                                     <th class="text-left px-5 py-3 sortable ${isActive ? 'sort-active' : ''}"
-                                        onclick="location.href='?page=1&sortBy=date&sortDir=${isActive ? oppDir : 'DESC'}'">
+                                        onclick="location.href='?page=1&sortBy=date&sortDir=${isActive ? oppDir : 'DESC'}${drParams}'">
                                         <span class="inline-flex items-center gap-1">
                                             결제일
                                             <span class="material-symbols-outlined text-sm">
@@ -157,7 +206,7 @@
                                     <%-- 결제 금액 --%>
                                     <c:set var="isActive" value="${sortBy == 'price'}"/>
                                     <th class="text-right px-5 py-3 sortable ${isActive ? 'sort-active' : ''}"
-                                        onclick="location.href='?page=1&sortBy=price&sortDir=${isActive ? oppDir : 'DESC'}'">
+                                        onclick="location.href='?page=1&sortBy=price&sortDir=${isActive ? oppDir : 'DESC'}${drParams}'">
                                         <span class="inline-flex items-center justify-end gap-1">
                                             결제 금액
                                             <span class="material-symbols-outlined text-sm">
@@ -176,7 +225,7 @@
                                     <%-- 순 수익 --%>
                                     <c:set var="isActive" value="${sortBy == 'netAmount'}"/>
                                     <th class="text-right px-5 py-3 sortable ${isActive ? 'sort-active' : ''}"
-                                        onclick="location.href='?page=1&sortBy=netAmount&sortDir=${isActive ? oppDir : 'DESC'}'">
+                                        onclick="location.href='?page=1&sortBy=netAmount&sortDir=${isActive ? oppDir : 'DESC'}${drParams}'">
                                         <span class="inline-flex items-center justify-end gap-1">
                                             순 수익
                                             <span class="material-symbols-outlined text-sm">
@@ -192,7 +241,7 @@
                                     <%-- 상태 --%>
                                     <c:set var="isActive" value="${sortBy == 'status'}"/>
                                     <th class="text-center px-5 py-3 sortable ${isActive ? 'sort-active' : ''}"
-                                        onclick="location.href='?page=1&sortBy=status&sortDir=${isActive ? oppDir : 'ASC'}'">
+                                        onclick="location.href='?page=1&sortBy=status&sortDir=${isActive ? oppDir : 'ASC'}${drParams}'">
                                         <span class="inline-flex items-center justify-center gap-1">
                                             상태
                                             <span class="material-symbols-outlined text-sm">
@@ -255,7 +304,7 @@
                         </p>
                         <div class="flex items-center gap-1">
                             <c:if test="${currentPage > 1}">
-                                <a href="?page=${currentPage - 1}&sortBy=${sortBy}&sortDir=${sortDir}"
+                                <a href="?page=${currentPage - 1}&sortBy=${sortBy}&sortDir=${sortDir}${drParams}"
                                    class="p-1.5 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant">
                                     <span class="material-symbols-outlined text-lg">chevron_left</span>
                                 </a>
@@ -266,13 +315,13 @@
                                         <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">${p}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="?page=${p}&sortBy=${sortBy}&sortDir=${sortDir}"
+                                        <a href="?page=${p}&sortBy=${sortBy}&sortDir=${sortDir}${drParams}"
                                            class="w-8 h-8 flex items-center justify-center rounded-lg text-sm text-on-surface-variant hover:bg-surface-container transition-colors">${p}</a>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
                             <c:if test="${currentPage < totalPages}">
-                                <a href="?page=${currentPage + 1}&sortBy=${sortBy}&sortDir=${sortDir}"
+                                <a href="?page=${currentPage + 1}&sortBy=${sortBy}&sortDir=${sortDir}${drParams}"
                                    class="p-1.5 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant">
                                     <span class="material-symbols-outlined text-lg">chevron_right</span>
                                 </a>
@@ -287,5 +336,29 @@
     </main>
 </div>
 
+<script>
+function setPreset(preset) {
+    const today = new Date();
+    const fmt = d => d.toISOString().slice(0, 10);
+    let from, to = fmt(today);
+    if (preset === 'today') {
+        from = to;
+    } else if (preset === 'week') {
+        const day = today.getDay();
+        const mon = new Date(today);
+        mon.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+        from = fmt(mon);
+    } else if (preset === 'month') {
+        from = fmt(new Date(today.getFullYear(), today.getMonth(), 1));
+    } else if (preset === '3months') {
+        const d = new Date(today);
+        d.setMonth(d.getMonth() - 3);
+        from = fmt(d);
+    }
+    document.getElementById('dateFrom').value = from;
+    document.getElementById('dateTo').value   = to;
+    document.getElementById('dateFrom').closest('form').submit();
+}
+</script>
 </body>
 </html>

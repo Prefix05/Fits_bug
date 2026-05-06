@@ -21,7 +21,6 @@ package dto.member;
  *   goals            VARCHAR(50),
  *   next_session     VARCHAR(100),
  *   lesson_count     INTEGER DEFAULT 0,
- *   total_lessons    INTEGER DEFAULT 10,
  *   last_session     VARCHAR(50),
  *   STATUS           VARCHAR(50) DEFAULT 'all',
  *   age              INTEGER
@@ -57,8 +56,7 @@ public class MemberDTO {
     private String  name;               // DB: NAME
     private String  goals;              // goals VARCHAR(50) ← 운동 목표
     private String  nextSession;        // DB: next_session
-    private int     lessonCount;        // DB: lesson_count  DEFAULT 0
-    private int     totalLessons;       // DB: total_lessons DEFAULT 10
+    private int     lessonCount;        // DB: lesson_count — 남은 수업 횟수
     private String  lastSession;        // DB: last_session
     private String  status;             // DB: STATUS  DEFAULT 'all'
     private int     age;
@@ -135,9 +133,6 @@ public class MemberDTO {
 
     public int getLessonCount() { return lessonCount; }
     public void setLessonCount(int lessonCount) { this.lessonCount = lessonCount; }
-
-    public int getTotalLessons() { return totalLessons; }
-    public void setTotalLessons(int totalLessons) { this.totalLessons = totalLessons; }
 
     public String getLastSession() { return lastSession; }
     public void setLastSession(String lastSession) { this.lastSession = lastSession; }

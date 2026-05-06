@@ -217,12 +217,10 @@
                     </div>
                     <div class="bg-surface-container-low px-4 py-3 md:px-6 md:py-4 rounded-2xl flex-1 md:flex-initial text-center border border-outline-variant/10">
                         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">
-                            Sessions</p>
-                        <div>Remaining</div>
-                        <p></p>
+                            남은 수업</p>
                         <div class="flex items-baseline justify-center gap-1">
                             <span class="text-3xl font-bold text-on-surface">${client.lessonCount}</span>
-                            <span class="text-sm font-medium text-on-surface-variant">/ ${client.totalLessons}</span>
+                            <span class="text-sm font-medium text-on-surface-variant">회</span>
                         </div>
                     </div>
                 </div>

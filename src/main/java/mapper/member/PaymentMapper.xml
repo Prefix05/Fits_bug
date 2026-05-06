@@ -65,4 +65,68 @@
         ORDER BY id DESC
     </select>
 
+    <!-- trainer_id로 결제 내역 조회 (earnings.jsp용) -->
+    <select id="findByTrainerId" parameterType="int" resultType="map">
+        SELECT
+            user_name                                   AS clientName,
+            DATE_FORMAT(payment_date, '%Y-%m-%d')       AS paymentDate,
+            DATE_FORMAT(payment_date, '%H:%i')          AS paymentTime,
+            payment_price                               AS price,
+            payment_fee                                 AS platformFee,
+            (payment_price - payment_fee)               AS netAmount,
+            method,
+            status
+        FROM PAYMENT
+        WHERE trainer_id   = #{trainerId}
+          AND payment_type = 'PT'
+        ORDER BY payment_date DESC
+        LIMIT 5
+    </select>
+
+    <!-- trainer_id로 결제 건수 조회 (페이징용, 날짜 필터 선택적) -->
+    <select id="countByTrainerId" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM PAYMENT
+        WHERE trainer_id   = #{trainerId}
+          AND payment_type = 'PT'
+        <if test="dateFrom != null and dateFrom != ''">
+          AND DATE(payment_date) &gt;= #{dateFrom}
+        </if>
+        <if test="dateTo != null and dateTo != ''">
+          AND DATE(payment_date) &lt;= #{dateTo}
+        </if>
+    </select>
+
+    <!-- trainer_id로 결제 내역 페이징 조회 (날짜 필터 선택적) -->
+    <select id="findByTrainerIdPaged" parameterType="map" resultType="map">
+        SELECT
+            user_name                                   AS clientName,
+            DATE_FORMAT(payment_date, '%Y-%m-%d')       AS paymentDate,
+            DATE_FORMAT(payment_date, '%H:%i')          AS paymentTime,
+            payment_price                               AS price,
+            payment_fee                                 AS platformFee,
+            (payment_price - payment_fee)               AS netAmount,
+            method,
+            status
+        FROM PAYMENT
+        WHERE trainer_id   = #{trainerId}
+          AND payment_type = 'PT'
+        <if test="dateFrom != null and dateFrom != ''">
+          AND DATE(payment_date) &gt;= #{dateFrom}
+        </if>
+        <if test="dateTo != null and dateTo != ''">
+          AND DATE(payment_date) &lt;= #{dateTo}
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortBy == 'clientName'">clientName</when>
+            <when test="sortBy == 'price'">price</when>
+            <when test="sortBy == 'netAmount'">netAmount</when>
+            <when test="sortBy == 'status'">status</when>
+            <otherwise>payment_date</otherwise>
+        </choose>
+        ${sortDir}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
 </mapper>

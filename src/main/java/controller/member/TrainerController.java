@@ -27,7 +27,7 @@ public class TrainerController extends HttpServlet {
 
         if (keyword == null) keyword = "";
         if (category == null) category = "전체";
-        if (sort == null) sort = "recommend";
+        if (sort == null) sort = "latest";
 
         List<TrainerDTO> list = service.getTrainerList(keyword, category, sort);
 

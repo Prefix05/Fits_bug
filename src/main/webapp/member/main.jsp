@@ -282,26 +282,255 @@ if(loginUser == null){
 
     <!-- 트레이너 수업 가능 일정 -->
     <div style="background:white;border-radius:20px;padding:24px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-      <h2 style="font-size:16px;font-weight:800;color:#1A1F36;margin-bottom:18px;">🗓 트레이너 수업 가능 일정</h2>
-      <div style="overflow-x:auto;">
-        <div style="display:grid;grid-template-columns:60px repeat(7,1fr);gap:4px;text-align:center;min-width:400px;">
-          <div style="font-size:11px;color:#9DA8C0;font-weight:700;padding:6px;">시간</div>
-          <% String[] days = {"월","화","수","목","금","토","일"};
-             for(String d : days){ %>
-          <div style="font-size:11px;color:#9DA8C0;font-weight:700;padding:6px;"><%= d %></div>
-          <% } %>
-          <% for(int i=9;i<=21;i+=2){ %>
-          <div style="font-size:11px;color:#5A6480;font-weight:600;padding:6px 4px;"><%= i %>:00</div>
-          <% for(int j=0;j<7;j++){
-               boolean isAvail = (j < 5 && i >= 10 && i <= 18);
-               String bg = isAvail ? "background:linear-gradient(135deg,rgba(0,191,165,0.15),rgba(38,212,187,0.1));border:1.5px solid rgba(0,191,165,0.3);" : "background:#F7F9FC;border:1.5px solid #E8EDF5;";
-          %>
-          <div style="height:36px;border-radius:8px;<%= bg %>transition:all 0.2s;cursor:<%= isAvail ? "pointer" : "default" %>;"
-               <% if(isAvail) { %>onmouseover="this.style.background='linear-gradient(135deg,#00BFA5,#26D4BB)';this.style.color='white'"
-               onmouseout="this.style.background='linear-gradient(135deg,rgba(0,191,165,0.15),rgba(38,212,187,0.1))'"<% } %>></div>
-          <% } } %>
+
+      <c:choose>
+      <c:when test="${sessionScope.memberInfo != null && sessionScope.memberInfo.trainerId != null && sessionScope.memberInfo.trainerId > 0}">
+
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+          <h2 style="font-size:16px;font-weight:800;color:#1A1F36;">
+            🗓 <c:out value="${not empty scheduleTrainerName ? scheduleTrainerName : '트레이너'}"/> 트레이너 수업 가능 일정
+          </h2>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button onclick="prevWeek()" style="padding:5px 12px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;cursor:pointer;font-size:13px;font-weight:700;color:#5A6480;">← 이전</button>
+            <span id="weekLabel" style="font-size:13px;font-weight:700;color:#5A6480;min-width:140px;text-align:center;"></span>
+            <button onclick="nextWeek()" style="padding:5px 12px;border-radius:99px;border:1.5px solid #E8EDF5;background:white;cursor:pointer;font-size:13px;font-weight:700;color:#5A6480;">다음 →</button>
+          </div>
         </div>
-      </div>
+
+        <!-- Legend -->
+        <div style="display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:#5A6480;display:flex;align-items:center;gap:4px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,rgba(0,191,165,0.2),rgba(38,212,187,0.12));border:1.5px solid rgba(0,191,165,0.4);display:inline-block;"></span>가능
+          </span>
+          <span style="font-size:11px;color:#5A6480;display:flex;align-items:center;gap:4px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:#00BFA5;display:inline-block;"></span>선택됨
+          </span>
+          <span style="font-size:11px;color:#5A6480;display:flex;align-items:center;gap:4px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(255,107,53,0.2);border:1.5px solid rgba(255,107,53,0.4);display:inline-block;"></span>예약됨
+          </span>
+          <span style="font-size:11px;color:#5A6480;display:flex;align-items:center;gap:4px;">
+            <span style="width:12px;height:12px;border-radius:3px;background:#F0F2F8;display:inline-block;"></span>불가
+          </span>
+        </div>
+
+        <!-- Grid -->
+        <div id="scheduleGrid" style="overflow-x:auto;"></div>
+
+        <!-- Reserve area -->
+        <div id="reserveArea" style="display:none;margin-top:16px;padding:14px 16px;background:#E8F8F6;border-radius:12px;border:1.5px solid rgba(0,191,165,0.3);">
+          <div id="selectedSlotInfo" style="font-size:13px;font-weight:700;color:#007A6A;margin-bottom:12px;"></div>
+          <form method="post" action="${pageContext.request.contextPath}/member/reserveLesson" id="reserveForm">
+            <input type="hidden" name="lessonDate" id="hdnDate">
+            <input type="hidden" name="startTime"  id="hdnStart">
+            <input type="hidden" name="endTime"    id="hdnEnd">
+            <div style="display:flex;gap:8px;">
+              <button type="submit" style="flex:1;padding:11px;border-radius:99px;border:none;cursor:pointer;background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-size:14px;font-weight:800;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(0,191,165,0.3);">
+                예약하기
+              </button>
+              <button type="button" onclick="cancelSelect()" style="padding:11px 18px;border-radius:99px;border:1.5px solid #B2DFDB;cursor:pointer;background:white;color:#5A6480;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;">
+                취소
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <script>
+        (function(){
+          const AVAIL        = ${not empty availabilityJson ? availabilityJson : '[]'};
+          const TRAINER_ID   = ${sessionScope.memberInfo.trainerId};
+          const LESSON_COUNT = ${sessionScope.memberInfo.lessonCount};
+          const CTX          = '${pageContext.request.contextPath}';
+          const DAY_NAMES_EN = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+          const DAY_NAMES_KO = ['일','월','화','수','목','금','토'];
+
+          let currentMonday = getMonday(new Date());
+          let bookedSlots   = [];
+          let selectedSlot  = null;
+
+          function getMonday(d) {
+            const day = d.getDay();
+            const diff = (day === 0) ? -6 : 1 - day;
+            const m = new Date(d);
+            m.setDate(d.getDate() + diff);
+            m.setHours(0,0,0,0);
+            return m;
+          }
+
+          function fmt(d) {
+            return d.getFullYear() + '-' +
+              String(d.getMonth()+1).padStart(2,'0') + '-' +
+              String(d.getDate()).padStart(2,'0');
+          }
+
+          function toMin(t) { // "HH:mm" or "HH:mm:ss"
+            const p = t.split(':');
+            return parseInt(p[0]) * 60 + parseInt(p[1]);
+          }
+
+          function getAvailForDay(dayIndex) {
+            const dow = DAY_NAMES_EN[dayIndex];
+            return AVAIL.find(a => a.dayOfWeek === dow) || null;
+          }
+
+          function isBooked(dateStr, hour) {
+            const sStart = hour * 60, sEnd = (hour+1) * 60;
+            return bookedSlots.some(b =>
+              b.lessonDate === dateStr &&
+              toMin(b.startTime) < sEnd &&
+              toMin(b.endTime)   > sStart
+            );
+          }
+
+          function getHourRange() {
+            if (!AVAIL.length) return {min:9, max:19};
+            let min = 23, max = 0;
+            AVAIL.forEach(a => {
+              const s = parseInt(a.startTime.split(':')[0]);
+              const e = parseInt(a.endTime.split(':')[0]);
+              if (s < min) min = s;
+              if (e > max) max = e;
+            });
+            return {min, max};
+          }
+
+          function renderGrid() {
+            const {min: HMIN, max: HMAX} = getHourRange();
+            const hours = [];
+            for (let h = HMIN; h < HMAX; h++) hours.push(h);
+
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+              const d = new Date(currentMonday);
+              d.setDate(currentMonday.getDate() + i);
+              dates.push(d);
+            }
+
+            const start = dates[0], end = dates[6];
+            document.getElementById('weekLabel').textContent =
+              (start.getMonth()+1)+'월 '+start.getDate()+'일 ~ '+(end.getMonth()+1)+'월 '+end.getDate()+'일';
+
+            let html = '<div style="display:grid;grid-template-columns:38px repeat(7,1fr);gap:3px;min-width:340px;">';
+
+            // Header
+            html += '<div></div>';
+            dates.forEach(d => {
+              const isToday = fmt(d) === fmt(new Date());
+              const color = isToday ? '#FF6B35' : '#5A6480';
+              html += '<div style="font-size:11px;font-weight:800;padding:4px 2px;text-align:center;color:'+color+';">'
+                + DAY_NAMES_KO[d.getDay()]+'<br>'
+                + '<span style="font-size:14px;">'+d.getDate()+'</span></div>';
+            });
+
+            // Rows
+            hours.forEach(h => {
+              html += '<div style="font-size:10px;color:#9DA8C0;font-weight:600;text-align:right;padding-right:4px;line-height:28px;">'+h+':00</div>';
+              dates.forEach(d => {
+                const dateStr = fmt(d);
+                const avail   = getAvailForDay(d.getDay());
+                let style, click = '';
+
+                if (!avail) {
+                  style = 'background:#F0F2F8;cursor:default;';
+                } else {
+                  const aStart = toMin(avail.startTime), aEnd = toMin(avail.endTime);
+                  const sStart = h*60, sEnd = (h+1)*60;
+                  if (sStart >= aEnd || sEnd <= aStart) {
+                    style = 'background:#F0F2F8;cursor:default;';
+                  } else if (isBooked(dateStr, h)) {
+                    style = 'background:linear-gradient(135deg,rgba(255,107,53,0.18),rgba(255,140,90,0.10));border:1.5px solid rgba(255,107,53,0.35);cursor:not-allowed;';
+                  } else {
+                    const sel = selectedSlot && selectedSlot.date===dateStr && selectedSlot.hour===h;
+                    if (sel) {
+                      style = 'background:linear-gradient(135deg,#00BFA5,#26D4BB);border:2px solid #00897B;cursor:pointer;';
+                    } else {
+                      style = 'background:linear-gradient(135deg,rgba(0,191,165,0.15),rgba(38,212,187,0.08));border:1.5px solid rgba(0,191,165,0.3);cursor:pointer;';
+                      click = 'onclick="selectSlot(\''+dateStr+'\','+h+')" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(0,191,165,0.3),rgba(38,212,187,0.2))\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(0,191,165,0.15),rgba(38,212,187,0.08))\'"';
+                    }
+                  }
+                }
+                html += '<div style="height:28px;border-radius:6px;'+style+'transition:all 0.15s;" '+click+'></div>';
+              });
+            });
+
+            html += '</div>';
+            document.getElementById('scheduleGrid').innerHTML = html;
+          }
+
+          async function fetchLessons() {
+            const sunday = new Date(currentMonday);
+            sunday.setDate(currentMonday.getDate() + 6);
+            const url = CTX+'/member/trainerSchedule?trainerId='+TRAINER_ID
+              +'&startDate='+fmt(currentMonday)+'&endDate='+fmt(sunday);
+            try {
+              const resp = await fetch(url);
+              bookedSlots = await resp.json();
+            } catch(e) {
+              bookedSlots = [];
+            }
+            renderGrid();
+          }
+
+          window.selectSlot = function(dateStr, hour) {
+            if (LESSON_COUNT <= 0) {
+              document.getElementById('noLessonsModal').style.display = 'flex';
+              return;
+            }
+            if (selectedSlot && selectedSlot.date===dateStr && selectedSlot.hour===hour) {
+              selectedSlot = null;
+              document.getElementById('reserveArea').style.display = 'none';
+            } else {
+              selectedSlot = {date: dateStr, hour: hour};
+              const d = new Date(dateStr+'T00:00:00');
+              const label = (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+DAY_NAMES_KO[d.getDay()]+') '
+                +String(hour).padStart(2,'0')+':00 – '+String(hour+1).padStart(2,'0')+':00';
+              document.getElementById('selectedSlotInfo').textContent = '📌 ' + label;
+              document.getElementById('hdnDate').value  = dateStr;
+              document.getElementById('hdnStart').value = String(hour).padStart(2,'0')+':00:00';
+              document.getElementById('hdnEnd').value   = String(hour+1).padStart(2,'0')+':00:00';
+              document.getElementById('reserveArea').style.display = 'block';
+            }
+            renderGrid();
+          };
+
+          window.cancelSelect = function() {
+            selectedSlot = null;
+            document.getElementById('reserveArea').style.display = 'none';
+            renderGrid();
+          };
+
+          window.prevWeek = function() {
+            currentMonday.setDate(currentMonday.getDate() - 7);
+            selectedSlot = null;
+            document.getElementById('reserveArea').style.display = 'none';
+            fetchLessons();
+          };
+
+          window.nextWeek = function() {
+            currentMonday.setDate(currentMonday.getDate() + 7);
+            selectedSlot = null;
+            document.getElementById('reserveArea').style.display = 'none';
+            fetchLessons();
+          };
+
+          fetchLessons();
+        })();
+        </script>
+
+      </c:when>
+      <c:otherwise>
+        <h2 style="font-size:16px;font-weight:800;color:#1A1F36;margin-bottom:16px;">🗓 트레이너 수업 가능 일정</h2>
+        <div style="text-align:center;padding:32px 0;">
+          <div style="font-size:40px;margin-bottom:12px;">🏋️</div>
+          <p style="font-size:14px;color:#9DA8C0;font-weight:600;margin-bottom:16px;">아직 담당 트레이너가 없습니다.</p>
+          <a href="${pageContext.request.contextPath}/member/trainerList"
+             style="display:inline-block;padding:10px 24px;border-radius:99px;background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-size:13px;font-weight:800;text-decoration:none;box-shadow:0 4px 14px rgba(0,191,165,0.3);">
+            트레이너 찾아보기 →
+          </a>
+        </div>
+      </c:otherwise>
+      </c:choose>
+
     </div>
 
     <!-- 헬스장 핫타임 -->
@@ -435,6 +664,29 @@ if(loginUser == null){
       <button onclick="closeChatModal()" style="width:32px;height:32px;border-radius:50%;border:none;background:#F7F9FC;color:#5A6480;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div id="chatList" style="max-height:340px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- 수업권 없음 모달 -->
+<div id="noLessonsModal" style="display:none;position:fixed;inset:0;background:rgba(26,31,54,0.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:white;border-radius:24px;padding:36px 32px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.15);animation:fb_modal_in 0.3s ease;text-align:center;">
+    <div style="font-size:52px;margin-bottom:12px;">🎟️</div>
+    <h3 style="font-size:18px;font-weight:800;color:#1A1F36;margin-bottom:8px;">남은 수업권이 없어요</h3>
+    <p style="font-size:14px;color:#9DA8C0;line-height:1.6;margin-bottom:24px;">
+      예약하려면 수업권이 필요해요.<br>트레이너 페이지에서 PT를 구매해보세요.
+    </p>
+    <a href="${pageContext.request.contextPath}/member/trainerList"
+       style="display:block;width:100%;padding:13px;border-radius:99px;border:none;cursor:pointer;
+              background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;
+              text-decoration:none;box-shadow:0 4px 16px rgba(255,107,53,0.3);margin-bottom:10px;box-sizing:border-box;">
+      수업권 구매하러 가기 →
+    </a>
+    <button onclick="document.getElementById('noLessonsModal').style.display='none'"
+            style="width:100%;padding:11px;border-radius:99px;border:1.5px solid #E8EDF5;
+                   background:white;color:#5A6480;font-weight:600;font-size:14px;cursor:pointer;
+                   font-family:'Noto Sans KR',sans-serif;">
+      닫기
+    </button>
   </div>
 </div>
 
@@ -744,7 +996,24 @@ window.onload=function(){
   loadChart('workout');
   loadHotTime();
   loadChatCount();
+
+  // Reservation result toast
+  const params = new URLSearchParams(location.search);
+  if (params.get('reserved') === '1') showToast('✅ 예약이 완료되었습니다!', '#00BFA5');
+  if (params.get('reserveError') === '1') showToast('❌ 예약 중 오류가 발생했습니다.', '#FF4D4D');
+  if (params.get('reserveError') === 'noLessons') document.getElementById('noLessonsModal').style.display = 'flex';
 };
+
+function showToast(msg, color) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);'
+    +'background:'+color+';color:white;padding:12px 24px;border-radius:99px;'
+    +'font-size:14px;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);'
+    +'animation:fb_modal_in 0.3s ease;';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
 
 /* 모달 열기/닫기 */
 function openWorkoutModal(){ document.getElementById("workoutModal").style.display="flex"; }
