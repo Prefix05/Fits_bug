@@ -245,10 +245,10 @@
                             class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
                         Workouts
                     </button>
-                    <button
-                            class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
+                    <a href="${pageContext.request.contextPath}/trainer/clientInbodyLog?clientId=${client.clientId}"
+                       class="px-8 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">
                         InBody
-                    </button>
+                    </a>
                 </nav>
                 <!-- Body Composition Trends -->
                 <section class="space-y-4">

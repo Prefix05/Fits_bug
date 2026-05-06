@@ -140,13 +140,14 @@
     <div id="cal-scroll" class="flex-1 overflow-y-auto">
 
         <%-- ────────────────────────── DAY VIEW ─────────────────────────── --%>
+        <%-- Grid runs 06:00 – 24:00  (18 h × 80 px = 1440 px)           --%>
         <c:if test="${view == 'day'}">
-            <div style="display:grid; grid-template-columns:56px 1fr; height:1920px; position:relative;">
+            <div style="display:grid; grid-template-columns:56px 1fr; height:1440px; position:relative;">
 
-                <%-- Time labels --%>
-                <div class="relative border-r border-gray-100" style="height:1920px;">
-                    <c:forEach begin="0" end="23" var="h">
-                        <div style="position:absolute; top:${h * 80}px; right:0; height:80px; width:100%;
+                <%-- Time labels — offset so row 0 = 06:00 --%>
+                <div class="relative border-r border-gray-100" style="height:1440px;">
+                    <c:forEach begin="6" end="23" var="h">
+                        <div style="position:absolute; top:${(h-6) * 80}px; right:0; height:80px; width:100%;
                                     display:flex; align-items:flex-start; justify-content:flex-end;
                                     padding-right:8px; padding-top:4px;">
                             <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">
@@ -157,10 +158,16 @@
                             </span>
                         </div>
                     </c:forEach>
+                    <%-- Midnight label at the very bottom --%>
+                    <div style="position:absolute; top:1440px; right:0; width:100%;
+                                display:flex; align-items:flex-start; justify-content:flex-end;
+                                padding-right:8px; padding-top:4px; transform:translateY(-100%);">
+                        <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">24:00</span>
+                    </div>
                 </div>
 
-                <%-- Day column --%>
-                <div class="relative time-grid-bg ${isToday ? 'bg-blue-50/20' : ''}" style="height:1920px;">
+                <%-- Day column — lesson topPx is midnight-relative so subtract 480 px (6 h) --%>
+                <div class="relative time-grid-bg ${isToday ? 'bg-blue-50/20' : ''}" style="height:1440px;">
 
                     <%-- Current time indicator (only if viewing today) --%>
                     <c:if test="${isToday}">
@@ -179,7 +186,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach items="${dayLessons}" var="lesson">
-                                <div style="position:absolute; top:${lesson.topPx}px; height:${lesson.heightPx}px; left:6px; right:6px; z-index:10;"
+                                <div style="position:absolute; top:${lesson.topPx - 480}px; height:${lesson.heightPx}px; left:6px; right:6px; z-index:10;"
                                      class="lc-${lesson.clientId % 5} rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity shadow-sm p-2">
                                     <c:choose>
                                         <c:when test="${lesson.heightPx < 32}">
@@ -204,13 +211,14 @@
         </c:if>
 
         <%-- ───────────────────────── WEEK VIEW ─────────────────────────── --%>
+        <%-- Grid runs 06:00 – 24:00  (18 h × 80 px = 1440 px)           --%>
         <c:if test="${view == 'week'}">
-            <div style="display:grid; grid-template-columns:56px repeat(7,1fr); height:1920px; position:relative;">
+            <div style="display:grid; grid-template-columns:56px repeat(7,1fr); height:1440px; position:relative;">
 
-                <%-- Time labels column --%>
-                <div class="relative border-r border-gray-100" style="height:1920px;">
-                    <c:forEach begin="0" end="23" var="h">
-                        <div style="position:absolute; top:${h * 80}px; right:0; height:80px; width:100%;
+                <%-- Time labels column — offset so row 0 = 06:00 --%>
+                <div class="relative border-r border-gray-100" style="height:1440px;">
+                    <c:forEach begin="6" end="23" var="h">
+                        <div style="position:absolute; top:${(h-6) * 80}px; right:0; height:80px; width:100%;
                                     display:flex; align-items:flex-start; justify-content:flex-end;
                                     padding-right:8px; padding-top:4px;">
                             <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">
@@ -221,12 +229,18 @@
                             </span>
                         </div>
                     </c:forEach>
+                    <%-- Midnight label at the very bottom --%>
+                    <div style="position:absolute; top:1440px; right:0; width:100%;
+                                display:flex; align-items:flex-start; justify-content:flex-end;
+                                padding-right:8px; padding-top:4px; transform:translateY(-100%);">
+                        <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">24:00</span>
+                    </div>
                 </div>
 
-                <%-- 7 day columns --%>
+                <%-- 7 day columns — lesson topPx is midnight-relative so subtract 480 px (6 h) --%>
                 <c:forEach items="${weekColumns}" var="col">
                     <div class="relative border-l border-gray-100 time-grid-bg ${col.isToday ? 'bg-blue-50/20' : ''}"
-                         style="height:1920px;">
+                         style="height:1440px;">
 
                         <%-- Current time indicator on today's column --%>
                         <c:if test="${col.isToday}">
@@ -238,7 +252,7 @@
 
                         <%-- Lesson cards --%>
                         <c:forEach items="${col.lessons}" var="lesson">
-                            <div style="position:absolute; top:${lesson.topPx}px; height:${lesson.heightPx}px; left:2px; right:2px; z-index:10;"
+                            <div style="position:absolute; top:${lesson.topPx - 480}px; height:${lesson.heightPx}px; left:2px; right:2px; z-index:10;"
                                  class="lc-${lesson.clientId % 5} rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity shadow-sm p-1.5">
                                 <c:choose>
                                     <c:when test="${lesson.heightPx < 32}">
@@ -296,10 +310,14 @@
 </main>
 
 <script>
+    const CALENDAR_VIEW = '${view}';
+    // Day and week views both start at 06:00 (480 px = 6 h × 80 px offset).
+    const DAY_OFFSET_PX = (CALENDAR_VIEW === 'day' || CALENDAR_VIEW === 'week') ? 480 : 0;
+
     // ── Current time indicator ──────────────────────────────────────────────
     function positionTimeIndicator() {
         const now = new Date();
-        const top = now.getHours() * 80 + now.getMinutes() * 80 / 60;
+        const top = now.getHours() * 80 + now.getMinutes() * 80 / 60 - DAY_OFFSET_PX;
         document.querySelectorAll('.time-indicator').forEach(el => {
             el.style.top = top + 'px';
         });
@@ -312,8 +330,9 @@
         const scroll = document.getElementById('cal-scroll');
         if (scroll) {
             const now = new Date();
-            // Scroll to 1.5 hours before current time so upcoming lessons are visible
-            scroll.scrollTop = Math.max(0, (now.getHours() - 1) * 80 + 40);
+            // Scroll so current time is ~1 hour from the top of the viewport
+            const rawTop = now.getHours() * 80 + now.getMinutes() * 80 / 60 - DAY_OFFSET_PX;
+            scroll.scrollTop = Math.max(0, rawTop - 80);
         }
     });
 </script>
