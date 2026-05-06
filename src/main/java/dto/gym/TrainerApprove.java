@@ -47,6 +47,11 @@ public class TrainerApprove {
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
+	@Override
+	public String toString() {
+		return "TrainerApprove [trainerId=" + trainerId + ", name=" + name + ", phoneNum=" + phoneNum + ", profileImg="
+				+ profileImg + ", approvalStatus=" + approvalStatus + "]";
+	}
 	
     
 }

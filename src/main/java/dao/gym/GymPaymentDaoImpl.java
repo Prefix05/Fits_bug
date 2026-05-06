@@ -1,5 +1,6 @@
 package dao.gym;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,14 +95,24 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 	}
 
 	@Override
-	public void approveRefund(int paymentNum) throws Exception {
+	public void approveRefund(int paymentNum, int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			session.update("mapper.payment.approveRefund", paymentNum);
-			session.commit();
-		} finally {
-			session.close();
-		}
+
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("paymentNum", paymentNum);
+	        param.put("gymId", gymId);
+
+	        session.update("mapper.payment.approveRefund", param);
+	        session.commit();
+
+	    } catch (Exception e) {
+	        session.rollback();
+	        throw e;
+
+	    } finally {
+	        session.close();
+	    }
 	}
 
 	@Override
@@ -125,17 +136,24 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 	}
 
 	@Override
-	public void updateCancelApprove(int paymentNum) throws Exception {
+	public void updateCancelApprove(int paymentNum, int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			session.update("mapper.payment.updateCancelApprove", paymentNum);
-			session.commit();
-		} catch (Exception e) {
-			session.rollback();
-			throw e;
-		} finally {
-			session.close();
-		}
+
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("paymentNum", paymentNum);
+	        param.put("gymId", gymId);
+
+	        session.update("mapper.payment.updateCancelApprove", param);
+	        session.commit();
+
+	    } catch (Exception e) {
+	        session.rollback();
+	        throw e;
+
+	    } finally {
+	        session.close();
+	    }
 	}
 
 	@Override
@@ -152,5 +170,7 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 		}
 
 	}
+
+	
 
 }

@@ -1,5 +1,6 @@
 package dao.gym;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,23 +14,31 @@ import util.MybatisSqlSessionFactory;
 public class TrainerManageDaoImpl implements TrainerManageDao {
 
 	@Override
-	public List<TrainerMemberView> selectCurrentMembers(int trainerId) throws Exception{
+	public List<TrainerMemberView> selectCurrentMembers(int trainerId, int gymId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			return session.selectList("mapper.trainerManage.selectCurrentMembers", trainerId);
-		}finally {
-			session.close();
-		}
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("trainerId", trainerId);
+	        param.put("gymId", gymId);
+
+	        return session.selectList("mapper.trainerManage.selectCurrentMembers", param);
+	    } finally {
+	        session.close();
+	    }
 	}
 
 	@Override
-	public List<TrainerMemberView> selectPastMembers(int trainerId) throws Exception{
+	public List<TrainerMemberView> selectPastMembers(int trainerId, int gymId) throws Exception{
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		try {
-			return session.selectList("mapper.trainerManage.selectPastMembers", trainerId);
-		}finally {
-			session.close();
-		}
+	    try {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("trainerId", trainerId);
+	        param.put("gymId", gymId);
+
+	        return session.selectList("mapper.trainerManage.selectPastMembers", param);
+	    } finally {
+	        session.close();
+	    }
 	}
 
 	@Override

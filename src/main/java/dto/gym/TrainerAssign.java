@@ -73,6 +73,13 @@ public class TrainerAssign {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "TrainerAssign [trainerName=" + trainerName + ", memberName=" + memberName + ", assignedAt=" + assignedAt
+				+ ", membershipName=" + membershipName + ", remainingCount=" + remainingCount + ", status=" + status
+				+ "]";
+	}
+
 	
     
     

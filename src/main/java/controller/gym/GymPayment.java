@@ -37,9 +37,16 @@ public class GymPayment extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 
-		if (session == null || session.getAttribute("userId") == null || session.getAttribute("memberId") == null) {
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+		if (session == null || session.getAttribute("loginUser") == null ||  session.getAttribute("userId") == null || session.getAttribute("memberId") == null) {
+			response.sendRedirect(request.getContextPath() + "/member/login");
 			return;
+		}
+		
+		String gymId = request.getParameter("gymId");
+		
+		if (gymId == null || gymId.trim().isEmpty()) {
+		    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "gymId 없음");
+		    return;
 		}
 
 		String path = request.getPathInfo();
@@ -53,11 +60,16 @@ public class GymPayment extends HttpServlet {
 
 			int membershipNum = Integer.parseInt(request.getParameter("membershipId"));
 			String startDateStr = request.getParameter("startDate");
+			
+			if (startDateStr == null || startDateStr.trim().isEmpty()) {
+			    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "startDate 없음");
+			    return;
+			}
 
 			Membership membership = paymentService.getMembership(membershipNum);
 
 			if (membership == null) {
-				response.sendRedirect(request.getContextPath() + "/gym/main");
+				response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + gymId);
 				return;
 			}
 
@@ -93,7 +105,7 @@ public class GymPayment extends HttpServlet {
 
 			paymentService.registerMembershipAndPayment(mr, payment);
 
-			response.sendRedirect(request.getContextPath() + "/member/paymentSuccess.jsp");
+			response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + membership.getGymNum());
 			return;
 		}
 		}catch(Exception e) {
@@ -101,6 +113,6 @@ public class GymPayment extends HttpServlet {
 		    throw new ServletException(e);
 		}
 
-		response.sendRedirect(request.getContextPath() + "/gym/main");
+		response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + gymId);
 	}
 }

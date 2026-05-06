@@ -261,6 +261,18 @@ public class Payment {
 
 
 
+	@Override
+	public String toString() {
+		return "Payment [paymentNum=" + paymentNum + ", userId=" + userId + ", userName=" + userName
+				+ ", membershipNum=" + membershipNum + ", mrNum=" + mrNum + ", gymId=" + gymId + ", trainerId="
+				+ trainerId + ", paymentDate=" + paymentDate + ", paymentPrice=" + paymentPrice + ", paymentFee="
+				+ paymentFee + ", method=" + method + ", status=" + status + ", paymentType=" + paymentType
+				+ ", memberName=" + memberName + ", membershipName=" + membershipName + ", reason=" + reason
+				+ ", canceledAt=" + canceledAt + "]";
+	}
+
+	
+
 	
 
 	

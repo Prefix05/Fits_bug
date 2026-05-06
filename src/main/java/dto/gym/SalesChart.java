@@ -33,6 +33,10 @@ public class SalesChart {
 	public void setPercent(int percent) {
 		this.percent = percent;
 	}
+	@Override
+	public String toString() {
+		return "SalesChart [label=" + label + ", sales=" + sales + ", percent=" + percent + "]";
+	}
 	
     
 }

@@ -166,7 +166,7 @@
     SELECT
         t.id AS trainerId,
         tu.name AS trainerName,
-        tu.profile_img AS profileImg,
+        tu.profile_image AS profileImg,
         IFNULL(p.totalSales, 0) AS totalSales,
         IFNULL(ps.sessionCount, 0) AS sessionCount
     FROM TRAINER t
@@ -192,7 +192,7 @@
 
     LEFT JOIN (
         SELECT trainer_id, COUNT(*) AS sessionCount
-        FROM PT_SESSION
+        FROM LESSON
         GROUP BY trainer_id
     ) ps ON ps.trainer_id = t.id
 

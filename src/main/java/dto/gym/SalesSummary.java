@@ -58,6 +58,11 @@ public class SalesSummary {
 	public void setGrowthRate(Double growthRate) {
 		this.growthRate = growthRate;
 	}
+	@Override
+	public String toString() {
+		return "SalesSummary [totalSales=" + totalSales + ", gymSales=" + gymSales + ", ptSales=" + ptSales
+				+ ", totalFee=" + totalFee + ", netSales=" + netSales + ", growthRate=" + growthRate + "]";
+	}
 	
 	
 	

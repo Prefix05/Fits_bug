@@ -73,6 +73,13 @@ public class Schedule {
 		this.availableWeekendEnd = availableWeekendEnd;
 	}
 
+	@Override
+	public String toString() {
+		return "Schedule [gsNum=" + gsNum + ", gymNum=" + gymNum + ", availableWeekdayStart=" + availableWeekdayStart
+				+ ", availableWeekdayEnd=" + availableWeekdayEnd + ", availableWeekendStart=" + availableWeekendStart
+				+ ", availableWeekendEnd=" + availableWeekendEnd + "]";
+	}
+
 	
 	
 	

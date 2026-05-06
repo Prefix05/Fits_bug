@@ -46,13 +46,20 @@ public class GymNoticeUpdate extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 
 		try {
-			int noticeId = Integer.parseInt(request.getParameter("noticeId"));
+			String noticeIdStr = request.getParameter("noticeId");
+
+			if (noticeIdStr == null || noticeIdStr.trim().isEmpty()) {
+			    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			    return;
+			}
+
+			int noticeId = Integer.parseInt(noticeIdStr);
 
 			// 1. 로그인 세션 확인
 			HttpSession session = request.getSession(false);
 
-			if (session == null || session.getAttribute("gymId") == null) {
-				response.sendRedirect(request.getContextPath() + "/login.jsp");
+			if (session == null || session.getAttribute("loginUser") == null ||session.getAttribute("gymId") == null) {
+				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
 
@@ -120,22 +127,75 @@ public class GymNoticeUpdate extends HttpServlet {
 			int orderIndex = 0;
 
 			for (Part part : request.getParts()) {
-				if ("noticeImages".equals(part.getName()) && part.getSize() > 0) {
+			    if ("noticeImages".equals(part.getName()) && part.getSize() > 0) {
 
-					String submittedFileName = new File(part.getSubmittedFileName()).getName();
-					String fileName = System.currentTimeMillis() + "_" + submittedFileName;
+			        String contentType = part.getContentType();
 
-					if (fileName != null && !fileName.isEmpty()) {
-						part.write(uploadPath + File.separator + fileName);
+			        if (contentType == null || !contentType.startsWith("image/")) {
+			            continue;
+			        }
 
-						NoticeImages image = new NoticeImages();
-						image.setNoticeId(noticeId);
-						image.setImageUrl(fileName);
-						image.setOrderIndex(orderIndex++);
+			        String originalFileName = new File(part.getSubmittedFileName()).getName();
 
-						service.addImage(image);
-					}
-				}
+			        if (originalFileName == null || originalFileName.trim().isEmpty()) {
+			            continue;
+			        }
+
+			        String ext = "";
+			        int dotIndex = originalFileName.lastIndexOf(".");
+			        if (dotIndex != -1) {
+			            ext = originalFileName.substring(dotIndex);
+			        }
+
+			        String fileName =
+			                System.currentTimeMillis() + "_" +
+			                java.util.UUID.randomUUID().toString().replace("-", "") +
+			                ext;
+
+			        part.write(uploadPath + File.separator + fileName);
+
+			        NoticeImages image = new NoticeImages();
+			        image.setNoticeId(noticeId);
+			        image.setImageUrl(fileName);
+			        image.setOrderIndex(orderIndex++);
+
+			        service.addImage(image);
+			    }
+			}for (Part part : request.getParts()) {
+			    if ("noticeImages".equals(part.getName()) && part.getSize() > 0) {
+
+			        String contentType = part.getContentType();
+
+			        if (contentType == null || !contentType.startsWith("image/")) {
+			            continue;
+			        }
+
+			        String originalFileName = new File(part.getSubmittedFileName()).getName();
+
+			        if (originalFileName == null || originalFileName.trim().isEmpty()) {
+			            continue;
+			        }
+
+			        String ext = "";
+			        int dotIndex = originalFileName.lastIndexOf(".");
+			        if (dotIndex != -1) {
+			            ext = originalFileName.substring(dotIndex);
+			        }
+
+			        String fileName =
+			                System.currentTimeMillis() + "_" +
+			                java.util.UUID.randomUUID().toString().replace("-", "") +
+			                ext;
+
+			        part.write(uploadPath + File.separator + fileName);
+
+			        NoticeImages image = new NoticeImages();
+			        image.setNoticeId(noticeId);
+			        image.setImageUrl(fileName);
+			        image.setOrderIndex(orderIndex++);
+
+			        service.addImage(image);
+			    }
 			}
 
 			response.sendRedirect(request.getContextPath() + "/gym/noticeDetail?noticeId=" + noticeId);

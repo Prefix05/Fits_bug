@@ -91,6 +91,13 @@ public class TrainerList {
 		this.memberCount = memberCount;
 	}
 
+	@Override
+	public String toString() {
+		return "TrainerList [trainerId=" + trainerId + ", userId=" + userId + ", name=" + name + ", phoneNum="
+				+ phoneNum + ", profileImg=" + profileImg + ", trainerType=" + trainerType + ", approvalStatus="
+				+ approvalStatus + ", memberCount=" + memberCount + "]";
+	}
+
 	
     
     

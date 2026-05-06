@@ -32,8 +32,8 @@ public class GymInfoEdit extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("gymId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -57,7 +57,7 @@ public class GymInfoEdit extends HttpServlet {
             e.printStackTrace();
 
             request.setAttribute("msg", "헬스장 정보 수정 페이지 조회 중 오류가 발생했습니다.");
-            request.setAttribute("url", request.getContextPath() + "/gym/main");
+            request.setAttribute("url", request.getContextPath() + "/gym/infoEdit");
 
             request.getRequestDispatcher("/common/alert.jsp")
                    .forward(request, response);

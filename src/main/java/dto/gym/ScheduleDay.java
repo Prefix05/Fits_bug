@@ -31,5 +31,9 @@ public class ScheduleDay {
 	public void setDateText(String dateText) {
 		this.dateText = dateText;
 	}
+	@Override
+	public String toString() {
+		return "ScheduleDay [value=" + value + ", name=" + name + ", dateText=" + dateText + "]";
+	}
     
 }	

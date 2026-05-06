@@ -40,7 +40,7 @@
             HOUR(ps.start_time) AS startHour,
             WEEKDAY(ps.lesson_date) + 1 AS dayOfWeek,
             ps.status AS status
-        FROM PT_SESSION ps
+        FROM LESSON ps
         JOIN TRAINER t
           ON ps.trainer_id = t.id
         JOIN `USER` t_user

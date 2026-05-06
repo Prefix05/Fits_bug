@@ -24,11 +24,13 @@ public class GymRefundApprove extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("gymId") == null) {
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("login_required");
             return;
         }
+        
+        int gymId = (int) session.getAttribute("gymId");
 
         String paymentNumStr = request.getParameter("paymentNum");
 
@@ -42,7 +44,7 @@ public class GymRefundApprove extends HttpServlet {
             int paymentNum = Integer.parseInt(paymentNumStr);
 
             GymPaymentService service = new GymPaymentServiceImpl();
-            service.approveRefund(paymentNum);
+            service.approveRefund(paymentNum, gymId);
 
             String ajax = request.getHeader("X-Requested-With");
 

@@ -13,8 +13,8 @@
     		t.id AS trainerId,
     		t.user_id AS userId,
     		u.name AS name,
-    		u.tel AS phoneNum,
-    		u.profile_img AS profileImg,
+    		u.phone AS phoneNum,
+    		u.profile_image AS profileImg,
     		t.trainer_type AS trainerType,
     		t.approval_status AS approvalStatus,
     		COUNT(DISTINCT p.client_id) AS memberCount
@@ -39,8 +39,8 @@
     		t.id,
     		t.user_id,
     		u.name,
-    		u.tel,
-    		u.profile_img,
+    		u.phone,
+    		u.profile_image,
     		t.trainer_type,
     		t.approval_status
 
@@ -78,7 +78,7 @@
         JOIN `USER` mu
           ON m.user_id = mu.id
 
-        LEFT JOIN PT_SESSION s
+        LEFT JOIN LESSON s
           ON p.id = s.package_id
 
         WHERE t.gym_id = #{value}
@@ -96,54 +96,60 @@
 
 
     <!-- 현재 트레이너 회원 목록 -->
-    <select id="selectCurrentTrainerMembers"
-            parameterType="int"
-            resultType="dto.gym.TrainerMemberView">
-        SELECT
-            u.name AS memberName,
-            CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-            (p.total_sessions - p.sessions_used) AS remainingSession,
-            DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-        FROM PT_PACKAGE p
-        JOIN MEMBER m
-          ON p.client_id = m.id
-        JOIN `USER` u
-          ON m.user_id = u.id
-        LEFT JOIN PT_SESSION s
-          ON p.id = s.package_id
-        WHERE p.trainer_id = #{value}
-          AND (p.expires_at IS NULL OR p.expires_at >= NOW())
-        GROUP BY
-            p.id,
-            u.name,
-            p.total_sessions,
-            p.sessions_used
-    </select>
+    <select id="selectCurrentMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+    SELECT
+        u.name AS memberName,
+        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+        (p.total_sessions - p.sessions_used) AS remainingSession,
+        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
+    FROM PT_PACKAGE p
+    JOIN TRAINER t
+      ON p.trainer_id = t.id
+    JOIN MEMBER m
+      ON p.client_id = m.id
+    JOIN `USER` u
+      ON m.user_id = u.id
+    LEFT JOIN LESSON s
+      ON p.id = s.package_id
+    WHERE p.trainer_id = #{trainerId}
+      AND t.gym_id = #{gymId}
+      AND (p.expires_at IS NULL OR p.expires_at >= NOW())
+    GROUP BY
+        p.id,
+        u.name,
+        p.total_sessions,
+        p.sessions_used
+</select>
 
 
     <!-- 과거 트레이너 회원 목록 -->
-    <select id="selectPastTrainerMembers"
-            parameterType="int"
-            resultType="dto.gym.TrainerMemberView">
-        SELECT
-            u.name AS memberName,
-            CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-            (p.total_sessions - p.sessions_used) AS remainingSession,
-            DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-        FROM PT_PACKAGE p
-        JOIN MEMBER m
-          ON p.client_id = m.id
-        JOIN `USER` u
-          ON m.user_id = u.id
-        LEFT JOIN PT_SESSION s
-          ON p.id = s.package_id
-        WHERE p.trainer_id = #{value}
-          AND p.expires_at &lt; NOW()
-        GROUP BY
-            p.id,
-            u.name,
-            p.total_sessions,
-            p.sessions_used
-    </select>
+    <select id="selectPastMembers"
+        parameterType="map"
+        resultType="dto.gym.TrainerMemberView">
+    SELECT
+        u.name AS memberName,
+        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
+        (p.total_sessions - p.sessions_used) AS remainingSession,
+        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
+    FROM PT_PACKAGE p
+    JOIN TRAINER t
+      ON p.trainer_id = t.id
+    JOIN MEMBER m
+      ON p.client_id = m.id
+    JOIN `USER` u
+      ON m.user_id = u.id
+    LEFT JOIN LESSON s
+      ON p.id = s.package_id
+    WHERE p.trainer_id = #{trainerId}
+      AND t.gym_id = #{gymId}
+      AND p.expires_at &lt; NOW()
+    GROUP BY
+        p.id,
+        u.name,
+        p.total_sessions,
+        p.sessions_used
+</select>
 
 </mapper>

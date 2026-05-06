@@ -1,28 +1,27 @@
 package controller.gym;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
-
-import java.io.File;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.Part;
-import java.util.ArrayList;
 
 /**
  * Servlet implementation class GymInfoUpdate
@@ -51,8 +50,8 @@ public class GymInfoUpdate extends HttpServlet {
 		try {
 			HttpSession session = request.getSession(false);
 
-			if (session == null || session.getAttribute("gymId") == null || session.getAttribute("userId") == null) {
-				response.sendRedirect(request.getContextPath() + "/login.jsp");
+			if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null || session.getAttribute("userId") == null) {
+				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
 
@@ -62,6 +61,9 @@ public class GymInfoUpdate extends HttpServlet {
 			GymInfoEditService service = new GymInfoEditServiceImpl();
 
 			Gym gym = service.selectGymMypage(gymId);
+			if (gym == null) {
+			    throw new ServletException("헬스장 정보 없음");
+			}
 
 			// 기본 정보
 			gym.setId(gymId);
@@ -92,8 +94,15 @@ public class GymInfoUpdate extends HttpServlet {
 
 			if (deleteGallery != null && !deleteGallery.trim().isEmpty()) {
 			    String[] deleteFiles = deleteGallery.split(",");
+			    String uploadPath = request.getServletContext().getRealPath("/gym/mainGalleryImages");
+
 			    for (String del : deleteFiles) {
 			        currentFiles.remove(del);
+
+			        File file = new File(uploadPath + File.separator + del);
+			        if (file.exists()) {
+			            file.delete();
+			        }
 			    }
 			}
 
@@ -131,14 +140,28 @@ public class GymInfoUpdate extends HttpServlet {
 
 			service.updateGym(gym);
 			service.updateGymUser(gym);
-
+			
 			// 운영시간
+			
+			String weekdayStart = request.getParameter("weekdayStart");
+			String weekdayEnd = request.getParameter("weekdayEnd");
+			String weekendStart = request.getParameter("weekendStart");
+			String weekendEnd = request.getParameter("weekendEnd");
+
+			if (weekdayStart == null || weekdayEnd == null ||
+			    weekendStart == null || weekendEnd == null) {
+
+			    throw new ServletException("운영시간 값 누락");
+			}
+			
 			Schedule schedule = new Schedule();
 			schedule.setGymNum(gymId);
 			schedule.setAvailableWeekdayStart(LocalTime.parse(request.getParameter("weekdayStart")));
 			schedule.setAvailableWeekdayEnd(LocalTime.parse(request.getParameter("weekdayEnd")));
 			schedule.setAvailableWeekendStart(LocalTime.parse(request.getParameter("weekendStart")));
 			schedule.setAvailableWeekendEnd(LocalTime.parse(request.getParameter("weekendEnd")));
+			
+		
 
 			service.updateSchedule(schedule);
 
@@ -148,22 +171,35 @@ public class GymInfoUpdate extends HttpServlet {
 			String[] membershipTypeReps = request.getParameterValues("membershipTypeRep");
 			String[] membershipPrices = request.getParameterValues("membershipPrice");
 
-			if (membershipIds != null) {
-				for (int i = 0; i < membershipIds.length; i++) {
-					Membership m = new Membership();
-					m.setGymNum(gymId);
-					m.setType(membershipTypes[i]);
-					m.setTypeRep(Integer.parseInt(membershipTypeReps[i]));
-					m.setPrice(new BigDecimal(membershipPrices[i]));
+			if (membershipIds != null &&
+				    membershipTypes != null &&
+				    membershipTypeReps != null &&
+				    membershipPrices != null) {
 
-					if ("new".equals(membershipIds[i])) {
-						service.insertMembership(m);
-					} else {
-						m.setMembershipNum(Integer.parseInt(membershipIds[i]));
-						service.updateMembership(m);
-					}
+				    int size = membershipIds.length;
+
+				    for (int i = 0; i < size; i++) {
+
+				        if (membershipTypes.length <= i ||
+				            membershipTypeReps.length <= i ||
+				            membershipPrices.length <= i) {
+				            continue;
+				        }
+
+				        Membership m = new Membership();
+				        m.setGymNum(gymId);
+				        m.setType(membershipTypes[i]);
+				        m.setTypeRep(Integer.parseInt(membershipTypeReps[i]));
+				        m.setPrice(new BigDecimal(membershipPrices[i]));
+
+				        if ("new".equals(membershipIds[i])) {
+				            service.insertMembership(m);
+				        } else {
+				            m.setMembershipNum(Integer.parseInt(membershipIds[i]));
+				            service.updateMembership(m);
+				        }
+				    }
 				}
-			}
 
 			response.sendRedirect(request.getContextPath() + "/gym/infoEdit");
 		} catch (Exception e) {
@@ -191,7 +227,7 @@ public class GymInfoUpdate extends HttpServlet {
 
 		String contentType = part.getContentType();
 
-		if (!contentType.startsWith("image/")) {
+		if (contentType == null || !contentType.startsWith("image/")) {
 		    return null;
 		}
 		

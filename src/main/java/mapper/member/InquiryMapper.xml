@@ -18,6 +18,11 @@
     </resultMap>
 
     <!-- 문의 저장 -->
+    <insert id="insertSupport" parameterType="SupportDTO">
+        INSERT INTO support (email, type, title, content, file_path)
+        VALUES (#{email}, #{type}, #{title}, #{content}, #{filePath})
+    </insert>
+    
     <insert id="insert" parameterType="dto.member.InquiryDTO">
         INSERT INTO INQUIRY (user_id, category, title, content, file)
         VALUES (#{userId}, #{category}, #{title}, #{content}, #{file})

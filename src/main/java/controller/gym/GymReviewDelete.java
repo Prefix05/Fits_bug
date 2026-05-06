@@ -18,13 +18,13 @@ public class GymReviewDelete extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
@@ -50,7 +50,7 @@ public class GymReviewDelete extends HttpServlet {
 
             service.deleteReview(reviewNum, loginUserId);
 
-            response.sendRedirect(request.getContextPath() + "/gym/main");
+            response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + origin.getGymId());
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);

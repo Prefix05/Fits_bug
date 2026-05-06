@@ -12,8 +12,8 @@
     SELECT
         t.id AS trainerId,
         u.name,
-        u.tel AS phoneNum,
-        u.profile_img AS profileImg,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id
@@ -22,10 +22,11 @@
     ORDER BY t.id DESC
 </select>
 
-<update id="approveTrainer" parameterType="int">
+<update id="approveTrainer" parameterType="map">
     UPDATE TRAINER
     SET approval_status = 'APPROVED'
-    WHERE id = #{value}
+    WHERE id = #{trainerId}
+      AND gym_id = #{gymId}
 </update>
 
 <select id="selectApprovedTrainerList"
@@ -34,8 +35,8 @@
     SELECT
         t.id AS trainerId,
         u.name,
-        u.tel AS phoneNum,
-        u.profile_img AS profileImg,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id

@@ -30,8 +30,8 @@ public class GymNoticeController extends HttpServlet {
         try {
             HttpSession session = request.getSession(false);
 
-            if (session == null || session.getAttribute("gymId") == null) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
+            if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
+                response.sendRedirect(request.getContextPath() + "/member/login");
                 return;
             }
 

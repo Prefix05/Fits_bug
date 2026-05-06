@@ -120,6 +120,14 @@ public class PtSessionView {
 	public void setSpecialization(String specialization) {
 		this.specialization = specialization;
 	}
+
+	@Override
+	public String toString() {
+		return "PtSessionView [id=" + id + ", trainerId=" + trainerId + ", trainerName=" + trainerName + ", clientId="
+				+ clientId + ", clientName=" + clientName + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", status=" + status + ", startHour=" + startHour + ", dayOfWeek=" + dayOfWeek + ", specialization="
+				+ specialization + "]";
+	}
 	
 	
 	
