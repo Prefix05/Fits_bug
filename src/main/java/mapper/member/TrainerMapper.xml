@@ -59,7 +59,7 @@
             t.has_homeGym, t.visit_service, t.description,
             t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
             t.approval_status, t.created_at, t.is_verified,
-            u.name, u.nickname, u.email, u.profileImg
+            u.name, u.nickname, u.email, u.profile_image AS profileImg
         FROM TRAINER t
         JOIN USER u ON t.user_id = u.id
         WHERE t.id = #{id}
@@ -73,7 +73,7 @@
             t.has_homeGym, t.visit_service, t.description,
             t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
             t.approval_status, t.created_at, t.is_verified,
-            u.name, u.nickname, u.email, u.profileImg
+            u.name, u.nickname, u.email, u.profile_image AS profileImg
         FROM TRAINER t
         JOIN USER u ON t.user_id = u.id
         WHERE u.email = #{email}
