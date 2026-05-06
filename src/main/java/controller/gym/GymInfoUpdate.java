@@ -68,9 +68,9 @@ public class GymInfoUpdate extends HttpServlet {
 			// 기본 정보
 			gym.setId(gymId);
 			gym.setUserId(userId);
-			gym.setEmailId(request.getParameter("emailId"));
-			gym.setUserName(request.getParameter("userName"));
-			gym.setTel(request.getParameter("tel"));
+//			gym.setEmailId(request.getParameter("emailId"));
+//			gym.setUserName(request.getParameter("userName"));
+//			gym.setTel(request.getParameter("tel"));
 
 			gym.setName(request.getParameter("gymName"));
 			gym.setPhoneNum(request.getParameter("phoneNum"));
@@ -121,7 +121,7 @@ public class GymInfoUpdate extends HttpServlet {
 			// 프로필 이미지 업로드
 			String profileFileName = uploadFile(request, "profileImg", "/gym/gymProfile");
 			if (profileFileName != null) {
-			    gym.setProfileImg(profileFileName);
+//			    gym.setProfileImg(profileFileName);
 			}
 
 			// 배경 이미지 업로드

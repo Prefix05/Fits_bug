@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImage() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
+    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImg() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -74,18 +74,34 @@
     <a href="<%=contextPath%>/member/community" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
     </a>
+    
+        <!-- [추가] 일반 메뉴와 관리 메뉴 사이 구분선 -->
+    <div style="height:2px; background:#E8EDF5; margin:8px 6px; border-radius:99px;"></div>
+    
     <a href="<%=contextPath%>/admin/memberAuth" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>회원 관리</span>
+      <span class="material-symbols-outlined" style="font-size:20px;">manage_accounts</span><span>회원 관리</span>
     </a>
     <a href="<%=contextPath%>/admin/exGuideList" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>운동가이드 관리</span>
+      <span class="material-symbols-outlined" style="font-size:20px;">video_settings</span><span>운동가이드 관리</span>
     </a>
     <a href="<%=contextPath%>/admin/reportList" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>신고 및 문의내역 관리</span>
+      <span class="material-symbols-outlined" style="font-size:20px;">priority_high</span><span>신고 및 문의내역 관리</span>
     </a>
-    <a href="<%=contextPath%>/admin/sales" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">person</span><span>정산 및 매출내역 관리</span>
-    </a>
+    <div class="sb-dropdown">
+        <a href="javascript:void(0);" class="sb-link" onclick="toggleSubMenu(this)">
+            <span class="material-symbols-outlined" style="font-size:20px;">payments</span>
+            <span>정산 및 매출내역 관리</span>
+            <span class="material-symbols-outlined arrow-icon" style="font-size:18px; margin-left:auto; transition: transform 0.3s;">expand_more</span>
+        </a>
+        <div class="sb-submenu" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #fdfdfd; border-radius: 12px;">
+            <a href="<%=contextPath%>/admin/salesSettlement" class="sb-link sub-link" style="padding-left: 46px; font-size: 13px; color: #7A7EA8;">
+                <span class="material-symbols-outlined" style="font-size:18px;">receipt_long</span><span>정산 내역</span>
+            </a>
+            <a href="<%=contextPath%>/admin/sales" class="sb-link sub-link" style="padding-left: 46px; font-size: 13px; color: #7A7EA8;">
+                <span class="material-symbols-outlined" style="font-size:18px;">monitoring</span><span>매출 내역</span>
+            </a>
+        </div>
+    </div>
 
 
   </nav>
@@ -96,11 +112,11 @@
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/logout'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
     </button>
     <% } else { %>
-    <button onclick="location.href='<%=contextPath%>/login.jsp'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인
     </button>
     <% } %>
@@ -262,6 +278,28 @@ body {
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:#F7F9FC;}
 ::-webkit-scrollbar-thumb{background:#00BFA5;border-radius:99px;}
+
+/* 하위 메뉴 스타일 전용 */
+.sb-dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-link:hover {
+    background: #FFF8F5 !important; /* 메인 메뉴보다 조금 더 연한 배경 */
+    color: #FF6B35 !important;
+}
+
+/* 화살표 회전 애니메이션 */
+.sb-dropdown.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+/* 메뉴가 열렸을 때의 상태 (JS에서 조절함) */
+.sb-submenu.open {
+    margin-top: 2px;
+    margin-bottom: 5px;
+}
 </style>
 
 <script>
@@ -315,4 +353,33 @@ function spawnFitbullSparkles() {
     setTimeout(() => s.remove(), 1800);
   }
 }
+
+/* 정산/매출 하위 메뉴 토글 함수 */
+function toggleSubMenu(element) {
+    const dropdown = element.parentElement;
+    const submenu = dropdown.querySelector('.sb-submenu');
+    const isActive = dropdown.classList.contains('active');
+
+    if (!isActive) {
+        // [열기]
+        dropdown.classList.add('active');
+        submenu.classList.add('open');
+        // scrollHeight를 사용하여 내용물만큼 높이를 동적으로 계산
+        submenu.style.maxHeight = submenu.scrollHeight + "px";
+    } else {
+        // [닫기]
+        dropdown.classList.remove('active');
+        submenu.classList.remove('open');
+        // 높이를 0으로 명시적으로 지정해야 transition이 작동하며 닫힙니다.
+        submenu.style.maxHeight = "0px";
+    }
+}
+
+// [옵션] 현재 페이지가 정산/매출 페이지라면 자동으로 메뉴를 열어두는 로직
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.href.includes('/admin/sales')) {
+        const salesMenu = document.querySelector('.sb-dropdown');
+        if(salesMenu) toggleSubMenu(salesMenu.querySelector('.sb-link'));
+    }
+});
 </script>

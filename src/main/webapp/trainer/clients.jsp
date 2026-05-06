@@ -184,98 +184,9 @@
     </a>
 </nav>
 
-<!-- SideNavBar Shell -->
-<aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1" id="main-nav">
-
-        <!-- 공통 nav item -->
-        <!-- 내주변 -->
-        <div class="relative">
-            <!-- Parent toggle -->
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="
-                        this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                        this.querySelector('.chevron').classList.toggle('rotate-180');
-                    " href="#">
-                <span class="material-symbols-outlined">distance</span>
-                내주변
-                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
-                      style="font-size:18px">expand_more</span>
-            </a>
-
-            <!-- Dropdown children -->
-            <div class="dropdown hidden flex-col pl-4">
-                <!-- 헬스장 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
-                    헬스장
-                </a>
-                <!-- 트레이너 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">person</span>
-                    트레이너
-                </a>
-            </div>
-        </div>
-
-        <!-- 대시보드 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드</a>
-
-        <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
-
-        <!-- 일정 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정</a>
-
-        <!-- 메시지 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="/messages.html" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
-
-        <!-- 수익 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="earnings.html" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
-    </nav>
-
-    <!--설정, 고객 지원-->
-    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
-            설정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
-            지원</a>
-        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
-    </div>
-
-    <!-- 마이프로필 -->
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
-        <img alt="profile image" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
-             style=""/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">${sessionScope.loginTrainer.name}</p>
-            <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="clients" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 
 <!-- Main Content Canvas (Adjusted with ml-64) -->
@@ -295,12 +206,11 @@
                 <div class="flex flex-col md:flex-row md:items-center gap-4 flex-1">
                     <!-- Integrated Search Bar -->
                     <div class="relative w-full lg:max-w-[300px]">
-                            <span
-                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg"
-                                    data-icon="search" style="">search</span>
-                        <input
-                                class="w-full bg-white border border-outline-variant rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-outline text-on-surface"
-                                placeholder="회원 검색..." type="text"/>
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+                        <input id="searchInput"
+                               class="w-full bg-white border border-outline-variant rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder-outline text-on-surface"
+                               placeholder="회원 검색..." type="text"
+                               value="${currentSearch}"/>
                     </div>
                     <!-- Segmented Control Filter -->
                     <div class="flex items-center gap-1 p-1 bg-surface-container-high rounded-2xl w-full">
@@ -427,7 +337,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="clients?page=${currentPage - 1}"
+                        <a href="clients?page=${currentPage - 1}&search=${currentSearch}"
                            class="w-9 h-9 flex items-center justify-center rounded-lg
                       text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
                             <span class="material-symbols-outlined text-xl">chevron_left</span>
@@ -445,7 +355,7 @@
                             </button>
                         </c:when>
                         <c:otherwise>
-                            <a href="clients?page=${i}"
+                            <a href="clients?page=${i}&search=${currentSearch}"
                                class="w-9 h-9 flex items-center justify-center rounded-lg
                           text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors">
                                     ${i}
@@ -463,7 +373,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="clients?page=${currentPage + 1}"
+                        <a href="clients?page=${currentPage + 1}&search=${currentSearch}"
                            class="w-9 h-9 flex items-center justify-center rounded-lg
                       text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
                             <span class="material-symbols-outlined text-xl">chevron_right</span>
@@ -474,6 +384,27 @@
         </div>
     </main>
 </div>
+<script>
+    const searchInput = document.getElementById('searchInput');
+
+    // Re-focus and move cursor to end after page reload
+    if (searchInput.value.length > 0) {
+        searchInput.focus();
+        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+    }
+
+    let debounceTimer;
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+            const query = searchInput.value.trim();
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', query);
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        }, 400);
+    });
+</script>
 </body>
 
 </html>

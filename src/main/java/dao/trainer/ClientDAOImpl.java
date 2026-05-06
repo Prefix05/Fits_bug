@@ -13,11 +13,12 @@ public class ClientDAOImpl implements ClientDAO {
 
     // list of clients
     @Override
-    public List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, int trainerId) {
+    public List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, String search, int trainerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("offset", offset);
         params.put("limit", limit);
         params.put("filter", filter);
+        params.put("search", search);
         params.put("trainerId", trainerId);
 
         return session.selectList("dao.ClientMapper.selectClients", params);
@@ -25,9 +26,10 @@ public class ClientDAOImpl implements ClientDAO {
 
     // total client count
     @Override
-    public int selectClientCount(SqlSession session, String filter, int trainerId) {
+    public int selectClientCount(SqlSession session, String filter, String search, int trainerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("filter", filter);
+        params.put("search", search);
         params.put("trainerId", trainerId);
 
         return session.selectOne("dao.ClientMapper.countClients", params);

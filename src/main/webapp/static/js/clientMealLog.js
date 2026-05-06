@@ -122,7 +122,7 @@ function updateMealList(meals) {
             + '<h4 class="font-bold text-on-surface text-sm leading-snug truncate">' + meal.mealName + '</h4>'
             + '<span class="text-[10px] font-medium text-on-surface-variant whitespace-nowrap shrink-0">' + meal.mealTime + '</span>'
             + '</div>'
-            + '<p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">' + meal.description + '</p>'
+            + '<p class="text-[11px] text-on-surface-variant mt-1 line-clamp-1">' + (meal.mealType || '') + '</p>'
             + '</div>'
             + '<div class="flex flex-wrap gap-x-3 gap-y-1 mt-2">'
             + '<div class="flex items-center gap-1">'

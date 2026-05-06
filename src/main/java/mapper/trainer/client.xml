@@ -11,7 +11,6 @@
         <result property="goals" column="goals"/>
         <result property="nextSession" column="next_session"/>
         <result property="lessonCount" column="lesson_count"/>
-        <result property="totalLessons" column="total_lessons"/>
         <result property="height" column="height"/>
         <result property="weight" column="weight"/>
         <result property="lastSession" column="last_session"/>
@@ -27,6 +26,9 @@
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
             </if>
+            <if test="search != null and search != ''">
+                AND name LIKE CONCAT('%', #{search}, '%')
+            </if>
         </where>
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -37,6 +39,9 @@
             trainer_id = #{trainerId}
             <if test="filter != null and filter != 'all'">
                 AND status = #{filter}
+            </if>
+            <if test="search != null and search != ''">
+                AND name LIKE CONCAT('%', #{search}, '%')
             </if>
         </where>
     </select>

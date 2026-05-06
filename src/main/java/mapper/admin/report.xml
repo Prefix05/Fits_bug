@@ -48,4 +48,8 @@
             process_date = NOW()
         WHERE id = #{reportId}
     </update>
+    
+    <select id="selectReportCnt" resultType="Integer">
+		select count(*) from report
+	</select>
 </mapper>

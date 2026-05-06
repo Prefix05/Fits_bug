@@ -1,11 +1,16 @@
 package controller.trainer;
 
+import dto.trainer.AvailabilityDTO;
+import dto.trainer.PricingDTO;
 import dto.trainer.TrainerDTO;
 import dto.trainer.UserDTO;
 import service.trainer.SignupService;
 import service.trainer.SignupServiceImpl;
 import service.trainer.TrainerService;
 import service.trainer.TrainerServiceImpl;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -51,9 +56,15 @@ public class ProfileEditController extends HttpServlet {
         if (trainer != null) {
             int tid = trainer.getTrainerId();
             request.setAttribute("trainer", trainer);
-            request.setAttribute("specializations", trainerService.getSpecializationsByTrainerId(tid));
-            request.setAttribute("traits",          trainerService.getTraitsByTrainerId(tid));
-            request.setAttribute("certifications",  trainerService.getCertificationsByTrainerId(tid));
+            request.setAttribute("specializations",  trainerService.getSpecializationsByTrainerId(tid));
+            request.setAttribute("traits",           trainerService.getTraitsByTrainerId(tid));
+            request.setAttribute("certifications",   trainerService.getCertificationsByTrainerId(tid));
+            request.setAttribute("pricingList",      trainerService.getPricingByTrainerId(tid));
+            request.setAttribute("availabilityList", trainerService.getAvailabilityByTrainerId(tid));
+            if (trainer.getGymId() != null) {
+                dto.gym.Gym currentGym = trainerService.getGymInfoById(trainer.getGymId());
+                request.setAttribute("currentGym", currentGym);
+            }
         }
 
         request.getRequestDispatcher("/trainer/profileEdit.jsp").forward(request, response);
@@ -103,11 +114,58 @@ public class ProfileEditController extends HttpServlet {
                 String original = Paths.get(profileImagePart.getSubmittedFileName()).getFileName().toString();
                 profileImageFileName = "profile_" + loginUser.getId() + "_" + original;
                 profileImagePart.write(uploadDir + File.separator + profileImageFileName);
-                loginUser.setProfileImg(profileImageFileName);
+//                loginUser.setProfileImg(profileImageFileName);
             }
 
-            // 3. Update trainer description + specializations + traits + profile image
+            // 3. Update trainer type, gym, address, description
+            String trainerType = request.getParameter("trainerType");
+            if (trainerType != null && !trainerType.isEmpty()) {
+                trainer.setTrainerType(trainerType);
+            }
+
             trainer.setDescription(request.getParameter("description"));
+
+            String gymCode = request.getParameter("gymCode");
+            boolean isGymBased = "GYM_EMPLOYED".equals(trainerType) || "GYM_RENTAL".equals(trainerType);
+
+            if (isGymBased && gymCode != null && !gymCode.trim().isEmpty()) {
+                Integer newGymId = trainerService.findGymIdByGymCode(gymCode.trim());
+                if (newGymId == null) {
+                    request.setAttribute("error", "유효하지 않은 헬스장 코드입니다. 다시 확인해 주세요.");
+                    request.setAttribute("trainer", trainer);
+                    int tid = trainer.getTrainerId();
+                    request.setAttribute("specializations", trainerService.getSpecializationsByTrainerId(tid));
+                    request.setAttribute("traits",          trainerService.getTraitsByTrainerId(tid));
+                    request.setAttribute("certifications",  trainerService.getCertificationsByTrainerId(tid));
+                    if (trainer.getGymId() != null)
+                        request.setAttribute("currentGym", trainerService.getGymInfoById(trainer.getGymId()));
+                    request.getRequestDispatcher("/trainer/profileEdit.jsp").forward(request, response);
+                    return;
+                }
+                trainer.setGymId(newGymId);
+                // Copy gym address + coordinates onto trainer record
+                dto.gym.Gym gym = trainerService.getGymInfoById(newGymId);
+                if (gym != null) {
+                    trainer.setAddress(gym.getAddress());
+                    trainer.setAddressDetail(gym.getAddressDetail());
+                    trainer.setPostcode(gym.getPostcode());
+                    trainer.setLatitude(gym.getLatitude());
+                    trainer.setLongitude(gym.getLongitude());
+                }
+            } else if (isGymBased) {
+                // Gym-based but no new code entered — carry existing lat/lng from hidden inputs
+                String lat = request.getParameter("latitude");
+                String lng = request.getParameter("longitude");
+                if (lat != null && !lat.isEmpty()) trainer.setLatitude(new java.math.BigDecimal(lat));
+                if (lng != null && !lng.isEmpty()) trainer.setLongitude(new java.math.BigDecimal(lng));
+            } else {
+                // Freelance — use trainer's own address and clear gym
+                trainer.setGymId(null);
+                trainer.setLatitude(null);
+                trainer.setLongitude(null);
+                trainer.setAddress(request.getParameter("address"));
+                trainer.setAddressDetail(request.getParameter("addressDetail"));
+            }
             String[] specializations = request.getParameterValues("specializations");
             String[] traits = request.getParameterValues("traits");
             if (specializations == null) specializations = new String[0];
@@ -146,27 +204,73 @@ public class ProfileEditController extends HttpServlet {
                 trainerService.insertCertifications(
                         trainer.getTrainerId(), certNames, issuingOrgs, issueDates, expiryDates, fileNames);
             } else {
-                // No cert rows submitted — clear existing certs
                 trainerService.insertCertifications(trainer.getTrainerId(), new String[0], null, null, null, null);
             }
 
-            response.sendRedirect(request.getContextPath() + "/trainer/profile?saved=1");
+            // 5. Save pricing
+            String[] pricingLabels = request.getParameterValues("pricingLabel");
+            String[] sessionCounts = request.getParameterValues("sessionCount");
+            String[] pricePrices   = request.getParameterValues("price");
+            String[] popularRows   = request.getParameterValues("popularRow");
+
+            Set<String> popularSet = new HashSet<>();
+            if (popularRows != null) {
+                for (String r : popularRows) popularSet.add(r);
+            }
+
+            List<PricingDTO> pricingList = new ArrayList<>();
+            if (pricingLabels != null) {
+                for (int i = 0; i < pricingLabels.length; i++) {
+                    if (pricingLabels[i] == null || pricingLabels[i].trim().isEmpty()) continue;
+                    PricingDTO p = new PricingDTO();
+                    p.setLabel(pricingLabels[i].trim());
+                    p.setSessionCount(parseIntSafe(sessionCounts, i, 1));
+                    p.setPrice(parseIntSafe(pricePrices, i, 0));
+                    p.setPopular(popularSet.contains(String.valueOf(i)));
+                    pricingList.add(p);
+                }
+            }
+
+            // 6. Save availability
+            String[] allDays = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
+            List<AvailabilityDTO> availabilityList = new ArrayList<>();
+            for (String day : allDays) {
+                if (request.getParameter("availEnabled_" + day) != null) {
+                    AvailabilityDTO a = new AvailabilityDTO();
+                    a.setDayOfWeek(day);
+                    String start = request.getParameter("startTime_" + day);
+                    String end   = request.getParameter("endTime_" + day);
+                    a.setStartTime(start != null && !start.isEmpty() ? start : "09:00");
+                    a.setEndTime(end   != null && !end.isEmpty()   ? end   : "18:00");
+                    availabilityList.add(a);
+                }
+            }
+
+            trainerService.savePricingAndAvailability(trainer.getTrainerId(), pricingList, availabilityList);
+
+            response.sendRedirect(request.getContextPath() + "/trainer/profileEdit?saved=1");
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "저장에 실패했습니다. 다시 시도해 주세요.");
-            // Reload data for the form
             UserDTO loginUser2 = (UserDTO) session.getAttribute("loginUser");
             TrainerService ts2 = new TrainerServiceImpl();
             TrainerDTO trainer2 = ts2.getTrainerByUserId(loginUser2.getId());
             if (trainer2 != null) {
                 int tid = trainer2.getTrainerId();
                 request.setAttribute("trainer", trainer2);
-                request.setAttribute("specializations", ts2.getSpecializationsByTrainerId(tid));
-                request.setAttribute("traits",          ts2.getTraitsByTrainerId(tid));
-                request.setAttribute("certifications",  ts2.getCertificationsByTrainerId(tid));
+                request.setAttribute("specializations",  ts2.getSpecializationsByTrainerId(tid));
+                request.setAttribute("traits",           ts2.getTraitsByTrainerId(tid));
+                request.setAttribute("certifications",   ts2.getCertificationsByTrainerId(tid));
+                request.setAttribute("pricingList",      ts2.getPricingByTrainerId(tid));
+                request.setAttribute("availabilityList", ts2.getAvailabilityByTrainerId(tid));
             }
             request.getRequestDispatcher("/trainer/profileEdit.jsp").forward(request, response);
         }
+    }
+
+    private int parseIntSafe(String[] arr, int i, int defaultVal) {
+        if (arr == null || i >= arr.length || arr[i] == null || arr[i].isEmpty()) return defaultVal;
+        try { return Integer.parseInt(arr[i]); } catch (NumberFormatException e) { return defaultVal; }
     }
 }

@@ -86,9 +86,12 @@
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
-      <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
-    </button>
+    <form action="<%=contextPath%>/member/logout" method="post">
+      <button type="submit" class="sb-btn-main">
+        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+        로그아웃
+      </button>
+    </form>
     <% } else { %>
     <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인

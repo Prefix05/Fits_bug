@@ -125,6 +125,8 @@
 		<mapper resource="mapper/trainer/payout_account.xml"/>
 		<mapper resource="mapper/trainer/certification.xml"/>
 		<mapper resource="mapper/trainer/pricing_availability.xml"/>
+		<mapper resource="mapper/trainer/settlement.xml"/>
+		<mapper resource="mapper/trainer/order.xml"/>
 
 	</mappers>
 </configuration>

@@ -41,9 +41,9 @@ public class ReportDAOImpl implements ReportDAO {
 	}
 
 	@Override
-	public int updateReportStatus(ReportDTO report) throws Exception {
+	public Integer updateReportStatus(ReportDTO report) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		int status = 0;
+		Integer status = 0;
 		try {
 			status = sqlSession.update("mapper.admin.report.updateReportStatus", report);
 			sqlSession.commit();
@@ -57,4 +57,18 @@ public class ReportDAOImpl implements ReportDAO {
 		return status;
 	}
 
+	@Override
+	public Integer selectReportCnt() throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Integer ReportCnt = 0;
+		try {
+			ReportCnt = sqlSession.selectOne("mapper.admin.report.selectReportCnt");
+		} catch(Exception e){
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		return ReportCnt;
+	}
 }

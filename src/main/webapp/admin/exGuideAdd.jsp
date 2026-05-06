@@ -105,7 +105,7 @@
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">
 <!-- Page Canvas -->
-<div class="pt-24 px-10 pb-10">
+<div class="pt-10 px-10 pb-10">
 <!-- Header Section -->
 <div class="flex justify-between items-center mb-8">
 <div>

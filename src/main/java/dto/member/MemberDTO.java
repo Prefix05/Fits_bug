@@ -1,5 +1,4 @@
 package dto.member;
-
 public class MemberDTO {
 
     // ── MEMBER 테이블 컬럼 ─────────────────────────────────────
@@ -24,8 +23,7 @@ public class MemberDTO {
     private String  name;               // DB: NAME
     private String  goals;              // goals VARCHAR(50) ← 운동 목표
     private String  nextSession;        // DB: next_session
-    private int     lessonCount;        // DB: lesson_count  DEFAULT 0
-    private int     totalLessons;       // DB: total_lessons DEFAULT 10
+    private int     lessonCount;        // DB: lesson_count — 남은 수업 횟수
     private String  lastSession;        // DB: last_session
     private String  status;             // DB: STATUS  DEFAULT 'all'
     private int     age;
@@ -102,9 +100,6 @@ public class MemberDTO {
 
     public int getLessonCount() { return lessonCount; }
     public void setLessonCount(int lessonCount) { this.lessonCount = lessonCount; }
-
-    public int getTotalLessons() { return totalLessons; }
-    public void setTotalLessons(int totalLessons) { this.totalLessons = totalLessons; }
 
     public String getLastSession() { return lastSession; }
     public void setLastSession(String lastSession) { this.lastSession = lastSession; }

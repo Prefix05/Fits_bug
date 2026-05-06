@@ -10,4 +10,7 @@ public interface InquiryService {
 	InquiryDTO getInquiryDetail(int inquiryId) throws Exception;
 	
 	boolean answerInquiry(InquiryDTO inquiry) throws Exception;
+	
+	Integer totalCnt() throws Exception;
+	Integer inquiryCnt() throws Exception;
 }

@@ -10,5 +10,7 @@ public interface InquiryDAO {
 	
 	InquiryDTO selectInquiryDetail(int inquiryId) throws Exception;
 	
-	int updateInquiryReply(InquiryDTO inquiry) throws Exception;
+	Integer updateInquiryReply(InquiryDTO inquiry) throws Exception;
+	
+	Integer selectInquiryCnt() throws Exception;
 }

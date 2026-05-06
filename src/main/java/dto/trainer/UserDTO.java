@@ -9,7 +9,7 @@ public class UserDTO {
     private String name;
     private String tel;
     private String nickname;
-    private String profileImage;
+    private String profileImg;
     private UserRole role;
     private LocalDateTime createdAt;
     private boolean deleted;
@@ -73,12 +73,12 @@ public class UserDTO {
 
 
 
-    public String getProfileImage() {
-		return profileImage;
+    public String getProfileImg() {
+		return profileImg;
 	}
 
-	public void setProfileImage(String profileImage) {
-		this.profileImage = profileImage;
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 
 	public UserRole getRole() {
@@ -124,7 +124,7 @@ public class UserDTO {
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", tel=" + tel
-				+ ", nickname=" + nickname + ", profileImage=" + profileImage + ", role=" + role + ", createdAt="
+				+ ", nickname=" + nickname + ", profileImg=" + profileImg + ", role=" + role + ", createdAt="
 				+ createdAt + ", deleted=" + deleted + ", provider=" + provider + ", providerId=" + providerId + "]";
 	}
     
