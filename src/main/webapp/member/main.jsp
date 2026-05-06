@@ -337,9 +337,10 @@ if(loginUser == null){
 
         <script>
         (function(){
-          const AVAIL      = ${not empty availabilityJson ? availabilityJson : '[]'};
-          const TRAINER_ID = ${sessionScope.memberInfo.trainerId};
-          const CTX        = '${pageContext.request.contextPath}';
+          const AVAIL        = ${not empty availabilityJson ? availabilityJson : '[]'};
+          const TRAINER_ID   = ${sessionScope.memberInfo.trainerId};
+          const LESSON_COUNT = ${sessionScope.memberInfo.lessonCount};
+          const CTX          = '${pageContext.request.contextPath}';
           const DAY_NAMES_EN = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
           const DAY_NAMES_KO = ['일','월','화','수','목','금','토'];
 
@@ -471,6 +472,10 @@ if(loginUser == null){
           }
 
           window.selectSlot = function(dateStr, hour) {
+            if (LESSON_COUNT <= 0) {
+              document.getElementById('noLessonsModal').style.display = 'flex';
+              return;
+            }
             if (selectedSlot && selectedSlot.date===dateStr && selectedSlot.hour===hour) {
               selectedSlot = null;
               document.getElementById('reserveArea').style.display = 'none';
@@ -659,6 +664,29 @@ if(loginUser == null){
       <button onclick="closeChatModal()" style="width:32px;height:32px;border-radius:50%;border:none;background:#F7F9FC;color:#5A6480;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div id="chatList" style="max-height:340px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- 수업권 없음 모달 -->
+<div id="noLessonsModal" style="display:none;position:fixed;inset:0;background:rgba(26,31,54,0.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:white;border-radius:24px;padding:36px 32px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.15);animation:fb_modal_in 0.3s ease;text-align:center;">
+    <div style="font-size:52px;margin-bottom:12px;">🎟️</div>
+    <h3 style="font-size:18px;font-weight:800;color:#1A1F36;margin-bottom:8px;">남은 수업권이 없어요</h3>
+    <p style="font-size:14px;color:#9DA8C0;line-height:1.6;margin-bottom:24px;">
+      예약하려면 수업권이 필요해요.<br>트레이너 페이지에서 PT를 구매해보세요.
+    </p>
+    <a href="${pageContext.request.contextPath}/member/trainerList"
+       style="display:block;width:100%;padding:13px;border-radius:99px;border:none;cursor:pointer;
+              background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:15px;font-weight:800;
+              text-decoration:none;box-shadow:0 4px 16px rgba(255,107,53,0.3);margin-bottom:10px;box-sizing:border-box;">
+      수업권 구매하러 가기 →
+    </a>
+    <button onclick="document.getElementById('noLessonsModal').style.display='none'"
+            style="width:100%;padding:11px;border-radius:99px;border:1.5px solid #E8EDF5;
+                   background:white;color:#5A6480;font-weight:600;font-size:14px;cursor:pointer;
+                   font-family:'Noto Sans KR',sans-serif;">
+      닫기
+    </button>
   </div>
 </div>
 
@@ -973,6 +1001,7 @@ window.onload=function(){
   const params = new URLSearchParams(location.search);
   if (params.get('reserved') === '1') showToast('✅ 예약이 완료되었습니다!', '#00BFA5');
   if (params.get('reserveError') === '1') showToast('❌ 예약 중 오류가 발생했습니다.', '#FF4D4D');
+  if (params.get('reserveError') === 'noLessons') document.getElementById('noLessonsModal').style.display = 'flex';
 };
 
 function showToast(msg, color) {

@@ -280,8 +280,6 @@
                             <span class="material-symbols-outlined text-primary text-xl">payments</span>
                             <h3 class="font-bold text-sm text-on-surface">1:1 트레이닝 비용</h3>
                         </div>
-                        <a href="${pageContext.request.contextPath}/trainer/pricing"
-                           class="text-[11px] font-bold text-primary hover:underline">수정</a>
                     </div>
                     <c:choose>
                         <c:when test="${not empty pricing}">
@@ -322,8 +320,6 @@
                             <span class="material-symbols-outlined text-primary text-xl">calendar_month</span>
                             <h3 class="font-bold text-sm text-on-surface">가능 일정</h3>
                         </div>
-                        <a href="${pageContext.request.contextPath}/trainer/pricing"
-                           class="text-[11px] font-bold text-primary hover:underline">수정</a>
                     </div>
                     <c:choose>
                         <c:when test="${not empty availability}">

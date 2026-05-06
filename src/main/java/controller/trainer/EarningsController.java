@@ -55,9 +55,9 @@ public class EarningsController extends HttpServlet {
                 e.printStackTrace();
             }
 
-            // 3. Transaction list from orders
+            // 3. Transaction list from PAYMENT
             try {
-                transactions = sql.selectList("order.findByTrainerId", trainerId);
+                transactions = sql.selectList("mapper.PaymentMapper.findByTrainerId", trainerId);
             } catch (Exception e) {
                 e.printStackTrace();
             }

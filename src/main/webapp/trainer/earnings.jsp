@@ -171,10 +171,6 @@
         <section class="space-y-3">
             <div class="flex items-center justify-between px-1">
                 <h3 class="text-base font-bold">월별 수익 내역</h3>
-                <a href="${pageContext.request.contextPath}/trainer/earnings/settlement"
-                   class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5">
-                    더보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
-                </a>
             </div>
             <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden">
                 <table class="w-full text-sm">
@@ -224,12 +220,6 @@
         <section class="space-y-3">
             <div class="flex items-center justify-between px-1">
                 <h3 class="text-base font-bold">결제 내역</h3>
-                <c:if test="${not empty transactions}">
-                <a href="${pageContext.request.contextPath}/trainer/earnings/transactions"
-                   class="text-xs text-primary font-semibold hover:underline flex items-center gap-0.5">
-                    더보기 <span class="material-symbols-outlined text-sm">chevron_right</span>
-                </a>
-                </c:if>
             </div>
             <c:choose>
                 <c:when test="${empty transactions}">

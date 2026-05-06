@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dto.member.MemberDTO;
 import dto.member.PaymentDTO;
 import dto.member.TrainerDTO;
 import dto.member.UserDTO;
@@ -94,6 +97,13 @@ public class PaymentSuccessController extends HttpServlet {
             sql.update("mapper.MemberMapper.updateTrainerAndLessons", memberUpdate);
 
             sql.commit();
+
+            // Refresh session memberInfo so the new trainer_id is visible immediately
+            MemberDAO memberDao = new MemberDAOImpl();
+            MemberDTO freshMember = memberDao.findByEmail(user.getEmail());
+            if (freshMember != null) {
+                session.setAttribute("memberInfo", freshMember);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

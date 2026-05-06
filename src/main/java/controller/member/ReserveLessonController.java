@@ -34,6 +34,10 @@ public class ReserveLessonController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/member/main");
             return;
         }
+        if (memberInfo.getLessonCount() <= 0) {
+            resp.sendRedirect(req.getContextPath() + "/member/main?reserveError=noLessons");
+            return;
+        }
 
         String lessonDate = req.getParameter("lessonDate");
         String startTime  = req.getParameter("startTime");
@@ -54,6 +58,7 @@ public class ReserveLessonController extends HttpServlet {
             params.put("goal",       null);
 
             sql.insert("lesson.insertLesson", params);
+            sql.update("mapper.MemberMapper.decrementLessonCount", memberInfo.getId());
             sql.commit();
 
         } catch (Exception e) {

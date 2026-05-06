@@ -47,23 +47,35 @@ public class EarningsTransactionsController extends HttpServlet {
         String sortDir = "DESC";
         if ("ASC".equalsIgnoreCase(request.getParameter("sortDir"))) sortDir = "ASC";
 
+        String dateFrom = request.getParameter("dateFrom");
+        String dateTo   = request.getParameter("dateTo");
+        // Basic validation: must be yyyy-MM-dd or empty
+        if (dateFrom != null && !dateFrom.matches("\\d{4}-\\d{2}-\\d{2}")) dateFrom = null;
+        if (dateTo   != null && !dateTo  .matches("\\d{4}-\\d{2}-\\d{2}")) dateTo   = null;
+
         int totalCount = 0;
         List<Map<String, Object>> transactions = new ArrayList<>();
 
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
             try {
-                totalCount = sql.selectOne("order.countByTrainerId", trainerId);
+                Map<String, Object> countParam = new HashMap<>();
+                countParam.put("trainerId", trainerId);
+                countParam.put("dateFrom",  dateFrom);
+                countParam.put("dateTo",    dateTo);
+                totalCount = sql.selectOne("mapper.PaymentMapper.countByTrainerId", countParam);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
                 Map<String, Object> param = new HashMap<>();
                 param.put("trainerId", trainerId);
-                param.put("limit", PAGE_SIZE);
-                param.put("offset", (page - 1) * PAGE_SIZE);
-                param.put("sortBy", sortBy);
-                param.put("sortDir", sortDir);
-                transactions = sql.selectList("order.findByTrainerIdPaged", param);
+                param.put("limit",     PAGE_SIZE);
+                param.put("offset",    (page - 1) * PAGE_SIZE);
+                param.put("sortBy",    sortBy);
+                param.put("sortDir",   sortDir);
+                param.put("dateFrom",  dateFrom);
+                param.put("dateTo",    dateTo);
+                transactions = sql.selectList("mapper.PaymentMapper.findByTrainerIdPaged", param);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -79,6 +91,8 @@ public class EarningsTransactionsController extends HttpServlet {
         request.setAttribute("totalCount", totalCount);
         request.setAttribute("sortBy", sortBy);
         request.setAttribute("sortDir", sortDir);
+        request.setAttribute("dateFrom", dateFrom != null ? dateFrom : "");
+        request.setAttribute("dateTo",   dateTo   != null ? dateTo   : "");
         request.getRequestDispatcher("/trainer/earningsTransactions.jsp").forward(request, response);
     }
 }
