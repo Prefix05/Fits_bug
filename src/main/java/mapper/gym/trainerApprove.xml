@@ -12,8 +12,8 @@
     SELECT
         t.id AS trainerId,
         u.name,
-        u.tel AS phoneNum,
-        u.profile_img AS profileImg,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id
@@ -35,8 +35,8 @@
     SELECT
         t.id AS trainerId,
         u.name,
-        u.tel AS phoneNum,
-        u.profile_img AS profileImg,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id

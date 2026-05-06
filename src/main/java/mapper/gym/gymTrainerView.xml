@@ -11,7 +11,7 @@
     SELECT
         t.id AS id,
         u.name AS name,
-        u.profile_img AS profileImg,
+        u.profile_image AS profileImg,
         COUNT(DISTINCT pp.client_id) AS memberCount,
         MAX(
             CASE s.type
@@ -29,14 +29,14 @@
     LEFT JOIN PT_PACKAGE pp
       ON t.id = pp.trainer_id
      AND (pp.expires_at IS NULL OR pp.expires_at >= NOW())
-    LEFT JOIN SPECIALIZATION s
+    LEFT JOIN TRAINER_SPECIALIZATION s
       ON t.id = s.trainer_id
     WHERE t.gym_id = #{value}
       AND t.approval_status = 'APPROVED'
     GROUP BY
         t.id,
         u.name,
-        u.profile_img
+        u.profile_image
     ORDER BY t.id DESC
 </select>
 

@@ -223,7 +223,7 @@
 </update>
 
     <update id="cancelPtSessionByPayment" parameterType="int">
-        UPDATE PT_SESSION ps
+        UPDATE LESSON ps
         JOIN PT_PACKAGE pp
           ON ps.package_id = pp.id
         JOIN PAYMENT p
