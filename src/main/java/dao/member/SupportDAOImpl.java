@@ -13,7 +13,7 @@ public class SupportDAOImpl implements SupportDAO {
     public void insertSupport(SupportDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.member.InquiryMapper.insertSupport", dto);
+            sqlSession.insert("mapper.member.InquiryMapper.insertInquiry", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();

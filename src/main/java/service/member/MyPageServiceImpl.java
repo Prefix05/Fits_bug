@@ -33,7 +33,7 @@ public class MyPageServiceImpl implements MyPageService {
         if (userDto != null) {
             if (member.getEmail() == null)      member.setEmail(userDto.getEmail());
             if (member.getNickname() == null)   member.setNickname(userDto.getNickname());
-            if (member.getProfileImg() == null) member.setProfileImg(userDto.getProfileImg());
+            if (member.getProfile_image() == null) member.setProfile_image(userDto.getProfile_image());
             if (member.getRole() == null)       member.setRole(userDto.getRole());
         }
 
@@ -56,7 +56,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public void updateProfileImg(UserDTO user) {
+    public void updateProfile_image(UserDTO user) {
         dao.updateProfileImg(user);
     }
 }

@@ -24,11 +24,11 @@ public class CommentDAOImpl implements CommentDAO {
     }
 
     @Override
-    public List<CommentDTO> findByPostId(int postId) {
+    public List<CommentDTO> findByPostNum(int postNum) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<CommentDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.CommentMapper.findByPostId", postId);
+            list = sqlSession.selectList("mapper.CommentMapper.findByPostNum", postNum);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

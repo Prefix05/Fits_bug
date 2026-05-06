@@ -38,7 +38,7 @@
                extends="memberResultMap">
         <result property="email"         column="email"/>
         <result property="nickname"      column="nickname"/>
-        <result property="profileImg"    column="profileImg"/>
+        <result property="profile_image"    column="profile_image"/>
         <result property="role"          column="role"/>
         <result property="emailVerified" column="email_verified"/>
         <result property="socialType"    column="provider"/>
@@ -182,7 +182,7 @@
 
     <!-- 프로필 이미지 업데이트 -->
     <update id="updateProfileImage" parameterType="dto.member.UserDTO">
-        UPDATE USER SET profile_image = #{profileImg}
+        UPDATE USER SET profile_image = #{profile_image}
         WHERE id = #{id}
     </update>
 

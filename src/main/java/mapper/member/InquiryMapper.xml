@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mapper.InquiryMapper">
+<mapper namespace="mapper.member.InquiryMapper">
 
     <resultMap id="inquiryResultMap" type="dto.member.InquiryDTO">
         <id     property="id"          column="id"/>
@@ -18,15 +18,22 @@
     </resultMap>
 
     <!-- 문의 저장 -->
-    <insert id="insertSupport" parameterType="SupportDTO">
+    <!-- <insert id="insertSupport" parameterType="dto.member.SupportDTO">
         INSERT INTO support (email, type, title, content, file_path)
         VALUES (#{email}, #{type}, #{title}, #{content}, #{filePath})
-    </insert>
+    </insert> -->
     
-    <insert id="insert" parameterType="dto.member.InquiryDTO">
+    <insert id="insertInquiry" parameterType="dto.member.InquiryDTO">
         INSERT INTO INQUIRY (user_id, category, title, content, file)
         VALUES (#{userId}, #{category}, #{title}, #{content}, #{file})
     </insert>
+    
+    <select id="selectByEmail" parameterType="string" resultMap="inquiryResultMap">
+        SELECT id, user_id, category, title, content, file, result, status, reg_date, process_date
+        FROM INQUIRY
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+    </select>
 
     <!-- user_id로 문의 목록 조회 -->
     <select id="findByUserId" parameterType="int" resultMap="inquiryResultMap">
@@ -34,14 +41,6 @@
                result, status, reg_date, process_date
         FROM INQUIRY
         WHERE user_id = #{userId}
-        ORDER BY id DESC
-    </select>
-
-    <!-- 전체 문의 조회 (관리자용) -->
-    <select id="findAll" resultMap="inquiryResultMap">
-        SELECT id, user_id, category, title, content, file,
-               result, status, reg_date, process_date
-        FROM INQUIRY
         ORDER BY id DESC
     </select>
 

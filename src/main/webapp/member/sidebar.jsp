@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImg() %>"
+    <img src="<%= loginUser.getProfile_image() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfile_image() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -86,7 +86,7 @@
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/logout'" class="sb-btn-main">
+    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
     </button>
     <% } else { %>

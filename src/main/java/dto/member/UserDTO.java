@@ -2,15 +2,6 @@ package dto.member;
 
 import java.time.LocalDateTime;
 
-/**
- * ↔ USER 테이블
- * id, email, password, name, phone, email_verified,
- * nickname, profileImg, role(ENUM), created_at, is_deleted, provider, provider_id
- *
- * 변경: tel → phone (DB 컬럼명 일치)
- *       UserRole enum 제거 → String (MyBatis 매핑 단순화)
- *       emailVerified 필드 추가
- */
 public class UserDTO {
 
     private int           id;
@@ -20,7 +11,7 @@ public class UserDTO {
     private String        phone;          // DB: phone (이전 tel → 수정)
     private boolean       emailVerified;  // DB: email_verified
     private String        nickname;
-    private String        profileImg;     // DB: profileImg
+    private String        profile_image;     // DB: profileImg
     private String        role;           // ENUM('MEMBER','TRAINER','GYM','ADMIN') → String
     private LocalDateTime createdAt;      // DB: created_at
     private boolean       deleted;        // DB: is_deleted
@@ -61,8 +52,8 @@ public class UserDTO {
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getProfileImg() { return profileImg; }
-    public void setProfileImg(String profileImg) { this.profileImg = profileImg; }
+    public String getProfile_image() { return profile_image; }
+    public void setProfile_image(String profile_image) { this.profile_image = profile_image; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }

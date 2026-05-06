@@ -36,7 +36,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:rgba(26,31,54,0.6
   </div>
 
   <!-- 폼 -->
-  <form action="step3" method="post" style="padding:28px 32px;display:flex;flex-direction:column;gap:22px;">
+  <form action="<%=request.getContextPath()%>/member/step3" method="post" style="padding:28px 32px;display:flex;flex-direction:column;gap:22px;">
 
     <!-- Q5 주간 운동 횟수 -->
     <div>

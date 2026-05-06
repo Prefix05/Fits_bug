@@ -221,7 +221,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </c:if>
     <div style="padding:18px;">
       <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;">${post.title}</h3>
-      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.content}</p>
+      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.body}</p>
       <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
       <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
         <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">${post.likeCount}</span></button>
@@ -321,27 +321,27 @@ function filterPost(type, el) {
 }
 
 // 댓글 토글
-function toggleComment(btn, postId) {
+function toggleComment(btn, postNum) {
   const article = btn.closest('article');
   const box = article.querySelector('.comment-box');
   const isHidden = box.style.display === 'none';
   box.style.display = isHidden ? 'block' : 'none';
-  if (isHidden) loadComments(postId);
+  if (isHidden) loadComments(postNum);
 }
 
 // 댓글 로드
-function loadComments(postId) {
-  fetch('commentList?postId=' + postId)
+function loadComments(postNum) {
+  fetch('commentList?postNum=' + postNum)
     .then(res => res.json())
     .then(list => {
-      const box = document.getElementById('commentList-' + postId);
+      const box = document.getElementById('commentList-' + postNum);
       if (!box) return;
       box.innerHTML = list.map(c => `
         <div style="display:flex;gap:10px;align-items:flex-start;">
           <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${c.userEmail}" style="width:30px;height:30px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;">
           <div style="background:white;border:1.5px solid #E8EDF5;border-radius:12px;padding:8px 14px;flex:1;">
             <div style="font-weight:700;font-size:12px;color:#1A1F36;">${c.userEmail}</div>
-            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.content}</div>
+            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.body}</div>
           </div>
         </div>
       `).join('');
@@ -349,29 +349,29 @@ function loadComments(postId) {
 }
 
 // 댓글 작성
-function writeComment(postId) {
-  const input = document.getElementById('commentInput-' + postId);
+function writeComment(postNum) {
+  const input = document.getElementById('commentInput-' + postNum);
   const content = input.value.trim();
   if (!content) return;
   fetch('comment', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'postId=' + postId + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
+    body: 'postNum=' + postNum + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
   }).then(res => res.text()).then(result => {
-    if (result === 'ok') { input.value = ''; loadComments(postId); }
+    if (result === 'ok') { input.value = ''; loadComments(postNum); }
   });
 }
 
 // 리액션
-function react(btn, postId, type) {
+function react(btn, postNum, type) {
   if (btn.disabled) return;
   fetch('reaction', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'postId=' + postId + '&type=' + type
+    body: 'postNum=' + postNum + '&type=' + type
   }).then(res => res.text()).then(result => {
     if (result === 'ok') {
-      const span = document.getElementById(type + '-' + postId);
+      const span = document.getElementById(type + '-' + postNum);
       if (span) span.innerText = parseInt(span.innerText) + 1;
       btn.disabled = true;
       btn.classList.add('reacted');
@@ -386,9 +386,9 @@ function react(btn, postId, type) {
 }
 
 // 신고 모달
-function openReportModal(postId) {
+function openReportModal(postNum) {
   const m = document.getElementById('reportModal');
-  if (m) { m.style.display = 'flex'; document.getElementById('reportPostId').value = postId; }
+  if (m) { m.style.display = 'flex'; document.getElementById('reportPostNum').value = postNum; }
 }
 function closeModal() {
   const m = document.getElementById('reportModal');

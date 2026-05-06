@@ -7,5 +7,5 @@ import dto.member.CommentDTO;
 public interface CommentService {
     void write(CommentDTO dto);
 
-    List<CommentDTO> getComments(int postId);
+    List<CommentDTO> getComments(int postNum);
 }

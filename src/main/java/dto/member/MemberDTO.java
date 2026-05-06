@@ -1,38 +1,5 @@
 package dto.member;
 
-/**
- * ↔ MEMBER 테이블 (회원 기본 정보 + 운동 계획 통합)
- *
- * CREATE TABLE MEMBER (
- *   id               INTEGER AUTO_INCREMENT PRIMARY KEY,
- *   user_id          INTEGER,
- *   trainer_id       INTEGER,
- *   gym_id           INTEGER,
- *   purpose          ENUM('diet','balance','bulk-up'),
- *   experience       ENUM('first(0)','beginner(<1)','intermediate(1~3)','high(>3)'),
- *   height           INTEGER,
- *   weight           INTEGER,
- *   diet             ENUM('YES','Intermediate','NO'),
- *   exerciseCount_goal ENUM('<=2','3~4','>5'),
- *   address          VARCHAR(255),
- *   latitude         DECIMAL(10,7),
- *   longitude        DECIMAL(10,7),
- *   NAME             VARCHAR(50),
- *   goals            VARCHAR(50),
- *   next_session     VARCHAR(100),
- *   lesson_count     INTEGER DEFAULT 0,
- *   total_lessons    INTEGER DEFAULT 10,
- *   last_session     VARCHAR(50),
- *   STATUS           VARCHAR(50) DEFAULT 'all',
- *   age              INTEGER
- * );
- *
- * ✅ WorkoutPlanDTO 통합: height, weight, diet, exerciseCountGoal
- *    + goals, experience, purpose → MEMBER 테이블 직접 관리
- *
- * + JOIN용 필드 (USER 테이블): email, nickname, profileImg, role
- * + 화면용 추가 필드: level, frequency (WorkoutPlanDTO 호환)
- */
 public class MemberDTO {
 
     // ── MEMBER 테이블 컬럼 ─────────────────────────────────────
@@ -70,7 +37,7 @@ public class MemberDTO {
     // ── JOIN용 필드 (USER 테이블, DB 컬럼 아님) ───────────────
     private String  email;
     private String  nickname;
-    private String  profileImg;
+    private String  profile_image;
     private String  role;
     private boolean emailVerified;
     private String  socialType;         // USER.provider
@@ -162,8 +129,8 @@ public class MemberDTO {
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getProfileImg() { return profileImg; }
-    public void setProfileImg(String profileImg) { this.profileImg = profileImg; }
+    public String getProfile_image() { return profile_image; }
+    public void setProfile_image(String profile_image) { this.profile_image = profile_image; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }

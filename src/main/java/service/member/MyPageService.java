@@ -17,5 +17,5 @@ public interface MyPageService {
     void updateMyPage(UserDTO user, MemberDTO member);
 
     // 프로필 이미지 수정
-    void updateProfileImg(UserDTO user);
+    void updateProfile_image(UserDTO user);
 }

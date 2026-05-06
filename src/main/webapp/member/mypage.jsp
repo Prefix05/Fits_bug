@@ -139,13 +139,13 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
     <div style="display:flex;gap:20px;align-items:flex-start;">
       <div style="text-align:center;">
         <img id="profileImg"
-          src="upload/<%= user.getProfileImg() == null ? "default.png" : user.getProfileImg() %>"
+          src="upload/<%= user.getProfile_image() == null ? "default.png" : user.getProfile_image() %>"
           onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.getNickname() %>'"
           style="width:90px;height:90px;border-radius:50%;border:3px solid #FF6B35;object-fit:cover;" alt="프로필">
         <form id="uploadForm">
           <label style="margin-top:10px;display:inline-block;padding:5px 12px;border-radius:99px;border:1.5px solid #E8EDF5;font-size:11px;font-weight:700;color:#5A6480;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='#FF6B35';this.style.color='#FF6B35'" onmouseout="this.style.borderColor='#E8EDF5';this.style.color='#5A6480'">
             📷 변경
-            <input type="file" name="profile" onchange="uploadImg()" style="display:none;">
+            <input type="file" name="profile_image" onchange="uploadImg()" style="display:none;">
           </label>
         </form>
       </div>
@@ -628,16 +628,27 @@ function drawMyPosts(posts){
 
 function uploadImg(){
   const data=new FormData(document.getElementById("uploadForm"));
-  fetch("uploadProfile",{method:"POST",body:data}).then(res=>res.text()).then(file=>{document.getElementById("profileImg").src="upload/"+file;});
+  fetch("uploadProfile",{method:"POST",body:data}).then(res=>res.text()).then(file=>{document.getElementById("profile_image").src="upload/"+file;});
 }
 
 function openProfileModal()  {document.getElementById("profileModal").style.display="flex";}
 function closeProfileModal() {document.getElementById("profileModal").style.display="none";}
 function updateProfile(){
-  fetch("updateProfile",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
-    body:"nickname="+document.getElementById("editNickname").value+"&password="+document.getElementById("editPassword").value})
-  .then(res=>res.text()).then(r=>{if(r==="ok"){alert("수정 완료");location.reload();}else alert("수정 실패");});
-}
+	  const formData = new FormData();
+
+	  formData.append("nickname", document.getElementById("editNickname").value);
+	  formData.append("password", document.getElementById("editPassword").value);
+
+	  const fileInput = document.querySelector('input[name="profile_image"]');
+	  if(fileInput.files.length > 0){
+	    formData.append("profile_image", fileInput.files[0]);
+	  }
+
+	  fetch("updateProfile", {
+	    method:"POST",
+	    body:formData
+	  })
+	}
 
 function openPlanModal()  {document.getElementById("planModal").style.display="flex";}
 function closePlanModal() {document.getElementById("planModal").style.display="none";}

@@ -7,6 +7,12 @@ import javax.servlet.http.*;
 
 @WebServlet("/member/step2")
 public class Step2Controller extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        RequestDispatcher rd = request.getRequestDispatcher("/member/step2.jsp");
+        rd.forward(request, response);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

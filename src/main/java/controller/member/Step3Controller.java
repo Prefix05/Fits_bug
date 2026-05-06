@@ -13,6 +13,14 @@ import dto.member.UserDTO;
 
 @WebServlet("/member/step3")
 public class Step3Controller extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
+
+	    // step3.jsp 보여주기
+	    RequestDispatcher rd = request.getRequestDispatcher("/member/step3.jsp");
+	    rd.forward(request, response);
+	}
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

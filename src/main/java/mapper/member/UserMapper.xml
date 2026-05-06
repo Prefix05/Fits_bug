@@ -20,7 +20,7 @@
         <result property="phone"         column="phone"/>
         <result property="emailVerified" column="email_verified"/>
         <result property="nickname"      column="nickname"/>
-        <result property="profileImg"    column="profileImg"/>
+        <result property="profile_image"    column="profile_image"/>
         <result property="role"          column="role"/>
         <result property="createdAt"     column="created_at"/>
         <result property="deleted"       column="is_deleted"/>
@@ -91,7 +91,7 @@
             name       = #{name},
             phone      = #{phone},
             nickname   = #{nickname},
-            profile_image = #{profileImage}
+            profile_image = #{profile_image}
         WHERE id = #{id}
     </update>
 

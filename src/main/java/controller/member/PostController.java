@@ -71,7 +71,7 @@ public class PostController extends HttpServlet {
 
         String category = request.getParameter("category");
         String title    = request.getParameter("title");
-        String content  = request.getParameter("content");
+        String body  = request.getParameter("body");
         String hashtags = request.getParameter("hashtags");
 
         Part filePart = request.getPart("image");
@@ -90,7 +90,7 @@ public class PostController extends HttpServlet {
         dto.setUserId(userId);
         dto.setCategory(category);
         dto.setTitle(title);
-        dto.setContent(content);
+        dto.setBody(body);
         dto.setImage(dbPath);
         dto.setHashtags(hashtags);
 

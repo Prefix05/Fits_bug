@@ -9,7 +9,7 @@
         <result property="userId"      column="user_id"/>
         <result property="category"    column="category"/>
         <result property="title"       column="title"/>
-        <result property="content"     column="content"/>
+        <result property="body"        column="body"/>
         <result property="image"       column="image"/>
         <result property="hashtags"    column="hashtags"/>
         <result property="createdAt"   column="created_at"/>
@@ -23,8 +23,8 @@
          → param: PostDTO
          ────────────────────────────────────────────────────── -->
     <insert id="insert" parameterType="PostDTO">
-        INSERT INTO post (user_id, category, title, content, image, hashtags)
-        VALUES (#{userId}, #{category}, #{title}, #{content}, #{image}, #{hashtags})
+        INSERT INTO post (user_id, category, title, body, image, hashtags)
+        VALUES (#{userId}, #{category}, #{title}, #{body}, #{image}, #{hashtags})
     </insert>
 
     <!-- ──────────────────────────────────────────────────────
@@ -33,7 +33,7 @@
          ────────────────────────────────────────────────────── -->
     <select id="getList" resultMap="postResultMap">
         SELECT
-            p.id, p.user_id, p.category, p.title, p.content,
+            p.id, p.user_id, p.category, p.title, p.body,
             p.image, p.hashtags, p.created_at,
             SUM(CASE WHEN pr.type = 'like'   THEN 1 ELSE 0 END) AS like_count,
             SUM(CASE WHEN pr.type = 'good'   THEN 1 ELSE 0 END) AS good_count,
@@ -41,7 +41,7 @@
         FROM post p
         LEFT JOIN post_reaction pr ON p.id = pr.post_id
         GROUP BY p.id, p.user_id, p.category, p.title,
-                 p.content, p.image, p.hashtags, p.created_at
+                 p.body, p.image, p.hashtags, p.created_at
         ORDER BY p.id DESC
     </select>
 
