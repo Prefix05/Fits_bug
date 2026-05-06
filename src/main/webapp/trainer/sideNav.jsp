@@ -95,4 +95,13 @@
             <p class="text-xs text-slate-500 truncate">마이프로필</p>
         </div>
     </a>
+
+    <!-- 로그아웃 -->
+    <form method="post" action="${pageContext.request.contextPath}/trainer/logout">
+        <button type="submit"
+                class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors duration-200 rounded-lg">
+            <span class="material-symbols-outlined">logout</span>
+            로그아웃
+        </button>
+    </form>
 </aside>
