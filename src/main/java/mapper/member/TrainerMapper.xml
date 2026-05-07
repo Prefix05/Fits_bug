@@ -21,7 +21,6 @@
         <result property="latitude"                column="latitude"/>
         <result property="longitude"               column="longitude"/>
         <result property="approvalStatus"          column="approval_status"/>
-        <result property="createdAt"               column="created_at"/>
         <result property="isVerified"              column="is_verified"/>
     </resultMap>
 
@@ -58,7 +57,7 @@
             t.business_registration_num, t.br_file,
             t.has_homeGym, t.visit_service, t.description,
             t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
-            t.approval_status, t.created_at, t.is_verified,
+            t.approval_status, t.is_verified,
             u.name, u.nickname, u.email, u.profile_image AS profileImg
         FROM TRAINER t
         JOIN USER u ON t.user_id = u.id
@@ -72,7 +71,7 @@
             t.business_registration_num, t.br_file,
             t.has_homeGym, t.visit_service, t.description,
             t.address, t.address_detail, t.postcode, t.latitude, t.longitude,
-            t.approval_status, t.created_at, t.is_verified,
+            t.approval_status, t.is_verified,
             u.name, u.nickname, u.email, u.profile_image AS profileImg
         FROM TRAINER t
         JOIN USER u ON t.user_id = u.id

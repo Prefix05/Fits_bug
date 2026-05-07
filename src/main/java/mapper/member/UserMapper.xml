@@ -6,7 +6,7 @@
 
     <!-- 로그인 (email + password) -->
     <select id="findByEmailAndPassword" parameterType="map" resultType="UserDTO">
-        SELECT id, email, password, name, phone, email_verified,
+        SELECT id, email, password, name, phone, age, gender, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email    = #{email}
@@ -16,7 +16,7 @@
 
     <!-- 이메일로 조회 -->
     <select id="findByEmail" parameterType="string" resultType="UserDTO">
-        SELECT id, email, password, name, phone, email_verified,
+        SELECT id, email, password, name, phone, age, gender, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email = #{email}
@@ -40,12 +40,12 @@
     <!-- 회원가입 INSERT -->
     <insert id="insert" parameterType="UserDTO">
         INSERT INTO USER (
-            email, password, name, phone, email_verified,
+            email, password, name, phone, age, gender, email_verified,
             nickname, profile_image, role,
-            created_at, is_deleted as deleted, provider, provider_id
+            created_at, is_deleted, provider, provider_id
         ) VALUES (
-            #{email}, #{password}, #{name}, #{phone}, #{emailVerified},
-            #{nickname}, #{profile_image}, #{role},
+            #{email}, #{password}, #{name}, #{phone}, #{age}, #{gender}, #{emailVerified},
+            #{nickname}, #{profileImage}, #{role},
             NOW(), 0, #{provider}, #{providerId}
         )
     </insert>

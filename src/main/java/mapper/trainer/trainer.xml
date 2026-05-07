@@ -59,8 +59,7 @@
             t.approval_status           AS approvalStatus,
             t.is_verified               AS isVerified,
             u.name,
-            u.email,
-            u.created_at                AS createdAt
+            u.email
         FROM trainer t
         JOIN `user` u ON t.user_id = u.id
         WHERE t.user_id = #{userId}

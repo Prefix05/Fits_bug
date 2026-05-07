@@ -8,7 +8,9 @@ public class UserDTO {
     private String email;
     private String password;
     private String name;
-    private String phone;          // DB 컬럼: phone  (이전 tel → phone 통일)
+    private String phone;          // DB 컬럼: phone
+    private int    age;            // DB 컬럼: age
+    private String gender;         // DB 컬럼: gender ENUM('MALE','FEMALE')
     private boolean emailVerified; // DB 컬럼: email_verified
     private String nickname;
     private String profileImage;     // DB 컬럼: profileImg
@@ -58,6 +60,12 @@ public class UserDTO {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
     public boolean isEmailVerified() { return emailVerified; }
     public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
 
@@ -98,6 +106,7 @@ public class UserDTO {
 	public void setOtherId(Integer otherId) {
 		this.otherId = otherId;
 	}
+
 
 
 	@Override

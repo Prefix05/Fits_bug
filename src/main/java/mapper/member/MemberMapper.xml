@@ -4,11 +4,10 @@
 
 <mapper namespace="mapper.MemberMapper">
 
+    <!-- MEMBER only -->
     <resultMap id="memberResultMap" type="dto.member.MemberDTO">
         <id     property="id"                column="id"/>
         <result property="userId"            column="user_id"/>
-        <result property="trainerId"         column="trainer_id"/>
-        <result property="gymId"             column="gym_id"/>
         <result property="purpose"           column="purpose"/>
         <result property="experience"        column="experience"/>
         <result property="height"            column="height"/>
@@ -18,66 +17,65 @@
         <result property="address"           column="address"/>
         <result property="latitude"          column="latitude"/>
         <result property="longitude"         column="longitude"/>
-        <result property="name"              column="NAME"/>
         <result property="goals"             column="goals"/>
-        <result property="nextSession"       column="next_session"/>
-        <result property="lessonCount"       column="lesson_count"/>
-        <result property="lastSession"       column="last_session"/>
-        <result property="status"            column="STATUS"/>
-        <result property="age"               column="age"/>
     </resultMap>
 
-    <!-- USER JOIN 포함 resultMap (로그인 세션, 마이페이지용) -->
+    <!-- MEMBER + USER + MEMBERSHIP_PT (latest) JOIN -->
     <resultMap id="memberWithUserResultMap" type="dto.member.MemberDTO"
                extends="memberResultMap">
         <result property="email"         column="email"/>
         <result property="nickname"      column="nickname"/>
-        <result property="profile_image"    column="profile_image"/>
+        <result property="profile_image" column="profile_image"/>
         <result property="role"          column="role"/>
         <result property="emailVerified" column="email_verified"/>
         <result property="socialType"    column="provider"/>
+        <result property="age"           column="age"/>
+        <result property="gender"        column="gender"/>
+        <result property="trainerId"     column="trainer_id"/>
+        <result property="gymId"         column="gym_id"/>
+        <result property="nextSession"   column="next_session"/>
+        <result property="lessonCount"   column="lesson_count"/>
+        <result property="lastSession"   column="last_session"/>
+        <result property="status"        column="status"/>
     </resultMap>
 
     <!-- MEMBER.id 로 조회 -->
     <select id="findById" parameterType="int" resultMap="memberResultMap">
-        SELECT id, user_id, trainer_id, gym_id,
+        SELECT id, user_id,
                purpose, experience,
                height, weight, diet, exerciseCount_goal,
-               address, latitude, longitude,
-               NAME, goals, next_session,
-               lesson_count,
-               last_session, STATUS, age
+               address, latitude, longitude, goals
         FROM MEMBER
         WHERE id = #{id}
     </select>
 
     <!-- USER.id 로 MEMBER 조회 -->
     <select id="findByUserId" parameterType="int" resultMap="memberResultMap">
-        SELECT id, user_id, trainer_id, gym_id,
+        SELECT id, user_id,
                purpose, experience,
                height, weight, diet, exerciseCount_goal,
-               address, latitude, longitude,
-               NAME, goals, next_session,
-               lesson_count,
-               last_session, STATUS, age
+               address, latitude, longitude, goals
         FROM MEMBER
         WHERE user_id = #{userId}
     </select>
 
-    <!-- USER.email 로 MEMBER + USER JOIN 조회 (마이페이지, 세션 로그인용) -->
+    <!-- USER.email 로 MEMBER + USER + 최신 MEMBERSHIP_PT JOIN 조회 -->
     <select id="findByEmail" parameterType="string" resultMap="memberWithUserResultMap">
         SELECT
-            m.id, m.user_id, m.trainer_id, m.gym_id,
+            m.id, m.user_id,
             m.purpose, m.experience,
             m.height, m.weight, m.diet, m.exerciseCount_goal,
-            m.address, m.latitude, m.longitude,
-            m.NAME, m.goals, m.next_session,
-            m.lesson_count,
-            m.last_session, m.STATUS, m.age,
+            m.address, m.latitude, m.longitude, m.goals,
             u.email, u.nickname, u.profile_image,
-            u.role, u.email_verified, u.provider
+            u.role, u.email_verified, u.provider,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
         FROM MEMBER m
         JOIN USER u ON m.user_id = u.id
+        LEFT JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT WHERE member_id = m.id ORDER BY id DESC LIMIT 1
+        )
         WHERE u.email    = #{email}
           AND u.is_deleted = 0
     </select>
@@ -93,13 +91,10 @@
 
     <!-- 전체 조회 -->
     <select id="findAll" resultMap="memberResultMap">
-        SELECT id, user_id, trainer_id, gym_id,
+        SELECT id, user_id,
                purpose, experience,
                height, weight, diet, exerciseCount_goal,
-               address, latitude, longitude,
-               NAME, goals, next_session,
-               lesson_count,
-               last_session, STATUS, age
+               address, latitude, longitude, goals
         FROM MEMBER
         ORDER BY id DESC
     </select>
@@ -107,29 +102,21 @@
     <!-- MEMBER INSERT (회원가입 step3 완료 시) -->
     <insert id="insertMember" parameterType="dto.member.MemberDTO">
         INSERT INTO MEMBER (
-            user_id, trainer_id, gym_id,
+            user_id,
             purpose, experience,
             height, weight, diet, exerciseCount_goal,
-            address, latitude, longitude,
-            NAME, goals, next_session,
-            lesson_count,
-            last_session, STATUS, age
+            address, latitude, longitude, goals
         ) VALUES (
-            #{userId}, #{trainerId}, #{gymId},
+            #{userId},
             #{purpose}, #{experience},
             #{height}, #{weight}, #{diet}, #{exerciseCountGoal},
-            #{address}, #{latitude}, #{longitude},
-            #{name}, #{goals}, #{nextSession},
-            #{lessonCount},
-            #{lastSession}, #{status}, #{age}
+            #{address}, #{latitude}, #{longitude}, #{goals}
         )
     </insert>
 
     <!-- MEMBER 수정 (마이페이지, 운동계획 수정 통합) -->
     <update id="update" parameterType="dto.member.MemberDTO">
         UPDATE MEMBER SET
-            trainer_id         = #{trainerId},
-            gym_id             = #{gymId},
             purpose            = #{purpose},
             experience         = #{experience},
             height             = #{height},
@@ -139,13 +126,7 @@
             address            = #{address},
             latitude           = #{latitude},
             longitude          = #{longitude},
-            NAME               = #{name},
-            goals              = #{goals},
-            next_session       = #{nextSession},
-            lesson_count       = #{lessonCount},
-            last_session       = #{lastSession},
-            STATUS             = #{status},
-            age                = #{age}
+            goals              = #{goals}
         WHERE id = #{id}
     </update>
 
@@ -165,24 +146,38 @@
     </update>
 
     <!-- 프로필 이미지 업데이트 -->
-    <update id="updateProfileImage" parameterType="dto.member.UserDTO">
+    <update id="updateProfileImage" parameterType="map">
         UPDATE USER SET profile_image = #{profile_image}
         WHERE id = #{id}
     </update>
 
-    <!-- PT 결제 후: trainer_id 설정 + lesson_count 증가 -->
-    <update id="updateTrainerAndLessons" parameterType="map">
-        UPDATE MEMBER
-        SET trainer_id   = #{trainerId},
-            lesson_count = lesson_count + #{sessionCount}
-        WHERE user_id = #{userId}
+    <!-- MEMBERSHIP_PT: 기존 PT 존재 여부 확인 -->
+    <select id="findMembershipPtByMemberAndTrainer" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM MEMBERSHIP_PT
+        WHERE member_id = #{memberId} AND trainer_id = #{trainerId}
+    </select>
+
+    <!-- MEMBERSHIP_PT: 기존 PT lesson_count 증가 -->
+    <update id="updateMembershipPtLessons" parameterType="map">
+        UPDATE MEMBERSHIP_PT
+        SET lesson_count = lesson_count + #{sessionCount},
+            status = 'active'
+        WHERE member_id = #{memberId} AND trainer_id = #{trainerId}
+        ORDER BY id DESC LIMIT 1
     </update>
 
-    <!-- 예약 후: lesson_count 차감 -->
+    <!-- MEMBERSHIP_PT: 새 PT 등록 -->
+    <insert id="insertMembershipPt" parameterType="map">
+        INSERT INTO MEMBERSHIP_PT (member_id, trainer_id, lesson_count, status, register_date)
+        VALUES (#{memberId}, #{trainerId}, #{sessionCount}, 'active', CURDATE())
+    </insert>
+
+    <!-- 예약 후: lesson_count 차감 (최신 MEMBERSHIP_PT) -->
     <update id="decrementLessonCount" parameterType="int">
-        UPDATE MEMBER
+        UPDATE MEMBERSHIP_PT
         SET lesson_count = GREATEST(lesson_count - 1, 0)
-        WHERE id = #{value}
+        WHERE member_id = #{value}
+        ORDER BY id DESC LIMIT 1
     </update>
 
     <!-- MEMBER 삭제 -->
@@ -190,41 +185,50 @@
         DELETE FROM MEMBER WHERE id = #{id}
     </delete>
 
-    <!-- trainer_id 로 회원 목록 -->
+    <!-- trainer_id 로 회원 목록 (MEMBERSHIP_PT 기준) -->
     <select id="findByTrainerId" parameterType="int" resultMap="memberWithUserResultMap">
         SELECT
-            m.id, m.user_id, m.trainer_id, m.gym_id,
+            m.id, m.user_id,
             m.purpose, m.experience,
             m.height, m.weight, m.diet, m.exerciseCount_goal,
-            m.address, m.latitude, m.longitude,
-            m.NAME, m.goals, m.next_session,
-            m.lesson_count,
-            m.last_session, m.STATUS, m.age,
-            u.email, u.nickname, u.profile_image, u.role
+            m.address, m.latitude, m.longitude, m.goals,
+            u.email, u.nickname, u.profile_image, u.role,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
         FROM MEMBER m
         JOIN USER u ON m.user_id = u.id
-        WHERE m.trainer_id = #{trainerId}
-          AND u.is_deleted = 0
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = #{trainerId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
         ORDER BY m.id DESC
     </select>
 
-    <!-- gym_id 로 회원 목록 -->
+    <!-- gym_id 로 회원 목록 (MEMBERSHIP_PT 기준) -->
     <select id="findByGymId" parameterType="int" resultMap="memberWithUserResultMap">
         SELECT
-            m.id, m.user_id, m.trainer_id, m.gym_id,
-            m.NAME, m.goals, m.next_session,
-            m.lesson_count,
-            m.last_session, m.STATUS, m.age,
-            u.email, u.nickname, u.profile_image, u.role
+            m.id, m.user_id,
+            m.goals,
+            u.email, u.nickname, u.profile_image, u.role,
+            u.age, u.gender,
+            mpt.trainer_id, mpt.gym_id,
+            mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
         FROM MEMBER m
         JOIN USER u ON m.user_id = u.id
-        WHERE m.gym_id = #{gymId}
-          AND u.is_deleted = 0
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND gym_id = #{gymId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
         ORDER BY m.id DESC
     </select>
-    
+
     <select id="selectMemberByUserId" parameterType="Integer" resultType="MemberDTO">
-    	select * from member where user_id=#{userId}
+        SELECT * FROM MEMBER WHERE user_id = #{userId}
     </select>
 
 </mapper>

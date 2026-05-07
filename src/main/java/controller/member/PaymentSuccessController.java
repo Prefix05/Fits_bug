@@ -90,11 +90,26 @@ public class PaymentSuccessController extends HttpServlet {
 
             sql.insert("mapper.PaymentMapper.insert", payment);
 
-            Map<String, Object> memberUpdate = new HashMap<>();
-            memberUpdate.put("userId",      userId);
-            memberUpdate.put("trainerId",   trainerId);
-            memberUpdate.put("sessionCount", sessionCount);
-            sql.update("mapper.MemberMapper.updateTrainerAndLessons", memberUpdate);
+            // Resolve MEMBER.id from session or DB
+            MemberDTO sessionMember = (MemberDTO) session.getAttribute("memberInfo");
+            int memberId = (sessionMember != null && sessionMember.getId() > 0) ? sessionMember.getId() : 0;
+            if (memberId == 0) {
+                MemberDTO memberRow = sql.selectOne("mapper.MemberMapper.findByUserId", userId);
+                if (memberRow != null) memberId = memberRow.getId();
+            }
+            if (memberId == 0) throw new IllegalStateException("MEMBER row not found for user_id=" + userId);
+
+            Map<String, Object> ptParams = new HashMap<>();
+            ptParams.put("memberId",     memberId);
+            ptParams.put("trainerId",    trainerId);
+            ptParams.put("sessionCount", sessionCount);
+
+            int existing = sql.selectOne("mapper.MemberMapper.findMembershipPtByMemberAndTrainer", ptParams);
+            if (existing > 0) {
+                sql.update("mapper.MemberMapper.updateMembershipPtLessons", ptParams);
+            } else {
+                sql.insert("mapper.MemberMapper.insertMembershipPt", ptParams);
+            }
 
             sql.commit();
 

@@ -2,7 +2,7 @@ package dto.member;
 
 /**
  * ↔ PAYMENT 테이블
- * id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+ * id, user_id, user_name, membership_id, mp_id, gym_id, trainer_id,
  * payment_date, payment_price, payment_fee, method,
  * status(결제완료/취소완료/환불요청/환불완료), payment_type(MEMBERSHIP/PT),
  * canceled_at, reason
@@ -13,7 +13,7 @@ public class PaymentDTO {
     private Integer userId;        // user_id (FK → USER.id)
     private String userName;       // user_name
     private Integer membershipId;  // membership_id (FK)
-    private Integer mrId;          // mr_id → MEMBERSHIP_REGISTRATION.id
+    private Integer mpId;          // mp_id → MEMBERSHIP_PT.id
     private Integer gymId;
     private Integer trainerId;
     private String paymentDate;    // payment_date (DATETIME)
@@ -48,8 +48,8 @@ public class PaymentDTO {
     public Integer getMembershipId() { return membershipId; }
     public void setMembershipId(Integer membershipId) { this.membershipId = membershipId; }
 
-    public Integer getMrId() { return mrId; }
-    public void setMrId(Integer mrId) { this.mrId = mrId; }
+    public Integer getMpId() { return mpId; }
+    public void setMpId(Integer mpId) { this.mpId = mpId; }
 
     public Integer getGymId() { return gymId; }
     public void setGymId(Integer gymId) { this.gymId = gymId; }

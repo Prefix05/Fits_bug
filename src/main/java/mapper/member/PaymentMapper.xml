@@ -6,7 +6,7 @@
 
     <!--
         PAYMENT 테이블 컬럼:
-        id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+        id, user_id, user_name, membership_id, mp_id, gym_id, trainer_id,
         payment_date, payment_price, payment_fee, method,
         status, payment_type, canceled_at, reason
 
@@ -17,7 +17,7 @@
         <result property="userId"       column="user_id"/>
         <result property="userName"     column="user_name"/>
         <result property="membershipId" column="membership_id"/>
-        <result property="mrId"         column="mr_id"/>
+        <result property="mpId"         column="mp_id"/>
         <result property="gymId"        column="gym_id"/>
         <result property="trainerId"    column="trainer_id"/>
         <result property="paymentDate"  column="payment_date"/>
@@ -33,7 +33,7 @@
     <!-- 결제 저장 -->
     <insert id="insert" parameterType="dto.member.PaymentDTO">
         INSERT INTO PAYMENT (
-            user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+            user_id, user_name, membership_id, mp_id, gym_id, trainer_id,
             payment_date, payment_price, payment_fee, method, status, payment_type
         ) VALUES (
             #{userId}, #{userName}, #{membershipId}, #{mrId}, #{gymId}, #{trainerId},
@@ -57,7 +57,7 @@
 
     <!-- user_id로 결제 내역 조회 -->
     <select id="findByUserId" parameterType="int" resultMap="paymentResultMap">
-        SELECT id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
+        SELECT id, user_id, user_name, membership_id, mp_id, gym_id, trainer_id,
                payment_date, payment_price, payment_fee, method, status, payment_type,
                canceled_at, reason
         FROM PAYMENT
