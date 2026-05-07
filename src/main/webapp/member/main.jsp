@@ -1032,7 +1032,7 @@ function loadTodayWorkout(){
       if(bestTitle) document.getElementById("statBestWorkout").innerText = bestTitle;
     })
     .catch(function(){ /* 무시 */ });
-=======
+
 
   // Reservation result toast
   const params = new URLSearchParams(location.search);
@@ -1050,7 +1050,7 @@ function showToast(msg, color) {
     +'animation:fb_modal_in 0.3s ease;';
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 3000);
->>>>>>> 22613cb77fdf088e2189029d4f5389a681e9116b
+
 }
 
 /* 모달 열기/닫기 */

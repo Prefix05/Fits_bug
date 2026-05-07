@@ -91,7 +91,7 @@ public class KakaoServiceImpl implements KakaoService {
                 member.setNickname("카카오회원_" + System.currentTimeMillis() % 10000);
                 member.setRole("MEMBER");
                 member.setProvider("kakao");
-                member.setEmailVerified(true);
+                member.setEmail_verified(true);
 
                 dao.insertSocial(member);
                 member = dao.findByEmail(email);

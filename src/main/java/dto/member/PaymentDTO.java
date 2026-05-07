@@ -1,19 +1,22 @@
 package dto.member;
 
 /**
- * ↔ PAYMENT 테이블
- * id, user_id, user_name, membership_id, mr_id, gym_id, trainer_id,
- * payment_date, payment_price, payment_fee, method,
- * status(결제완료/취소완료/환불요청/환불완료), payment_type(MEMBERSHIP/PT),
- * canceled_at, reason
+ * ↔ PAYMENT 테이블 (DB SQL 기준으로 수정)
+ * DB 실제 컬럼:
+ *   id, user_id, user_name, membership_id, mp_id(FK→MEMBERSHIP_PT),
+ *   gym_id, trainer_id, payment_date, payment_price, payment_fee,
+ *   method, status(결제완료/취소완료/환불요청/환불완료),
+ *   payment_type(MEMBERSHIP/PT), canceled_at, reason
+ *
+ * 수정: mr_id → mp_id (MEMBERSHIP_PT 참조)
  */
 public class PaymentDTO {
 
     private int    id;
     private Integer userId;        // user_id (FK → USER.id)
     private String userName;       // user_name
-    private Integer membershipId;  // membership_id (FK)
-    private Integer mrId;          // mr_id → MEMBERSHIP_REGISTRATION.id
+    private Integer membershipId;  // membership_id (FK → MEMBERSHIP.id)
+    private Integer mpId;          // mp_id (FK → MEMBERSHIP_PT.id) ← 기존 mrId에서 수정
     private Integer gymId;
     private Integer trainerId;
     private String paymentDate;    // payment_date (DATETIME)
@@ -25,7 +28,7 @@ public class PaymentDTO {
     private String canceledAt;     // canceled_at
     private String reason;
 
-    // ── 이전 코드 호환용 필드 (orderId, email, amount, productName) ──
+    // ── 이전 코드 호환용 필드 ──────────────────────────────────
     private String orderId;        // 토스 주문 ID (TOSS 테이블 연동용)
     private String email;          // USER.email (JOIN용)
     private int    amount;         // payment_price의 정수형 별칭
@@ -48,8 +51,13 @@ public class PaymentDTO {
     public Integer getMembershipId() { return membershipId; }
     public void setMembershipId(Integer membershipId) { this.membershipId = membershipId; }
 
-    public Integer getMrId() { return mrId; }
-    public void setMrId(Integer mrId) { this.mrId = mrId; }
+    /** DB 컬럼: mp_id (FK → MEMBERSHIP_PT.id) */
+    public Integer getMpId() { return mpId; }
+    public void setMpId(Integer mpId) { this.mpId = mpId; }
+
+    /** 이전 코드 호환 (mrId → mpId) */
+    public Integer getMrId() { return mpId; }
+    public void setMrId(Integer mrId) { this.mpId = mrId; }
 
     public Integer getGymId() { return gymId; }
     public void setGymId(Integer gymId) { this.gymId = gymId; }

@@ -17,7 +17,6 @@ public class Step3Controller extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
 
-	    // step3.jsp 보여주기
 	    RequestDispatcher rd = request.getRequestDispatcher("/member/step3.jsp");
 	    rd.forward(request, response);
 	}
@@ -50,48 +49,40 @@ public class Step3Controller extends HttpServlet {
         try { height = Integer.parseInt(heightStr); } catch (Exception ignored) {}
         try { weight = Integer.parseInt(weightStr); } catch (Exception ignored) {}
 
-        // ── 1단계: USER 테이블 INSERT ─────────────────────────
         UserDTO user = new UserDTO();
         user.setEmail(email);
         user.setPassword(password);
         user.setNickname(nickname);
         user.setName(name);
         user.setPhone(phone);
-        user.setEmailVerified(true);
+        user.setEmail_verified(true);
         user.setRole("MEMBER");
 
         UserDAO userDao = new UserDAOImpl();
         userDao.insert(user);
 
-        // ── 방금 INSERT 된 USER.id 조회 ──────────────────────
         UserDTO inserted = userDao.findByEmail(email);
         int userId = (inserted != null) ? inserted.getId() : 0;
 
-        // ── 2단계: MEMBER 테이블 INSERT ───────────────────────
-        /*
-         * ✅ WorkoutPlanDAO 완전 제거
-         *    MEMBER 테이블이 height/weight/diet/goals/experience 모두 포함
-         *    → 단 한 번의 INSERT 로 모든 정보 저장
-         */
+
         MemberDTO member = new MemberDTO();
         member.setUserId(userId);
-        member.setPurpose(purpose);             // diet / balance / bulk-up
-        member.setExperience(experience);       // first(0) / beginner(<1) / ...
-        member.setHeight(height);              // ✅ WorkoutPlan 통합
-        member.setWeight(weight);              // ✅ WorkoutPlan 통합
-        member.setDiet(diet);                  // ✅ WorkoutPlan 통합
-        member.setGoals(purpose);              // goals 는 purpose 와 동일로 초기화
-        member.setFrequency(frequency);        // 화면 표시용 (level 필드에 매핑)
-        member.setLevel(experience);           // level 은 experience 별칭
+        member.setPurpose(purpose);             
+        member.setExperience(experience);       
+        member.setHeight(height);              
+        member.setWeight(weight);              
+        member.setDiet(diet);                  
+        member.setGoals(purpose);              
+        member.setFrequency(frequency);        
+        member.setLevel(experience);           
         if (exerciseCntGoal != null) {
             member.setExerciseCountGoal(exerciseCntGoal);
         }
-        member.setStatus("active");
 
         MemberDAO memberDao = new MemberDAOImpl();
         memberDao.insertMember(member);
 
-        // ── 세션 정리 ─────────────────────────────────────────
+
         for (String key : new String[]{
                 "username","password","nickname","name","phone",
                 "role","height","weight","diet",
@@ -99,11 +90,11 @@ public class Step3Controller extends HttpServlet {
             session.removeAttribute(key);
         }
 
-        // ── 로그인 세션 저장 ──────────────────────────────────
+
         if (inserted != null) {
             session.setAttribute("loginUser",  inserted);
             session.setAttribute("loginEmail", email);
-            // memberInfo 세션에 MEMBER 전체 정보 저장 (MainController 캐싱)
+
             member.setEmail(email);
             member.setNickname(nickname);
             session.setAttribute("memberInfo", member);

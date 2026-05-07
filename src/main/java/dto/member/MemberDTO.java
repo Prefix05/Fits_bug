@@ -1,16 +1,23 @@
 package dto.member;
+
+/**
+ * ↔ MEMBER 테이블 (DB SQL 기준으로 수정)
+ * DB 실제 컬럼: id, user_id, purpose, experience,
+ *              height, weight, diet, exerciseCount_goal,
+ *              address, latitude, longitude, goals
+ *
+ * 제거된 컬럼: trainer_id, gym_id, next_session, lesson_count, last_session, STATUS, age
+ * → 이 정보들은 MEMBERSHIP_PT 테이블로 이동됨
+ */
 public class MemberDTO {
 
-    // ── MEMBER 테이블 컬럼 ─────────────────────────────────────
+    // ── MEMBER 테이블 컬럼 (DB 실제 컬럼만) ──────────────────────
     private int     id;
     private Integer userId;              // user_id  (FK → USER.id)
-    private Integer trainerId;           // trainer_id
-    private Integer gymId;              // gym_id
 
     private String  purpose;            // ENUM('diet','balance','bulk-up')
-    private String  experience;         // ENUM('first(0)','beginner(<1)',...)
+    private String  experience;         // ENUM('first(0)','beginner(<1)',...)'
 
-    // ✅ WorkoutPlanDTO에서 통합된 필드
     private int     height;             // height INTEGER
     private int     weight;             // weight INTEGER
     private String  diet;               // ENUM('YES','Intermediate','NO')
@@ -19,42 +26,39 @@ public class MemberDTO {
     private String  address;
     private double  latitude;
     private double  longitude;
+    private String  goals;              // goals VARCHAR(100)
 
-    private String  name;               // DB: NAME
-    private String  goals;              // goals VARCHAR(50) ← 운동 목표
-    private String  nextSession;        // DB: next_session
-    private int     lessonCount;        // DB: lesson_count — 남은 수업 횟수
-    private String  lastSession;        // DB: last_session
-    private String  status;             // DB: STATUS  DEFAULT 'all'
-    private int     age;
-
-    // ── 화면/세션용 추가 필드 (WorkoutPlanDTO 호환) ───────────
+    // ── 화면/세션용 추가 필드 (WorkoutPlanDTO 호환) ───────────────
     private String  level;              // 운동 수준 (초급/중급/고급) - 화면 표시용
     private String  frequency;          // 운동 빈도 (주 3회 등) - 화면 표시용
 
-    // ── JOIN용 필드 (USER 테이블, DB 컬럼 아님) ───────────────
+    // ── JOIN용 필드 (USER 테이블, DB 컬럼 아님) ───────────────────
+    private String  name;               // USER.name (JOIN용)
     private String  email;
     private String  nickname;
     private String  profile_image;
     private String  role;
     private boolean emailVerified;
     private String  socialType;         // USER.provider
+    private int     age;                // USER.age (JOIN용)
+
+    // ── MEMBERSHIP_PT JOIN용 필드 (화면 표시용) ──────────────────
+    private String  nextSession;        // MEMBERSHIP_PT.next_session
+    private int     lessonCount;        // MEMBERSHIP_PT.lesson_count
+    private String  lastSession;        // MEMBERSHIP_PT.last_session
+    private String  status;             // MEMBERSHIP_PT.status
+    private Integer trainerId;          // MEMBERSHIP_PT.trainer_id
+    private Integer gymId;              // MEMBERSHIP_PT.gym_id
 
     public MemberDTO() {}
 
-    // ── getter / setter ──────────────────────────────────────
+    // ── getter / setter ──────────────────────────────────────────
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
-
-    public Integer getTrainerId() { return trainerId; }
-    public void setTrainerId(Integer trainerId) { this.trainerId = trainerId; }
-
-    public Integer getGymId() { return gymId; }
-    public void setGymId(Integer gymId) { this.gymId = gymId; }
 
     public String getPurpose() { return purpose; }
     public void setPurpose(String purpose) { this.purpose = purpose; }
@@ -85,30 +89,12 @@ public class MemberDTO {
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) { this.longitude = longitude; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getGoals() { return goals; }
     public void setGoals(String goals) { this.goals = goals; }
 
     // WorkoutPlanDTO.getGoal() 호환
     public String getGoal() { return goals; }
     public void setGoal(String goal) { this.goals = goal; }
-
-    public String getNextSession() { return nextSession; }
-    public void setNextSession(String nextSession) { this.nextSession = nextSession; }
-
-    public int getLessonCount() { return lessonCount; }
-    public void setLessonCount(int lessonCount) { this.lessonCount = lessonCount; }
-
-    public String getLastSession() { return lastSession; }
-    public void setLastSession(String lastSession) { this.lastSession = lastSession; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }
 
     // 화면용 (WorkoutPlanDTO 호환)
     public String getLevel() { return level; }
@@ -117,7 +103,10 @@ public class MemberDTO {
     public String getFrequency() { return frequency; }
     public void setFrequency(String frequency) { this.frequency = frequency; }
 
-    // JOIN용
+    // JOIN용 (USER 테이블)
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
@@ -135,6 +124,28 @@ public class MemberDTO {
 
     public String getSocialType() { return socialType; }
     public void setSocialType(String socialType) { this.socialType = socialType; }
+
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+
+    // MEMBERSHIP_PT JOIN용
+    public String getNextSession() { return nextSession; }
+    public void setNextSession(String nextSession) { this.nextSession = nextSession; }
+
+    public int getLessonCount() { return lessonCount; }
+    public void setLessonCount(int lessonCount) { this.lessonCount = lessonCount; }
+
+    public String getLastSession() { return lastSession; }
+    public void setLastSession(String lastSession) { this.lastSession = lastSession; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public Integer getTrainerId() { return trainerId; }
+    public void setTrainerId(Integer trainerId) { this.trainerId = trainerId; }
+
+    public Integer getGymId() { return gymId; }
+    public void setGymId(Integer gymId) { this.gymId = gymId; }
 
     @Override
     public String toString() {

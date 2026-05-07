@@ -11,4 +11,5 @@ public interface GymMainDao {
 	HotTime selectTodayHotTime(Map<String, Object> param) throws Exception;
 	void insertGym(Gym gym) throws Exception;
 	void insertUserByGym(UserDTO user) throws Exception;
+	Gym selectGymByUserId(int id);
 }
