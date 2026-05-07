@@ -36,7 +36,7 @@ public class GymInfoEdit extends HttpServlet {
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
-        }
+        } 
 
         Integer gymId = user.getOtherId();
 
