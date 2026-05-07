@@ -71,26 +71,25 @@
 		<mapper resource="mapper/admin/report.xml"/>
 		<mapper resource="mapper/admin/inquiry.xml"/>
 		<mapper resource="mapper/admin/sales.xml"/>
+
 		<mapper resource="mapper/gym/gymMain.xml"/>
 		<mapper resource="mapper/gym/gymNotice.xml"/>
 		<mapper resource="mapper/gym/gymTrainerView.xml"/>
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
-
 		<mapper resource="mapper/gym/dashboard.xml"/>
 		<mapper resource="mapper/gym/memberManage.xml"/>
 		<mapper resource="mapper/gym/trainerManage.xml"/>
 		<mapper resource="mapper/gym/trainerApprove.xml"/>
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
-
 		<mapper resource="mapper/gym/payment.xml"/>
 		<mapper resource="mapper/gym/gymDetailCard.xml"/>
 
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/member/UserMapper.xml"/>
-		<mapper resource="mapper/member/GymMapper.xml"/>
+ 		<mapper resource="mapper/member/GymMapper.xml"/>
 		<mapper resource="mapper/member/WorkoutLogMapper.xml"/>
         <mapper resource="mapper/member/MealLogMapper.xml"/>
         <mapper resource="mapper/member/InbodyLogMapper.xml"/>
@@ -114,7 +113,8 @@
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
         <mapper resource="mapper/member/LessonMapper.xml"/>
-        
+
+
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>
@@ -126,7 +126,6 @@
 		<mapper resource="mapper/trainer/certification.xml"/>
 		<mapper resource="mapper/trainer/pricing_availability.xml"/>
 		<mapper resource="mapper/trainer/settlement.xml"/>
-
 
 	</mappers>
 </configuration>

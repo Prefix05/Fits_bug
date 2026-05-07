@@ -44,28 +44,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO login(String email, String password) throws Exception {
-        // 1. 이메일과 비밀번호로 사용자 조회
         UserDTO user = userDAO.findByEmailAndPassword(email, password);
-        
-        // 2. 사용자가 존재하고 삭제되지 않은 상태인지 확인 (is_deleted 필드에 맞춰 수정)
-        if (user != null && !user.isIs_deleted()) {
-            String role = user.getRole();
-            
-            // 3. 역할(Role)에 따라 각 테이블의 고유 ID(PK)를 가져와 otherId에 저장
-            if ("GYM".equals(role)) {
-                Gym gym = gymMainDAO.selectGymByUserId(user.getId());
-                if (gym != null) user.setOtherId(gym.getId());
-                
-            } else if ("MEMBER".equals(role)) {
-                MemberDTO member = memberDAO.selectMemberByUserId(user.getId());
-                if (member != null) user.setOtherId(member.getId());
-                
-            } else if ("TRAINER".equals(role)) {
-                try (SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-                    TrainerDTO trainer = trainerDAO.findByUserId(session, user.getId());
-                    if (trainer != null) user.setOtherId(trainer.getTrainerId());
-                }
-            }
+        if (user != null && !user.isDeleted()) {
+        	String role = user.getRole();
+        	if(role.equals("GYM")) {
+        		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
+        		user.setOtherId(gym.getId()); // gymId  userDTO에 추가
+        	} else if (role.equals("MEMBER")) {
+        		MemberDTO member = memberDAO.selectMemberByUserId(user.getId());
+        		user.setOtherId(member.getId()); // memberId userDTO에 추가
+        	} else if(role.equals("TRAINER")) {               
+                try(SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+                	TrainerDTO trainer = trainerDAO.findByUserId(session, user.getId());
+                	user.setOtherId(trainer.getTrainerId());	
+                } 
+        	}
             return user;
         }
         return null;

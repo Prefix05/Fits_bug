@@ -33,14 +33,14 @@ public class KakaoLoginController extends HttpServlet {
             user = new UserDTO();
             user.setEmail(email);
             user.setNickname("카카오회원_" + System.currentTimeMillis() % 10000);
-            user.setEmail_verified(true);
+            user.setEmailVerified(true);
             user.setRole("MEMBER");
             user.setProvider("kakao");
             userDao.insertSocial(user);
             user = userDao.findByEmail(email);
         }
 
-        if (user != null && user.isIs_deleted()) {
+        if (user != null && user.isDeleted()) {
             request.setAttribute("errorMsg", "탈퇴한 계정입니다.");
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
