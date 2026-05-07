@@ -332,9 +332,9 @@ body {
 						처리할 수 있습니다.</p>
 				</div>
 
-				<span
-					class="text-[11px] font-bold text-error bg-error/10 px-3 py-1 rounded-full">
-					미처리 ${pendingRefundCount}건 </span>
+				<span id="pendingRefundCount"
+					  class="text-[11px] font-bold text-error bg-error/10 px-3 py-1 rounded-full">
+					  미처리 ${pendingRefundCount}건 </span>
 			</div>
 
 			<div class="overflow-x-auto">
@@ -378,7 +378,8 @@ body {
 									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm"/></td>
 
 								<td class="px-6 py-3">
-									<div class="flex justify-center gap-2">
+									<div id="refundAction-${payment.paymentNum}" 
+										 class="flex justify-center gap-2">
 									<fmt:formatDate value="${payment.paymentDate}" pattern="yyyy-MM-dd HH:mm" var="formattedDate"/>
 										<button type="button" onclick="openModal(this)"
 											class="px-3 py-1 bg-error text-white rounded text-xs font-bold hover:opacity-90"
@@ -443,9 +444,9 @@ body {
 			</p>
 		</div>
 
-		<span
-			class="text-[11px] font-bold text-error bg-error/10 px-3 py-1 rounded-full">
-			미처리 ${pendingCancelCount}건
+		<span 
+			  class="text-[11px] font-bold text-error bg-error/10 px-3 py-1 rounded-full">
+			  미처리 ${pendingCancelCount}건
 		</span>
 	</div>
 
@@ -676,13 +677,15 @@ let selectedPaymentNum = null;
 
 function openModal(btn) {
     selectedPaymentNum = btn.dataset.paymentNum;
+    
+    const price = Number(btn.dataset.price);
 
     document.getElementById("modalName").innerText = btn.dataset.name;
     document.getElementById("modalMembership").innerText = btn.dataset.membership;
     document.getElementById("modalDate").innerText = btn.dataset.date;
-    document.getElementById("modalPrice").innerText = btn.dataset.price + "원";
+    document.getElementById("modalPrice").innerText = price.toLocaleString('ko-KR') + "원";
     document.getElementById("modalReason").innerText = btn.dataset.reason;
-    document.getElementById("modalRefundPrice").innerText = btn.dataset.price;
+    document.getElementById("modalRefundPrice").innerText = Math.floor(Number(price)).toLocaleString('ko-KR');
 
     document.getElementById("refundModal").classList.remove("hidden");
 }
@@ -717,9 +720,31 @@ function approveRefund() {
 function closeSuccessModal() {
     document.getElementById("successModal").classList.add("hidden");
 
-    const row = document.getElementById("paymentRow-" + selectedPaymentNum);
-    if (row) {
-        row.remove();
+    const actionCell = document.getElementById(
+    	    "refundAction-" + selectedPaymentNum
+    	);	
+
+    if (actionCell) {
+
+        const now = new Date();
+
+        const formatted =
+            now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, '0') + "-" +
+            String(now.getDate()).padStart(2, '0');
+
+        actionCell.innerHTML = 
+            '<span class="text-[11px] font-bold text-slate-400">'
+               + formatted + ' 환불완료'
+               +'</span>';
+        
+    }
+    
+    const badge = document.getElementById("pendingRefundCount");
+    if (badge) {
+        const current = Number(badge.innerText.replace(/[^0-9]/g, ""));
+        const next = Math.max(current - 1, 0);
+        badge.innerText = "미처리 " + next + "건";
     }
 }
 

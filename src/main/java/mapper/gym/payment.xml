@@ -9,20 +9,30 @@
             parameterType="dto.gym.MembershipRegistration"
             useGeneratedKeys="true"
             keyProperty="mrNum">
-        INSERT INTO MEMBERSHIP_REGISTRATION (
+        INSERT INTO MEMBERSHIP_PT (
             member_id,
             membership_id,
+            gym_id,
             register_date,
             start_date,
             end_date,
-            status
+            status,
+            trainer_id,
+            next_session,
+            lesson_count,
+            last_session
         ) VALUES (
             #{memberNum},
             #{membershipNum},
+            #{gymId},
             CURDATE(),
             #{startDate},
             #{endDate},
-            #{status}
+            #{status},
+            #{trainerId},
+            #{nextSession},
+            #{lessonCount},
+            #{lastSession}
         )
     </insert>
 
@@ -30,11 +40,10 @@
             parameterType="dto.gym.Payment"
             useGeneratedKeys="true"
             keyProperty="paymentNum">
-        INSERT INTO PAYMENT (
-            user_id,
+        user_id,
             user_name,
             membership_id,
-            mr_id,
+            mp_id,
             gym_id,
             trainer_id,
             payment_date,
@@ -66,11 +75,16 @@
             id AS mrNum,
             member_id AS memberNum,
             membership_id AS membershipNum,
+            gym_id AS gymId,
             register_date AS registerDate,
             start_date AS startDate,
             end_date AS endDate,
-            status
-        FROM MEMBERSHIP_REGISTRATION
+            status,
+            trainer_id AS trainerId,
+            next_session AS nextSession,
+            lesson_count AS lessonCount,
+            last_session AS lastSession
+        FROM MEMBERSHIP_PT
         WHERE id = #{value}
     </select>
 
@@ -140,30 +154,27 @@
                 END
             ) AS membershipName
         FROM PAYMENT p
-        JOIN `USER` u
-          ON p.user_id = u.id
-        JOIN MEMBERSHIP m
-          ON p.membership_id = m.id
-        WHERE m.gym_id = #{gymId}
+        JOIN `USER` u ON p.user_id = u.id
+        JOIN MEMBERSHIP m ON p.membership_id = m.id
+        WHERE p.gym_id = #{value}
           AND p.status = '환불요청'
         ORDER BY p.payment_date DESC
     </select>
 
     <select id="countRefundRequest" parameterType="int" resultType="int">
-        SELECT COUNT(*)
-        FROM PAYMENT p
-        JOIN MEMBERSHIP m
-          ON p.membership_id = m.id
-        WHERE m.gym_id = #{gymId}
-          AND p.status = '환불요청'
+		SELECT COUNT(*)
+		FROM PAYMENT p
+		WHERE p.gym_id = #{value}
+  			AND p.status = '환불요청'
     </select>
 
-    <update id="approveRefund" parameterType="int">
+    <update id="approveRefund" parameterType="map">
         UPDATE PAYMENT
-        SET status = '환불완료',
-            canceled_at = NOW()
-        WHERE id = #{paymentNum}
-         AND gym_id = #{gymId}
+		SET status = '환불완료',
+    		canceled_at = NOW()
+		WHERE id = #{paymentNum}
+  	   	 AND gym_id = #{gymId}
+ 		 AND status = '환불요청'
     </update>
 
     <select id="selectCancelRequestList" parameterType="map" resultType="dto.gym.Payment">
@@ -196,41 +207,40 @@
                 END
             ) AS membershipName
         FROM PAYMENT p
-        JOIN `USER` u
-          ON p.user_id = u.id
-        JOIN MEMBERSHIP m
-          ON p.membership_id = m.id
-        WHERE m.gym_id = #{gymId}
+        JOIN `USER` u ON p.user_id = u.id
+        JOIN MEMBERSHIP m ON p.membership_id = m.id
+        WHERE p.gym_id = #{gymId}
           AND p.status = '취소요청'
         ORDER BY p.payment_date DESC
         LIMIT #{startRow}, #{pageSize}
     </select>
 
     <select id="countCancelRequest" parameterType="int" resultType="int">
-        SELECT COUNT(*)
-        FROM PAYMENT p
-        JOIN MEMBERSHIP m
-          ON p.membership_id = m.id
-        WHERE m.gym_id = #{gymId}
-          AND p.status = '취소요청'
+		SELECT COUNT(*)
+		FROM PAYMENT p
+		WHERE p.gym_id = #{value}
+		  AND p.status = '취소요청'
     </select>
 
     <update id="updateCancelApprove" parameterType="map">
-    UPDATE PAYMENT
-    SET status = '취소완료'
-    WHERE id = #{paymentNum}
-      AND gym_id = #{gymId}
+		UPDATE PAYMENT
+		SET status = '취소완료',
+		    canceled_at = NOW()
+		WHERE id = #{paymentNum}
+		  AND gym_id = #{gymId}
+		  AND status = '취소요청'
 </update>
 
     <update id="cancelPtSessionByPayment" parameterType="int">
-        UPDATE LESSON ps
-        JOIN PT_PACKAGE pp
-          ON ps.package_id = pp.id
-        JOIN PAYMENT p
-          ON pp.mr_id = p.mr_id
-        SET ps.status = '취소'
-        WHERE p.id = #{paymentNum}
-          AND ps.status = '예약완료'
+        UPDATE LESSON l
+    JOIN PAYMENT p
+      ON p.id = #{paymentNum}
+    JOIN MEMBERSHIP_PT mp
+      ON p.mp_id = mp.id
+    SET l.status = '취소'
+    WHERE l.trainer_id = mp.trainer_id
+      AND l.client_id = mp.member_id
+      AND l.status = '예약완료'
     </update>
 
 </mapper>

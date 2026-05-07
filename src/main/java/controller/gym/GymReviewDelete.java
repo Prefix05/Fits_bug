@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.Review;
+import dto.member.UserDTO;
 import service.gym.GymReviewService;
 import service.gym.GymReviewServiceImpl;
 
@@ -18,25 +19,35 @@ public class GymReviewDelete extends HttpServlet {
         super();
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-
-        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/member/login");
-            return;
-        }
-
-        String reviewNumStr = request.getParameter("reviewNum");
-
-        if (reviewNumStr == null || reviewNumStr.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
         try {
-            int loginUserId = (Integer) session.getAttribute("userId");
+        	
+        	HttpSession session = request.getSession();
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+
+			if (user == null) {
+				response.sendRedirect(request.getContextPath() + "/member/login");
+				return;
+			}
+
+			
+			
+//            int loginUserId = (Integer) session.getAttribute("userId");
+            
+            String reviewNumStr = request.getParameter("reviewNum");
+
+            if (reviewNumStr == null || reviewNumStr.trim().isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
             int reviewNum = Integer.parseInt(reviewNumStr);
 
             GymReviewService service = new GymReviewServiceImpl();
@@ -48,7 +59,7 @@ public class GymReviewDelete extends HttpServlet {
                 return;
             }
 
-            service.deleteReview(reviewNum, loginUserId);
+            service.deleteReview(reviewNum, user.getId());
 
             response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + origin.getGymId());
 

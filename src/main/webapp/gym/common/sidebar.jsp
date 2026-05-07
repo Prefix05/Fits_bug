@@ -40,13 +40,13 @@
 					</a>
 					<a href="${contextPath}/gym/schedule"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">calendar_today</span>
     					<span class="text-sm">스케줄</span>
 					</a> 
 					
 					<a href="${contextPath}/gym/memberManage"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">group</span>
     					<span class="text-sm">회원</span>
 
 					</a>
@@ -54,8 +54,8 @@
 					<div class="flex flex-col">
 
 						<button type="button" onclick="toggleTrainerMenu()"
-							class="flex items-center px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg w-full text-left">
-
+							class="flex items-center gap-3 px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg w-full text-left">
+							<span class="material-symbols-outlined">fitness_center</span>
 							<span>트레이너</span> <span id="trainerArrow"
 								class="material-symbols-outlined ml-auto text-base transition-transform">
 								expand_more </span>
@@ -65,8 +65,10 @@
 
 							<a href="${contextPath}/gym/trainer"
 								class="px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+								<span class="material-symbols-outlined">group</span>
 								트레이너 관리 </a> <a href="${contextPath}/gym/trainerPending"
-								class="px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+								class="gap-3 px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+								<span class="material-symbols-outlined">person_add</span>
 								트레이너 등록 </a>
 
 						</div>
@@ -74,21 +76,21 @@
 
 					<a href="${contextPath}/gym/sales"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">bar_chart</span>
     					<span class="text-sm">매출</span>
 
 					</a> 
 					
 					<a href="${contextPath}/gym/notice"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">campaign</span>
     					<span class="text-sm">공지사항</span>
 
 					</a>
 					 
 					 <a href="${contextPath}/gym/infoEdit"
    					    class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">edit_square</span>
     					<span class="text-sm">정보수정</span>
 					</a>
 
@@ -104,7 +106,7 @@
       				<span>트레이너</span>
     			</a>
     			
-   				<a href="${contextPath}/member/gymList" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+   				<a href="${contextPath}/gym/main" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
       				<span class="material-symbols-outlined">store</span>
       				<span>헬스장</span>
     			</a>

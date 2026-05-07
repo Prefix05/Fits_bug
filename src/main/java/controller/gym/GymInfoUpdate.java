@@ -121,10 +121,8 @@ public class GymInfoUpdate extends HttpServlet {
 			    gym.setBrFile(brFileName);
 			}
 
-			
-
 			service.updateGym(gym);
-			service.updateGymUser(gym);
+//			service.updateGymUser(gym);
 			
 			// 운영시간
 			

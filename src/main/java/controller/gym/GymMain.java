@@ -47,13 +47,13 @@ public class GymMain extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
-
-            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
+			int gymId = 1;
+//            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
 			
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 
-			
+				
 			Map<String,Object> gym = service.getGymMainInfo(gymId);
 			List<Review> reviewList = service.getReviewList(gymId);
 			List<Membership> membershipList = service.getMembershipList(gymId);
