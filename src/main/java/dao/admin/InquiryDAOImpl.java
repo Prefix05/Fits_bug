@@ -41,9 +41,9 @@ public class InquiryDAOImpl implements InquiryDAO {
 	}
 
 	@Override
-	public int updateInquiryReply(InquiryDTO inquiry) throws Exception {
+	public Integer updateInquiryReply(InquiryDTO inquiry) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-		int reply = 0;
+		Integer reply = 0;
 		try {
 			reply = sqlSession.update("mapper.admin.inquiry.updateInquiryReply", inquiry);
 			sqlSession.commit();
@@ -55,6 +55,21 @@ public class InquiryDAOImpl implements InquiryDAO {
 			sqlSession.close();
 		}
 		return reply;
+	}
+
+	@Override
+	public Integer selectInquiryCnt() throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		Integer InquiryCnt = 0;
+		try {
+			InquiryCnt = sqlSession.selectOne("mapper.admin.inquiry.selectInquiryCnt");
+		} catch(Exception e){
+			e.printStackTrace();
+			throw e;
+		} finally {
+			sqlSession.close();
+		}
+		return InquiryCnt;
 	}
 
 }

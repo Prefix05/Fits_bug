@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.UserDTO"%>
 <%
-    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
-    if(loginUser == null){ response.sendRedirect("login.jsp"); return; }
+    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+    if(loginUser == null){ response.sendRedirect(request.getContextPath() + "/member/login"); return; }
     String sender = loginUser.getEmail();
     String receiver = request.getParameter("receiver") != null ? request.getParameter("receiver") : "trainer1";
 %>

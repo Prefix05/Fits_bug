@@ -38,12 +38,24 @@
 <div class="flex"><jsp:include page="sidebar.jsp"></jsp:include></div>
 
 <main class="ml-64 min-h-screen">
-    <div class="pt-24 px-10 pb-10 space-y-8">
+    <div class="pt-10 px-10 pb-10 space-y-8">
         <section class="relative">
             <h2 class="text-2xl font-semibold mb-6">신고 및 문의내역 관리</h2>
-            <button class="absolute right-0 top-0 flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-                <span class="material-symbols-outlined text-sm mr-2">edit_note</span>공지사항 작성
-            </button>
+<section class="grid grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <p class="text-xs text-gray-400 mb-1 font-medium">전체 내역</p>
+                <p class="text-2xl font-bold">${totalCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-error border-y border-r border-gray-100">
+                <p class="text-xs text-gray-400 mb-1 font-medium">신고 내역</p>
+                <p class="text-2xl font-bold text-error">${reportCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-primary border-y border-r border-gray-100">
+                <p class="text-xs text-gray-400 mb-1 font-medium">문의 내역</p>
+                <p class="text-2xl font-bold text-primary">${inquiryCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            </div>
+            
+</section>
             <div class="flex space-x-8 border-b border-outline-variant/10">
                 <button onclick="location.href='${pageContext.request.contextPath}/admin/reportList'" class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">신고내역</button>
                 <button onclick="location.href='${pageContext.request.contextPath}/admin/inquiryList'" class="pb-4 text-sm font-bold text-primary border-b-2 border-primary">문의내역</button>
@@ -158,24 +170,7 @@
         <img id="modalFullImage" src="" class="w-full h-full object-contain" alt="확대 이미지">
     </div>
 </div>
-        <section class="grid grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">전체 내역</p>
-                <p class="text-2xl font-bold">1,248 <span class="text-sm font-normal text-gray-300">건</span></p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-error border-y border-r border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">신고 내역</p>
-                <p class="text-2xl font-bold text-error">32 <span class="text-sm font-normal text-gray-300">건</span></p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-primary border-y border-r border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">문의 내역</p>
-                <p class="text-2xl font-bold text-primary">12 <span class="text-sm font-normal text-gray-300">건</span></p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">처리 완료</p>
-                <p class="text-2xl font-bold text-green-600">41 <span class="text-sm font-normal text-gray-300">건</span></p>
-            </div>
-        </section>
+        
     </div>
 
     <script>

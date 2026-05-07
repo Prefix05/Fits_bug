@@ -58,25 +58,11 @@ public class GymInfoUpdate extends HttpServlet {
             }
 
             Integer gymId = user.getOtherId();
-			
-	        user.setId(loginUser.getId());
-	        user.setEmail(request.getParameter("emailId"));
-	        user.setName(request.getParameter("userName"));
-	        user.setPassword(request.getParameter("newPassword"));
 
-			GymInfoEditService service = new GymInfoEditServiceImpl();
+		    GymInfoEditService service = new GymInfoEditServiceImpl();
+			
+			Gym gym = service.selectGymMypage(gymId);
 
-			Integer gymId = Integer.parseInt(request.getParameter("gymId"));		
-			Gym gym = new Gym();
-			gym.setId(gymId);
-			gym.setName(request.getParameter("gymName"));
-			gym.setPhoneNum(request.getParameter("phoneNum"));
-			gym.setDescription(request.getParameter("description"));
-			gym.setAddress(request.getParameter("address"));
-			gym.setAddressDetail(request.getParameter("addressDetail"));
-			gym.setPostcode(request.getParameter("postcode"));
-			
-			
 
 			// 시설
 			String[] facilities = request.getParameterValues("facility");

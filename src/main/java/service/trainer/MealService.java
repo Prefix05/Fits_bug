@@ -46,16 +46,16 @@ public class MealService {
     }
 
     // ── Main method the servlet calls ─────────────────────────────────────
-    public WeekResult getMealData(int clientId, int weekOffset, String selectedDate) {
+    public WeekResult getMealData(int memberId, int weekOffset, String selectedDate) {
 
         boolean isDailyView = (selectedDate != null && !selectedDate.isEmpty());
         if (!isDailyView) selectedDate = "";
 
         // Fetch data
         LocalDate targetDate = LocalDate.now().plusWeeks(weekOffset);
-        List<MealDTO> weekMeals = mealDAO.selectMealsByWeek(clientId, targetDate);
+        List<MealDTO> weekMeals = mealDAO.selectMealsByWeek(memberId, targetDate);
         List<MealDTO> dayMeals  = isDailyView
-                ? mealDAO.selectMealsByDay(clientId, selectedDate)
+                ? mealDAO.selectMealsByDay(memberId, selectedDate)
                 : new ArrayList<>();
 
         // Week averages

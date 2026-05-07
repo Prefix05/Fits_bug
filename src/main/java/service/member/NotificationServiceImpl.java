@@ -7,11 +7,12 @@ import dao.member.NotificationDAOImpl;
 import dto.member.NotificationDTO;
 
 public class NotificationServiceImpl implements NotificationService {
-    private NotificationDAO dao = new NotificationDAOImpl();
 
+    private NotificationDAO dao = new NotificationDAOImpl();
+    
     @Override
     public List<NotificationDTO> getList(String email) {
-        return dao.findByEmail(email);
+        return dao.findByRecvId(email);
     }
 
     @Override
@@ -29,8 +30,8 @@ public class NotificationServiceImpl implements NotificationService {
         dao.updateReadAll(email);
     }
 
-	@Override
-	public void readOne(int id) {
-		dao.updateReadOne(id);	
-	}
+    @Override
+    public void readOne(int id) {
+        dao.updateReadOne(id);
+    }
 }

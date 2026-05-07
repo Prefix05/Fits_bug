@@ -10,5 +10,7 @@ public interface ReportDAO {
 	
 	ReportDTO selectReportDetail(int reportId) throws Exception;
 	
-	int updateReportStatus(ReportDTO report) throws Exception;
+	Integer updateReportStatus(ReportDTO report) throws Exception;
+	
+	Integer selectReportCnt() throws Exception;
 }

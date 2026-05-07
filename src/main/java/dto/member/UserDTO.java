@@ -98,6 +98,15 @@ public class UserDTO {
 	public void setOtherId(Integer otherId) {
 		this.otherId = otherId;
 	}
+
+
+	@Override
+	public String toString() {
+		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone="
+				+ phone + ", emailVerified=" + emailVerified + ", nickname=" + nickname + ", profileImage="
+				+ profileImage + ", role=" + role + ", createdAt=" + createdAt + ", deleted=" + deleted + ", provider="
+				+ provider + ", providerId=" + providerId + ", otherId=" + otherId + "]";
+	}
 	
 	
 

@@ -24,16 +24,16 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
 <div class="form-side">
 
   <!-- 로고 + 역할 선택 -->
-  <a href="login.jsp" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:32px;">
+  <a href="<%=request.getContextPath()%>/member/login" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:32px;">
     <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6B35,#00BFA5);display:flex;align-items:center;justify-content:center;font-size:18px;">🐾</div>
     <span style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;background:linear-gradient(135deg,#FF6B35,#00BFA5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">핏츠버그</span>
   </a>
 
   <!-- 역할 탭 -->
   <div style="display:flex;gap:8px;margin-bottom:28px;">
-    <button onclick="location.href='join.jsp'" style="padding:10px 22px;border-radius:99px;border:2px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;">🏃 일반 회원</button>
+    <button onclick="location.href="<%=request.getContextPath()%>/member/join"" style="padding:10px 22px;border-radius:99px;border:2px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;">🏃 일반 회원</button>
     <button style="padding:10px 22px;border-radius:99px;border:none;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(255,107,53,0.3);">🏋️ 트레이너</button>
-    <button onclick="location.href='gymJoin.jsp'" style="padding:10px 22px;border-radius:99px;border:2px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;">🏢 헬스장</button>
+    <button onclick="location.href="<%=request.getContextPath()%>/member/gymJoin"" style="padding:10px 22px;border-radius:99px;border:2px solid #E8EDF5;background:white;color:#5A6480;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;">🏢 헬스장</button>
   </div>
 
   <h1 style="font-size:28px;font-weight:900;color:#1A1F36;margin-bottom:6px;">트레이너 가입 💪</h1>
@@ -73,7 +73,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;min-heigh
       🚀 가입 완료하기
     </button>
     <p style="text-align:center;font-size:14px;color:#9DA8C0;">
-      이미 계정이 있으신가요? <a href="login.jsp" style="color:#FF6B35;font-weight:700;text-decoration:none;">로그인하기 →</a>
+      이미 계정이 있으신가요? <a href="<%=request.getContextPath()%>/member/login" style="color:#FF6B35;font-weight:700;text-decoration:none;">로그인하기 →</a>
     </p>
   </form>
 </div>

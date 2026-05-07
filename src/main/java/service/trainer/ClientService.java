@@ -5,9 +5,9 @@ import dto.trainer.ClientDTO;
 import java.util.List;
 
 public interface ClientService {
-    List<ClientDTO> getClients(int offset, int limit, String filter, int trainerId);
+    List<ClientDTO> getClients(int offset, int limit, String filter, String search, int trainerId);
 
-    int getClientCount(String filter, int trainerId);
+    int getClientCount(String filter, String search, int trainerId);
 
     ClientDTO getClientById(int clientId);
 

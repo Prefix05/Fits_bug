@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<% String contextPath = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -270,9 +269,9 @@ body {
     </button>
 
     <div class="signup-row">
-      아직 회원이 아니신가요?<a href="<%=contextPath%>/member/join">무료 회원가입 →</a>
+      아직 회원이 아니신가요?<a href="<%=request.getContextPath()%>/member/join">무료 회원가입 →</a>
     </div>
-    <a href="<%=contextPath%>/member/guest" class="guest-link">🔍 로그인 없이 둘러보기</a>
+    <a href="<%=request.getContextPath()%>/member/guest" class="guest-link">🔍 로그인 없이 둘러보기</a>
   </div>
 </div>
 

@@ -11,7 +11,6 @@ public class ClientDTO {
     private Integer age;
     private Integer height;
     private Integer weight;
-    private Integer totalLessons;
     private int trainerId;
 
     // ──────────────────────────────
@@ -97,14 +96,6 @@ public class ClientDTO {
         this.weight = weight;
     }
 
-    public int getTotalLessons() {
-        return totalLessons;
-    }
-
-    public void setTotalLessons(int totalLessons) {
-        this.totalLessons = totalLessons;
-    }
-
     public void setLessonCount(Integer lessonCount) {
         this.lessonCount = lessonCount;
     }
@@ -119,10 +110,6 @@ public class ClientDTO {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
-    }
-
-    public void setTotalLessons(Integer totalLessons) {
-        this.totalLessons = totalLessons;
     }
 
     public int getTrainerId() {

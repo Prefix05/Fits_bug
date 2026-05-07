@@ -8,9 +8,9 @@ import java.util.List;
 public interface ClientDAO {
 
     // clients (회원상세)
-    List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, int trainerId);
+    List<ClientDTO> selectClients(SqlSession session, int offset, int limit, String filter, String search, int trainerId);
 
-    int selectClientCount(SqlSession session, String filter, int trainerId);
+    int selectClientCount(SqlSession session, String filter, String search, int trainerId);
 
     ClientDTO selectClientById(SqlSession session, int clientId);
 }

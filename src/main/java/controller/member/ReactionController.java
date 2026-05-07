@@ -7,9 +7,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.member.PostReactionDAO;
 import dao.member.PostReactionDAOImpl;
+import dto.member.UserDTO;
 
 @WebServlet("/member/reaction")
 public class ReactionController extends HttpServlet {
@@ -22,11 +24,14 @@ public class ReactionController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String userId = (String) request.getSession().getAttribute("loginUser");
-        int postId = Integer.parseInt(request.getParameter("postId"));
+    	HttpSession session = request.getSession();
+    	UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+    	
+    	String userId = loginUser.getEmail();
+        int postNum = Integer.parseInt(request.getParameter("postNum"));
         String type = request.getParameter("type");
 
-        dao.addReaction(postId, userId, type);
+        dao.addReaction(postNum, userId, type);
 
         response.getWriter().write("ok");
     }

@@ -1,40 +1,71 @@
 package controller.member;
 
 import java.io.IOException;
-
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import dao.member.WorkoutPlanDAO;
-import dao.member.WorkoutPlanDAOImpl;
+import javax.servlet.http.*;
+import dao.member.MyPageDAO;
+import dao.member.MyPageDAOImpl;
 import dto.member.MemberDTO;
-import dto.member.WorkoutPlanDTO;
+import dto.member.UserDTO;
 
 @WebServlet("/member/updatePlan")
 public class UpdatePlanController extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
         req.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        // ✅ UserDTO 로 세션 조회 (MemberDTO 캐스팅 에러 수정)
+        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
-        WorkoutPlanDTO dto = new WorkoutPlanDTO();
+        if (loginUser == null) {
+            resp.getWriter().write("not_login");
+            return;
+        }
 
-        dto.setEmail(user.getEmail());
-        dto.setGoal(req.getParameter("goal"));
-        dto.setLevel(req.getParameter("level"));
-        dto.setHeight(Integer.parseInt(req.getParameter("height")));
-        dto.setWeight(Integer.parseInt(req.getParameter("weight")));
-        dto.setDiet(req.getParameter("diet"));
+        /*
+         * ✅ WorkoutPlanDAO 완전 제거
+         *    운동 계획 수정 → MemberDAO(MyPageDAO).updateMemberPlan 으로 교체
+         *    MEMBER 테이블에서 height/weight/diet/goals/experience 직접 UPDATE
+         */
+        MemberDTO member = new MemberDTO();
+        member.setEmail(loginUser.getEmail());  // WHERE 조건용 email
+        member.setGoals(req.getParameter("goal"));           // goals 컬럼
+        member.setExperience(req.getParameter("level"));     // experience 컬럼
+        member.setLevel(req.getParameter("level"));          // 화면용 level
+        member.setFrequency(req.getParameter("frequency")); // 화면용 frequency
 
-        WorkoutPlanDAO dao = new WorkoutPlanDAOImpl();
+        try {
+            member.setHeight(Integer.parseInt(req.getParameter("height")));
+            member.setWeight(Integer.parseInt(req.getParameter("weight")));
+        } catch (NumberFormatException e) {
+            member.setHeight(0);
+            member.setWeight(0);
+        }
 
-        boolean result = dao.update(dto);
+        member.setDiet(req.getParameter("diet"));
 
-        resp.getWriter().write(result ? "ok" : "fail");
+        String exGoal = req.getParameter("exerciseCountGoal");
+        if (exGoal != null && !exGoal.isEmpty()) {
+            member.setExerciseCountGoal(exGoal);
+        }
+
+        MyPageDAO dao = new MyPageDAOImpl();
+        dao.updateMemberPlan(member);
+
+        // 세션 memberInfo 최신화
+        MemberDTO cached = (MemberDTO) session.getAttribute("memberInfo");
+        if (cached != null) {
+            cached.setGoals(member.getGoals());
+            cached.setExperience(member.getExperience());
+            cached.setHeight(member.getHeight());
+            cached.setWeight(member.getWeight());
+            cached.setDiet(member.getDiet());
+            session.setAttribute("memberInfo", cached);
+        }
+
+        resp.getWriter().write("ok");
     }
 }

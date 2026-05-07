@@ -13,7 +13,7 @@ public class SupportDAOImpl implements SupportDAO {
     public void insertSupport(SupportDTO dto) {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         try {
-            sqlSession.insert("mapper.SupportMapper.insertSupport", dto);
+            sqlSession.insert("mapper.member.InquiryMapper.insertInquiry", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -28,7 +28,7 @@ public class SupportDAOImpl implements SupportDAO {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<SupportDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.SupportMapper.selectByEmail", email);
+            list = sqlSession.selectList("mapper.member.InquiryMapper.selectByEmail", email);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

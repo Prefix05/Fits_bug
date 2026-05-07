@@ -17,9 +17,9 @@ public class CommentListController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        int postId = Integer.parseInt(req.getParameter("postId"));
+        int postNum = Integer.parseInt(req.getParameter("postNum"));
 
-        var list = service.getComments(postId);
+        var list = service.getComments(postNum);
 
         resp.setContentType("application/json;charset=UTF-8");
 
@@ -28,8 +28,8 @@ public class CommentListController extends HttpServlet {
             var c = list.get(i);
 
             json.append("{")
-                .append("\"nickname\":\"").append(c.getNickname()).append("\",")
-                .append("\"content\":\"").append(c.getContent()).append("\"")
+                .append("\"userId\":\"").append(c.getUserId()).append("\",")
+                .append("\"body\":\"").append(c.getBody()).append("\"")
                 .append("}");
 
             if(i < list.size()-1) json.append(",");

@@ -30,8 +30,8 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
 <div style="margin:20px 0;">
   <button class="role-btn active" data-role="member">회원</button>
-  <button class="role-btn" data-role="trainer" onclick="location.href='trainerJoin.jsp'">트레이너</button>
-  <button class="role-btn" data-role="gym" onclick="location.href='gymJoin.jsp'">헬스장</button>
+  <button class="role-btn" data-role="trainer" onclick="location.href='<%=request.getContextPath()%>/trainer/signup'">트레이너</button>
+  <button class="role-btn" data-role="gym" onclick="location.href='<%=request.getContextPath()%>/member/gymJoin'">헬스장</button>
 </div>
 
 <form action="join" method="post">
@@ -87,8 +87,8 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 document.querySelectorAll(".role-btn").forEach(btn=>{
   btn.onclick=()=>{
     const role = btn.dataset.role;
-    if(role==="trainer") location.href="trainerJoin.jsp";
-    if(role==="gym") location.href="gymJoin.jsp";
+    if(role==="trainer") location.href="<%=request.getContextPath()%>/trainer/signup";
+    if(role==="gym") location.href="<%=request.getContextPath()%>/member/gymJoin";
     document.querySelectorAll(".role-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById("role").value=role;
@@ -117,7 +117,7 @@ function checkEmail(){
 function sendCode(){
   const email = username.value;
 
-  fetch("<%=request.getContextPath()%>/sendEmailCode",{
+  fetch("<%=request.getContextPath()%>/member/sendEmailCode",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({email})
@@ -143,7 +143,7 @@ function startTimer(){
 
 // 코드 검증
 function verifyCode(){
-  fetch("<%=request.getContextPath()%>/verifyCode",{
+  fetch("<%=request.getContextPath()%>/member/verifyCode",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({email:username.value, code:code.value})

@@ -1,62 +1,127 @@
 package controller.member;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
-import service.member.PaymentService;
-import service.member.PaymentServiceImpl;
+import dto.member.PaymentDTO;
+import dto.member.TrainerDTO;
+import dto.member.UserDTO;
+import org.apache.ibatis.session.SqlSession;
+import util.MybatisSqlSessionFactory;
 
 @WebServlet("/member/paymentSuccess")
 public class PaymentSuccessController extends HttpServlet {
 
-    private PaymentService service = new PaymentServiceImpl();
+    private static final double FEE_RATE = 0.20;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws ServletException, IOException {
 
-        resp.setContentType("text/html;charset=UTF-8");
-
-        // 1. orderId 체크
-        String orderId = req.getParameter("orderId");
-
-        if(orderId == null || orderId.trim().isEmpty()){
-            resp.getWriter().write("잘못된 접근입니다 (orderId 없음)");
-            return;
-        }
-
-        // 2. 로그인 체크
+        // ── 1. Session check ─────────────────────────────────────────────
         HttpSession session = req.getSession(false);
-        if(session == null){
-            resp.sendRedirect("/member/login.jsp");
+        if (session == null || session.getAttribute("loginUser") == null) {
+            // Not logged in — store the success params so we can resume after login
+            resp.sendRedirect(req.getContextPath() + "/member/login");
             return;
         }
 
-        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        // ── 2. Parse Toss params ──────────────────────────────────────────
+        String orderId   = req.getParameter("orderId");
+        String amountStr = req.getParameter("amount");
 
-        if(user == null){
-            resp.sendRedirect("/member/login.jsp");
+        if (orderId == null || !orderId.startsWith("PT-")) {
+            resp.sendRedirect(req.getContextPath() + "/member/main");
             return;
         }
 
-        // 3. 결제 성공 처리 (DB + 예약 + 알림)
+        // orderId format: PT-{trainerId}-{sessionCount}-{timestamp}
+        String[] parts = orderId.split("-");
+        if (parts.length < 4) {
+            req.setAttribute("errorMsg", "잘못된 주문 ID 형식입니다: " + orderId);
+            req.getRequestDispatcher("/member/paymentSuccess.jsp").forward(req, resp);
+            return;
+        }
+
+        int trainerId;
+        int sessionCount;
+        double amount;
         try {
-            service.success(orderId, user.getEmail());
-
-            // 4. 성공 페이지로 이동
-            resp.sendRedirect("/member/main.jsp");
-
-        } catch(Exception e){
-            e.printStackTrace();
-
-            // 실패 처리
-            resp.getWriter().write("결제 처리 중 오류 발생");
+            trainerId    = Integer.parseInt(parts[1]);
+            sessionCount = Integer.parseInt(parts[2]);
+            amount       = Double.parseDouble(amountStr != null ? amountStr : "0");
+        } catch (NumberFormatException e) {
+            req.setAttribute("errorMsg", "결제 금액 파싱 오류: " + e.getMessage());
+            req.getRequestDispatcher("/member/paymentSuccess.jsp").forward(req, resp);
+            return;
         }
+
+        UserDTO user    = (UserDTO) session.getAttribute("loginUser");
+        int    userId   = user.getId();
+        String userName = user.getName() != null ? user.getName() : user.getNickname();
+        double fee      = Math.round(amount * FEE_RATE * 100.0) / 100.0;
+
+        // ── 3. Save to DB ─────────────────────────────────────────────────
+        TrainerDTO trainer = null;
+        try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+
+            trainer = sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+
+            PaymentDTO payment = new PaymentDTO();
+            payment.setUserId(userId);
+            payment.setUserName(userName);
+            payment.setTrainerId(trainerId);
+            payment.setPaymentPrice(amount);
+            payment.setPaymentFee(fee);
+            payment.setMethod("카드");
+            payment.setStatus("결제완료");
+            payment.setPaymentType("PT");
+
+            sql.insert("mapper.PaymentMapper.insert", payment);
+
+            Map<String, Object> memberUpdate = new HashMap<>();
+            memberUpdate.put("userId",      userId);
+            memberUpdate.put("trainerId",   trainerId);
+            memberUpdate.put("sessionCount", sessionCount);
+            sql.update("mapper.MemberMapper.updateTrainerAndLessons", memberUpdate);
+
+            sql.commit();
+
+            // Refresh session memberInfo so the new trainer_id is visible immediately
+            MemberDAO memberDao = new MemberDAOImpl();
+            MemberDTO freshMember = memberDao.findByEmail(user.getEmail());
+            if (freshMember != null) {
+                session.setAttribute("memberInfo", freshMember);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Surface the real error so it's visible during development
+            req.setAttribute("errorMsg", "DB 저장 오류: " + e.getMessage());
+            req.setAttribute("trainerName",  trainer != null ? trainer.getName() : "트레이너");
+            req.setAttribute("sessionCount", sessionCount);
+            req.setAttribute("amount",       (long) amount);
+            req.setAttribute("fee",          (long) fee);
+            req.getRequestDispatcher("/member/paymentSuccess.jsp").forward(req, resp);
+            return;
+        }
+
+        // ── 4. Forward to success page ────────────────────────────────────
+        req.setAttribute("trainerName",  trainer != null ? trainer.getName() : "트레이너");
+        req.setAttribute("sessionCount", sessionCount);
+        req.setAttribute("amount",       (long) amount);
+        req.setAttribute("fee",          (long) fee);
+        req.getRequestDispatcher("/member/paymentSuccess.jsp").forward(req, resp);
     }
 }

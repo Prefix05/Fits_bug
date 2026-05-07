@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.admin.ReportDTO;
+import service.admin.InquiryService;
+import service.admin.InquiryServiceImpl;
 import service.admin.ReportService;
 import service.admin.ReportServiceImpl;
 
@@ -19,6 +21,7 @@ import service.admin.ReportServiceImpl;
 @WebServlet("/admin/reportList")
 public class ReportList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private InquiryService inquiryService = new InquiryServiceImpl();
 	private ReportService reportService = new ReportServiceImpl();
 	
     public ReportList() {
@@ -47,9 +50,14 @@ public class ReportList extends HttpServlet {
                 String keyword = request.getParameter("keyword");
 
                 List<ReportDTO> list = reportService.getReportList(status, keyword);
-                
+                int totalCount = inquiryService.totalCnt();
+                int inquiryCount = inquiryService.inquiryCnt();
+                int reportCount = reportService.reportCnt();
                 request.setAttribute("reportList", list);
                 request.setAttribute("currentStatus", status); // 탭 활성화 상태 기억용
+                request.setAttribute("totalCount", totalCount);
+                request.setAttribute("inquiryCount", inquiryCount);
+                request.setAttribute("reportCount", reportCount);
                 request.getRequestDispatcher("/admin/report.jsp").forward(request, response);
             }
         } catch (Exception e) {

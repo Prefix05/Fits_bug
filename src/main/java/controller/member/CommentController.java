@@ -20,14 +20,14 @@ public class CommentController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        int postId = Integer.parseInt(req.getParameter("postId"));
-        String nickname = req.getParameter("nickname");
-        String content = req.getParameter("content");
+        int postNum = Integer.parseInt(req.getParameter("postNum"));
+        String userId = req.getParameter("userId");
+        String body = req.getParameter("body");
 
         CommentDTO dto = new CommentDTO();
-        dto.setPostId(postId);
-        dto.setNickname(nickname);
-        dto.setContent(content);
+        dto.setPostNum(postNum);
+        dto.setUserId(userId);
+        dto.setBody(body);
 
         service.write(dto);
 

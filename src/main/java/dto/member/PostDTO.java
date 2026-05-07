@@ -6,7 +6,7 @@ public class PostDTO {
     private String userId;
     private String category;
     private String title;
-    private String content;
+    private String body;
     private String image;
     private String hashtags;
     private String createdAt;
@@ -14,14 +14,14 @@ public class PostDTO {
     private int goodCount;
     private int muscleCount;
     
-	public PostDTO(int id, String userId, String category, String title, String content, String image, String hashtags,
+	public PostDTO(int id, String userId, String category, String title, String body, String image, String hashtags,
 			String createdAt, int likeCount, int goodCount, int muscleCount) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.category = category;
 		this.title = title;
-		this.content = content;
+		this.body = body;
 		this.image = image;
 		this.hashtags = hashtags;
 		this.createdAt = createdAt;
@@ -67,12 +67,12 @@ public class PostDTO {
 		this.title = title;
 	}
 
-	public String getContent() {
-		return content;
+	public String getBody() {
+		return body;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public String getImage() {

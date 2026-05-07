@@ -2,89 +2,62 @@ package controller.member;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.*;
 import dto.member.InbodyLogDTO;
-import dto.member.LoginDTO;
-import service.member.InbodyRecordService;
-import service.member.InbodyRecordServiceImpl;
+import dto.member.UserDTO;
+import service.member.InbodyLogService;
+import service.member.InbodyLogServiceImpl;
 
 @WebServlet("/member/inbody")
 public class InbodyRecordController extends HttpServlet {
 
-    private InbodyRecordService service = new InbodyRecordServiceImpl();
+    private InbodyLogService service = new InbodyLogServiceImpl();
 
-    // ===== 조회 =====
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-    	LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
+        if (user == null) { response.setStatus(401); return; }
 
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        List<InbodyLogDTO> list = service.getList(user.getEmail());
+        List<InbodyLogDTO> list = service.getListByEmail(user.getEmail());
 
         response.setContentType("application/json;charset=UTF-8");
-
-        StringBuilder json = new StringBuilder();
-        json.append("[");
-
+        StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < list.size(); i++) {
-
             InbodyLogDTO d = list.get(i);
-
-            json.append("{");
-            json.append("\"date\":\"").append(d.getRecordDate()).append("\",");
-            json.append("\"weight\":").append(d.getWeight()).append(",");
-            json.append("\"muscle\":").append(d.getMuscle()).append(",");
-            json.append("\"fat\":").append(d.getFat());
-            json.append("}");
-
+            json.append("{")
+                .append("\"date\":\"").append(d.getRecordDate()).append("\",")
+                .append("\"weight\":").append(d.getWeight()).append(",")
+                .append("\"muscle\":").append(d.getMuscleMass()).append(",")  // muscleMass
+                .append("\"fat\":").append(d.getBodyFat())                    // bodyFat
+                .append("}");
             if (i != list.size() - 1) json.append(",");
         }
-
         json.append("]");
-
         response.getWriter().write(json.toString());
     }
 
-    // ===== 저장 =====
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-    	LoginDTO user = (LoginDTO) request.getSession().getAttribute("loginUser");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
+        if (user == null) { response.setStatus(401); return; }
 
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        dao.member.MemberDAO memberDao = new dao.member.MemberDAOImpl();
+        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
 
         InbodyLogDTO dto = new InbodyLogDTO();
-
-        dto.setEmail(user.getEmail());
+        dto.setMemberId(memberId);
+        dto.setRecordDate(new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()));
         dto.setWeight(Double.parseDouble(request.getParameter("weight")));
-        dto.setMuscle(Double.parseDouble(request.getParameter("muscle")));
-        dto.setFat(Double.parseDouble(request.getParameter("fat")));
-
-        // 선택값 (이미지 없을 수도 있음)
-        String imagePath = request.getParameter("imagePath");
-        dto.setImagePath(imagePath);
+        dto.setMuscleMass(Double.parseDouble(request.getParameter("muscle")));  // muscleMass
+        dto.setBodyFat(Double.parseDouble(request.getParameter("fat")));        // bodyFat
+        dto.setImg(request.getParameter("img"));
 
         int result = service.save(dto);
-
-        if (result > 0) {
-            response.getWriter().write("success");
-        } else {
-            response.getWriter().write("fail");
-        }
+        response.getWriter().write(result > 0 ? "success" : "fail");
     }
 }

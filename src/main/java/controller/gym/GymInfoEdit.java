@@ -36,16 +36,16 @@ public class GymInfoEdit extends HttpServlet {
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
-        }
+        } 
 
         Integer gymId = user.getOtherId();
 
         try {
-            GymInfoEditService service = new GymInfoEditServiceImpl();
-
-            Gym gym = service.selectGymMypage(gymId);
-            Schedule schedule = service.selectSchedule(gymId);
-            List<Membership> membershipList = service.selectMembershipList(gymId);
+            GymInfoEditService gymservice = new GymInfoEditServiceImpl();
+            Gym gym = gymservice.selectGymMypage(gymId);
+            
+            Schedule schedule = gymservice.selectSchedule(gymId);
+            List<Membership> membershipList = gymservice.selectMembershipList(gymId);
 
             request.setAttribute("user", user);
             request.setAttribute("gym", gym);

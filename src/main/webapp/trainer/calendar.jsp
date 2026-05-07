@@ -75,101 +75,8 @@
 </nav>
 
 <!-- SideNavBar -->
-<aside
-        class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 transition-colors duration-200 z-20 flex-col p-6 hidden lg:flex">
-    <a href="" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl" data-icon="" style="">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface" style="">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1" id="main-nav">
-
-        <!-- 공통 nav item -->
-
-        <!-- 내주변 -->
-        <div class="relative">
-            <!-- Parent toggle -->
-            <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg cursor-pointer select-none"
-               onclick="
-                            this.parentElement.querySelector('.dropdown').classList.toggle('hidden');
-                            this.querySelector('.chevron').classList.toggle('rotate-180');
-                        " href="#">
-                <span class="material-symbols-outlined">distance</span>
-                내주변
-                <span class="material-symbols-outlined ml-auto transition-transform duration-200 chevron"
-                      style="font-size:18px">expand_more</span>
-            </a>
-
-            <!-- Dropdown children -->
-            <div class="dropdown hidden flex-col pl-4">
-                <!-- 헬스장 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">fitness_center</span>
-                    헬스장
-                </a>
-                <!-- 트레이너 -->
-                <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-                   href="#">
-                    <span class="material-symbols-outlined" data-icon="">person</span>
-                    트레이너
-                </a>
-            </div>
-        </div>
-
-        <!-- 트레이너  nav item-->
-
-        <!-- 대시보드 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard" style=""><span class="material-symbols-outlined" data-icon="" style="">dashboard</span>
-            대시보드</a>
-
-        <!-- 회원관리 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients" style=""><span class="material-symbols-outlined" data-icon="" style="">group</span>
-            회원
-            관리</a>
-
-        <!-- 일정 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/calendar" style=""><span class="material-symbols-outlined" data-icon="" style="">calendar_today</span>
-            일정</a>
-
-        <!-- 메시지 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">chat</span> 메시지</a>
-
-        <!-- 수익 -->
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="" style=""><span class="material-symbols-outlined" data-icon="" style="">payments</span>
-            수익</a>
-    </nav>
-
-    <!-- 공통 nav item -->
-    <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">settings</span>
-            설정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg"
-           href="#" style=""><span class="material-symbols-outlined" data-icon="" style="">help</span> 고객
-            지원</a>
-        <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>
-    </div>
-
-
-    <!-- 마이프로필 nav item -->
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class=" flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg">
-        <img alt="Alex Fischer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"
-             style=""/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-on-surface truncate" style="">연진호</p>
-            <p class="text-xs text-slate-500 truncate" style="">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<c:set var="activePage" value="calendar" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <%-- ═════════════════════════════════════════════════════════════ MAIN ════ --%>
 <main class="lg:pl-64 flex flex-col h-screen overflow-hidden">
@@ -233,13 +140,14 @@
     <div id="cal-scroll" class="flex-1 overflow-y-auto">
 
         <%-- ────────────────────────── DAY VIEW ─────────────────────────── --%>
+        <%-- Grid runs 06:00 – 24:00  (18 h × 80 px = 1440 px)           --%>
         <c:if test="${view == 'day'}">
-            <div style="display:grid; grid-template-columns:56px 1fr; height:1920px; position:relative;">
+            <div style="display:grid; grid-template-columns:56px 1fr; height:1440px; position:relative;">
 
-                <%-- Time labels --%>
-                <div class="relative border-r border-gray-100" style="height:1920px;">
-                    <c:forEach begin="0" end="23" var="h">
-                        <div style="position:absolute; top:${h * 80}px; right:0; height:80px; width:100%;
+                <%-- Time labels — offset so row 0 = 06:00 --%>
+                <div class="relative border-r border-gray-100" style="height:1440px;">
+                    <c:forEach begin="6" end="23" var="h">
+                        <div style="position:absolute; top:${(h-6) * 80}px; right:0; height:80px; width:100%;
                                     display:flex; align-items:flex-start; justify-content:flex-end;
                                     padding-right:8px; padding-top:4px;">
                             <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">
@@ -250,10 +158,16 @@
                             </span>
                         </div>
                     </c:forEach>
+                    <%-- Midnight label at the very bottom --%>
+                    <div style="position:absolute; top:1440px; right:0; width:100%;
+                                display:flex; align-items:flex-start; justify-content:flex-end;
+                                padding-right:8px; padding-top:4px; transform:translateY(-100%);">
+                        <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">24:00</span>
+                    </div>
                 </div>
 
-                <%-- Day column --%>
-                <div class="relative time-grid-bg ${isToday ? 'bg-blue-50/20' : ''}" style="height:1920px;">
+                <%-- Day column — lesson topPx is midnight-relative so subtract 480 px (6 h) --%>
+                <div class="relative time-grid-bg ${isToday ? 'bg-blue-50/20' : ''}" style="height:1440px;">
 
                     <%-- Current time indicator (only if viewing today) --%>
                     <c:if test="${isToday}">
@@ -272,7 +186,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach items="${dayLessons}" var="lesson">
-                                <div style="position:absolute; top:${lesson.topPx}px; height:${lesson.heightPx}px; left:6px; right:6px; z-index:10;"
+                                <div style="position:absolute; top:${lesson.topPx - 480}px; height:${lesson.heightPx}px; left:6px; right:6px; z-index:10;"
                                      class="lc-${lesson.clientId % 5} rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity shadow-sm p-2">
                                     <c:choose>
                                         <c:when test="${lesson.heightPx < 32}">
@@ -297,13 +211,14 @@
         </c:if>
 
         <%-- ───────────────────────── WEEK VIEW ─────────────────────────── --%>
+        <%-- Grid runs 06:00 – 24:00  (18 h × 80 px = 1440 px)           --%>
         <c:if test="${view == 'week'}">
-            <div style="display:grid; grid-template-columns:56px repeat(7,1fr); height:1920px; position:relative;">
+            <div style="display:grid; grid-template-columns:56px repeat(7,1fr); height:1440px; position:relative;">
 
-                <%-- Time labels column --%>
-                <div class="relative border-r border-gray-100" style="height:1920px;">
-                    <c:forEach begin="0" end="23" var="h">
-                        <div style="position:absolute; top:${h * 80}px; right:0; height:80px; width:100%;
+                <%-- Time labels column — offset so row 0 = 06:00 --%>
+                <div class="relative border-r border-gray-100" style="height:1440px;">
+                    <c:forEach begin="6" end="23" var="h">
+                        <div style="position:absolute; top:${(h-6) * 80}px; right:0; height:80px; width:100%;
                                     display:flex; align-items:flex-start; justify-content:flex-end;
                                     padding-right:8px; padding-top:4px;">
                             <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">
@@ -314,12 +229,18 @@
                             </span>
                         </div>
                     </c:forEach>
+                    <%-- Midnight label at the very bottom --%>
+                    <div style="position:absolute; top:1440px; right:0; width:100%;
+                                display:flex; align-items:flex-start; justify-content:flex-end;
+                                padding-right:8px; padding-top:4px; transform:translateY(-100%);">
+                        <span style="font-size:10px; color:#717786; font-weight:500; white-space:nowrap;">24:00</span>
+                    </div>
                 </div>
 
-                <%-- 7 day columns --%>
+                <%-- 7 day columns — lesson topPx is midnight-relative so subtract 480 px (6 h) --%>
                 <c:forEach items="${weekColumns}" var="col">
                     <div class="relative border-l border-gray-100 time-grid-bg ${col.isToday ? 'bg-blue-50/20' : ''}"
-                         style="height:1920px;">
+                         style="height:1440px;">
 
                         <%-- Current time indicator on today's column --%>
                         <c:if test="${col.isToday}">
@@ -331,7 +252,7 @@
 
                         <%-- Lesson cards --%>
                         <c:forEach items="${col.lessons}" var="lesson">
-                            <div style="position:absolute; top:${lesson.topPx}px; height:${lesson.heightPx}px; left:2px; right:2px; z-index:10;"
+                            <div style="position:absolute; top:${lesson.topPx - 480}px; height:${lesson.heightPx}px; left:2px; right:2px; z-index:10;"
                                  class="lc-${lesson.clientId % 5} rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity shadow-sm p-1.5">
                                 <c:choose>
                                     <c:when test="${lesson.heightPx < 32}">
@@ -389,10 +310,14 @@
 </main>
 
 <script>
+    const CALENDAR_VIEW = '${view}';
+    // Day and week views both start at 06:00 (480 px = 6 h × 80 px offset).
+    const DAY_OFFSET_PX = (CALENDAR_VIEW === 'day' || CALENDAR_VIEW === 'week') ? 480 : 0;
+
     // ── Current time indicator ──────────────────────────────────────────────
     function positionTimeIndicator() {
         const now = new Date();
-        const top = now.getHours() * 80 + now.getMinutes() * 80 / 60;
+        const top = now.getHours() * 80 + now.getMinutes() * 80 / 60 - DAY_OFFSET_PX;
         document.querySelectorAll('.time-indicator').forEach(el => {
             el.style.top = top + 'px';
         });
@@ -405,8 +330,9 @@
         const scroll = document.getElementById('cal-scroll');
         if (scroll) {
             const now = new Date();
-            // Scroll to 1.5 hours before current time so upcoming lessons are visible
-            scroll.scrollTop = Math.max(0, (now.getHours() - 1) * 80 + 40);
+            // Scroll so current time is ~1 hour from the top of the viewport
+            const rawTop = now.getHours() * 80 + now.getMinutes() * 80 / 60 - DAY_OFFSET_PX;
+            scroll.scrollTop = Math.max(0, rawTop - 80);
         }
     });
 </script>

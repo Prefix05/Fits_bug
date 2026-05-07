@@ -6,7 +6,6 @@
     String contextPath = request.getContextPath();
 %>
 <!DOCTYPE html>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -187,7 +186,7 @@
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">
 <!-- Page Canvas -->
-<div class="pt-24 px-10 pb-10">
+<div class="pt-10 px-10 pb-10">
 <!-- Header Section -->
 <div class="flex justify-between items-end mb-8">
 <div>
@@ -195,15 +194,61 @@
 <p class="text-on-surface-variant mt-1">서비스 전체 회원의 활동 내역과 승인 상태를 관리합니다.</p>
 </div>
 </div>
+
 <!-- Main Tabs -->
-<div class="flex gap-8 mb-8 border-b border-outline-variant/20">
+<div class="flex gap-8 mb-4 border-b border-outline-variant/20">
 <a href="<%= contextPath %>/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
 <a href="<%= contextPath %>/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
+
+<!-- Summary Section Metrics -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-4 mt-1">
+<!-- Card 1: Total Members -->
+<div class="bg-surface-container-lowest px-6 py-3 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-2">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">전체회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${totalCount }명</h3>
+</div>
+<!-- Card 2: Gyms -->
+<div class="bg-surface-container-lowest px-6 py-3 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-2">
+<div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+</div>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">헬스장</p>
+<h3 class="text-2xl font-bold text-on-surface">${gymCount }개</h3>
+</div>
+<!-- Card 3: Trainers -->
+<div class="bg-surface-container-lowest px-6 py-3 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-2">
+<div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+</div>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">트레이너</p>
+<h3 class="text-2xl font-bold text-on-surface">${trainerCount }명</h3>
+</div>
+<!-- Card 4: Members -->
+<div class="bg-surface-container-lowest px-6 py-3 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-2">
+<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
+<h3 class="text-2xl font-bold text-on-surface">${clientCount }명</h3>
+</div>
+</div>
+
 <!-- Bento Filter Section -->
-<div class="grid grid-cols-12 gap-6 mb-8">
+<div class="grid grid-cols-12 gap-6 mb-4">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
 <a href="<%= contextPath %>/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
@@ -339,49 +384,7 @@ class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-contain
 </div>
 </div>
 </div>
-<!-- Summary Section Metrics -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-<!-- Card 1: Total Members -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="flex items-center justify-between mb-4">
-<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" data-icon="group">group</span>
-</div>
-</div>
-<p class="text-xs font-label text-on-surface-variant uppercase mb-1">전체회원</p>
-<h3 class="text-2xl font-bold text-on-surface">${totalCount }명</h3>
-</div>
-<!-- Card 2: Gyms -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="flex items-center justify-between mb-4">
-<div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
-<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
-</div>
-</div>
-<p class="text-xs font-label text-on-surface-variant uppercase mb-1">헬스장</p>
-<h3 class="text-2xl font-bold text-on-surface">${gymCount }개</h3>
-</div>
-<!-- Card 3: Trainers -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="flex items-center justify-between mb-4">
-<div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
-<span class="material-symbols-outlined" data-icon="badge">badge</span>
-</div>
-</div>
-<p class="text-xs font-label text-on-surface-variant uppercase mb-1">트레이너</p>
-<h3 class="text-2xl font-bold text-on-surface">${trainerCount }명</h3>
-</div>
-<!-- Card 4: Members -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="flex items-center justify-between mb-4">
-<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-</div>
-</div>
-<p class="text-xs font-label text-on-surface-variant uppercase mb-1">회원</p>
-<h3 class="text-2xl font-bold text-on-surface">${clientCount }명</h3>
-</div>
-</div>
+
 </div>
 </main>
 </body></html>

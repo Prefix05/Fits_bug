@@ -1,19 +1,3 @@
-/*
- * package service;
- * 
- * import dao.JoinDAO; import dao.JoinDAOImpl; import
- * org.json.simple.JSONObject;
- * 
- * public class JoinServiceImpl implements JoinService {
- * 
- * private JoinDAO dao = new JoinDAOImpl();
- * 
- * @Override public void join(JSONObject json) { dao.insertUser(json); }
- * 
- * @Override public void trainer(JSONObject json) { dao.insertTrainer(json); }
- * 
- * @Override public void gym(JSONObject json) { dao.insertGym(json); } }
- */
 package service.member;
 
 import java.io.BufferedReader;
@@ -24,13 +8,15 @@ import java.net.URL;
 
 import org.json.JSONObject;
 
-import dao.member.LoginDAO;
-import dao.member.LoginDAOImpl;
-import dto.member.LoginDTO;
+import dao.member.UserDAO;
+import dao.member.UserDAOImpl;
+import dto.member.UserDTO;
 
+// ✅ LoginDTO/LoginDAO → UserDTO/UserDAO 로 전면 수정
 public class KakaoServiceImpl implements KakaoService {
 
-    private LoginDAO dao = new LoginDAOImpl();
+    // ✅ LoginDAO → UserDAO
+    private UserDAO dao = new UserDAOImpl();
 
     @Override
     public String getAccessToken(String code) {
@@ -55,14 +41,13 @@ public class KakaoServiceImpl implements KakaoService {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             String line;
-
             while ((line = br.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
 
-            JSONObject json = new JSONObject(result);
+            JSONObject json = new JSONObject(result.toString());
             accessToken = json.getString("access_token");
 
         } catch (Exception e) {
@@ -73,8 +58,8 @@ public class KakaoServiceImpl implements KakaoService {
     }
 
     @Override
-    public LoginDTO getUserInfo(String token) {
-        LoginDTO member = null;
+    public UserDTO getUserInfo(String token) {
+        UserDTO member = null;
 
         try {
             URL url = new URL("https://kapi.kakao.com/v2/user/me");
@@ -86,26 +71,30 @@ public class KakaoServiceImpl implements KakaoService {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             String line;
-
             while ((line = br.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
 
-            JSONObject json = new JSONObject(result);
+            JSONObject json    = new JSONObject(result.toString());
             JSONObject account = json.getJSONObject("kakao_account");
+            String email       = account.getString("email");
 
-            String email = account.getString("email");
-
+            // ✅ UserDAO.findByEmail 사용
             member = dao.findByEmail(email);
 
             if (member == null) {
-            	member = new LoginDTO();
-            	member.setEmail(email);
-            	member.setNickname("카카오회원");
+                // ✅ LoginDTO → UserDTO, insertKakaoUser → insertSocial
+                member = new UserDTO();
+                member.setEmail(email);
+                member.setNickname("카카오회원_" + System.currentTimeMillis() % 10000);
+                member.setRole("MEMBER");
+                member.setProvider("kakao");
+                member.setEmailVerified(true);
 
-                dao.insertKakaoUser(member);
+                dao.insertSocial(member);
+                member = dao.findByEmail(email);
             }
 
         } catch (Exception e) {

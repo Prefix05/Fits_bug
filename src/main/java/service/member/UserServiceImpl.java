@@ -2,17 +2,33 @@ package service.member;
 
 import java.util.List;
 
+
 import dao.gym.GymMainDao;
 import dao.gym.GymMainDaoImpl;
+
+import org.apache.ibatis.session.SqlSession;
+
+import dao.gym.GymMainDao;
+import dao.gym.GymMainDaoImpl;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
 import dto.gym.Gym;
+import dao.trainer.TrainerDAO;
+import dao.trainer.TrainerDAOImpl;
+import dto.gym.Gym;
+import dto.member.MemberDTO;
 import dto.member.UserDTO;
+import dto.trainer.TrainerDTO;
+import util.MybatisSqlSessionFactory;
 
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO = new UserDAOImpl();
     private GymMainDao gymMainDAO = new GymMainDaoImpl();
+    private MemberDAO memberDAO = new MemberDAOImpl();
+    private TrainerDAO trainerDAO = new TrainerDAOImpl();
 
     @Override
     public int register(UserDTO dto) {
@@ -37,7 +53,14 @@ public class UserServiceImpl implements UserService {
         		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
         		user.setOtherId(gym.getId()); // gymId  userDTO에 추가
         	} else if (role.equals("MEMBER")) {
-        		
+        		MemberDTO member = memberDAO.selectMemberByUserId(user.getId());
+        		user.setOtherId(member.getId()); // memberId userDTO에 추가
+        	} else if(role.equals("TRAINER")) {               
+                try(SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+                	TrainerDTO trainer = trainerDAO.findByUserId(session, user.getId());
+                	user.setOtherId(trainer.getTrainerId());	
+                } 
+
         	}
             return user;
         }

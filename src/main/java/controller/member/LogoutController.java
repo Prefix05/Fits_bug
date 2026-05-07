@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 @WebServlet("/member/logout")
 public class LogoutController extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         HttpSession session = request.getSession(false);
@@ -20,3 +20,4 @@ public class LogoutController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/member/login");
     }
 }
+

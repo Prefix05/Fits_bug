@@ -113,7 +113,7 @@ function searchGuide(keyword) {
     <jsp:include page="sidebar.jsp"></jsp:include>
 
     <main class="flex-1 ml-64 min-h-screen">
-        <div class="pt-24 px-10 pb-10">
+        <div class="pt-10 px-10 pb-10">
             
             <div class="flex justify-between items-center mb-8">
                 <div>
