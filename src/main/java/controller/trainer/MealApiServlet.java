@@ -97,15 +97,15 @@ public class MealApiServlet extends HttpServlet {
             MealDTO m = r.dayMeals.get(i);
             if (i > 0) json.append(",");
             json.append("{");
-            json.append("\"mealName\":\"").append(m.getMealName()).append("\",");
-            json.append("\"mealTime\":\"").append(m.getMealTime()).append("\",");
-            json.append("\"description\":\"").append(m.getDescription()).append("\",");
-            json.append("\"imageUrl\":\"").append(m.getImageUrl()).append("\",");
+            json.append("\"mealName\":\"").append(m.getMealName() != null ? m.getMealName().replace("\"","\\\"") : "").append("\",");
+            json.append("\"mealTime\":\"").append(m.getMealTime() != null ? m.getMealTime() : "").append("\",");
+            json.append("\"mealType\":\"").append(m.getMealType() != null ? m.getMealType() : "").append("\",");
+            json.append("\"imageUrl\":\"").append(m.getImageUrl() != null ? m.getImageUrl() : "").append("\",");
             json.append("\"calories\":").append(m.getCalories()).append(",");
             json.append("\"protein\":").append(m.getProtein()).append(",");
             json.append("\"carbs\":").append(m.getCarbs()).append(",");
             json.append("\"fat\":").append(m.getFat()).append(",");
-            json.append("\"mealType\":\"").append(m.getMealType()).append("\"");
+            json.append("\"totcalorie\":").append(m.getTotcalorie());
             json.append("}");
         }
         json.append("]}");

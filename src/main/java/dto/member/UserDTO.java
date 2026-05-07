@@ -11,7 +11,7 @@ public class UserDTO {
     private String phone;          // DB 컬럼: phone  (이전 tel → phone 통일)
     private boolean emailVerified; // DB 컬럼: email_verified
     private String nickname;
-    private String profileImg;     // DB 컬럼: profileImg
+    private String profileImage;     // DB 컬럼: profileImg
     private String role;           // ENUM → String으로 MyBatis 처리 간편화
     private LocalDateTime createdAt;
     private boolean deleted;       // DB 컬럼: is_deleted
@@ -19,24 +19,31 @@ public class UserDTO {
     private String providerId;     // DB 컬럼: provider_id
     private Integer otherId;
 
-    // ─── 기본 생성자 ───────────────────────────────────────────
     public UserDTO() {}
 
-    // ─── 회원가입용 생성자 ─────────────────────────────────────
-    public UserDTO(String email, String password, String name, String phone,
-                   boolean emailVerified, String nickname, String role) {
-        this.email         = email;
-        this.password      = password;
-        this.name          = name;
-        this.phone         = phone;
-        this.emailVerified = emailVerified;
-        this.nickname      = nickname;
-        this.role          = role;
-    }
 
-    // ─── getter / setter ───────────────────────────────────────
+    public UserDTO(int id, String email, String password, String name, String phone, boolean emailVerified,
+			String nickname, String profileImage, String role, LocalDateTime createdAt, boolean deleted,
+			String provider, String providerId, Integer otherId) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.phone = phone;
+		this.emailVerified = emailVerified;
+		this.nickname = nickname;
+		this.profileImage = profileImage;
+		this.role = role;
+		this.createdAt = createdAt;
+		this.deleted = deleted;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.otherId = otherId;
+	}
 
-    public int getId() { return id; }
+
+	public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public String getEmail() { return email; }
@@ -57,8 +64,6 @@ public class UserDTO {
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getProfileImg() { return profileImg; }
-    public void setProfileImg(String profileImg) { this.profileImg = profileImg; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
@@ -76,7 +81,17 @@ public class UserDTO {
     public void setProviderId(String providerId) { this.providerId = providerId; }
 
     
-    public Integer getOtherId() {
+
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
+	public Integer getOtherId() {
 		return otherId;
 	}
 
@@ -84,9 +99,15 @@ public class UserDTO {
 		this.otherId = otherId;
 	}
 
+
 	@Override
-    public String toString() {
-        return "UserDTO{id=" + id + ", email='" + email + "', nickname='" + nickname
-                + "', role='" + role + "'}";
-    }
+	public String toString() {
+		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone="
+				+ phone + ", emailVerified=" + emailVerified + ", nickname=" + nickname + ", profileImage="
+				+ profileImage + ", role=" + role + ", createdAt=" + createdAt + ", deleted=" + deleted + ", provider="
+				+ provider + ", providerId=" + providerId + ", otherId=" + otherId + "]";
+	}
+	
+	
+
 }

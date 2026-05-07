@@ -13,14 +13,14 @@ public class ClientServiceImpl implements ClientService {
     private ClientDAO clientDAO = new ClientDAOImpl();
 
     @Override
-    public List<ClientDTO> getClients(int offset, int limit, String filter, int trainerId) {
+    public List<ClientDTO> getClients(int offset, int limit, String filter, String search, int trainerId) {
 
         SqlSession session = MybatisSqlSessionFactory
                 .getSqlSessionFactory()
                 .openSession();
 
         try {
-            return clientDAO.selectClients(session, offset, limit, filter, trainerId);
+            return clientDAO.selectClients(session, offset, limit, filter, search, trainerId);
 
         } finally {
             session.close();
@@ -28,14 +28,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public int getClientCount(String filter, int trainerId) {
+    public int getClientCount(String filter, String search, int trainerId) {
 
         SqlSession session = MybatisSqlSessionFactory
                 .getSqlSessionFactory()
                 .openSession();
 
         try {
-            return clientDAO.selectClientCount(session, filter, trainerId);
+            return clientDAO.selectClientCount(session, filter, search, trainerId);
         } finally {
             session.close();
         }

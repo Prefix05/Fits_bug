@@ -15,7 +15,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> getComments(int postId) {
-        return dao.findByPostId(postId);
+    public List<CommentDTO> getComments(int postNum) {
+        return dao.findByPostNum(postNum);
     }
 }

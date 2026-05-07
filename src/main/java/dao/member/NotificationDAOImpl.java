@@ -1,87 +1,69 @@
 package dao.member;
 
-import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
-
 import dto.member.NotificationDTO;
 import util.MybatisSqlSessionFactory;
+import java.util.List;
 
 public class NotificationDAOImpl implements NotificationDAO {
 
+    private static final String NS = "mapper.NotificationMapper.";
+
     @Override
-    public List<NotificationDTO> findByEmail(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public List<NotificationDTO> findByRecvId(String recvId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<NotificationDTO> list = null;
         try {
-            list = sqlSession.selectList("mapper.NotificationMapper.findByEmail", email);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+            list = session.selectList(NS + "findByRecvId", recvId);
+        } catch (Exception e) { e.printStackTrace(); }
+        finally { session.close(); }
         return list;
     }
 
     @Override
-    public int countUnread(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public int countUnread(String recvId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.selectOne("mapper.NotificationMapper.countUnread", email);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+            result = session.selectOne(NS + "countUnread", recvId);
+        } catch (Exception e) { e.printStackTrace(); }
+        finally { session.close(); }
         return result;
     }
 
     @Override
     public int insert(NotificationDTO dto) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.insert("mapper.NotificationMapper.insert", dto);
-            sqlSession.commit();
-        } catch (Exception e) {
-            sqlSession.rollback();
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+            result = session.insert(NS + "insert", dto);
+            session.commit();
+        } catch (Exception e) { session.rollback(); e.printStackTrace(); }
+        finally { session.close(); }
         return result;
     }
 
     @Override
-    public int updateReadAll(String email) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    public int updateReadAll(String recvId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.update("mapper.NotificationMapper.updateReadAll", email);
-            sqlSession.commit();
-        } catch (Exception e) {
-            sqlSession.rollback();
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+            result = session.update(NS + "updateReadAll", recvId);
+            session.commit();
+        } catch (Exception e) { session.rollback(); e.printStackTrace(); }
+        finally { session.close(); }
         return result;
     }
 
     @Override
     public int updateReadOne(int id) {
-        SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.update("mapper.NotificationMapper.updateReadOne", id);
-            sqlSession.commit();
-        } catch (Exception e) {
-            sqlSession.rollback();
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+            result = session.update(NS + "updateReadOne", id);
+            session.commit();
+        } catch (Exception e) { session.rollback(); e.printStackTrace(); }
+        finally { session.close(); }
         return result;
     }
 }

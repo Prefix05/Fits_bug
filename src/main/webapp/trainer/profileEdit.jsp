@@ -16,45 +16,9 @@
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
 
-<!-- Sidebar -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 z-20 flex flex-col p-6">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex items-center gap-3 mb-10">
-        <div class="w-10 h-10 bg-[#007AFF] rounded-xl flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-white text-2xl">exercise</span>
-        </div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Fitsbug</h1>
-    </a>
-    <nav class="flex-1 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/dashboard">
-            <span class="material-symbols-outlined">dashboard</span>대시보드</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg"
-           href="${pageContext.request.contextPath}/trainer/clients">
-            <span class="material-symbols-outlined">group</span>회원 관리</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">calendar_today</span>일정</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">chat</span>메시지</a>
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">payments</span>수익</a>
-    </nav>
-    <div class="mt-auto pt-6 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 rounded-lg" href="#">
-            <span class="material-symbols-outlined">settings</span>설정</a>
-        <div class="border-t border-slate-200 my-2"></div>
-    </div>
-    <a href="${pageContext.request.contextPath}/trainer/profile"
-       class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50">
-        <img alt="프로필" class="w-10 h-10 rounded-full object-cover shrink-0"
-             src="${not empty sessionScope.loginUser.profileImg
-                     ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg)
-                     : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        <div class="overflow-hidden">
-            <p class="text-sm font-bold text-blue-700 truncate">${sessionScope.loginUser.name}</p>
-            <p class="text-xs text-blue-500 truncate">마이프로필</p>
-        </div>
-    </a>
-</aside>
+<!-- SideNavBar -->
+<c:set var="activePage" value="profile" scope="request"/>
+<jsp:include page="/trainer/sideNav.jsp"/>
 
 <!-- Main -->
 <main class="lg:pl-64 min-h-screen">
@@ -128,6 +92,95 @@
                     <input type="tel" name="tel" value="${sessionScope.loginUser.tel}"
                            class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
                            placeholder="010-0000-0000"/>
+                </div>
+
+            </section>
+
+            <!-- Section 1b: Trainer Type & Gym/Address -->
+            <section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm space-y-5 border border-surface-variant/30">
+                <h3 class="text-base font-bold text-on-surface flex items-center gap-2 pb-4 border-b border-surface-container">
+                    <span class="material-symbols-outlined text-primary">badge</span>활동 유형 및 위치
+                </h3>
+
+                <!-- Trainer Type -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">트레이너 유형</label>
+                    <div class="flex gap-2">
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="GYM_EMPLOYED" class="hidden type-radio"
+                                   ${trainer.trainerType == 'GYM_EMPLOYED' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">apartment</span>헬스장 소속
+                            </span>
+                        </label>
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="GYM_RENTAL" class="hidden type-radio"
+                                   ${trainer.trainerType == 'GYM_RENTAL' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">store</span>독립 운영 (임대)
+                            </span>
+                        </label>
+                        <label class="type-option flex-1 cursor-pointer">
+                            <input type="radio" name="trainerType" value="FREELANCE" class="hidden type-radio"
+                                   ${trainer.trainerType == 'FREELANCE' ? 'checked' : ''}/>
+                            <span class="type-label flex flex-col items-center gap-1 px-3 py-3 rounded-xl border text-xs font-semibold text-center transition-colors
+                                         border-outline-variant/40 text-on-surface-variant bg-surface-container-low">
+                                <span class="material-symbols-outlined text-lg">person_pin</span>프리랜서
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gym section (GYM_EMPLOYED / GYM_RENTAL) -->
+                <div id="gym-section" class="space-y-3">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">헬스장 코드</label>
+
+                    <c:if test="${not empty currentGym}">
+                        <div class="flex items-center gap-3 px-4 py-3 bg-primary/5 rounded-xl border border-primary/20">
+                            <span class="material-symbols-outlined text-primary text-base">fitness_center</span>
+                            <div>
+                                <p class="text-sm font-bold text-on-surface">${currentGym.name}</p>
+                                <p class="text-xs text-on-surface-variant">현재 소속 · 코드: <span class="font-mono font-bold">${currentGym.gymCode}</span></p>
+                            </div>
+                        </div>
+                    </c:if>
+
+                    <div class="flex gap-2">
+                        <input type="text" id="gymCodeInput" name="gymCode"
+                               class="flex-1 px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20 font-mono"
+                               placeholder="새 헬스장 코드 입력"/>
+                        <button type="button" onclick="lookupGym()"
+                                class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors">
+                            확인
+                        </button>
+                    </div>
+                    <div id="gym-lookup-result" class="hidden"></div>
+
+                    <!-- Address (filled from gym, read-only) -->
+                    <div class="space-y-2 pt-1">
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">헬스장 주소 (자동 입력)</label>
+                        <input type="text" id="addressInput" name="address" value="${trainer.address}" readonly
+                               class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-sm text-on-surface-variant outline-none cursor-not-allowed"
+                               placeholder="헬스장 코드 확인 시 자동 입력"/>
+                        <input type="text" id="addressDetailInput" name="addressDetail" value="${trainer.addressDetail}" readonly
+                               class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-sm text-on-surface-variant outline-none cursor-not-allowed"
+                               placeholder="상세 주소"/>
+                    </div>
+                    <input type="hidden" id="gymLatInput"  name="latitude"  value="${trainer.latitude}"/>
+                    <input type="hidden" id="gymLngInput"  name="longitude" value="${trainer.longitude}"/>
+                </div>
+
+                <!-- Address section (FREELANCE) -->
+                <div id="freelance-section" class="space-y-2">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">활동 주소</label>
+                    <input type="text" id="freelanceAddress" name="address" value="${trainer.address}"
+                           class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
+                           placeholder="도로명 주소"/>
+                    <input type="text" id="freelanceAddressDetail" name="addressDetail" value="${trainer.addressDetail}"
+                           class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
+                           placeholder="상세 주소 (동, 호수 등)"/>
                 </div>
             </section>
 
@@ -232,19 +285,108 @@
                 </button>
             </section>
 
-            <!-- Section 6: Pricing & Availability link -->
-            <section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-variant/30">
-                <div class="flex items-center justify-between">
+            <!-- Section 6: Pricing -->
+            <section class="bg-surface-container-lowest rounded-2xl border border-surface-variant/30 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">payments</span>
-                        <h3 class="text-base font-bold text-on-surface">수업 가격 및 가능 일정</h3>
+                        <h3 class="text-base font-bold text-on-surface">1:1 트레이닝 요금</h3>
                     </div>
-                    <a href="${pageContext.request.contextPath}/trainer/pricing"
-                       class="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
-                        수정하기 <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </a>
+                    <button type="button" onclick="addPricingRow()"
+                            class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                        <span class="material-symbols-outlined text-sm">add</span>요금 추가
+                    </button>
                 </div>
-                <p class="text-xs text-on-surface-variant mt-2">요금제와 가능 시간은 별도 페이지에서 관리합니다.</p>
+                <div id="pricing-list" class="space-y-3">
+                    <c:forEach var="p" items="${pricingList}" varStatus="st">
+                        <div class="pricing-row flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+                            <div class="flex-1 min-w-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">패키지 이름</label>
+                                <input type="text" name="pricingLabel" value="${p.label}" placeholder="예: 10회 패키지"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="w-24 shrink-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">횟수</label>
+                                <input type="number" name="sessionCount" value="${p.sessionCount}" min="1"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="w-32 shrink-0">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">가격 (원)</label>
+                                <input type="number" name="price" value="${p.price}" min="0" step="1000"
+                                       class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                            <div class="flex items-center gap-2 pt-5 shrink-0">
+                                <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                                    <input type="checkbox" name="popularRow" value="${st.index}"
+                                           ${p.popular ? 'checked' : ''}
+                                           class="w-4 h-4 accent-primary popular-check"/>
+                                    <span class="text-xs font-medium text-on-surface-variant">인기</span>
+                                </label>
+                                <button type="button" onclick="removePricingRow(this)"
+                                        class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-colors">
+                                    <span class="material-symbols-outlined text-base">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <c:if test="${empty pricingList}">
+                    <script>document.addEventListener('DOMContentLoaded', addPricingRow);</script>
+                </c:if>
+            </section>
+
+            <!-- Section 7: Availability -->
+            <section class="bg-surface-container-lowest rounded-2xl border border-surface-variant/30 shadow-sm p-6">
+                <div class="flex items-center gap-2 mb-5">
+                    <span class="material-symbols-outlined text-primary">calendar_month</span>
+                    <h3 class="text-base font-bold text-on-surface">운영 시간</h3>
+                </div>
+
+                <c:set var="MON_avail" value=""/>
+                <c:set var="TUE_avail" value=""/>
+                <c:set var="WED_avail" value=""/>
+                <c:set var="THU_avail" value=""/>
+                <c:set var="FRI_avail" value=""/>
+                <c:set var="SAT_avail" value=""/>
+                <c:set var="SUN_avail" value=""/>
+                <c:forEach var="a" items="${availabilityList}">
+                    <c:if test="${a.dayOfWeek == 'MON'}"><c:set var="MON_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'TUE'}"><c:set var="TUE_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'WED'}"><c:set var="WED_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'THU'}"><c:set var="THU_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'FRI'}"><c:set var="FRI_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'SAT'}"><c:set var="SAT_avail" value="${a}"/></c:if>
+                    <c:if test="${a.dayOfWeek == 'SUN'}"><c:set var="SUN_avail" value="${a}"/></c:if>
+                </c:forEach>
+
+                <div class="space-y-2">
+                    <c:forEach var="dayCode" items="MON,TUE,WED,THU,FRI,SAT,SUN" varStatus="ds">
+                        <c:set var="dayLabel" value="${ds.index == 0 ? '월' : ds.index == 1 ? '화' : ds.index == 2 ? '수' : ds.index == 3 ? '목' : ds.index == 4 ? '금' : ds.index == 5 ? '토' : '일'}"/>
+                        <c:set var="avail"    value="${ds.index == 0 ? MON_avail : ds.index == 1 ? TUE_avail : ds.index == 2 ? WED_avail : ds.index == 3 ? THU_avail : ds.index == 4 ? FRI_avail : ds.index == 5 ? SAT_avail : SUN_avail}"/>
+                        <c:set var="enabled"  value="${not empty avail}"/>
+                        <div class="flex items-center gap-4 p-3 rounded-xl border ${enabled ? 'bg-blue-50 border-blue-200' : 'bg-surface-container-low border-outline-variant/20'} avail-row"
+                             id="avail-row-${dayCode}">
+                            <label class="flex items-center gap-2 cursor-pointer w-12 shrink-0">
+                                <input type="checkbox" name="availEnabled_${dayCode}" value="1"
+                                       ${enabled ? 'checked' : ''}
+                                       onchange="toggleDay('${dayCode}', this.checked)"
+                                       class="w-4 h-4 accent-primary"/>
+                                <span class="text-sm font-bold ${enabled ? 'text-primary' : 'text-on-surface-variant'}">${dayLabel}</span>
+                            </label>
+                            <div class="flex items-center gap-2 flex-1 ${enabled ? '' : 'opacity-40'}" id="avail-times-${dayCode}">
+                                <input type="time" name="startTime_${dayCode}"
+                                       value="${not empty avail ? avail.startTime : '09:00'}"
+                                       ${enabled ? '' : 'disabled'}
+                                       class="bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                                <span class="text-on-surface-variant text-sm">~</span>
+                                <input type="time" name="endTime_${dayCode}"
+                                       value="${not empty avail ? avail.endTime : '18:00'}"
+                                       ${enabled ? '' : 'disabled'}
+                                       class="bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
             </section>
 
             <!-- Actions -->
@@ -262,6 +404,38 @@
         </form>
     </div>
 </main>
+
+<!-- Pricing row template -->
+<template id="pricing-row-template">
+    <div class="pricing-row flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+        <div class="flex-1 min-w-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">패키지 이름</label>
+            <input type="text" name="pricingLabel" placeholder="예: 10회 패키지"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="w-24 shrink-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">횟수</label>
+            <input type="number" name="sessionCount" value="1" min="1"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="w-32 shrink-0">
+            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-1">가격 (원)</label>
+            <input type="number" name="price" value="0" min="0" step="1000"
+                   class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"/>
+        </div>
+        <div class="flex items-center gap-2 pt-5 shrink-0">
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input type="checkbox" name="popularRow" value="__IDX__"
+                       class="w-4 h-4 accent-primary popular-check"/>
+                <span class="text-xs font-medium text-on-surface-variant">인기</span>
+            </label>
+            <button type="button" onclick="removePricingRow(this)"
+                    class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-colors">
+                <span class="material-symbols-outlined text-base">delete</span>
+            </button>
+        </div>
+    </div>
+</template>
 
 <!-- New cert row template -->
 <template id="cert-template">
@@ -302,6 +476,72 @@
 </template>
 
 <script>
+    // ── Trainer type toggle ────────────────────────────────────────────────
+    const typeRadios = document.querySelectorAll('.type-radio');
+    const gymSection = document.getElementById('gym-section');
+    const freelanceSection = document.getElementById('freelance-section');
+
+    function updateTypeUI() {
+        const selected = document.querySelector('.type-radio:checked');
+        const val = selected ? selected.value : '';
+        const isGymBased = val === 'GYM_EMPLOYED' || val === 'GYM_RENTAL';
+
+        gymSection.style.display = isGymBased ? '' : 'none';
+        freelanceSection.style.display = isGymBased ? 'none' : '';
+
+        // Disable inputs in the hidden section so they don't submit
+        gymSection.querySelectorAll('input[name="address"], input[name="addressDetail"]')
+            .forEach(i => i.disabled = !isGymBased);
+        freelanceSection.querySelectorAll('input[name="address"], input[name="addressDetail"]')
+            .forEach(i => i.disabled = isGymBased);
+
+        // Style radio labels
+        document.querySelectorAll('.type-radio').forEach(r => {
+            const label = r.nextElementSibling;
+            if (r.checked) {
+                label.classList.add('bg-primary', 'text-white', 'border-primary');
+                label.classList.remove('border-outline-variant/40', 'text-on-surface-variant', 'bg-surface-container-low');
+                label.querySelector('.material-symbols-outlined').style.color = 'white';
+            } else {
+                label.classList.remove('bg-primary', 'text-white', 'border-primary');
+                label.classList.add('border-outline-variant/40', 'text-on-surface-variant', 'bg-surface-container-low');
+                label.querySelector('.material-symbols-outlined').style.color = '';
+            }
+        });
+    }
+
+    typeRadios.forEach(r => r.addEventListener('change', updateTypeUI));
+    updateTypeUI(); // init on page load
+
+    // ── Gym code lookup ────────────────────────────────────────────────────
+    function lookupGym() {
+        const code = document.getElementById('gymCodeInput').value.trim();
+        const result = document.getElementById('gym-lookup-result');
+        if (!code) return;
+
+        fetch('${pageContext.request.contextPath}/trainer/gymLookup?code=' + encodeURIComponent(code))
+            .then(r => r.json())
+            .then(data => {
+                if (data.found) {
+                    document.getElementById('addressInput').value = data.address || '';
+                    document.getElementById('addressDetailInput').value = data.addressDetail || '';
+                    document.getElementById('gymLatInput').value = data.latitude || '';
+                    document.getElementById('gymLngInput').value = data.longitude || '';
+                    result.className = 'flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-700';
+                    result.innerHTML = '<span class="material-symbols-outlined text-base">check_circle</span><span><strong>' + data.name + '</strong> 확인됨</span>';
+                } else {
+                    result.className = 'flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700';
+                    result.innerHTML = '<span class="material-symbols-outlined text-base">error</span>유효하지 않은 헬스장 코드입니다.';
+                }
+                result.classList.remove('hidden');
+            });
+    }
+
+    // Also trigger lookup on Enter key in gym code input
+    document.getElementById('gymCodeInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); lookupGym(); }
+    });
+
     // ── Checkbox toggle styling ────────────────────────────────────────────
     function initCheckboxes(cbClass, labelClass, selectedList) {
         const selected = new Set(selectedList);
@@ -344,6 +584,49 @@
     function updateFileName(input) {
         const span = input.closest('label').querySelector('.file-name-text');
         span.textContent = input.files.length > 0 ? input.files[0].name : '파일 선택';
+    }
+
+    // ── Pricing rows ───────────────────────────────────────────────────────
+    function addPricingRow() {
+        const list = document.getElementById('pricing-list');
+        const idx  = list.querySelectorAll('.pricing-row').length;
+        const tpl  = document.getElementById('pricing-row-template');
+        const html = tpl.innerHTML.replace('__IDX__', idx);
+        const div  = document.createElement('div');
+        div.innerHTML = html;
+        list.appendChild(div.firstElementChild);
+        reindexPopularCheckboxes();
+    }
+
+    function removePricingRow(btn) {
+        btn.closest('.pricing-row').remove();
+        reindexPopularCheckboxes();
+    }
+
+    function reindexPopularCheckboxes() {
+        document.querySelectorAll('#pricing-list .pricing-row').forEach((row, i) => {
+            const cb = row.querySelector('.popular-check');
+            if (cb) cb.value = i;
+        });
+    }
+
+    // ── Availability toggle ────────────────────────────────────────────────
+    function toggleDay(dayCode, enabled) {
+        const row   = document.getElementById('avail-row-' + dayCode);
+        const times = document.getElementById('avail-times-' + dayCode);
+        const label = row.querySelector('span');
+        times.querySelectorAll('input[type="time"]').forEach(inp => inp.disabled = !enabled);
+        if (enabled) {
+            row.classList.replace('bg-surface-container-low', 'bg-blue-50');
+            row.classList.replace('border-outline-variant/20', 'border-blue-200');
+            times.classList.remove('opacity-40');
+            label.classList.replace('text-on-surface-variant', 'text-primary');
+        } else {
+            row.classList.replace('bg-blue-50', 'bg-surface-container-low');
+            row.classList.replace('border-blue-200', 'border-outline-variant/20');
+            times.classList.add('opacity-40');
+            label.classList.replace('text-primary', 'text-on-surface-variant');
+        }
     }
 
     // ── Profile image preview ──────────────────────────────────────────────

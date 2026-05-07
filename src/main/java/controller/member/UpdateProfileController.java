@@ -35,7 +35,7 @@ public class UpdateProfileController extends HttpServlet {
         String password = req.getParameter("password");
 
         // 🔥 파일 처리
-        Part filePart = req.getPart("profileImage");
+        Part filePart = req.getPart("profile_image");
 
         String fileName = null;
 
@@ -50,7 +50,7 @@ public class UpdateProfileController extends HttpServlet {
 
             filePart.write(uploadPath + File.separator + fileName);
 
-            loginUser.setProfileImg(fileName);
+            loginUser.setProfileImage(fileName);
         }
 
         // 🔥 텍스트 값

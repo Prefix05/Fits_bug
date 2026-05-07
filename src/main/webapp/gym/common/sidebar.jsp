@@ -86,7 +86,7 @@
 
 					</a>
 					 
-					 <a href="${contextPath}/gym/main"
+					 <a href="${contextPath}/gym/infoEdit"
    					    class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 
     					<span class="text-sm">정보수정</span>

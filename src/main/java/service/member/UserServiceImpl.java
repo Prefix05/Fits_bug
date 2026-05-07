@@ -2,44 +2,43 @@ package service.member;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import dao.gym.GymMainDao;
 import dao.gym.GymMainDaoImpl;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
+import dao.trainer.TrainerDAO;
+import dao.trainer.TrainerDAOImpl;
 import dto.gym.Gym;
+import dto.member.MemberDTO;
 import dto.member.UserDTO;
+import dto.trainer.TrainerDTO;
+import util.MybatisSqlSessionFactory;
 
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO = new UserDAOImpl();
     private GymMainDao gymMainDAO = new GymMainDaoImpl();
+    private MemberDAO memberDAO = new MemberDAOImpl();
+    private TrainerDAO trainerDAO = new TrainerDAOImpl();
 
-    // ─── 일반 회원가입 ───────────────────────────────────────────
     @Override
     public int register(UserDTO dto) {
-        // 이메일 중복 체크
-        if (userDAO.isEmailExists(dto.getEmail())) {
-            return 0;
-        }
-        // role 기본값 설정
-        if (dto.getRole() == null || dto.getRole().isEmpty()) {
-            dto.setRole("MEMBER");
-        }
+        if (userDAO.isEmailExists(dto.getEmail())) return 0;
+        if (dto.getRole() == null || dto.getRole().isEmpty()) dto.setRole("MEMBER");
         return userDAO.insert(dto);
     }
 
-    // ─── 소셜 회원가입 ───────────────────────────────────────────
     @Override
     public int registerSocial(UserDTO dto) {
-        // 이미 가입된 소셜 계정이면 skip
-        if (userDAO.findByEmail(dto.getEmail()) != null) {
-            return 0;
-        }
+        if (userDAO.findByEmail(dto.getEmail()) != null) return 0;
         dto.setRole("MEMBER");
         return userDAO.insertSocial(dto);
     }
 
-    // ─── 로그인 ──────────────────────────────────────────────────
     @Override
     public UserDTO login(String email, String password) throws Exception {
         UserDTO user = userDAO.findByEmailAndPassword(email, password);
@@ -48,46 +47,40 @@ public class UserServiceImpl implements UserService {
         	if(role.equals("GYM")) {
         		Gym gym = gymMainDAO.selectGymByUserId(user.getId());
         		user.setOtherId(gym.getId()); // gymId  userDTO에 추가
+        	} else if (role.equals("MEMBER")) {
+        		MemberDTO member = memberDAO.selectMemberByUserId(user.getId());
+        		user.setOtherId(member.getId()); // memberId userDTO에 추가
+        	} else if(role.equals("TRAINER")) {               
+                try(SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+                	TrainerDTO trainer = trainerDAO.findByUserId(session, user.getId());
+                	user.setOtherId(trainer.getTrainerId());	
+                } 
         	}
             return user;
         }
         return null;
     }
 
-    // ─── 이메일 중복 체크 ─────────────────────────────────────────
     @Override
     public boolean isEmailExists(String email) {
         if (email == null || email.trim().isEmpty()) return false;
         return userDAO.isEmailExists(email);
     }
 
-    // ─── 이메일로 조회 ───────────────────────────────────────────
     @Override
-    public UserDTO findByEmail(String email) {
-        return userDAO.findByEmail(email);
-    }
+    public UserDTO findByEmail(String email) { return userDAO.findByEmail(email); }
 
-    // ─── 전체 조회 ───────────────────────────────────────────────
     @Override
-    public List<UserDTO> findAll() {
-        return userDAO.findAll();
-    }
+    public List<UserDTO> findAll() { return userDAO.findAll(); }
 
-    // ─── 정보 수정 ───────────────────────────────────────────────
     @Override
-    public int update(UserDTO dto) {
-        return userDAO.update(dto);
-    }
+    public int update(UserDTO dto) { return userDAO.update(dto); }
 
-    // ─── 비밀번호 변경 ────────────────────────────────────────────
     @Override
     public int updatePassword(String email, String password) {
         return userDAO.updatePassword(email, password);
     }
 
-    // ─── 탈퇴 ────────────────────────────────────────────────────
     @Override
-    public int delete(int id) {
-        return userDAO.delete(id);
-    }
+    public int delete(int id) { return userDAO.delete(id); }
 }

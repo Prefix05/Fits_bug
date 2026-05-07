@@ -20,7 +20,7 @@ import javax.servlet.http.Part;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
-import dto.trainer.UserDTO;
+import dto.member.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
@@ -51,30 +51,16 @@ public class GymInfoUpdate extends HttpServlet {
 
 		try {
 			HttpSession session = request.getSession();
-			UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/member/login");
+                return;
+            }
 
-			if (loginUser == null) {
-				response.sendRedirect(request.getContextPath() + "/member/login");
-				return;
-			}
+            Integer gymId = user.getOtherId();
 			
-	        UserDTO user = new UserDTO();
-	        user.setId(loginUser.getId());
-	        user.setEmail(request.getParameter("emailId"));
-	        user.setName(request.getParameter("userName"));
-	        user.setPassword(request.getParameter("newPassword"));
-
 			GymInfoEditService service = new GymInfoEditServiceImpl();
-
-			Integer gymId = Integer.parseInt(request.getParameter("gymId"));		
-			Gym gym = new Gym();
-			gym.setId(gymId);
-			gym.setName(request.getParameter("gymName"));
-			gym.setPhoneNum(request.getParameter("phoneNum"));
-			gym.setDescription(request.getParameter("description"));
-			gym.setAddress(request.getParameter("address"));
-			gym.setAddressDetail(request.getParameter("addressDetail"));
-			gym.setPostcode(request.getParameter("postcode"));
+			Gym gym = service.selectGymMypage(gymId);
 
 			// 시설
 			String[] facilities = request.getParameterValues("facility");

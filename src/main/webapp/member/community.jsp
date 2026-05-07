@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="dto.member.MemberDTO" %>
+<%@ page import="dto.member.UserDTO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-  MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+  UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
   String nickname = (loginUser != null) ? loginUser.getNickname() : "";
 %>
 <!DOCTYPE html>
@@ -99,24 +99,37 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </div>
   </div>
 
-  <!-- 오운완 스트릭 카드 -->
+  <!-- 오운완 스트릭 카드 (DB 기반 - CompleteController에서 weekLog/streak/best attribute 제공) -->
+  <%
+    int[] weekLog = (int[]) request.getAttribute("weekLog");   // 7칸 배열 (0=월~6=일)
+    int streak    = request.getAttribute("streak") != null ? (int) request.getAttribute("streak") : 0;
+    int best      = request.getAttribute("best")   != null ? (int) request.getAttribute("best")   : 0;
+    if (weekLog == null) weekLog = new int[7];
+    int remaining = Math.max(0, 7 - streak);
+  %>
   <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
     <div style="display:flex;align-items:center;gap:18px;">
       <div style="width:52px;height:52px;background:linear-gradient(135deg,#FFF3EE,#FFE5D5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">🔥</div>
       <div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-size:17px;font-weight:900;color:#FF6B35;">5일 연속 오운완!</span>
-          <span style="font-size:12px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">최고 기록: 14일</span>
+          <span style="font-size:17px;font-weight:900;color:#FF6B35;">
+            <%=streak%>일 연속 오운완!
+          </span>
+          <span style="font-size:12px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">
+            최고 기록: <%=best%>일
+          </span>
         </div>
         <div style="display:flex;gap:10px;margin-top:12px;">
-          <% String[] daysKR = {"월","화","수","목","금","토","일"};
-             boolean[] done  = {true,true,true,true,true,false,false};
-             for(int i=0;i<7;i++){ %>
+          <%
+            String[] daysKR = {"월","화","수","목","금","토","일"};
+            for (int i = 0; i < 7; i++) {
+              boolean done = weekLog[i] > 0;
+          %>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div class="streak-dot <%= done[i] ? "done" : "empty" %>">
-              <%= done[i] ? "✔" : "" %>
+            <div class="streak-dot <%=done ? "done" : "empty"%>">
+              <%=done ? "✔" : ""%>
             </div>
-            <span style="font-size:10px;color:#9DA8C0;font-weight:600;"><%= daysKR[i] %></span>
+            <span style="font-size:10px;color:#9DA8C0;font-weight:600;"><%=daysKR[i]%></span>
           </div>
           <% } %>
         </div>
@@ -124,7 +137,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </div>
     <div style="text-align:right;">
       <div style="font-size:13px;color:#9DA8C0;">이번주 목표까지</div>
-      <div style="font-size:20px;font-weight:900;color:#FF6B35;margin-top:2px;">2일 남음</div>
+      <div style="font-size:20px;font-weight:900;color:#FF6B35;margin-top:2px;"><%=remaining%>일 남음</div>
     </div>
   </div>
 
@@ -208,7 +221,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </c:if>
     <div style="padding:18px;">
       <h3 style="font-size:15px;font-weight:800;color:#1A1F36;margin-bottom:6px;">${post.title}</h3>
-      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.content}</p>
+      <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.body}</p>
       <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
       <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
         <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">${post.likeCount}</span></button>
@@ -308,27 +321,27 @@ function filterPost(type, el) {
 }
 
 // 댓글 토글
-function toggleComment(btn, postId) {
+function toggleComment(btn, postNum) {
   const article = btn.closest('article');
   const box = article.querySelector('.comment-box');
   const isHidden = box.style.display === 'none';
   box.style.display = isHidden ? 'block' : 'none';
-  if (isHidden) loadComments(postId);
+  if (isHidden) loadComments(postNum);
 }
 
 // 댓글 로드
-function loadComments(postId) {
-  fetch('commentList?postId=' + postId)
+function loadComments(postNum) {
+  fetch('commentList?postNum=' + postNum)
     .then(res => res.json())
     .then(list => {
-      const box = document.getElementById('commentList-' + postId);
+      const box = document.getElementById('commentList-' + postNum);
       if (!box) return;
       box.innerHTML = list.map(c => `
         <div style="display:flex;gap:10px;align-items:flex-start;">
           <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${c.userEmail}" style="width:30px;height:30px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;">
           <div style="background:white;border:1.5px solid #E8EDF5;border-radius:12px;padding:8px 14px;flex:1;">
             <div style="font-weight:700;font-size:12px;color:#1A1F36;">${c.userEmail}</div>
-            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.content}</div>
+            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.body}</div>
           </div>
         </div>
       `).join('');
@@ -336,29 +349,29 @@ function loadComments(postId) {
 }
 
 // 댓글 작성
-function writeComment(postId) {
-  const input = document.getElementById('commentInput-' + postId);
+function writeComment(postNum) {
+  const input = document.getElementById('commentInput-' + postNum);
   const content = input.value.trim();
   if (!content) return;
   fetch('comment', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'postId=' + postId + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
+    body: 'postNum=' + postNum + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
   }).then(res => res.text()).then(result => {
-    if (result === 'ok') { input.value = ''; loadComments(postId); }
+    if (result === 'ok') { input.value = ''; loadComments(postNum); }
   });
 }
 
 // 리액션
-function react(btn, postId, type) {
+function react(btn, postNum, type) {
   if (btn.disabled) return;
   fetch('reaction', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'postId=' + postId + '&type=' + type
+    body: 'postNum=' + postNum + '&type=' + type
   }).then(res => res.text()).then(result => {
     if (result === 'ok') {
-      const span = document.getElementById(type + '-' + postId);
+      const span = document.getElementById(type + '-' + postNum);
       if (span) span.innerText = parseInt(span.innerText) + 1;
       btn.disabled = true;
       btn.classList.add('reacted');
@@ -373,9 +386,9 @@ function react(btn, postId, type) {
 }
 
 // 신고 모달
-function openReportModal(postId) {
+function openReportModal(postNum) {
   const m = document.getElementById('reportModal');
-  if (m) { m.style.display = 'flex'; document.getElementById('reportPostId').value = postId; }
+  if (m) { m.style.display = 'flex'; document.getElementById('reportPostNum').value = postNum; }
 }
 function closeModal() {
   const m = document.getElementById('reportModal');

@@ -4,11 +4,6 @@
 
 <mapper namespace="mapper.MemberMapper">
 
-    <!--
-        MEMBER 테이블 전체 컬럼 resultMap
-        ✅ WorkoutPlanDTO 통합: height, weight, diet, exerciseCount_goal
-           + goals(=goal), experience, purpose, level, frequency 포함
-    -->
     <resultMap id="memberResultMap" type="dto.member.MemberDTO">
         <id     property="id"                column="id"/>
         <result property="userId"            column="user_id"/>
@@ -27,7 +22,6 @@
         <result property="goals"             column="goals"/>
         <result property="nextSession"       column="next_session"/>
         <result property="lessonCount"       column="lesson_count"/>
-        <result property="totalLessons"      column="total_lessons"/>
         <result property="lastSession"       column="last_session"/>
         <result property="status"            column="STATUS"/>
         <result property="age"               column="age"/>
@@ -38,7 +32,7 @@
                extends="memberResultMap">
         <result property="email"         column="email"/>
         <result property="nickname"      column="nickname"/>
-        <result property="profileImg"    column="profileImg"/>
+        <result property="profile_image"    column="profile_image"/>
         <result property="role"          column="role"/>
         <result property="emailVerified" column="email_verified"/>
         <result property="socialType"    column="provider"/>
@@ -51,7 +45,7 @@
                height, weight, diet, exerciseCount_goal,
                address, latitude, longitude,
                NAME, goals, next_session,
-               lesson_count, total_lessons,
+               lesson_count,
                last_session, STATUS, age
         FROM MEMBER
         WHERE id = #{id}
@@ -64,7 +58,7 @@
                height, weight, diet, exerciseCount_goal,
                address, latitude, longitude,
                NAME, goals, next_session,
-               lesson_count, total_lessons,
+               lesson_count,
                last_session, STATUS, age
         FROM MEMBER
         WHERE user_id = #{userId}
@@ -78,7 +72,7 @@
             m.height, m.weight, m.diet, m.exerciseCount_goal,
             m.address, m.latitude, m.longitude,
             m.NAME, m.goals, m.next_session,
-            m.lesson_count, m.total_lessons,
+            m.lesson_count,
             m.last_session, m.STATUS, m.age,
             u.email, u.nickname, u.profile_image,
             u.role, u.email_verified, u.provider
@@ -104,16 +98,13 @@
                height, weight, diet, exerciseCount_goal,
                address, latitude, longitude,
                NAME, goals, next_session,
-               lesson_count, total_lessons,
+               lesson_count,
                last_session, STATUS, age
         FROM MEMBER
         ORDER BY id DESC
     </select>
 
-    <!--
-        MEMBER INSERT (회원가입 step3 완료 시)
-        ✅ height, weight, diet, exerciseCount_goal, goals 포함
-    -->
+    <!-- MEMBER INSERT (회원가입 step3 완료 시) -->
     <insert id="insertMember" parameterType="dto.member.MemberDTO">
         INSERT INTO MEMBER (
             user_id, trainer_id, gym_id,
@@ -121,7 +112,7 @@
             height, weight, diet, exerciseCount_goal,
             address, latitude, longitude,
             NAME, goals, next_session,
-            lesson_count, total_lessons,
+            lesson_count,
             last_session, STATUS, age
         ) VALUES (
             #{userId}, #{trainerId}, #{gymId},
@@ -129,15 +120,12 @@
             #{height}, #{weight}, #{diet}, #{exerciseCountGoal},
             #{address}, #{latitude}, #{longitude},
             #{name}, #{goals}, #{nextSession},
-            #{lessonCount}, #{totalLessons},
+            #{lessonCount},
             #{lastSession}, #{status}, #{age}
         )
     </insert>
 
-    <!--
-        MEMBER 수정 (마이페이지, 운동계획 수정 통합)
-        ✅ WorkoutPlan 수정도 여기서 처리 (height, weight, diet, goals, experience)
-    -->
+    <!-- MEMBER 수정 (마이페이지, 운동계획 수정 통합) -->
     <update id="update" parameterType="dto.member.MemberDTO">
         UPDATE MEMBER SET
             trainer_id         = #{trainerId},
@@ -155,17 +143,13 @@
             goals              = #{goals},
             next_session       = #{nextSession},
             lesson_count       = #{lessonCount},
-            total_lessons      = #{totalLessons},
             last_session       = #{lastSession},
             STATUS             = #{status},
             age                = #{age}
         WHERE id = #{id}
     </update>
 
-    <!--
-        운동 계획만 부분 수정 (UpdatePlanController 용)
-        ✅ WorkoutPlanMapper.update 대체
-    -->
+    <!-- 운동 계획만 부분 수정 (UpdatePlanController 용) -->
     <update id="updatePlan" parameterType="dto.member.MemberDTO">
         UPDATE MEMBER m
         JOIN USER u ON m.user_id = u.id
@@ -182,8 +166,23 @@
 
     <!-- 프로필 이미지 업데이트 -->
     <update id="updateProfileImage" parameterType="dto.member.UserDTO">
-        UPDATE USER SET profile_image = #{profileImg}
+        UPDATE USER SET profile_image = #{profile_image}
         WHERE id = #{id}
+    </update>
+
+    <!-- PT 결제 후: trainer_id 설정 + lesson_count 증가 -->
+    <update id="updateTrainerAndLessons" parameterType="map">
+        UPDATE MEMBER
+        SET trainer_id   = #{trainerId},
+            lesson_count = lesson_count + #{sessionCount}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 예약 후: lesson_count 차감 -->
+    <update id="decrementLessonCount" parameterType="int">
+        UPDATE MEMBER
+        SET lesson_count = lesson_count - 1
+        WHERE id = #{value}
     </update>
 
     <!-- MEMBER 삭제 -->
@@ -199,7 +198,7 @@
             m.height, m.weight, m.diet, m.exerciseCount_goal,
             m.address, m.latitude, m.longitude,
             m.NAME, m.goals, m.next_session,
-            m.lesson_count, m.total_lessons,
+            m.lesson_count,
             m.last_session, m.STATUS, m.age,
             u.email, u.nickname, u.profile_image, u.role
         FROM MEMBER m
@@ -214,7 +213,7 @@
         SELECT
             m.id, m.user_id, m.trainer_id, m.gym_id,
             m.NAME, m.goals, m.next_session,
-            m.lesson_count, m.total_lessons,
+            m.lesson_count,
             m.last_session, m.STATUS, m.age,
             u.email, u.nickname, u.profile_image, u.role
         FROM MEMBER m
@@ -222,6 +221,10 @@
         WHERE m.gym_id = #{gymId}
           AND u.is_deleted = 0
         ORDER BY m.id DESC
+    </select>
+    
+    <select id="selectMemberByUserId" parameterType="Integer" resultType="MemberDTO">
+    	select * from member where user_id=#{userId}
     </select>
 
 </mapper>

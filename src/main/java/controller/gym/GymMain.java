@@ -47,17 +47,9 @@ public class GymMain extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
-			HttpSession session = request.getSession();
-			UserDTO user = (UserDTO)session.getAttribute("loginUser");
-            if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/member/login");
-                return;
-            }
 
-            Integer gymId = user.getOtherId();
+            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
 			
-
-
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 

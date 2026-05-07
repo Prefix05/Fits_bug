@@ -46,7 +46,10 @@ public class Clients extends HttpServlet {
             String filter = request.getParameter("filter");
             if (filter == null || filter.isEmpty()) filter = "all";
 
-            int totalClients = clientService.getClientCount(filter, trainerId);
+            String search = request.getParameter("search");
+            if (search == null) search = "";
+
+            int totalClients = clientService.getClientCount(filter, search, trainerId);
             int totalPages = (int) Math.ceil((double) totalClients / DEFAULT_PAGE_SIZE);
 
             if (currentPage < 1) currentPage = 1;
@@ -55,12 +58,13 @@ public class Clients extends HttpServlet {
             int offset = (currentPage - 1) * DEFAULT_PAGE_SIZE;
 
             List<ClientDTO> clients =
-                    clientService.getClients(offset, DEFAULT_PAGE_SIZE, filter, trainerId);
+                    clientService.getClients(offset, DEFAULT_PAGE_SIZE, filter, search, trainerId);
 
             request.setAttribute("clients", clients);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentFilter", filter);
+            request.setAttribute("currentSearch", search);
 
             request.getRequestDispatcher("/trainer/clients.jsp").forward(request, response);
 

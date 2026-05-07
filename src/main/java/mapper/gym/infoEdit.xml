@@ -23,7 +23,7 @@
         g.br_file AS brFile,
         u.email AS emailId,
         u.name AS userName,
-        u.tel,
+        u.phone,
         u.profile_image AS profileImg
     FROM GYM g
     JOIN `USER` u ON g.user_id = u.id

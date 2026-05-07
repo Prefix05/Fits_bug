@@ -4,9 +4,9 @@ import java.sql.Timestamp;
 
 public class CommentDTO {
 	private int id;
-    private int postId;
-    private String nickname;
-    private String content;
+    private int postNum;
+    private String userId;
+    private String body;
     private Timestamp createdAt;
     
 	public CommentDTO() {
@@ -14,12 +14,12 @@ public class CommentDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CommentDTO(int id, int postId, String nickname, String content, Timestamp createdAt) {
+	public CommentDTO(int id, int postNum, String userId, String body, Timestamp createdAt) {
 		super();
 		this.id = id;
-		this.postId = postId;
-		this.nickname = nickname;
-		this.content = content;
+		this.postNum = postNum;
+		this.userId = userId;
+		this.body = body;
 		this.createdAt = createdAt;
 	}
 
@@ -31,28 +31,28 @@ public class CommentDTO {
 		this.id = id;
 	}
 
-	public int getPostId() {
-		return postId;
+	public int getPostNum() {
+		return postNum;
 	}
 
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPostNum(int postNum) {
+		this.postNum = postNum;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getContent() {
-		return content;
+	public String getBody() {
+		return body;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public Timestamp getCreatedAt() {

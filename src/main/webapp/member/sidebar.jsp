@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.member.MemberDTO"%>
+<%@ page import="dto.member.UserDTO"%>
 <%
     String contextPath = request.getContextPath();
-    MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 %>
 
 <!-- 핏불 사이드바 -->
@@ -16,7 +16,7 @@
 ">
 
   <!-- 로고 -->
-  <a href="<%=contextPath%>/main" style="
+  <a href="<%=contextPath%>/member/main" style="
     display:flex;align-items:center;gap:10px;
     margin-bottom:22px;padding:0 6px;text-decoration:none;
   ">
@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
+    <img src="<%= loginUser.getProfile_image() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfile_image() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -86,9 +86,12 @@
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
-      <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
-    </button>
+    <form action="<%=contextPath%>/member/logout" method="post">
+      <button type="submit" class="sb-btn-main">
+        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+        로그아웃
+      </button>
+    </form>
     <% } else { %>
     <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인

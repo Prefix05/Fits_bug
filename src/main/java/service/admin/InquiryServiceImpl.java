@@ -6,13 +6,17 @@ import java.util.Map;
 
 import dao.admin.InquiryDAO;
 import dao.admin.InquiryDAOImpl;
+import dao.admin.ReportDAO;
+import dao.admin.ReportDAOImpl;
 import dto.admin.InquiryDTO;
 
 public class InquiryServiceImpl implements InquiryService {
 
 	private InquiryDAO inquiryDAO;
+	private ReportDAO reportDAO;
 	public InquiryServiceImpl() {
 		inquiryDAO = new InquiryDAOImpl();
+		reportDAO = new ReportDAOImpl();
 	}
 	
 	@Override
@@ -36,6 +40,16 @@ public class InquiryServiceImpl implements InquiryService {
         // 2. 결과값이 0보다 크면(성공) true, 아니면 false 반환
         // 만약 여기서 알림 발송 로직이 추가된다면 result > 0 일 때 실행하면 됩니다.
         return result > 0;
+	}
+
+	@Override
+	public Integer totalCnt() throws Exception {
+		return inquiryDAO.selectInquiryCnt() + reportDAO.selectReportCnt();
+	}
+
+	@Override
+	public Integer inquiryCnt() throws Exception {
+		return inquiryDAO.selectInquiryCnt();
 	}
 
 }

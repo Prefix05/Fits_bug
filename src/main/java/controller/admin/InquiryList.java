@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import dto.admin.InquiryDTO;
 import service.admin.InquiryService;
 import service.admin.InquiryServiceImpl;
+import service.admin.ReportService;
+import service.admin.ReportServiceImpl;
 
 /**
  * Servlet implementation class InquiryList
@@ -20,6 +22,7 @@ import service.admin.InquiryServiceImpl;
 public class InquiryList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private InquiryService inquiryService = new InquiryServiceImpl();
+	private ReportService reportService = new ReportServiceImpl();
     
     public InquiryList() {
         super();
@@ -50,9 +53,14 @@ public class InquiryList extends HttpServlet {
 	                String keyword = request.getParameter("keyword");
 
 	                List<InquiryDTO> list = inquiryService.getInquiryList(status, keyword);
-
+	                int totalCount = inquiryService.totalCnt();
+	                int inquiryCount = inquiryService.inquiryCnt();
+	                int reportCount = reportService.reportCnt();
 	                request.setAttribute("inquiryList", list);
 	                request.setAttribute("currentStatus", status); 
+	                request.setAttribute("totalCount", totalCount);
+	                request.setAttribute("inquiryCount", inquiryCount);
+	                request.setAttribute("reportCount", reportCount);
 	                request.getRequestDispatcher("/admin/inquiry.jsp").forward(request, response);
 	            }
 	        } catch (Exception e) {

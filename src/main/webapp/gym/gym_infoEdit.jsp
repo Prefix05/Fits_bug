@@ -122,7 +122,7 @@ tailwind.config = {
                                    name="emailId"
                                    class="flex-1 bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                    type="email"
-                                   value="${gym.emailId}"
+                                   value="${user.email}"
                                    placeholder="example@email.com"/>
 
                             <button type="button"
@@ -157,7 +157,7 @@ tailwind.config = {
                         <input name="userName"
                                class="w-full bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                type="text"
-                               value="${gym.userName}"/>
+                               value="${user.name}"/>
                     </div>
 
                     <div>
@@ -165,7 +165,7 @@ tailwind.config = {
                         <input name="tel"
                                class="w-full bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                type="tel"
-                               value="${gym.tel}"
+                               value="${user.phone}"
                                placeholder="010-0000-0000"/>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ tailwind.config = {
                         <div class="relative">
                             <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm">
                                 <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
+                                     src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}"
  									 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                             </div>
                             <button type="button" onclick="openModal('profileModal')"
@@ -202,7 +202,7 @@ tailwind.config = {
                         <div class="relative">
                             <div class="w-20 h-14 rounded overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm bg-slate-200">
                                 <img class="w-full h-full object-cover"
-     								 src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+     								 src="${pageContext.request.contextPath}/trainer/profile-img/${gym.backgroundImg}"
  									 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                             </div>
                             <button type="button" onclick="openModal('backgroundModal')"
@@ -225,7 +225,7 @@ tailwind.config = {
                         <c:if test="${not empty img}">
                             <div class="aspect-square rounded overflow-hidden bg-slate-100 relative">
                                 <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}">
+                                     src="${pageContext.request.contextPath}/trainer/profile-img/${img}">
                             </div>
                         </c:if>
                     </c:forEach>
@@ -488,7 +488,7 @@ tailwind.config = {
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container shadow">
                     <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
+                         src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}"
 						 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                 </div>
                 <p class="mt-3 text-sm text-on-surface-variant">현재 등록된 로고</p>

@@ -164,11 +164,11 @@
 <!-- Main Content Area -->
 <main class="ml-64 min-h-screen">
 <!-- Page Canvas -->
-<div class="pt-24 px-10 pb-10 max-w-7xl">
+<div class="pt-10 px-10 pb-10 max-w-7xl">
 <!-- Header Section -->
 <div class="flex justify-between items-end mb-8">
 <div>
-<h2 class="text-2xl font-semibold font-headline tracking-tight text-on-surface">회원관리</h2>
+<h2 class="text-2xl font-semibold font-headline tracking-tight text-on-surface">회원 자격승인</h2>
 <p class="text-on-surface-variant mt-1">신규 가입 회원의 정보를 검토하고 승인 프로세스를 진행합니다.</p>
 </div>
 </div>

@@ -7,5 +7,5 @@ import dto.member.CommentDTO;
 public interface CommentDAO {
     void insert(CommentDTO dto);
 
-    List<CommentDTO> findByPostId(int postId);
+    List<CommentDTO> findByPostNum(int postNum);
 }

@@ -1,142 +1,123 @@
 package controller.member;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-import dto.member.MemberDTO;
+import dao.member.MemberDAO;
+import dao.member.MemberDAOImpl;
+import dao.member.WorkoutLogDAO;
+import dao.member.WorkoutLogDAOImpl;
+import dto.member.UserDTO;
 import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
-import service.member.WorkoutRecordService;
-import service.member.WorkoutRecordServiceImpl;
+import service.member.WorkoutLogService;
+import service.member.WorkoutLogServiceImpl;
 
-@WebServlet("/member/records")
+@WebServlet("/member/workout")
 public class WorkoutRecordController extends HttpServlet {
 
-    private WorkoutRecordService service = new WorkoutRecordServiceImpl();
+    private WorkoutLogService service = new WorkoutLogServiceImpl();
+    private WorkoutLogDAO     logDao  = new WorkoutLogDAOImpl();
+    private MemberDAO         memberDao = new MemberDAOImpl();
 
-    // =========================
-    // 조회 (JSON)
-    // =========================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
+        if (user == null) { response.setStatus(401); return; }
 
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
 
-        List<WorkoutLogDTO> list = service.getRecords(user.getEmail());
+        // ✅ 오늘 날짜 기록만 조회 (findTodayByMemberId)
+        List<WorkoutLogDTO> list = logDao.findTodayByMemberId(memberId);
+        if (list == null) list = new ArrayList<>();
 
         response.setContentType("application/json;charset=UTF-8");
-
-        StringBuilder json = new StringBuilder();
-        json.append("[");
-
-        for (int i = 0; i < list.size(); i++) {
-
-            WorkoutLogDTO log = list.get(i);
-
-            json.append("{");
-            json.append("\"date\":\"").append(log.getDate()).append("\",");
-            json.append("\"startTime\":\"").append(log.getStartTime()).append("\",");
-            json.append("\"endTime\":\"").append(log.getEndTime()).append("\",");
-
-            json.append("\"details\":[");
-
-            List<WorkoutDetailDTO> details = log.getDetails();
-
-            if (details != null) {
-                for (int j = 0; j < details.size(); j++) {
-
-                    WorkoutDetailDTO d = details.get(j);
-
-                    json.append("{");
-                    json.append("\"title\":\"").append(d.getTitle()).append("\",");
-                    json.append("\"set\":").append(d.getSet()).append(",");
-                    json.append("\"rep\":").append(d.getRep()).append(",");
-                    json.append("\"weight\":").append(d.getWeight());
-                    json.append("}");
-
-                    if (j != details.size() - 1) {
-                        json.append(",");
-                    }
-                }
-            }
-
-            json.append("]}");
-
-            if (i != list.size() - 1) {
-                json.append(",");
+        StringBuilder json = new StringBuilder("[");
+        int idx = 0;
+        for (WorkoutLogDTO log : list) {
+            if (log.getDetails() == null) continue;
+            for (WorkoutDetailDTO d : log.getDetails()) {
+                if (idx > 0) json.append(",");
+                json.append("{")
+                    .append("\"title\":\"").append(esc(d.getTitle())).append("\",")
+                    .append("\"weight\":").append(d.getWeight()).append(",")
+                    .append("\"rep\":").append(d.getRep()).append(",")
+                    .append("\"set\":").append(d.getSet())
+                    .append("}");
+                idx++;
             }
         }
-
         json.append("]");
-
         response.getWriter().write(json.toString());
     }
 
-    // =========================
-    // 저장
-    // =========================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
-        MemberDTO user = (MemberDTO) request.getSession().getAttribute("loginUser");
+        request.setCharacterEncoding("UTF-8");
 
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+        UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
+        if (user == null) { response.setStatus(401); return; }
+
+        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
+
+        // ── WORKOUT_LOG 구성 ─────────────────────────────────
+        WorkoutLogDTO dto = new WorkoutLogDTO();
+        dto.setMemberId(memberId);
+        dto.setDate(LocalDate.now());                         
+
+        String startStr = request.getParameter("startTime");
+        String endStr   = request.getParameter("endTime");
+        if (startStr != null && !startStr.isEmpty())
+            dto.setStartTime(LocalTime.parse(startStr));
+        if (endStr   != null && !endStr.isEmpty())
+            dto.setEndTime(LocalTime.parse(endStr));
+
+        String title  = request.getParameter("name");    // 운동명
+        String wtStr  = request.getParameter("weight");  // 무게
+        String rpStr  = request.getParameter("reps");    // 횟수
+        String setStr = request.getParameter("sets");    // 세트 (기본 1)
+
+        double weight = 0;
+        int    reps   = 0;
+        int    sets   = 1;
+        try { weight = Double.parseDouble(wtStr); }  catch (Exception ignored) {}
+        try { reps   = Integer.parseInt(rpStr);   }  catch (Exception ignored) {}
+        try { sets   = Integer.parseInt(setStr);  }  catch (Exception ignored) {}
+
+        if (title != null && !title.trim().isEmpty()) {
+            WorkoutDetailDTO detail = new WorkoutDetailDTO();
+            detail.setTitle(title.trim());
+            detail.setWeight(weight);
+            detail.setRep(reps);
+            detail.setSet(sets);
+
+            List<WorkoutDetailDTO> details = new ArrayList<>();
+            details.add(detail);
+            dto.setDetails(details);
         }
 
-        // ===== WorkoutLog 생성 =====
-        WorkoutLogDTO log = new WorkoutLogDTO();
+        int result = service.save(dto);
 
-        log.setMemberId(user.getId()); // email ❌ → id 사용 (정석)
-        log.setGymId(0); // 필요 시 세션/폼에서 받아오기
-        log.setSessionId(0);
-
-        // ===== Detail 생성 =====
-        WorkoutDetailDTO detail = new WorkoutDetailDTO();
-        detail.setTitle(request.getParameter("name"));
-        detail.setSet(parseIntSafe(request.getParameter("sets")));
-        detail.setRep(parseIntSafe(request.getParameter("reps")));
-        detail.setWeight(parseDoubleSafe(request.getParameter("weight")));
-
-        log.setDetails(List.of(detail));
-
-        // ===== 저장 =====
-        service.insertRecord(log);
-
-        response.setContentType("text/plain;charset=UTF-8");
-        response.getWriter().write("success");
+        response.setContentType("application/json;charset=UTF-8");
+        if (result > 0) {
+            response.getWriter().write("{\"success\":true,\"workoutId\":" + dto.getId() + "}");
+        } else {
+            response.getWriter().write("{\"success\":false}");
+        }
     }
 
-    // =========================
-    // 안전 파싱 (예외 방지)
-    // =========================
-    private int parseIntSafe(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    private double parseDoubleSafe(String value) {
-        try {
-            return Double.parseDouble(value);
-        } catch (Exception e) {
-            return 0.0;
-        }
+    private String esc(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }

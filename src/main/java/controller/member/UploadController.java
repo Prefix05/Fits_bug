@@ -31,10 +31,10 @@ public class UploadController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("loginUser");
 
-        user.setProfileImg(fileName);
+        user.setProfileImage(fileName);
 
         // DB 업데이트
-        new MyPageServiceImpl().updateProfileImg(user);
+        new MyPageServiceImpl().updateProfile_image(user);
 
         response.getWriter().write(fileName);
     }

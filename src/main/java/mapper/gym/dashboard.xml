@@ -20,7 +20,7 @@
         mu.name AS memberName,
         IFNULL(CONCAT('PT ', mem.type_rep, '회권'), 'PT 이용권 없음') AS membershipName,
         ps.status AS status
-    FROM PT_SESSION ps
+    FROM LESSON ps
     JOIN TRAINER t ON ps.trainer_id = t.id
     JOIN `USER` tu ON t.user_id = tu.id
     JOIN MEMBER mb ON ps.client_id = mb.id
