@@ -1,9 +1,11 @@
 package service.member;
 
+import java.util.List;
+import java.util.Map;
+
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
-import java.util.List;
 
 public class MemberServiceImpl implements MemberService {
 
@@ -13,7 +15,7 @@ public class MemberServiceImpl implements MemberService {
     public int insertMember(MemberDTO dto) { return memberDAO.insertMember(dto); }
 
     @Override
-    public MemberDTO findByEmail(String email) { return memberDAO.findByEmail(email); }
+    public Map<String,Object> findByEmail(String email) { return memberDAO.findByEmail(email); }
 
     @Override
     public MemberDTO findById(int id) { return memberDAO.findById(id); }
@@ -21,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO findByUserId(int userId) { return memberDAO.findByUserId(userId); }
 
-    @Override
-    public int findMemberIdByEmail(String email) { return memberDAO.findMemberIdByEmail(email); }
+//    @Override
+//    public int findMemberIdByEmail(String email) { return memberDAO.findMemberIdByEmail(email); }
 
     @Override
     public int update(MemberDTO dto) { return memberDAO.update(dto); }

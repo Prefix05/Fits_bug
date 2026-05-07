@@ -292,7 +292,7 @@ if(loginUser == null){
     <div style="background:white;border-radius:20px;padding:24px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
 
       <c:choose>
-      <c:when test="${sessionScope.memberInfo != null && sessionScope.memberInfo.trainerId != null && sessionScope.memberInfo.trainerId > 0}">
+      <c:when test="${memberInfo != null && memberInfo.trainer_id != null }">
 
         <!-- Header -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
@@ -323,7 +323,19 @@ if(loginUser == null){
         </div>
 
         <!-- Grid -->
-        <div id="scheduleGrid" style="overflow-x:auto;"></div>
+        <div id="scheduleGrid" style="overflow-x:auto;">
+        	<table border="1">
+        	<tr><td>멤버ID</td><td>요일</td><td>시작시간</td><td>끝시간</td></tr>
+        	<c:forEach items="${availList}" var="avail">
+        	<tr>
+        		<td>${avail.id }</td>
+        		<td>${avail.dayOfWeek }</td>
+        		<td>${avail.startTime }</td>
+        		<td>${avail.endTime }</td>
+        	</tr>
+        	</c:forEach>
+        	</table>
+        </div>
 
         <!-- Reserve area -->
         <div id="reserveArea" style="display:none;margin-top:16px;padding:14px 16px;background:#E8F8F6;border-radius:12px;border:1.5px solid rgba(0,191,165,0.3);">

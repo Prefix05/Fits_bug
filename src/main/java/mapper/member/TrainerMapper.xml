@@ -51,7 +51,7 @@
     </insert>
 
     <!-- TRAINER.id로 조회 -->
-    <select id="findById" parameterType="int" resultMap="trainerWithUserResultMap">
+    <select id="findById" parameterType="Integer" resultType="map">
         SELECT
             t.id, t.user_id, t.trainer_type, t.gym_id, t.gym_join_code,
             t.business_registration_num, t.br_file,
@@ -61,7 +61,7 @@
             u.name, u.nickname, u.email, u.profile_image AS profileImg
         FROM TRAINER t
         JOIN USER u ON t.user_id = u.id
-        WHERE t.id = #{id}
+        WHERE t.id = #{trainerId}
     </select>
 
     <!-- USER.email로 TRAINER 조회 -->

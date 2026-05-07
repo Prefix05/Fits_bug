@@ -4,7 +4,6 @@ public class PostDTO {
 
     private int id;
     private String userId;
-    private String category;
     private String title;
     private String body;
     private String image;
@@ -14,12 +13,11 @@ public class PostDTO {
     private int goodCount;
     private int muscleCount;
     
-	public PostDTO(int id, String userId, String category, String title, String body, String image, String hashtags,
-			String createdAt, int likeCount, int goodCount, int muscleCount) {
+	public PostDTO(int id, String userId, String title, String body, String image, String hashtags, String createdAt,
+			int likeCount, int goodCount, int muscleCount) {
 		super();
 		this.id = id;
 		this.userId = userId;
-		this.category = category;
 		this.title = title;
 		this.body = body;
 		this.image = image;
@@ -51,13 +49,6 @@ public class PostDTO {
 		this.userId = userId;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
 
 	public String getTitle() {
 		return title;
@@ -122,4 +113,13 @@ public class PostDTO {
 	public void setMuscleCount(int muscleCount) {
 		this.muscleCount = muscleCount;
 	}
+
+	@Override
+	public String toString() {
+		return "PostDTO [id=" + id + ", userId=" + userId + ", title=" + title + ", body=" + body + ", image=" + image
+				+ ", hashtags=" + hashtags + ", createdAt=" + createdAt + ", likeCount=" + likeCount + ", goodCount="
+				+ goodCount + ", muscleCount=" + muscleCount + "]";
+	}
+	
+	
 }

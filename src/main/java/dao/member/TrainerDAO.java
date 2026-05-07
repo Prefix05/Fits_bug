@@ -1,9 +1,11 @@
 package dao.member;
 
 import dto.member.TrainerDTO;
+import dto.trainer.AvailabilityDTO;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public interface TrainerDAO {
     // 기존 기능 (회원가입/트레이너 등록)
@@ -13,4 +15,6 @@ public interface TrainerDAO {
     List<TrainerDTO> getTrainerList(String keyword, String category, String sort);
     
     public TrainerDTO getTrainerDetail(int trainerId);
+    List<AvailabilityDTO> findAvailabilityByTrainerId(Integer trainerId);
+    Map<String,Object> findTrainerInfoById(Integer trainerId);
 }

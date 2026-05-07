@@ -33,7 +33,7 @@ public class WorkoutRecordController extends HttpServlet {
         UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
         if (user == null) { response.setStatus(401); return; }
 
-        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
+        int memberId = user.getOtherId();
 
         // ✅ 오늘 날짜 기록만 조회 (findTodayByMemberId)
         List<WorkoutLogDTO> list = logDao.findTodayByMemberId(memberId);
@@ -68,7 +68,7 @@ public class WorkoutRecordController extends HttpServlet {
         UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
         if (user == null) { response.setStatus(401); return; }
 
-        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
+        int memberId = user.getOtherId();
 
         // ── WORKOUT_LOG 구성 ─────────────────────────────────
         WorkoutLogDTO dto = new WorkoutLogDTO();

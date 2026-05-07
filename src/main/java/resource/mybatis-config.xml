@@ -113,8 +113,13 @@
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
         <mapper resource="mapper/member/LessonMapper.xml"/>
-
-
+		<mapper resource="mapper/member/TrainerMapper.xml"/>
+		<mapper resource="mapper/member/trainerListMapper.xml"/>
+		<mapper resource="mapper/member/TrainerPricingMapper.xml"/>
+		<mapper resource="mapper/member/TrainerSpecializationMapper.xml"/>
+		<mapper resource="mapper/member/TrainerTraitsMapper.xml"/>
+		<mapper resource="mapper/member/TrainerCertificationMapper.xml"/>
+		
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>

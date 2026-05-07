@@ -124,7 +124,7 @@ public class PaymentSuccessController extends HttpServlet {
             sql.commit();
 
             MemberDAO memberDao = new MemberDAOImpl();
-            MemberDTO freshMember = memberDao.findByEmail(user.getEmail());
+            Map<String,Object> freshMember = memberDao.findByEmail(user.getEmail());
             if (freshMember != null) {
                 session.setAttribute("memberInfo", freshMember);
             }

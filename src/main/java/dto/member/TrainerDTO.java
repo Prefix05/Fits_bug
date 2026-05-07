@@ -140,9 +140,18 @@ public class TrainerDTO {
     public int getMinPrice() { return minPrice; }
     public void setMinPrice(int minPrice) { this.minPrice = minPrice; }
 
-    @Override
-    public String toString() {
-        return "TrainerDTO{id=" + id + ", trainerType='" + trainerType
-                + "', approvalStatus='" + approvalStatus + "'}";
-    }
+	@Override
+	public String toString() {
+		return "TrainerDTO [id=" + id + ", userId=" + userId + ", trainerType=" + trainerType + ", gymId=" + gymId
+				+ ", gymJoinCode=" + gymJoinCode + ", businessRegistrationNum=" + businessRegistrationNum + ", brFile="
+				+ brFile + ", hasHomeGym=" + hasHomeGym + ", visitService=" + visitService + ", description="
+				+ description + ", address=" + address + ", addressDetail=" + addressDetail + ", postcode=" + postcode
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", approvalStatus=" + approvalStatus
+				+ ", createdAt=" + createdAt + ", isVerified=" + isVerified + ", name=" + name + ", nickname="
+				+ nickname + ", email=" + email + ", profileImg=" + profileImg + ", specialty=" + specialty
+				+ ", rating=" + rating + ", similarity=" + similarity + ", price10=" + price10 + ", price1=" + price1
+				+ ", career=" + career + ", minPrice=" + minPrice + "]";
+	}
+
+
 }
