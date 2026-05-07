@@ -19,12 +19,6 @@ public class GymReviewDelete extends HttpServlet {
         super();
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -37,10 +31,6 @@ public class GymReviewDelete extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
-
-			
-			
-//            int loginUserId = (Integer) session.getAttribute("userId");
             
             String reviewNumStr = request.getParameter("reviewNum");
 
