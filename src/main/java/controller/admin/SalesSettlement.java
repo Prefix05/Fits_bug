@@ -58,15 +58,25 @@ public class SalesSettlement extends HttpServlet {
             endDate = LocalDate.now().toString();
         }
         if (status == null) status = "정산대기"; // 기본 탭 설정
-
+        
+        String offsetParam = request.getParameter("offset");
+        int offset = (offsetParam != null && !offsetParam.isEmpty()) ? Integer.parseInt(offsetParam) : 0;
         // 2. 파라미터 맵 구성 (매퍼로 전달될 데이터)
         Map<String, Object> params = new HashMap<>();
         params.put("startDate", startDate);
         params.put("endDate", endDate);
         params.put("searchKeyword", searchKeyword);
         params.put("status", status);
-        params.put("limit", 10);  // 한 페이지에 보여줄 개수
-        params.put("offset", 0);  // 시작 위치
+        params.put("limit", 10);  
+        params.put("offset", offset); // JSP에서 넘긴 offset 반영
+        params.put("pageSize", 10);
+        params.put("salesPage", 1);   // 필요 시 request에서 받아오도록 확장 가능
+        params.put("paymentPage", 1); 
+        params.put("salesOffset", 0);    // selectSalesList용 (추가)
+
+        // (선택사항) viewType이나 salesSearch 등 매퍼에 정의된 다른 필터가 있다면 기본값 추가
+        params.put("viewType", request.getParameter("viewType")); 
+        params.put("salesSearch", request.getParameter("salesSearch"));
 
         // 3. 서비스 호출하여 통합 데이터 수신
         // (Service 내에 getDashboardData와 같은 통합 메서드를 만드는 것을 추천합니다)
@@ -87,7 +97,7 @@ public class SalesSettlement extends HttpServlet {
             
             // 사용자에게 보여줄 에러 메시지 저장
             request.setAttribute("errorMessage", "데이터를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-            
+             
             // 에러 발생 시에도 빈 데이터를 보내거나, 에러 전용 페이지로 보낼 수 있습니다.
             // 여기서는 기존 페이지로 보내되 메시지만 띄우는 방식을 선택합니다.
             request.getRequestDispatcher("/admin/salesSettlement.jsp").forward(request, response);

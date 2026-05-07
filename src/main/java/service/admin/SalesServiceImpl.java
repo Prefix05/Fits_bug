@@ -1,10 +1,12 @@
 package service.admin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import dao.admin.SalesDAO;
 import dao.admin.SalesDAOImpl;
+import dto.admin.SalesDTO;
 import util.PageInfo;
 
 public class SalesServiceImpl implements SalesService {
@@ -36,6 +38,17 @@ public class SalesServiceImpl implements SalesService {
 	public Map<String, Object> getDashboardData(Map<String, Object> paramMap) throws Exception {
 		Map<String, Object> data = new HashMap<>();
 
+		// 1. 파라미터 보정 (정산 목록용)
+	    // Controller에서 "limit", "offset"으로 보냈으므로 이를 그대로 사용하거나 기본값 설정
+	    int limit = parseMapInt(paramMap, "limit", 10);
+	    int offset = parseMapInt(paramMap, "offset", 0);
+	    paramMap.put("limit", limit);
+	    paramMap.put("offset", offset);
+
+	    // 2. [필수 추가] 정산 목록 조회 -> JSP의 ${data.settlementList}와 연동됨
+	    List<SalesDTO> settlementList = salesDAO.selectSettlementList(paramMap);
+	    data.put("settlementList", settlementList);
+	    
 	    // --- [에러 해결 포인트] 안전하게 숫자 꺼내기 ---
 	    // paramMap.get() 결과가 null이거나 타입이 다를 수 있으므로 Object로 받아서 처리
 	    int salesCurPage = parseMapInt(paramMap, "salesPage", 1);
@@ -74,5 +87,16 @@ public class SalesServiceImpl implements SalesService {
 	    } catch (NumberFormatException e) {
 	        return defaultValue;
 	    }
+	}
+	
+	@Override
+	public boolean processSettlement(Integer id) throws Exception {
+		// 매퍼의 updateSettlementStatus 호출 (status='정산완료', completed_at=NOW() 반영)
+        return salesDAO.updateSettlementStatus(id) > 0;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSettlementDetail(Integer settlementId) throws Exception {
+		return salesDAO.selectSettlementDetail(settlementId);
 	}
 }
