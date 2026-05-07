@@ -115,11 +115,11 @@
 		<!-- Sorting UI -->
 		<div class="flex items-center justify-between mb-6">
 			<div class="flex items-center gap-4">
-				<a href="${pageContext.request.contextPath}/gym/notice?sort=latest&page=1"
+				<a href="${pageContext.request.contextPath}/gym/notice?gymId=${gymId}&sort=latest&page=1"
    		   		   class="${empty sort || sort eq 'latest' ? 'text-sm font-bold text-primary border-b-2 border-primary pb-1' : 'text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors pb-1 border-b-2 border-transparent'}">
    					최신순
 				</a>
-				<a href="${pageContext.request.contextPath}/gym/notice?sort=view&page=1"
+				<a href="${pageContext.request.contextPath}/gym/notice?gymId=${gymId}&sort=view&page=1"
    		   		   class="${sort eq 'view' ? 'text-sm font-bold text-primary border-b-2 border-primary pb-1' : 'text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors pb-1 border-b-2 border-transparent'}">
    					조회수순
 				</a>
@@ -132,7 +132,7 @@
 		<!-- Notice List -->
 		<div class="space-y-4">
 			<c:forEach var="notice" items="${noticeList}">
-				<a href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${notice.id}"
+				<a href="${pageContext.request.contextPath}/gym/noticeDetail?noticeId=${notice.id}&gymId=${gymId}"
 			   	   class="block bg-white hover:bg-surface-container-low p-6 rounded-lg transition-all duration-200 flex items-start gap-6 group cursor-pointer border border-outline-variant/10">
 			
 				<div class="flex-shrink-0 text-center w-16">
@@ -154,7 +154,7 @@
 					</div>	
 				
 					<h4 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors mb-1">${notice.title}</h4>
-					<p class="text-sm text-on-surface-variant line-clamp-1 leading-relaxed">${notice.content}</p>
+					<%-- <p class="text-sm text-on-surface-variant line-clamp-1 leading-relaxed">${notice.content}</p> --%>
 				</div>	
 			
 				<div class="flex-shrink-0 self-center">
@@ -199,9 +199,9 @@
 <!-- 모달 -->
 <!-- 공지 작성 모달 -->
 <div id="noticeModal"
-     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-md p-4">
 
-    <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
+    <div class="bg-surface-container-lowest w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
         <!-- 모달 헤더 -->
         <div class="px-8 py-6 flex justify-between items-center border-b border-gray-200">
@@ -219,7 +219,8 @@
               onsubmit="return submitNoticeForm();"
               enctype="multipart/form-data"
               class="px-8 pb-8 pt-6 space-y-6">
-
+              
+			<input type="hidden" name="gymId" value="${gymId}"/>
             <!-- 제목 -->
             <div class="space-y-2">
                 <label for="noticeTitle"
@@ -247,10 +248,10 @@
                 <!-- 실제 서버로 보낼 hidden input -->
                 <input type="hidden" name="content" id="noticeContent" />
                 
-                <input type="file"
+<!--                 <input type="file"
            			   name="noticeImages"
            			   multiple
-           			   class="w-full text-sm border border-outline-variant/30 rounded-lg p-2">
+           			   class="w-full text-sm border border-outline-variant/30 rounded-lg p-2"> -->
             </div>
 
             <!-- 버튼 -->

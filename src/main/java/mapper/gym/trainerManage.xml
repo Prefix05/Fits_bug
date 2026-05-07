@@ -79,9 +79,9 @@
           ON m.user_id = mu.id
 
         LEFT JOIN LESSON s
-          ON p.id = s.package_id
+          ON p.id = s.pt_package_id
 
-        WHERE t.gym_id = #{value}
+        WHERE t.gym_id = #{gymId}
 
         GROUP BY
             p.id,
@@ -112,7 +112,7 @@
     JOIN `USER` u
       ON m.user_id = u.id
     LEFT JOIN LESSON s
-      ON p.id = s.package_id
+      ON p.id = s.pt_package_id
     WHERE p.trainer_id = #{trainerId}
       AND t.gym_id = #{gymId}
       AND (p.expires_at IS NULL OR p.expires_at >= NOW())
@@ -141,7 +141,7 @@
     JOIN `USER` u
       ON m.user_id = u.id
     LEFT JOIN LESSON s
-      ON p.id = s.package_id
+      ON p.id = s.pt_package_id
     WHERE p.trainer_id = #{trainerId}
       AND t.gym_id = #{gymId}
       AND p.expires_at &lt; NOW()

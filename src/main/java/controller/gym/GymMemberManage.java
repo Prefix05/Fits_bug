@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.gym.MemberManage;
 import dto.gym.Payment;
+import dto.member.UserDTO;
 import service.gym.GymMemberManageService;
 import service.gym.GymMemberManageServiceImpl;
 import service.gym.GymPaymentService;
@@ -41,15 +42,14 @@ public class GymMemberManage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		 try {
-		        HttpSession session = request.getSession(false);
+				HttpSession session = request.getSession();
+				UserDTO user = (UserDTO)session.getAttribute("loginUser");
+	            if (user == null) {
+	                response.sendRedirect(request.getContextPath() + "/member/login");
+	                return;
+	            }
 
-		        if (session == null || 
-		        	    session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
-		            response.sendRedirect(request.getContextPath() + "/member/login");
-		            return;
-		        }
-
-		        int gymId = (int) session.getAttribute("gymId");
+	            Integer gymId = user.getOtherId();
 
 		        String keyword = request.getParameter("keyword");
 		        String type = request.getParameter("type");

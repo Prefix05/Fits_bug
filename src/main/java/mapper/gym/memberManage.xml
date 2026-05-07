@@ -13,7 +13,7 @@
         SELECT
             m.id AS memberId,
             u.name AS memberName,
-            u.tel AS tel,
+            u.phone AS tel,
 
             ms.id AS membershipNum,
             ms.type AS membershipType,
@@ -62,7 +62,7 @@
         <if test="keyword != null and keyword != ''">
             AND (
                 u.name LIKE CONCAT('%', #{keyword}, '%')
-                OR u.tel LIKE CONCAT('%', #{keyword}, '%')
+                OR u.phone LIKE CONCAT('%', #{keyword}, '%')
             )
         </if>
 
@@ -153,7 +153,7 @@
     <if test="keyword != null and keyword != ''">
         AND (
             u.name LIKE CONCAT('%', #{keyword}, '%')
-            OR u.tel LIKE CONCAT('%', #{keyword}, '%')
+            OR u.phone LIKE CONCAT('%', #{keyword}, '%')
         )
     </if>
 

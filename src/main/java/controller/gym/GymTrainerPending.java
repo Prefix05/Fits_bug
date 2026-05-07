@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.TrainerApprove;
+import dto.member.UserDTO;
 import service.gym.GymTrainerApproveService;
 import service.gym.GymTrainerApproveServiceImpl;
 
@@ -26,14 +27,14 @@ public class GymTrainerPending extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
 
         try {
-            HttpSession session = request.getSession(false);
-
-            if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
+			HttpSession session = request.getSession();
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+            if (user == null) {
                 response.sendRedirect(request.getContextPath() + "/member/login");
                 return;
             }
 
-            int gymId = (int) session.getAttribute("gymId");
+            Integer gymId = user.getOtherId();
 
             GymTrainerApproveService service = new GymTrainerApproveServiceImpl();
 

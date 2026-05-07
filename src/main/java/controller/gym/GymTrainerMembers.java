@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.TrainerMemberView;
+import dto.member.UserDTO;
 import service.gym.GymTrainerManageService;
 import service.gym.GymTrainerManageServiceImpl;
 
@@ -26,14 +27,14 @@ public class GymTrainerMembers extends HttpServlet {
     	request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null ||session.getAttribute("gymId") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("[]");
+		HttpSession session = request.getSession();
+		UserDTO user = (UserDTO)session.getAttribute("loginUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
-        
-        int gymId = (int) session.getAttribute("gymId");
+
+        Integer gymId = user.getOtherId(); 
 
         String trainerIdStr = request.getParameter("trainerId");
 

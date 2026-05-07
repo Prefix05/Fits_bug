@@ -473,7 +473,7 @@
 			<c:when test="${not empty trainerList}">
 				<c:forEach var="trainer" items="${trainerList}" begin="0" end="2">
 					<img class="w-8 h-8 rounded-full border-2 border-white object-cover" 
-						 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+						 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}"
 						 alt="${trainer.name}"/>
 				</c:forEach>
 				<c:if test="${trainerCount > 3}">
@@ -591,8 +591,7 @@ function prevImage(){
 							<div class="relative shrink-0">
 								<img class="w-12 h-12 rounded-full object-cover border-2 border-primary-container/20 group-hover:border-primary transition-colors" 
      								 alt="${trainer.name}" 
-     								 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
-     								 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"/>
+     								 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}"/>
 							</div>
 							<div class="flex-1 min-w-0">
 								<div class="flex justify-between items-baseline mb-0.5">

@@ -1,21 +1,17 @@
 package dao.member;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import dto.member.MemberDTO;
 import util.MybatisSqlSessionFactory;
-
 import java.util.List;
 
 public class MemberDAOImpl implements MemberDAO {
 
     private static final String NS = "mapper.MemberMapper.";
-    private SqlSessionFactory factory = MybatisSqlSessionFactory.getSqlSessionFactory();
 
-    // ─── MEMBER INSERT ───────────────────────────────────────────
     @Override
     public int insertMember(MemberDTO dto) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
             result = session.insert(NS + "insertMember", dto);
@@ -29,21 +25,12 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    // ─── USER.id로 MEMBER 조회 ───────────────────────────────────
     @Override
     public MemberDTO findByUserId(int userId) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         MemberDTO result = null;
         try {
-
             result = session.selectOne(NS + "findByUserId", userId);
-
-            MemberDTO param = new MemberDTO();
-            param.setEmail(email);
-            param.setPassword(password);
-            System.out.println(param);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -52,10 +39,9 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    // ─── MEMBER.id로 조회 ─────────────────────────────────────────
     @Override
     public MemberDTO findById(int id) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         MemberDTO result = null;
         try {
             result = session.selectOne(NS + "findById", id);
@@ -67,10 +53,9 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    // ─── 이메일로 MEMBER + USER JOIN 조회 ────────────────────────
     @Override
     public MemberDTO findByEmail(String email) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         MemberDTO result = null;
         try {
             result = session.selectOne(NS + "findByEmail", email);
@@ -82,10 +67,9 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    // ─── 이메일로 MEMBER.id 조회 ─────────────────────────────────
     @Override
     public int findMemberIdByEmail(String email) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         Integer result = null;
         try {
             result = session.selectOne(NS + "findMemberIdByEmail", email);
@@ -97,10 +81,9 @@ public class MemberDAOImpl implements MemberDAO {
         return result == null ? 0 : result;
     }
 
-    // ─── MEMBER 수정 ─────────────────────────────────────────────
     @Override
     public int update(MemberDTO dto) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
             result = session.update(NS + "update", dto);
@@ -114,10 +97,9 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    // ─── trainer_id로 회원 목록 ──────────────────────────────────
     @Override
     public List<MemberDTO> findByTrainerId(int trainerId) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<MemberDTO> list = null;
         try {
             list = session.selectList(NS + "findByTrainerId", trainerId);
@@ -129,10 +111,9 @@ public class MemberDAOImpl implements MemberDAO {
         return list;
     }
 
-    // ─── gym_id로 회원 목록 ──────────────────────────────────────
     @Override
     public List<MemberDTO> findByGymId(int gymId) {
-        SqlSession session = factory.openSession();
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         List<MemberDTO> list = null;
         try {
             list = session.selectList(NS + "findByGymId", gymId);
@@ -143,4 +124,13 @@ public class MemberDAOImpl implements MemberDAO {
         }
         return list;
     }
+
+	@Override
+	public MemberDTO selectMemberByUserId(Integer userId) throws Exception {
+		MemberDTO memberDto = null;
+		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			memberDto = sqlSession.selectOne("mapper.member.selectMemberByUserId", userId);
+		}
+		return memberDto;
+	}
 }

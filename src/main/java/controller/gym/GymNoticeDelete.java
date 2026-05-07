@@ -1,8 +1,6 @@
 package controller.gym;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.gym.GymNotice;
-import dto.gym.NoticeImages;
+import dto.member.UserDTO;
 import service.gym.GymNoticeService;
 import service.gym.GymNoticeServiceImpl;
 
@@ -38,66 +35,23 @@ public class GymNoticeDelete extends HttpServlet {
 		GymNoticeService service = new GymNoticeServiceImpl();
 		
 		try {
-			String noticeIdStr = request.getParameter("noticeId");
-
-			if (noticeIdStr == null || noticeIdStr.trim().isEmpty()) {
-			    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			    return;
-			}
-
-			int noticeId = Integer.parseInt(noticeIdStr);
 			
-            HttpSession session = request.getSession(false);
-            if (session == null || 
-            	    session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
+            HttpSession session = request.getSession();
+            UserDTO user = (UserDTO)session.getAttribute("loginUser");
+            if (user == null) {
                 response.sendRedirect(request.getContextPath() + "/member/login");
                 return;
             }
 
-            int loginGymId = (int) session.getAttribute("gymId");
-
-            GymNotice notice = service.getNoticeDetail(noticeId);
-
-            if (notice == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-
-            if (notice.getGymId() != loginGymId) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
-         // 1. 이미지 목록 조회
-            List<NoticeImages> imageList = service.getImagesByNoticeId(noticeId);
-            
-            // 2. 실제 이미지 파일 삭제
-            String uploadPath = request.getServletContext().getRealPath("/noticeDetailImages");
-
-            if (imageList != null) {
-                for (NoticeImages image : imageList) {
-                    String imageUrl = image.getImageUrl();
-
-                    if (imageUrl != null) {
-                        String fileName = new File(imageUrl).getName();
-                        File file = new File(uploadPath, fileName);
-
-                        if (file.exists()) {
-                            file.delete();
-                        }
-                    }
-                }
-            }
+			int noticeId = Integer.parseInt(request.getParameter("noticeId"));
 
             service.deleteNotice(noticeId);
-
-            response.sendRedirect(request.getContextPath() + "/gym/notice");
+            response.sendRedirect(request.getContextPath() + "/gym/notice?gymId="+user.getOtherId());
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
         }
     }
-	
 
 }

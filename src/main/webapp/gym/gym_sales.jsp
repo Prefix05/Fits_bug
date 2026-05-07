@@ -238,7 +238,7 @@
     						</c:when>
     						<c:otherwise>
         						<img alt="Trainer" class="w-10 h-10 rounded-full object-cover shrink-0"
-             					 	 src="${trainer.profileImg}">
+             					 	 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}">
     						</c:otherwise>
 						</c:choose>
 

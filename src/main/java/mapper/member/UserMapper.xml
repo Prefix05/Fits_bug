@@ -4,147 +4,79 @@
 
 <mapper namespace="mapper.UserMapper">
 
-    <!-- ============================================================
-         ResultMap : USER 테이블 컬럼 ↔ UserDTO 필드 명시적 매핑
-         DB 컬럼명: phone, profileImg, email_verified, is_deleted
-         ============================================================ -->
-    <resultMap id="userResultMap" type="dto.member.UserDTO">
-        <id     property="id"            column="id"/>
-        <result property="email"         column="email"/>
-        <result property="password"      column="password"/>
-        <result property="name"          column="name"/>
-        <result property="phone"         column="phone"/>
-        <result property="emailVerified" column="email_verified"/>
-        <result property="nickname"      column="nickname"/>
-        <result property="profileImg"    column="profileImg"/>
-        <result property="role"          column="role"/>
-        <result property="createdAt"     column="created_at"/>
-        <result property="deleted"       column="is_deleted"/>
-        <result property="provider"      column="provider"/>
-        <result property="providerId"    column="provider_id"/>
-    </resultMap>
-
-    <!-- ============================================================
-         회원가입 INSERT → USER 테이블
-         UserDAOImpl.insert(UserDTO dto)
-         ============================================================ -->
-    <insert id="insert" parameterType="dto.member.UserDTO">
-        INSERT INTO USER (
-            email, password, name, phone,
-            email_verified, nickname, profileImg,
-            role, created_at, is_deleted,
-            provider, provider_id
-        ) VALUES (
-            #{email}, #{password}, #{name}, #{phone},
-            #{emailVerified}, #{nickname}, #{profileImg},
-            #{role}, NOW(), 0,
-            #{provider}, #{providerId}
-        )
-    </insert>
-
-    <!-- ============================================================
-         이메일 + 비밀번호로 로그인 조회
-         UserDAOImpl.findByEmailAndPassword(String email, String password)
-         → param: Map{email, password}
-         ============================================================ -->
-    <select id="findByEmailAndPassword" parameterType="map" resultMap="userResultMap">
-        SELECT id, email, password, name, phone,
-               email_verified, nickname, profileImg,
-               role, created_at, is_deleted, provider, provider_id
+    <!-- 로그인 (email + password) -->
+    <select id="findByEmailAndPassword" parameterType="map" resultType="UserDTO">
+        SELECT id, email, password, name, phone, email_verified,
+               nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email    = #{email}
           AND password = #{password}
           AND is_deleted = 0
     </select>
 
-    <!-- ============================================================
-         이메일로 회원 조회 (중복체크 / 소셜로그인 확인)
-         UserDAOImpl.findByEmail(String email)
-         ============================================================ -->
-    <select id="findByEmail" parameterType="string" resultMap="userResultMap">
-        SELECT id, email, password, name, phone,
-               email_verified, nickname, profileImg,
-               role, created_at, is_deleted, provider, provider_id
+    <!-- 이메일로 조회 -->
+    <select id="findByEmail" parameterType="string" resultType="UserDTO">
+        SELECT id, email, password, name, phone, email_verified,
+               nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email = #{email}
           AND is_deleted = 0
     </select>
 
-    <!-- ============================================================
-         이메일 중복 체크 (COUNT)
-         UserDAOImpl.isEmailExists(String email)
-         ============================================================ -->
+    <!-- 이메일 중복 체크 -->
     <select id="isEmailExists" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM USER WHERE email = #{email}
     </select>
 
-    <!-- ============================================================
-         전체 회원 조회 (관리자용)
-         UserDAOImpl.findAll()
-         ============================================================ -->
-    <select id="findAll" resultMap="userResultMap">
-        SELECT id, email, password, name, phone,
-               email_verified, nickname, profileImg,
-               role, created_at, is_deleted, provider, provider_id
+    <!-- 전체 조회 (관리자용) -->
+    <select id="findAll" resultType="UserDTO">
+        SELECT id, email, password, name, phone, email_verified,
+               nickname, profile_image, role, created_at, is_deleted as deleted, provider, provider_id
         FROM USER
         WHERE is_deleted = 0
         ORDER BY id DESC
     </select>
 
-    <!-- ============================================================
-         닉네임으로 조회
-         UserDAOImpl.findByNickname(String nickname)
-         ============================================================ -->
-    <select id="findByNickname" parameterType="string" resultMap="userResultMap">
-        SELECT id, email, nickname, profileImg, role
-        FROM USER
-        WHERE nickname = #{nickname}
-          AND is_deleted = 0
-    </select>
+    <!-- 회원가입 INSERT -->
+    <insert id="insert" parameterType="UserDTO">
+        INSERT INTO USER (
+            email, password, name, phone, email_verified,
+            nickname, profile_image, role,
+            created_at, is_deleted as deleted, provider, provider_id
+        ) VALUES (
+            #{email}, #{password}, #{name}, #{phone}, #{emailVerified},
+            #{nickname}, #{profile_image}, #{role},
+            NOW(), 0, #{provider}, #{providerId}
+        )
+    </insert>
 
-    <!-- ============================================================
-         회원 정보 수정 (닉네임, 이름, 전화번호, 프로필)
-         UserDAOImpl.update(UserDTO dto)
-         ============================================================ -->
-    <update id="update" parameterType="dto.member.UserDTO">
+    <!-- 소셜 회원가입 (카카오/네이버) -->
+    <insert id="insertSocial" parameterType="UserDTO">
+        INSERT INTO USER (
+            email, nickname, email_verified, role,
+            provider, provider_id, created_at, is_deleted as deleted
+        ) VALUES (
+            #{email}, #{nickname}, 1, 'MEMBER',
+            #{provider}, #{providerId}, NOW(), 0
+        )
+    </insert>
+
+    <!-- 회원 정보 수정 -->
+    <update id="update" parameterType="UserDTO">
         UPDATE USER SET
             name       = #{name},
             phone      = #{phone},
             nickname   = #{nickname},
-            profileImg = #{profileImg}
+            profile_image = #{profileImage}
         WHERE id = #{id}
     </update>
 
-    <!-- ============================================================
-         비밀번호 변경
-         param: Map{email, password}
-         ============================================================ -->
+    <!-- 비밀번호 변경 -->
     <update id="updatePassword" parameterType="map">
-        UPDATE USER SET
-            password = #{password}
-        WHERE email = #{email}
+        UPDATE USER SET password = #{password} WHERE email = #{email}
     </update>
 
-    <!-- ============================================================
-         소셜 회원가입 (카카오/네이버)
-         KakaoLoginController → UserDAOImpl.insertSocial(UserDTO)
-         ============================================================ -->
-    <insert id="insertSocial" parameterType="dto.member.UserDTO">
-        INSERT INTO USER (
-            email, nickname, email_verified,
-            role, provider, provider_id,
-            created_at, is_deleted
-        ) VALUES (
-            #{email}, #{nickname}, 1,
-            'MEMBER', #{provider}, #{providerId},
-            NOW(), 0
-        )
-    </insert>
-
-    <!-- ============================================================
-         회원 탈퇴 (soft delete)
-         UserDAOImpl.delete(int id)
-         ============================================================ -->
+    <!-- 회원 탈퇴 (soft delete) -->
     <update id="delete" parameterType="int">
         UPDATE USER SET is_deleted = 1 WHERE id = #{id}
     </update>
