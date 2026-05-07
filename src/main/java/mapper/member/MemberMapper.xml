@@ -222,5 +222,9 @@
           AND u.is_deleted = 0
         ORDER BY m.id DESC
     </select>
+    
+    <select id="selectMemberByUserId" parameterType="Integer" resultType="MemberDTO">
+    	select * from member where user_id=#{userId}
+    </select>
 
 </mapper>

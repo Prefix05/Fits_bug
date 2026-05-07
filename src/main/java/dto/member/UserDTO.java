@@ -4,34 +4,46 @@ import java.time.LocalDateTime;
 
 public class UserDTO {
 
-    private int           id;
-    private String        email;
-    private String        password;
-    private String        name;
-    private String        phone;          // DB: phone (이전 tel → 수정)
-    private boolean       emailVerified;  // DB: email_verified
-    private String        nickname;
-    private String        profile_image;     // DB: profileImg
-    private String        role;           // ENUM('MEMBER','TRAINER','GYM','ADMIN') → String
-    private LocalDateTime createdAt;      // DB: created_at
-    private boolean       deleted;        // DB: is_deleted
-    private String        provider;       // ENUM('kakao','naver')
-    private String        providerId;     // DB: provider_id
+    private int    id;
+    private String email;
+    private String password;
+    private String name;
+    private String phone;          // DB 컬럼: phone  (이전 tel → phone 통일)
+    private boolean emailVerified; // DB 컬럼: email_verified
+    private String nickname;
+    private String profileImage;     // DB 컬럼: profileImg
+    private String role;           // ENUM → String으로 MyBatis 처리 간편화
+    private LocalDateTime createdAt;
+    private boolean deleted;       // DB 컬럼: is_deleted
+    private String provider;       // ENUM('kakao','naver')
+    private String providerId;     // DB 컬럼: provider_id
+    private Integer otherId;
 
     public UserDTO() {}
 
-    public UserDTO(String email, String password, String name, String phone,
-                   boolean emailVerified, String nickname, String role) {
-        this.email         = email;
-        this.password      = password;
-        this.name          = name;
-        this.phone         = phone;
-        this.emailVerified = emailVerified;
-        this.nickname      = nickname;
-        this.role          = role;
-    }
 
-    public int getId() { return id; }
+    public UserDTO(int id, String email, String password, String name, String phone, boolean emailVerified,
+			String nickname, String profileImage, String role, LocalDateTime createdAt, boolean deleted,
+			String provider, String providerId, Integer otherId) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.phone = phone;
+		this.emailVerified = emailVerified;
+		this.nickname = nickname;
+		this.profileImage = profileImage;
+		this.role = role;
+		this.createdAt = createdAt;
+		this.deleted = deleted;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.otherId = otherId;
+	}
+
+
+	public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public String getEmail() { return email; }
@@ -52,8 +64,6 @@ public class UserDTO {
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getProfile_image() { return profile_image; }
-    public void setProfile_image(String profile_image) { this.profile_image = profile_image; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
@@ -70,8 +80,34 @@ public class UserDTO {
     public String getProviderId() { return providerId; }
     public void setProviderId(String providerId) { this.providerId = providerId; }
 
-    @Override
-    public String toString() {
-        return "UserDTO{id=" + id + ", email='" + email + "', role='" + role + "'}";
-    }
+    
+
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
+	public Integer getOtherId() {
+		return otherId;
+	}
+
+	public void setOtherId(Integer otherId) {
+		this.otherId = otherId;
+	}
+
+
+	@Override
+	public String toString() {
+		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone="
+				+ phone + ", emailVerified=" + emailVerified + ", nickname=" + nickname + ", profileImage="
+				+ profileImage + ", role=" + role + ", createdAt=" + createdAt + ", deleted=" + deleted + ", provider="
+				+ provider + ", providerId=" + providerId + ", otherId=" + otherId + "]";
+	}
+	
+	
+
 }

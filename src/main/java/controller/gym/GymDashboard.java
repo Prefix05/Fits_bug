@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.Dashboard;
+import dto.member.UserDTO;
 import service.gym.GymDashboardService;
 import service.gym.GymDashboardServiceImpl;
 
@@ -25,15 +26,14 @@ public class GymDashboard extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
-
-        if (session == null || session.getAttribute("gymId") == null ||
-        	    session.getAttribute("loginUser") == null) {
+		HttpSession session = request.getSession();
+		UserDTO user = (UserDTO)session.getAttribute("loginUser");
+        if (user == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
-        Integer gymId = (Integer) session.getAttribute("gymId");
+        Integer gymId = user.getOtherId();
 
         String weekStart = request.getParameter("weekStart");
         String selectedDate = request.getParameter("selectedDate");

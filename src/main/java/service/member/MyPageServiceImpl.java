@@ -33,7 +33,7 @@ public class MyPageServiceImpl implements MyPageService {
         if (userDto != null) {
             if (member.getEmail() == null)      member.setEmail(userDto.getEmail());
             if (member.getNickname() == null)   member.setNickname(userDto.getNickname());
-            if (member.getProfile_image() == null) member.setProfile_image(userDto.getProfile_image());
+            if (member.getProfile_image() == null) member.setProfile_image(userDto.getProfileImage());
             if (member.getRole() == null)       member.setRole(userDto.getRole());
         }
 

@@ -57,9 +57,7 @@
 				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
 				<property name="username" value="root"/>
 				<property name="password" value="7564"/>
-<!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
 				<property name="poolMaximumActiveConnections" value="500"/>
-<!-- 				최대 유효 커넥션 수 : 사용하지않고 대기 상태를 유지할 커넥선 개수-->
 				<property name="poolMaximumIdleConnections" value="500"/>
 			</dataSource>
 		</environment>
@@ -71,26 +69,25 @@
 		<mapper resource="mapper/admin/report.xml"/>
 		<mapper resource="mapper/admin/inquiry.xml"/>
 		<mapper resource="mapper/admin/sales.xml"/>
+		
 		<mapper resource="mapper/gym/gymMain.xml"/>
 		<mapper resource="mapper/gym/gymNotice.xml"/>
 		<mapper resource="mapper/gym/gymTrainerView.xml"/>
 		<mapper resource="mapper/gym/membership.xml"/>
 		<mapper resource="mapper/gym/review.xml"/>
 		<mapper resource="mapper/gym/schedule.xml"/>
-
 		<mapper resource="mapper/gym/dashboard.xml"/>
 		<mapper resource="mapper/gym/memberManage.xml"/>
 		<mapper resource="mapper/gym/trainerManage.xml"/>
 		<mapper resource="mapper/gym/trainerApprove.xml"/>
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
-
 		<mapper resource="mapper/gym/payment.xml"/>
 		<mapper resource="mapper/gym/gymDetailCard.xml"/>
 
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/member/UserMapper.xml"/>
-		<mapper resource="mapper/member/GymMapper.xml"/>
+ 		<mapper resource="mapper/member/GymMapper.xml"/>
 		<mapper resource="mapper/member/WorkoutLogMapper.xml"/>
         <mapper resource="mapper/member/MealLogMapper.xml"/>
         <mapper resource="mapper/member/InbodyLogMapper.xml"/>
@@ -113,7 +110,7 @@
 		<mapper resource="mapper/member/ChartMapper.xml"/>
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
-        <mapper resource="mapper/member/LessonMapper.xml"/>
+        <mapper resource="mapper/member/LessonMapper.xml"/> 
         
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>

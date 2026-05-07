@@ -41,7 +41,7 @@ public class MyPageController extends HttpServlet {
             MemberDTO fallback = new MemberDTO();
             fallback.setEmail(loginUser.getEmail());
             fallback.setNickname(loginUser.getNickname());
-            fallback.setProfile_image(loginUser.getProfile_image());
+            fallback.setProfile_image(loginUser.getProfileImage());
             fallback.setRole(loginUser.getRole());
             dto.setMember(fallback);
         }

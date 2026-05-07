@@ -1,7 +1,8 @@
 package dao.member;
 
-import dto.member.MemberDTO;
 import java.util.List;
+
+import dto.member.MemberDTO;
 
 public interface MemberDAO {
     int insertMember(MemberDTO dto);
@@ -12,4 +13,5 @@ public interface MemberDAO {
     int update(MemberDTO dto);
     List<MemberDTO> findByTrainerId(int trainerId);
     List<MemberDTO> findByGymId(int gymId);
+    MemberDTO selectMemberByUserId(Integer userId) throws Exception;
 }

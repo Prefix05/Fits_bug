@@ -1,9 +1,14 @@
 package controller.member;
 
 import java.io.IOException;
-import javax.servlet.*;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import dto.member.UserDTO;
 import service.member.UserService;
 import service.member.UserServiceImpl;
@@ -29,21 +34,31 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        try {
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
 
-        String email    = request.getParameter("email");
-        String password = request.getParameter("password");
+			// USER 테이블 기준 로그인
+			UserDTO loginUser = userService.login(email, password);
+			System.out.println(loginUser);
 
-        // UserDTO 기반 로그인 (USER 테이블)
-        UserDTO loginUser = userService.login(email, password);
-
-        if (loginUser != null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("loginUser",  loginUser);
-            session.setAttribute("loginEmail", email);
-            response.sendRedirect(request.getContextPath() + "/member/main");
-        } else {
-            request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
-            request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+			if (loginUser != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("loginUser", loginUser); // UserDTO 저장
+				session.setAttribute("loginEmail", email); // 이메일 별도 저장 (다른 DAO에서 사용)
+				if(loginUser.getRole().equals("GYM")) {
+					System.out.println("GYM");
+					response.sendRedirect(request.getContextPath() + "/gym/dashboard");
+				} else if(loginUser.getRole().equals("MEMBER")) {
+					System.out.println("MEMBER");
+					response.sendRedirect(request.getContextPath() + "/member/main");
+				} 
+			} else {
+				request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
+				request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+			}
+        } catch(Exception e) {
+        	e.printStackTrace();
         }
     }
 }

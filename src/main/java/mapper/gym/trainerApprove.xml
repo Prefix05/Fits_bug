@@ -17,7 +17,7 @@
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id
-    WHERE t.gym_id = #{value}
+    WHERE t.gym_id = #{gymId}
       AND t.approval_status = 'PENDING'
     ORDER BY t.id DESC
 </select>
@@ -40,7 +40,7 @@
         t.approval_status AS approvalStatus
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id
-    WHERE t.gym_id = #{value}
+    WHERE t.gym_id = #{gymId}
       AND t.approval_status = 'APPROVED'
     ORDER BY t.id DESC
 </select>

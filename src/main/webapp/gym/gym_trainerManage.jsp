@@ -133,7 +133,7 @@
 							<c:choose>
 								<c:when test="${not empty trainer.profileImg}">
 									<img alt="트레이너" class="w-10 h-10 rounded-full object-cover border-2 border-surface shadow-sm" 
-					 					 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"/>
+					 					 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}"/>
 								</c:when>
 								<c:otherwise>
 									<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
@@ -167,6 +167,7 @@
 </section>
 
 <!-- Assignment Section -->
+<%-- 
 <section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col min-h-0 flex-1">
 <div class="p-6 border-b border-surface-container flex justify-between items-center shrink-0">
 <h3 class="font-headline font-bold text-lg text-on-surface">트레이너-회원 배정 현황</h3>
@@ -209,7 +210,7 @@
 </tbody>
 </table>	
 </div>
-</section>
+</section> --%>
 </div>
 </div>
 </main>
@@ -284,7 +285,7 @@ function openMemberModal(trainerId, trainerName, profileImg) {
 
     if (profileImg) {
         document.getElementById("modalProfileImg").src =
-            '${pageContext.request.contextPath}/gym/trainerProfileImgs/' + profileImg;
+            '${pageContext.request.contextPath}/trainer/profile-img/' + profileImg;
     }
 
     loadTrainerMembers("current");
@@ -301,7 +302,7 @@ function loadTrainerMembers(type) {
     .then(response => response.json())
     .then(data => {
         let html = "";
-
+		console.log(data)
         if (data.length === 0) {
             html = `
                 <tr>

@@ -13,7 +13,7 @@ import dto.gym.Schedule;
 import dto.trainer.UserDTO;
 
 public interface GymMainService {
-	Gym getGymMainInfo(int gymId) throws Exception;
+	Map<String,Object> getGymMainInfo(int gymId) throws Exception;
     List<GymNotice> getNoticeList(int gymId) throws Exception;
     List<Review> getReviewList(int gymId) throws Exception;
     List<Membership> getMembershipList(int gymId) throws Exception;

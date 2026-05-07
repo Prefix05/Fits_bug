@@ -2,18 +2,24 @@ package controller.member;
 
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.*;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.ibatis.session.SqlSession;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
 import dto.member.TrainerDTO;
 import dto.member.UserDTO;
 import dto.trainer.AvailabilityDTO;
-import org.apache.ibatis.session.SqlSession;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import util.MybatisSqlSessionFactory;
 
 @WebServlet("/member/main")
@@ -52,7 +58,6 @@ public class MainController extends HttpServlet {
                     obj.put("dayOfWeek", a.getDayOfWeek());
                     obj.put("startTime", a.getStartTime());
                     obj.put("endTime", a.getEndTime());
-                    arr.put(obj);
                 }
                 request.setAttribute("availabilityJson", arr.toString());
 

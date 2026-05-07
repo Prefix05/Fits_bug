@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import dto.gym.TrainerAssign;
 import dto.gym.TrainerList;
+import dto.member.UserDTO;
 import service.gym.GymTrainerManageService;
 import service.gym.GymTrainerManageServiceImpl;
 
@@ -41,34 +42,34 @@ public class GymTrainerManage extends HttpServlet {
 
 		GymTrainerManageService service = new GymTrainerManageServiceImpl();
 
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
+		UserDTO user = (UserDTO)session.getAttribute("loginUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
+            return;
+        }
 
-		if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
-			response.sendRedirect(request.getContextPath() + "/member/login");
-			return;
-		}
+        Integer gymId = user.getOtherId(); 
 
-		int gymId = (int) session.getAttribute("gymId");
-
-		String keyword = request.getParameter("keyword");
+        String keyword = request.getParameter("keyword");
 		if (keyword == null) {
 			keyword = "";
 		}
 
 		try {
 			List<TrainerList> trainerList = service.getTrainerList(gymId, keyword);
-			List<TrainerAssign> assignList = service.getTrainerAssignList(gymId);
+//			List<TrainerAssign> assignList = service.getTrainerAssignList(gymId);
 
 			if (trainerList == null) {
 				trainerList = new ArrayList<>();
 			}
 
-			if (assignList == null) {
-				assignList = new ArrayList<>();
-			}
+//			if (assignList == null) {
+//				assignList = new ArrayList<>();
+//			}
 
 			request.setAttribute("trainerList", trainerList);
-			request.setAttribute("assignList", assignList);
+//			request.setAttribute("assignList", assignList);
 			request.setAttribute("keyword", keyword);
 
 			request.getRequestDispatcher("/gym/gym_trainerManage.jsp").forward(request, response);

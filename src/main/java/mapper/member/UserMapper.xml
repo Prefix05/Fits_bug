@@ -4,32 +4,8 @@
 
 <mapper namespace="mapper.UserMapper">
 
-    <!--
-        USER 테이블 컬럼:
-        id, email, password, name, phone, email_verified,
-        nickname, profileImg, role, created_at, is_deleted, provider, provider_id
-
-        수정: tel → phone, profile_img → profileImg, deleted → is_deleted,
-              UserRole enum → String, emailVerified 추가
-    -->
-    <resultMap id="userResultMap" type="dto.member.UserDTO">
-        <id     property="id"            column="id"/>
-        <result property="email"         column="email"/>
-        <result property="password"      column="password"/>
-        <result property="name"          column="name"/>
-        <result property="phone"         column="phone"/>
-        <result property="emailVerified" column="email_verified"/>
-        <result property="nickname"      column="nickname"/>
-        <result property="profile_image"    column="profile_image"/>
-        <result property="role"          column="role"/>
-        <result property="createdAt"     column="created_at"/>
-        <result property="deleted"       column="is_deleted"/>
-        <result property="provider"      column="provider"/>
-        <result property="providerId"    column="provider_id"/>
-    </resultMap>
-
     <!-- 로그인 (email + password) -->
-    <select id="findByEmailAndPassword" parameterType="map" resultMap="userResultMap">
+    <select id="findByEmailAndPassword" parameterType="map" resultType="UserDTO">
         SELECT id, email, password, name, phone, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
@@ -39,7 +15,7 @@
     </select>
 
     <!-- 이메일로 조회 -->
-    <select id="findByEmail" parameterType="string" resultMap="userResultMap">
+    <select id="findByEmail" parameterType="string" resultType="UserDTO">
         SELECT id, email, password, name, phone, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
@@ -53,20 +29,20 @@
     </select>
 
     <!-- 전체 조회 (관리자용) -->
-    <select id="findAll" resultMap="userResultMap">
+    <select id="findAll" resultType="UserDTO">
         SELECT id, email, password, name, phone, email_verified,
-               nickname, profile_image, role, created_at, is_deleted, provider, provider_id
+               nickname, profile_image, role, created_at, is_deleted as deleted, provider, provider_id
         FROM USER
         WHERE is_deleted = 0
         ORDER BY id DESC
     </select>
 
     <!-- 회원가입 INSERT -->
-    <insert id="insert" parameterType="dto.member.UserDTO">
+    <insert id="insert" parameterType="UserDTO">
         INSERT INTO USER (
             email, password, name, phone, email_verified,
             nickname, profile_image, role,
-            created_at, is_deleted, provider, provider_id
+            created_at, is_deleted as deleted, provider, provider_id
         ) VALUES (
             #{email}, #{password}, #{name}, #{phone}, #{emailVerified},
             #{nickname}, #{profile_image}, #{role},
@@ -75,10 +51,10 @@
     </insert>
 
     <!-- 소셜 회원가입 (카카오/네이버) -->
-    <insert id="insertSocial" parameterType="dto.member.UserDTO">
+    <insert id="insertSocial" parameterType="UserDTO">
         INSERT INTO USER (
             email, nickname, email_verified, role,
-            provider, provider_id, created_at, is_deleted
+            provider, provider_id, created_at, is_deleted as deleted
         ) VALUES (
             #{email}, #{nickname}, 1, 'MEMBER',
             #{provider}, #{providerId}, NOW(), 0
@@ -86,12 +62,12 @@
     </insert>
 
     <!-- 회원 정보 수정 -->
-    <update id="update" parameterType="dto.member.UserDTO">
+    <update id="update" parameterType="UserDTO">
         UPDATE USER SET
             name       = #{name},
             phone      = #{phone},
             nickname   = #{nickname},
-            profile_image = #{profile_image}
+            profile_image = #{profileImage}
         WHERE id = #{id}
     </update>
 

@@ -136,9 +136,20 @@ public class MemberDTO {
     public String getSocialType() { return socialType; }
     public void setSocialType(String socialType) { this.socialType = socialType; }
 
-    @Override
-    public String toString() {
-        return "MemberDTO{id=" + id + ", email='" + email
-                + "', nickname='" + nickname + "', goals='" + goals + "'}";
-    }
+	@Override
+	public String toString() {
+		return "MemberDTO [id=" + id + ", userId=" + userId + ", trainerId=" + trainerId + ", gymId=" + gymId
+				+ ", purpose=" + purpose + ", experience=" + experience + ", height=" + height + ", weight=" + weight
+				+ ", diet=" + diet + ", exerciseCountGoal=" + exerciseCountGoal + ", address=" + address + ", latitude="
+				+ latitude + ", longitude=" + longitude + ", name=" + name + ", goals=" + goals + ", nextSession="
+				+ nextSession + ", lessonCount=" + lessonCount + ", lastSession=" + lastSession + ", status=" + status
+				+ ", age=" + age + ", level=" + level + ", frequency=" + frequency + ", email=" + email + ", nickname="
+				+ nickname + ", profile_image=" + profile_image + ", role=" + role + ", emailVerified=" + emailVerified
+				+ ", socialType=" + socialType + "]";
+	}
+
+
+    
+    
+
 }

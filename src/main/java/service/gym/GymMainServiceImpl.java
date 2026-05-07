@@ -35,7 +35,7 @@ public class GymMainServiceImpl implements GymMainService {
     private GymMainTrainerViewDao trainerViewDao = new GymMainTrainerViewDaoImpl();
     
     @Override
-    public Gym getGymMainInfo(int gymId) throws Exception {
+    public Map<String,Object> getGymMainInfo(int gymId) throws Exception {
         return gymMainDao.selectGymMainInfo(gymId);
     }
 
