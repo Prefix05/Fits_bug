@@ -58,9 +58,19 @@
             p.payment_date AS payDate,
             p.payment_price AS payAmount,
             p.payment_fee AS fee,
-            (p.payment_price - p.payment_fee) AS netAmount
+            (p.payment_price - p.payment_fee) AS netAmount,
+            COALESCE(pa.bank_name, g.bank_name) AS bankName,
+        	COALESCE(pa.account_number, g.account_number) AS accountNum,
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' THEN g.name
+            	ELSE tu.name 
+        	END AS ownerName
         FROM PAYMENT p
-        JOIN USER u ON p.user_id = u.id
+    	JOIN USER u ON p.user_id = u.id
+    	LEFT JOIN GYM g ON p.gym_id = g.id
+    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
+    	LEFT JOIN USER tu ON t.user_id = tu.id 
+    	LEFT JOIN PAYOUT_ACCOUNT pa ON t.id = pa.trainer_id
         WHERE p.status = '결제완료'
     	<!-- 1. 해당 정산의 대상(헬스장 or 트레이너) 필터링 -->
     	AND (
@@ -91,7 +101,13 @@
          	WHERE p.status = '결제완료' 
            	AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
            	AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
-        	) as total_fee
+        	) as total_fee,
+        	(SELECT IFNULL(SUM(payment_price) - SUM(payment_fee), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+            AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+            AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_amount
     	FROM SETTLEMENT s
         <where>
             <if test="status != null and status != ''">
@@ -104,6 +120,17 @@
         ORDER BY s.settlement_deadline ASC
         LIMIT #{limit} OFFSET #{offset}
     </select>
+    <select id="selectSettlementCount" resultType="int">
+		SELECT COUNT(*) FROM SETTLEMENT s
+		<where>
+			<if test="status != null and status != ''">
+				AND s.status = #{status}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (s.target_id LIKE CONCAT('%', #{searchKeyword}, '%'))
+			</if>
+		</where>
+	</select>
 	<!-- [추가] 정산 상태 업데이트 -->
     <update id="updateSettlementStatus">
         UPDATE SETTLEMENT 

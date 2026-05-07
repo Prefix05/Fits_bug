@@ -1,6 +1,8 @@
 package service.admin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dao.admin.ExerciseDAO;
 import dao.admin.ExerciseDAOImpl;
@@ -29,8 +31,37 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
 	@Override
-	public List<ExerciseDTO> getExerciseGuideList(String targetMuscle) throws Exception {
-		return exerciseDAO.selectAllGuide(targetMuscle);
+	public Map<String, Object> getExerciseGuideList(int page, String targetMuscle, String searchKeyword) throws Exception {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("targetMuscle", targetMuscle);
+	    params.put("searchKeyword", searchKeyword);
+
+	    // 1. 전체 데이터 개수 조회
+	    int totalCount = ((ExerciseDAOImpl)exerciseDAO).selectGuideCount(params);
+
+	    // 2. 페이징 계산 (PageInfo 객체 활용)
+	    int pageSize = 8;
+	    int allPage = (int) Math.ceil((double) totalCount / pageSize);
+	    if (allPage == 0) allPage = 1;
+
+	    // 페이지 블록 계산 (예: 1~5, 6~10)
+	    int startPage = ((page - 1) / 5) * 5 + 1;
+	    int endPage = startPage + 4;
+	    if (endPage > allPage) endPage = allPage;
+
+	    util.PageInfo pageInfo = new util.PageInfo(page, allPage, startPage, endPage);
+
+	    // 3. 목록 조회를 위한 시작 위치 계산 및 조회
+	    params.put("startRow", (page - 1) * pageSize);
+	    List<ExerciseDTO> list = exerciseDAO.selectAllGuide(params);
+
+	    // 4. 컨트롤러로 보낼 결과 맵 구성
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("guideList", list);
+	    resultMap.put("pageInfo", pageInfo);
+	    resultMap.put("totalCount", totalCount);
+
+	    return resultMap;
 	}
 
 	@Override

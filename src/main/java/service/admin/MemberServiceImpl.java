@@ -67,13 +67,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDTO> trainerList(PageInfo pageInfo, String trainerName) throws Exception {
+	public List<MemberDTO> trainerList(Map<String, Object> paramMap) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
+		
+		PageInfo pageInfo = (PageInfo)paramMap.get("pageInfo");
+	    String trainerName = (String)paramMap.get("trainerName");
+	    String sortColumn = (String)paramMap.get("sortColumn");
+	    String sortOrder = (String)paramMap.get("sortOrder");
+	    
 		Integer trainerCnt = memberDAO.selectTrainerCnt(); // db에 등록된 전체 헬스장 수
 		Integer allPage = (int)Math.ceil((double)trainerCnt/pageRow); // 전체 페이지 수 계산 ceil:올림
 		Integer startPage = (pageInfo.getCurPage()-1)/btnCnt*btnCnt+1;
-		Integer endPage = startPage+btnCnt-1;
+		Integer endPage = Math.min(startPage + btnCnt - 1, allPage);
 		if(endPage>allPage) endPage = allPage;
 		
 		pageInfo.setAllPage(allPage);
@@ -86,17 +92,26 @@ public class MemberServiceImpl implements MemberService {
 		pagingMap.put("row", row);
 		pagingMap.put("pageRow", pageRow);
 		pagingMap.put("trainerName", trainerName);
+		pagingMap.put("sortColumn", (sortColumn == null || sortColumn.isEmpty()) ? "trainerName" : sortColumn);
+	    pagingMap.put("sortOrder", (sortOrder == null || sortOrder.isEmpty()) ? "ASC" : sortOrder);
+	    
 		return memberDAO.selectTrainerList(pagingMap);
 	}
 
 	@Override
-	public List<MemberDTO> clientList(PageInfo pageInfo, String clientName) throws Exception {
+	public List<MemberDTO> clientList(Map<String, Object> paramMap) throws Exception {
 		int pageRow = 4; // 한 페이지에 보여줄 데이터 수
 		int btnCnt = 4; // 화면 하단에 보여줄 페이지 번호 버튼 갯수
+		
+		PageInfo pageInfo = (PageInfo)paramMap.get("pageInfo");
+	    String clientName = (String)paramMap.get("clientName");
+	    String sortColumn = (String)paramMap.get("sortColumn");
+	    String sortOrder = (String)paramMap.get("sortOrder");
+	    
 		Integer clientCnt = memberDAO.selectClientCnt(); // db에 등록된 전체 헬스장 수
 		Integer allPage = (int)Math.ceil((double)clientCnt/pageRow); // 전체 페이지 수 계산 ceil:올림
 		Integer startPage = (pageInfo.getCurPage()-1)/btnCnt*btnCnt+1;
-		Integer endPage = startPage+btnCnt-1;
+		Integer endPage = Math.min(startPage + btnCnt - 1, allPage);
 		if(endPage>allPage) endPage = allPage;
 		
 		pageInfo.setAllPage(allPage);
@@ -109,6 +124,9 @@ public class MemberServiceImpl implements MemberService {
 		pagingMap.put("row", row);
 		pagingMap.put("pageRow", pageRow);
 		pagingMap.put("clientName", clientName);
+		pagingMap.put("sortColumn", (sortColumn == null || sortColumn.isEmpty()) ? "clientName" : sortColumn);
+	    pagingMap.put("sortOrder", (sortOrder == null || sortOrder.isEmpty()) ? "ASC" : sortOrder);
+	    
 		return memberDAO.selectClientList(pagingMap);
 	}
 
@@ -144,5 +162,15 @@ public class MemberServiceImpl implements MemberService {
 		}else {
 			return memberDAO.selectTrainerAuthDetail(userId);
 		}
+	}
+	@Override
+	public boolean approveMember(String userId, String authType) throws Exception {
+	    int result = 0;
+	    if("GYM".equals(authType)) {
+	        result = memberDAO.updateGymStatus(userId, "APPROVED");
+	    } else {
+	        result = memberDAO.updateTrainerStatus(userId, "APPROVED");
+	    }
+	    return result > 0;
 	}
 }

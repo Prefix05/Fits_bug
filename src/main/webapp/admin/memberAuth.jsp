@@ -77,9 +77,15 @@
     </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        fn_loadPendingList(); // 페이지 열자마자 리스트 로딩
-    });
+//현재 상세 보기 중인 회원의 정보를 저장할 변수
+let currentSelectedUser = {
+    userId: '',
+    authType: ''
+};	
+
+$(document).ready(function() {
+	fn_loadPendingList(); // 페이지 열자마자 리스트 로딩
+});
 
     // 1. 대기 리스트 로드
     function fn_loadPendingList() {
@@ -114,6 +120,8 @@
 
     // 2. 상세 정보 로드
     function fn_loadDetail(uid, type) {
+    	currentSelectedUser.userId = uid;
+        currentSelectedUser.authType = type;
         $.ajax({
             url: "${pageContext.request.contextPath}/admin/memberAuthDetail",
             data: { 
@@ -132,11 +140,43 @@
                 //타입별 특화정보
                 if(type === 'GYM') {
                     $("#detailAddr").text(data.address + " " + data.address_detail);
-                    $("#detailAuthDoc").attr("src", "/uploads/gym/" + data.business_registration_num); // 예시
+                    $("#detailAuthDoc").attr("src", "/uploads/gym/" + data.bizNum); // 예시
                 } else {
                     $("#detailAddr").text(data.address || '프리랜서/지점소속');
                     $("#detailAuthDoc").attr("src", `${contextPath}/trainer/profile-img/` + data.certFile);
                 }
+            }
+        });
+    }
+    
+    function fn_approveUser() {
+        const userName = $("#detailName").text();
+        
+        if (!confirm(`[\${userName}] 님의 자격을 승인하시겠습니까?`)) {
+            return;
+        }
+        
+        $.ajax({
+            url: "${pageContext.request.contextPath}/admin/memberAuthDetail",
+            type: "POST",
+            data: {
+                userId: currentSelectedUser.userId,
+                authType: currentSelectedUser.authType,
+                statusAction: 'APPROVED' // 서버에서 'approved'로 처리하도록 고정값 전달
+            },
+            success: function(response) {
+                if(response === "success") {
+                    alert("정상적으로 승인되었습니다.");
+                    // 화면 초기화 및 리스트 새로고침
+                    $("#detailView").addClass("hidden");
+                    $("#emptyView").removeClass("hidden");
+                    fn_loadPendingList(); 
+                } else {
+                    alert("승인 처리 중 오류가 발생했습니다.");
+                }
+            },
+            error: function() {
+                alert("서버 통신 오류가 발생했습니다.");
             }
         });
     }
@@ -217,8 +257,8 @@ class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary trans
                     <p id="detailEmail" class="text-primary font-semibold mt-1">이메일</p>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="fn_authAction('REJECT')" class="px-6 py-2.5 rounded-xl border border-outline-variant text-on-surface-variant font-bold text-sm">반려</button>
-                    <button onclick="fn_authAction('APPROVE')" class="px-8 py-2.5 rounded-xl primary-gradient text-white font-bold text-sm">승인</button>
+                    <button onclick="fn_approveUser()" class="px-8 py-2.5 rounded-xl primary-gradient text-white font-bold text-sm">
+                    승인</button>
                 </div>
             </div>
 

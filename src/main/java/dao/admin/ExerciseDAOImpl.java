@@ -1,6 +1,7 @@
 package dao.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -25,11 +26,11 @@ public class ExerciseDAOImpl implements ExerciseDAO {
 	}
 
 	@Override
-	public List<ExerciseDTO> selectAllGuide(String targetMuscle) throws Exception {
+	public List<ExerciseDTO> selectAllGuide(Map<String, Object> paramMap) throws Exception {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		List<ExerciseDTO> list = null;
 		try {
-			list = sqlSession.selectList("mapper.admin.exercise.selectAllGuide", targetMuscle);
+			list = sqlSession.selectList("mapper.admin.exercise.selectAllGuide", paramMap);
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -37,6 +38,21 @@ public class ExerciseDAOImpl implements ExerciseDAO {
 			sqlSession.close();
 		}
 		return list;
+	}
+	
+	@Override
+	public Integer selectGuideCount(Map<String, Object> paramMap) throws Exception {
+		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		int cnt = 0;
+		try {
+			cnt = sqlSession.selectOne("mapper.admin.exercise.selectGuideCount", paramMap);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			sqlSession.close();
+		}
+		return cnt;
 	}
 
 	@Override
@@ -88,7 +104,4 @@ public class ExerciseDAOImpl implements ExerciseDAO {
 		}
 		return result;
 	}
-
-	
-
 }

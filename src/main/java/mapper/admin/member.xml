@@ -7,7 +7,7 @@
 		select g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
 		from gym g 
 		left join user u on(g.user_id=u.id)
-		left join member m on(g.id=m.gym_id)
+		left join member m on(u.id=m.id)
 		left join trainer t on(g.id=t.gym_id)
 		left join payment p on(p.user_id=g.user_id)
 		group by g.name, u.phone, u.created_at
@@ -17,18 +17,21 @@
 		select u.name as trainerName, u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
 		from trainer t
 		left join user u on(t.user_id=u.id)
-		left join member m on(t.id=m.trainer_id)
+		left join member m on(u.id=m.id)
 		left join payment p on(p.user_id=t.user_id)
 		group by u.name, u.phone, u.created_at
 		order by u.name
 	</select>
 	<select id="selectAllClient" resultType="member">
-		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, m.trainer_id as ptTrainer, ifnull(sum(p.payment_price),0) as payment 
-		from member m
-		left join user u on(m.user_id=u.id)
-		left join payment p on(p.user_id=m.user_id)
-		group by u.name, u.phone, u.created_at, m.trainer_id
-		order by u.name
+		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
+        IFNULL(SUM(p.payment_price), 0) AS payment 
+    	FROM MEMBER m
+    	LEFT JOIN USER u ON m.user_id = u.id
+    	LEFT JOIN PAYMENT p ON p.user_id = m.user_id
+    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
+    	LEFT JOIN USER tu ON t.user_id = tu.id
+    	GROUP BY u.name, u.phone, u.created_at, tu.name
+    	ORDER BY u.name
 	</select>
 	
 	
@@ -36,10 +39,9 @@
 		select g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
 		from gym g 
 		left join user u on(g.user_id=u.id)
-		left join member m on(g.id=m.gym_id)
+		left join member m on(u.id=m.id)
 		left join trainer t on(g.id=t.gym_id)
-		left join payment p on(p.user_id=g.user_id)
-			
+		left join payment p on(p.user_id=g.user_id)		
 		<where>
 			<if test="gymName != null and gymName != ''">
 				And g.name like concat('%', #{gymName}, '%')
@@ -63,7 +65,7 @@
 		select u.name as trainerName, u.profile_image ,u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
 		from trainer t
 		left join user u on(t.user_id=u.id)
-		left join member m on(t.id=m.trainer_id)
+		left join member m on(u.id=m.id)
 		left join payment p on(p.user_id=t.user_id)
 		
 		<where>
@@ -71,9 +73,16 @@
 				And u.name like concat('%', #{trainerName}, '%')
 			</if>
 		</where>
-		group by u.name, u.phone, u.created_at
-		order by u.name
-		limit #{row}, #{pageRow}
+    	group by u.name, u.phone, u.created_at, u.profile_image
+    	order by 
+    	<choose>
+        	<when test="sortColumn == 'trainerClientCount'">trainerClientCount</when>
+        	<when test="sortColumn == 'trainerCal'">trainerCal</when>
+        	<when test="sortColumn == 'regDate'">regDate</when>
+        	<otherwise>u.name</otherwise>
+    	</choose>
+    	${sortOrder}
+    	limit #{row}, #{pageRow}
 	</select>
 	<select id="selectTrainerCnt" resultType="Integer">
 		select count(*) from trainer
@@ -81,19 +90,28 @@
 	
 	
 	<select id="selectClientList" parameterType="Map" resultType="member">
-		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, m.trainer_id as ptTrainer, ifnull(sum(p.payment_price),0) as payment 
+		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
+        IFNULL(SUM(p.payment_price), 0) AS payment
 		from member m
 		left join user u on(m.user_id=u.id)
 		left join payment p on(p.user_id=m.user_id)
+		LEFT JOIN trainer t ON p.trainer_id = t.id
+    	LEFT JOIN user tu ON t.user_id = tu.id
 		
 		<where>
 			<if test="clientName != null and clientName != ''">
 				And u.name like concat('%', #{clientName}, '%')
 			</if>
 		</where>
-		group by u.name, u.phone, u.created_at, m.trainer_id
-		order by u.name
-		limit #{row}, #{pageRow}
+		group by u.name, u.phone, u.created_at, tu.name
+    	order by 
+    	<choose>
+        	<when test="sortColumn == 'payment'">payment</when>
+        	<when test="sortColumn == 'regDate'">regDate</when>
+        	<otherwise>u.name</otherwise>
+    	</choose>
+    	${sortOrder}
+    	limit #{row}, #{pageRow}
 	</select>
 	<select id="selectClientCnt" resultType="Integer">
 		select count(*) from member
@@ -144,8 +162,17 @@
         	t.br_file AS authDoc,
 			tc.cert_file AS certFile
     	FROM user u
-    	JOIN trainer t ON u.id = t.user_id
-    	JOIN trainer_certification tc ON t.id=tc.trainer_id
+    	left JOIN trainer t ON u.id = t.user_id
+    	left JOIN trainer_certification tc ON t.id=tc.trainer_id
     	WHERE u.id = #{userId}
 	</select>
+	
+	<update id="updateGymStatus" parameterType="Map">
+    	UPDATE gym SET approval_status = #{status} WHERE user_id = #{userId}
+	</update>
+
+	<update id="updateTrainerStatus" parameterType="Map">
+    	UPDATE trainer SET approval_status = #{status} WHERE user_id = #{userId}
+	</update>
+	
 </mapper>	

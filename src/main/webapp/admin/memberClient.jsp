@@ -6,7 +6,9 @@
     String contextPath = request.getContextPath();
 %>    
 <!DOCTYPE html>
-<html lang="ko"><head>
+<html lang="ko">
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
