@@ -41,7 +41,7 @@ public class MyPageController extends HttpServlet {
             MemberDTO fallback = new MemberDTO();
             fallback.setEmail(loginUser.getEmail());
             fallback.setNickname(loginUser.getNickname());
-            fallback.setProfile_image(loginUser.getProfile_image());
+            fallback.setProfile_image(loginUser.getProfileImage());
             fallback.setRole(loginUser.getRole());
             dto.setMember(fallback);
         }
@@ -83,8 +83,6 @@ public class MyPageController extends HttpServlet {
         member.setEmail(email);  // WHERE 조건용
         member.setGoals(request.getParameter("goal"));
         member.setExperience(request.getParameter("level"));
-        member.setLevel(request.getParameter("level"));
-        member.setFrequency(request.getParameter("frequency"));
 
         try {
             member.setHeight(Integer.parseInt(request.getParameter("height")));

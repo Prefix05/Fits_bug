@@ -50,7 +50,7 @@ public class UpdateProfileController extends HttpServlet {
 
             filePart.write(uploadPath + File.separator + fileName);
 
-            loginUser.setProfile_image(fileName);
+            loginUser.setProfileImage(fileName);
         }
 
         // 🔥 텍스트 값

@@ -14,4 +14,6 @@ public interface MemberDAO {
     List<MemberDTO> findByTrainerId(int trainerId);
     List<MemberDTO> findByGymId(int gymId);
     MemberDTO selectMemberByUserId(Integer userId) throws Exception;
+
 }
+

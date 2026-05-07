@@ -31,7 +31,7 @@ public class UploadController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("loginUser");
 
-        user.setProfile_image(fileName);
+        user.setProfileImage(fileName);
 
         // DB 업데이트
         new MyPageServiceImpl().updateProfile_image(user);

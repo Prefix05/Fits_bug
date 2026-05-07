@@ -33,11 +33,18 @@ public class Step3Controller extends HttpServlet {
         String nickname = (String) session.getAttribute("nickname");
         String name     = (String) session.getAttribute("name");
         String phone    = (String) session.getAttribute("phone");
+        String ageStr   = (String) session.getAttribute("age");
+        String gender   = (String) session.getAttribute("gender");
 
         // ── Step2 세션 데이터 ─────────────────────────────────
         String heightStr = (String) session.getAttribute("height");
         String weightStr = (String) session.getAttribute("weight");
-        String diet      = (String) session.getAttribute("diet");
+        String dietRaw   = (String) session.getAttribute("diet");
+        // Map form values to DB ENUM('YES','Intermediate','NO')
+        String diet;
+        if ("strict".equals(dietRaw))        diet = "YES";
+        else if ("protein".equals(dietRaw))  diet = "Intermediate";
+        else                                 diet = "NO";
 
         // ── Step3 파라미터 ────────────────────────────────────
         String purpose       = request.getParameter("goal");       // ENUM('diet','balance','bulk-up')
@@ -45,9 +52,10 @@ public class Step3Controller extends HttpServlet {
         String frequency     = request.getParameter("workout");    // 운동 빈도
         String exerciseCntGoal = request.getParameter("exerciseCntGoal"); // <=2 / 3~4 / >5
 
-        int height = 0, weight = 0;
+        int height = 0, weight = 0, age = 0;
         try { height = Integer.parseInt(heightStr); } catch (Exception ignored) {}
         try { weight = Integer.parseInt(weightStr); } catch (Exception ignored) {}
+        try { age    = Integer.parseInt(ageStr);    } catch (Exception ignored) {}
 
         UserDTO user = new UserDTO();
         user.setEmail(email);
@@ -55,7 +63,12 @@ public class Step3Controller extends HttpServlet {
         user.setNickname(nickname);
         user.setName(name);
         user.setPhone(phone);
-        user.setEmail_verified(true);
+
+        user.setEmailVerified(true);
+
+        user.setAge(age);
+        user.setGender(gender);
+
         user.setRole("MEMBER");
 
         UserDAO userDao = new UserDAOImpl();
@@ -72,19 +85,22 @@ public class Step3Controller extends HttpServlet {
         member.setHeight(height);              
         member.setWeight(weight);              
         member.setDiet(diet);                  
-        member.setGoals(purpose);              
-        member.setFrequency(frequency);        
-        member.setLevel(experience);           
+        member.setGoals(purpose);                        
         if (exerciseCntGoal != null) {
             member.setExerciseCountGoal(exerciseCntGoal);
         }
 
         MemberDAO memberDao = new MemberDAOImpl();
-        memberDao.insertMember(member);
+        int inserted2 = memberDao.insertMember(member);
+        if (inserted2 == 0) {
+            System.err.println("[Step3] MEMBER INSERT failed for user_id=" + userId);
+            request.getRequestDispatcher("/member/step3.jsp").forward(request, response);
+            return;
+        }
 
 
         for (String key : new String[]{
-                "username","password","nickname","name","phone",
+                "username","password","nickname","name","phone","age","gender",
                 "role","height","weight","diet",
                 "authCode","authTime","authEmail"}) {
             session.removeAttribute(key);

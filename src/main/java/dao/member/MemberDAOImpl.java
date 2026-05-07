@@ -129,6 +129,7 @@ public class MemberDAOImpl implements MemberDAO {
 	public MemberDTO selectMemberByUserId(Integer userId) throws Exception {
 		MemberDTO memberDto = null;
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+
 			memberDto = sqlSession.selectOne("mapper.MemberMapper.selectMemberByUserId", userId);
 		}
 		return memberDto;

@@ -109,6 +109,18 @@ public class PaymentSuccessController extends HttpServlet {
             payment.setPaymentType("PT");
             sql.insert("mapper.PaymentMapper.insert", payment);
 
+            Map<String, Object> ptParams = new HashMap<>();
+            ptParams.put("memberId",     memberId);
+            ptParams.put("trainerId",    trainerId);
+            ptParams.put("sessionCount", sessionCount);
+
+            int existing = sql.selectOne("mapper.MemberMapper.findMembershipPtByMemberAndTrainer", ptParams);
+            if (existing > 0) {
+                sql.update("mapper.MemberMapper.updateMembershipPtLessons", ptParams);
+            } else {
+                sql.insert("mapper.MemberMapper.insertMembershipPt", ptParams);
+            }
+
             sql.commit();
 
             MemberDAO memberDao = new MemberDAOImpl();
