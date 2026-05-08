@@ -47,7 +47,29 @@ public class GymMain extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
-            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
+
+			HttpSession session = request.getSession();
+
+			UserDTO user = null;
+			Integer gymId = null;
+
+			if (session != null && session.getAttribute("loginUser") != null) {
+			    user = (UserDTO) session.getAttribute("loginUser");
+
+			    if (user.getOtherId() != null) {
+			        gymId = user.getOtherId();
+			    }
+			}
+
+			if (gymId == null && request.getParameter("gymId") != null) {
+			    gymId = Integer.parseInt(request.getParameter("gymId"));
+			}
+
+			if (gymId == null) {
+			    gymId = 1; // 임시 기본값
+			}
+//            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
+
 			
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
@@ -71,6 +93,7 @@ public class GymMain extends HttpServlet {
 			request.setAttribute("trainerCount", trainerList == null ? 0 : trainerList.size());
 			request.setAttribute("todayHotTime", todayHotTime);
 			request.setAttribute("allReviewList", allReviewList);
+			request.setAttribute("user", user);
 
 			request.getRequestDispatcher("/gym/gym_main.jsp").forward(request, response);
 

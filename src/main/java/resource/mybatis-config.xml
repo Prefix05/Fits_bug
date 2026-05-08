@@ -61,7 +61,7 @@
 			<transactionManager type="JDBC"/>
 			<dataSource type="POOLED">
 				<property name="driver" value="org.mariadb.jdbc.Driver"/>
-				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
+				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug2"/>
 				<property name="username" value="root"/>
 				<property name="password" value="7564"/>
 <!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
@@ -92,7 +92,7 @@
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
 		<mapper resource="mapper/gym/payment.xml"/>
-		<mapper resource="mapper/gym/gymDetailCard.xml"/>
+		
 
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/member/UserMapper.xml"/>

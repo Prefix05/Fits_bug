@@ -8,6 +8,7 @@ import dao.gym.InfoEditDaoImpl;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
+import dto.member.UserDTO;
 
 public class GymInfoEditServiceImpl implements GymInfoEditService {
 	private InfoEditDao dao = new InfoEditDaoImpl();
@@ -23,8 +24,8 @@ public class GymInfoEditServiceImpl implements GymInfoEditService {
 	}
 
 	@Override
-	public int updateGymUser(Gym gym) {
-		return dao.updateGymUser(gym);
+	public void updateGymUser(UserDTO user) {
+		dao.updateGymUser(user);
 	}
 
 	@Override

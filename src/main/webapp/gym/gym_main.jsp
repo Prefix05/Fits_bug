@@ -117,22 +117,56 @@
 <!-- Hero Section -->
 <section>
 <div class="relative h-[240px] rounded-xl overflow-hidden shadow-sm">
-<img alt="Modern high-end gym interior" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOmAriJw7C7IRscUaDd8fksRXMSKZHOVB_8-HXCoQq2K9GCjy4GL9h3g5dh6ZAP3acuI7M9g61BPLNElK6ptpJpqpajwYiOszBAt_J0Kh5ptZu1dkKB6DQVunEBmyiEIOfZTgJ3Qa8m3O_3_E6qnm0jIC_fdHGau6Z8PH8qYbhpwnH6HswH70ba6rM_uGIIcqdDqcJkM8uFap5ohS3Gez3PPjLUR3_oxbqCMu3OpdTXLkMLnGnxJx50HZWp5EmYkyXVeJiorZaSXnH"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-<div class="absolute bottom-6 left-6 flex items-end space-x-4">
-<div class="w-20 h-20 bg-surface-container-lowest rounded-xl p-2 shadow-lg flex items-center justify-center">
-<span class="text-primary font-black text-xl tracking-tighter italic">FBG</span>
-</div>
-<div class="text-white pb-1">
-<h2 class="text-3xl font-black tracking-tight">${gym.name}<span class="material-symbols-outlined text-primary align-middle ml-2" style='font-variation-settings: "FILL" 1; font-size: 24px;'>check_circle</span></h2>
 
-<div class="flex items-center space-x-4 text-[11px] font-medium text-white/90">
-<span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">call</span>${gym.phoneNum}</span>
-<span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1 text-yellow-400" style='font-variation-settings: "FILL" 1;'>star</span>${gym.rating}(${gym.reviewCount}개 후기)</span>
-</div>
-<p class="text-[11px] font-medium text-white/90 mt-1">${gym.description}</p>
-</div>
-</div>
+    <!-- 배경 이미지 -->
+    <img alt="Gym background"
+         class="w-full h-full object-cover"
+         src="${pageContext.request.contextPath}/trainer/profile-img/${gym.backgroundImg}"
+         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'"/>
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+    <div class="absolute bottom-6 left-6 flex items-end space-x-4">
+
+        <!-- 프로필 로고 -->
+        <div class="w-20 h-20 bg-surface-container-lowest rounded-xl p-1 shadow-lg overflow-hidden">
+            <img class="w-full h-full object-cover rounded-lg"
+                 src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}"
+                 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
+        </div>
+
+        <!-- 텍스트 -->
+        <div class="text-white pb-1">
+
+            <h2 class="text-3xl font-black tracking-tight">
+                ${gym.name}
+                <span class="material-symbols-outlined text-primary align-middle ml-2"
+                      style='font-variation-settings: "FILL" 1; font-size: 24px;'>
+                    check_circle
+                </span>
+            </h2>
+
+            <div class="flex items-center space-x-4 text-[11px] font-medium text-white/90">
+
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-xs mr-1">call</span>
+                    ${gym.phoneNum}
+                </span>
+
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-xs mr-1 text-yellow-400"
+                          style='font-variation-settings: "FILL" 1;'>star</span>
+                    ${gym.rating}(${gym.reviewCount}개 후기)
+                </span>
+
+            </div>
+
+            <p class="text-[11px] font-medium text-white/90 mt-1">
+                ${gym.description}
+            </p>
+
+        </div>
+    </div>
 </div>
 </section>
 <div class="grid grid-cols-12 gap-6 items-start">
@@ -149,10 +183,9 @@
 		<div class="grid grid-cols-2 gap-2">
 			<c:forEach var="img" items="${images}" varStatus="status">
 				<div class="aspect-video rounded-lg overflow-hidden border border-outline-variant/10">
-					<img alt="Gym gallery image"  
-						 src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"
-	 					 onclick="openLightbox(${status.index})"
-     					 class="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer"/>
+					<img alt="Modern high-end gym interior" class="w-full h-full object-cover"
+     					 src="${pageContext.request.contextPath}/trainer/profile-img/${img}"
+     					 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'"/>
 				</div>
 			</c:forEach>
 		</div>
@@ -512,22 +545,35 @@
 <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/15">
 <h4 class="text-[10px] font-bold text-on-surface-variant mb-4 uppercase tracking-widest">시설 정보</h4>
 <div class="grid grid-cols-2 gap-2 mb-6">
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">lock</span>
-<span class="text-[10px] font-semibold">락커</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">shower</span>
-<span class="text-[10px] font-semibold">샤워실</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">local_parking</span>
-<span class="text-[10px] font-semibold">주차</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">apparel</span>
-<span class="text-[10px] font-semibold">운동복</span>
-</div>
+
+    <c:if test="${fn:contains(gym.facility, '개인락커')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">lock</span>
+            <span class="text-[10px] font-semibold">락커</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '샤워실')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">shower</span>
+            <span class="text-[10px] font-semibold">샤워실</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '주차장')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">local_parking</span>
+            <span class="text-[10px] font-semibold">주차</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '운동복')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">apparel</span>
+            <span class="text-[10px] font-semibold">운동복</span>
+        </div>
+    </c:if>
+
 </div>
 <div class="pt-4 border-t border-outline-variant/10">
 	<h4 class="text-[10px] font-bold text-on-surface-variant mb-3 uppercase tracking-widest">운영 시간</h4>
@@ -617,7 +663,7 @@
 
 const galleryImages =[
 	<c:forEach var="img" items="${images}" varStatus="status">
-	"${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"<c:if test="${!status.last}">,</c:if>
+	"${pageContext.request.contextPath}/trainer/profile-img/${img}"<c:if test="${!status.last}">,</c:if>
 	</c:forEach>
 ];
 

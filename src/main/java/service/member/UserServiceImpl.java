@@ -1,6 +1,7 @@
 package service.member;
 
 import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import dao.gym.GymMainDao;
@@ -9,6 +10,7 @@ import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dao.member.UserDAO;
 import dao.member.UserDAOImpl;
+import dto.gym.Gym;
 import dao.trainer.TrainerDAO;
 import dao.trainer.TrainerDAOImpl;
 import dto.gym.Gym;
@@ -58,6 +60,7 @@ public class UserServiceImpl implements UserService {
                 	TrainerDTO trainer = trainerDAO.findByUserId(session, user.getId());
                 	user.setOtherId(trainer.getTrainerId());	
                 } 
+
         	}
             return user;
         }

@@ -46,7 +46,7 @@
         if (!response.ok) {
             // 결제 실패 비즈니스 로직을 구현하세요.
             console.log(json);
-            window.location.href = `${pageContext.request.contextPath}/trainer/payment/fail.jsp?message=${json.message}&code=${json.code}`;
+            window.location.href = `fail.jsp`;
         }
 
         // 결제 성공 비즈니스 로직을 구현하세요.
