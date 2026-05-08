@@ -2,6 +2,7 @@ package controller.gym;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.gym.Gym;
 import dto.gym.GymTrainerView;
 import dto.gym.HotTime;
 import dto.gym.Membership;
 import dto.gym.Review;
 import dto.gym.Schedule;
+import dto.member.UserDTO;
 import service.gym.GymMainService;
 import service.gym.GymMainServiceImpl;
 import service.gym.GymReviewService;
@@ -24,7 +25,7 @@ import service.gym.GymReviewServiceImpl;
 /**
  * Servlet implementation class GymMain
  */
-@WebServlet("/gym/main")
+@WebServlet("/member/gymDetail")
 public class GymMain extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -42,28 +43,40 @@ public class GymMain extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
 
-			String gymIdStr = request.getParameter("gymId");
+			HttpSession session = request.getSession();
 
+			UserDTO user = null;
+			Integer gymId = null;
 
-	        if (gymIdStr == null) {
-	            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "gymId 없음");
-	            return;
-	        }
+			if (session != null && session.getAttribute("loginUser") != null) {
+			    user = (UserDTO) session.getAttribute("loginUser");
 
+			    if (user.getOtherId() != null) {
+			        gymId = user.getOtherId();
+			    }
+			}
 
-	        int gymId = Integer.parseInt(gymIdStr);
+			if (gymId == null && request.getParameter("gymId") != null) {
+			    gymId = Integer.parseInt(request.getParameter("gymId"));
+			}
 
+			if (gymId == null) {
+			    gymId = 1; // 임시 기본값
+			}
+//            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
+
+			
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 
-			
-			Gym gym = service.getGymMainInfo(gymId);
+				
+			Map<String,Object> gym = service.getGymMainInfo(gymId);
+			System.out.println(gym);
 			List<Review> reviewList = service.getReviewList(gymId);
 			List<Membership> membershipList = service.getMembershipList(gymId);
 			Schedule schedule = service.getSchedule(gymId);
@@ -80,6 +93,7 @@ public class GymMain extends HttpServlet {
 			request.setAttribute("trainerCount", trainerList == null ? 0 : trainerList.size());
 			request.setAttribute("todayHotTime", todayHotTime);
 			request.setAttribute("allReviewList", allReviewList);
+			request.setAttribute("user", user);
 
 			request.getRequestDispatcher("/gym/gym_main.jsp").forward(request, response);
 

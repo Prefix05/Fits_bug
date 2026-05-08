@@ -21,44 +21,13 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
-<!-- Mobile Bottom Nav -->
-<nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">distance</span>
-        <span class="text-[10px] font-medium">내주변</span>
-    </a>
-    <a href="" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-[22px]"
-                  style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-bold text-blue-700">대시보드</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/clients"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-medium">회원관리</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/calendar"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">chat</span>
-        <span class="text-[10px] font-medium">메시지</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">payments</span>
-        <span class="text-[10px] font-medium">수익</span>
-    </a>
-</nav>
 
 <!-- SideNavBar -->
 <c:set var="activePage" value="profile" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+<jsp:include page="/trainer/mobileTopHeader.jsp"/>
+
 
 
 <!-- Main -->
@@ -142,9 +111,19 @@
                                             <span class="material-symbols-outlined text-sm">mail</span>${sessionScope.loginUser.email}
                                         </span>
                                     </c:if>
-                                    <c:if test="${not empty sessionScope.loginUser.tel}">
+                                    <c:if test="${not empty sessionScope.loginUser.phone}">
                                         <span class="flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">phone</span>${sessionScope.loginUser.tel}
+                                            <span class="material-symbols-outlined text-sm">phone</span>${sessionScope.loginUser.phone}
+                                        </span>
+                                    </c:if>
+                                    <c:if test="${sessionScope.loginUser.age > 0}">
+                                        <span class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">cake</span>${sessionScope.loginUser.age}세
+                                        </span>
+                                    </c:if>
+                                    <c:if test="${not empty sessionScope.loginUser.gender}">
+                                        <span class="flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">person</span>${sessionScope.loginUser.gender == 'MALE' ? '남성' : '여성'}
                                         </span>
                                     </c:if>
                                     <c:if test="${not empty gym}">
@@ -306,9 +285,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <p class="text-on-surface-variant/50 text-sm italic">등록된 요금제가 없습니다.
-                                <a href="${pageContext.request.contextPath}/trainer/pricing" class="text-primary font-semibold not-italic">추가하기</a>
-                            </p>
+                            <p class="text-on-surface-variant/50 text-sm italic">등록된 요금제가 없습니다.</p>
                         </c:otherwise>
                     </c:choose>
                 </div>

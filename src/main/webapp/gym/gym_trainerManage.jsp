@@ -120,7 +120,7 @@
 				<tr class="bg-surface-container-low/50">
 					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">프로필</th>
 					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">사번/식별ID</th>
-					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">성함</th>
+					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">이름</th>
 					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">연락처</th>
 					<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">담당 회원 수</th>
 				</tr>

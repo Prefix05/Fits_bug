@@ -83,6 +83,7 @@ tailwind.config = {
       method="post"
       enctype="multipart/form-data">
 
+<input type="hidden" id="gymId" name="gymId" value="${gym.id}">
 <input type="hidden" id="postcode" name="postcode" value="${gym.postcode}">
 <input type="hidden" id="latitude" name="latitude" value="${gym.latitude}">
 <input type="hidden" id="longitude" name="longitude" value="${gym.longitude}">
@@ -121,7 +122,7 @@ tailwind.config = {
                                    name="emailId"
                                    class="flex-1 bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                    type="email"
-                                   value="${gym.emailId}"
+                                   value="${user.email}"
                                    placeholder="example@email.com"/>
 
                             <button type="button"
@@ -156,7 +157,7 @@ tailwind.config = {
                         <input name="userName"
                                class="w-full bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                type="text"
-                               value="${gym.userName}"/>
+                               value="${user.name}"/>
                     </div>
 
                     <div>
@@ -164,7 +165,7 @@ tailwind.config = {
                         <input name="tel"
                                class="w-full bg-surface-container-low border-0 rounded-lg px-3 py-1.5 text-sm"
                                type="tel"
-                               value="${gym.tel}"
+                               value="${user.phone}"
                                placeholder="010-0000-0000"/>
                     </div>
                 </div>
@@ -185,8 +186,9 @@ tailwind.config = {
                     <div class="flex flex-col items-center gap-1.5">
                         <div class="relative">
                             <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm">
-                                <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
+                                <img id="profileMainPreview"
+                                	 class="w-full h-full object-cover"
+                                     src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}"
  									 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
                             </div>
                             <button type="button" onclick="openModal('profileModal')"
@@ -200,8 +202,9 @@ tailwind.config = {
                     <div class="flex flex-col items-center gap-1.5">
                         <div class="relative">
                             <div class="w-20 h-14 rounded overflow-hidden ring-2 ring-primary-fixed border-2 border-white shadow-sm bg-slate-200">
-                                <img class="w-full h-full object-cover"
-     								 src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
+                                <img id="backgroundMainPreview"
+                                	 class="w-full h-full object-cover"
+     								 src="${pageContext.request.contextPath}/trainer/profile-img/${gym.backgroundImg}"
  									 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'">
                             </div>
                             <button type="button" onclick="openModal('backgroundModal')"
@@ -213,21 +216,25 @@ tailwind.config = {
                     </div>
                 </div>
 
-<!-- 				<button type="button" onclick="openModal('galleryModal')"
-        					class="text-[10px] font-bold text-primary flex items-center gap-1 hover:underline">
-    					<span class="material-symbols-outlined text-xs">edit</span> 수정
-				</button>	 -->
+<button type="button"
+        onclick="openModal('galleryModal')"
+        class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-primary text-white rounded-full shadow text-[10px] font-bold">
+    <span class="material-symbols-outlined text-[12px]">photo_camera</span>
+    갤러리 수정
+</button>	 
 				
-                <div class="grid grid-cols-4 gap-2">
+                <div id="galleryMainPreview" class="grid grid-cols-4 gap-2">
                     <c:set var="images" value="${fn:split(gym.file, ',')}" />
-                    <c:forEach var="img" items="${images}">
-                        <c:if test="${not empty img}">
-                            <div class="aspect-square rounded overflow-hidden bg-slate-100 relative">
-                                <img class="w-full h-full object-cover"
-                                     src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}">
-                            </div>
-                        </c:if>
-                    </c:forEach>
+<c:forEach var="img" items="${images}">
+    <c:if test="${not empty img}">
+        <div class="aspect-square rounded overflow-hidden bg-slate-100 relative" data-file="${img}">
+            <img id="galleryMainPreview"
+            	 class="w-full h-full object-cover"
+                 src="${pageContext.request.contextPath}/trainer/profile-img/${img}"
+                 onerror="this.parentElement.remove();">
+        </div>
+    </c:if>
+</c:forEach>
 
                 </div>
             </section>
@@ -311,10 +318,17 @@ tailwind.config = {
     					</p>
 					</button>
 
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-lg border border-outline-variant/10">
-                    	<span class="material-symbols-outlined text-xs text-primary">insert_drive_file</span>
-                        <span class="text-[10px] font-medium truncate flex-1">${gym.brFile}</span>
-                    </div>
+<div class="w-full">
+    <img id="brMainImagePreview"
+         src="${pageContext.request.contextPath}/trainer/profile-img/${gym.brFile}"
+         class="w-full max-h-48 object-contain rounded-lg"
+         onerror="this.style.display='none'">
+
+    <span id="brFilePreview"
+          class="hidden text-[10px] font-medium truncate flex-1">
+        ${gym.brFile}
+    </span>
+</div>
                 </div>
          	</section>
          	
@@ -450,7 +464,7 @@ tailwind.config = {
             </button>
         </div>
 
-        <div class="space-y-2">
+        <div id="membershipPreview" class="space-y-2">
             <c:forEach var="m" items="${membershipList}">
                 <div class="px-3 py-2 rounded bg-surface-container-low flex justify-between items-center">
                     <span class="text-[11px] font-bold">
@@ -471,7 +485,7 @@ tailwind.config = {
 </div>
     </div>
 </main>
-</form>
+
 
 <!-- 프로필 로고 모달 -->
 <div id="profileModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
@@ -486,9 +500,9 @@ tailwind.config = {
         <div class="p-6 space-y-6">
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container shadow">
-                    <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymProfile/${gym.profileImg}"
-						 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
+                    <img id="profilePreview"
+     					 class="w-full h-full object-cover"
+     					 src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}">
                 </div>
                 <p class="mt-3 text-sm text-on-surface-variant">현재 등록된 로고</p>
             </div>
@@ -497,13 +511,17 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-primary text-3xl">cloud_upload</span>
                 <p class="text-sm font-bold">새 로고 업로드</p>
                 <p class="text-xs text-on-surface-variant">PNG, JPG 최대 2MB</p>
-                <input type="file" name="profileImg" class="hidden">
+                <input id="profileImgInput"
+       				   type="file"
+       				   name="profileImg"
+       				   accept="image/*"
+       				   class="hidden">
             </label>
         </div>
 
         <div class="bg-surface-container-low px-6 py-4 flex justify-end gap-3">
             <button type="button" onclick="closeModal('profileModal')" class="px-4 py-2 text-sm rounded-lg">취소</button>
-            <button type="button" onclick="closeModal('profileModal')" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
+            <button type="button" onclick="applyProfilePreview()" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
         </div>
     </div>
 </div>
@@ -522,9 +540,9 @@ tailwind.config = {
             <div>
                 <p class="text-xs font-bold mb-2">현재 배경 사진</p>
                 <div class="aspect-[21/9] rounded-lg overflow-hidden">
-                    <img class="w-full h-full object-cover"
-                         src="${pageContext.request.contextPath}/gym/gymBackImg/${gym.backgroundImg}"
-						 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'">
+                    <img id="backgroundPreview"
+     					 class="w-full h-full object-cover"
+     					 src="${pageContext.request.contextPath}/trainer/profile-img/${gym.backgroundImg}">
                 </div>
             </div>
 
@@ -532,13 +550,17 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-primary text-3xl">cloud_upload</span>
                 <p class="text-sm font-bold">새 배경 사진 업로드</p>
                 <p class="text-xs text-on-surface-variant">PNG, JPG 권장 1920x600</p>
-                <input type="file" name="backgroundImg" class="hidden">
+                <input id="backgroundImgInput"
+       				   type="file"
+       				   name="backgroundImg"
+       				   accept="image/*"
+       				   class="hidden">
             </label>
         </div>
 
         <div class="bg-surface-container-low px-6 py-4 flex justify-end gap-3">
             <button type="button" onclick="closeModal('backgroundModal')" class="px-4 py-2 text-sm rounded-lg">취소</button>
-            <button type="button" onclick="closeModal('backgroundModal')" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
+            <button type="button" onclick="applyBackgroundPreview()" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
         </div>
     </div>
 </div>
@@ -558,9 +580,9 @@ tailwind.config = {
                 <c:set var="images" value="${fn:split(gym.file, ',')}" />
                 <c:forEach var="img" items="${images}">
                     <c:if test="${not empty img}">
-                        <div class="relative aspect-square rounded-lg overflow-hidden bg-surface-container-low">
+                        <div class="relative aspect-square rounded-lg overflow-hidden bg-surface-container-low"  data-file="${img}">
                             <img class="w-full h-full object-cover"
-                                 src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}">
+                                 src="${pageContext.request.contextPath}/trainer/profile-img/${img}">
                             <button type="button"
         							onclick="removeGallery(this, '${img}')"
         							class="absolute top-2 right-2 bg-white rounded shadow px-1">
@@ -570,16 +592,27 @@ tailwind.config = {
                     </c:if>
                 </c:forEach>
 
-                <label class="aspect-square rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer">
-                    <span class="material-symbols-outlined text-primary text-3xl">add</span>
-                    <input type="file" name="galleryImgs" multiple class="hidden">
-                </label>
+                <label id="galleryUploadBox"
+       class="aspect-square rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer overflow-hidden relative">
+    <span id="galleryAddIcon"
+          class="material-symbols-outlined text-primary text-3xl">add</span>
+
+    <img id="galleryUploadPreview"
+         class="hidden absolute inset-0 w-full h-full object-cover">
+
+    <input id="galleryImgsInput"
+           type="file"
+           name="galleryImgs"
+           multiple
+           accept="image/*"
+           class="hidden">
+</label>
             </div>
         </div>
 
         <div class="bg-surface-container-low px-6 py-4 flex justify-end gap-3">
             <button type="button" onclick="closeModal('galleryModal')" class="px-4 py-2 text-sm rounded-lg">취소</button>
-            <button type="button" onclick="closeModal('galleryModal')" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
+            <button type="button" onclick="applyGalleryPreview()" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
         </div>
     </div>
 </div>
@@ -594,22 +627,32 @@ tailwind.config = {
             </button>
         </div>
 
-        <div class="p-6">
-            <label class="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center space-y-4 cursor-pointer">
-                <span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
-                <p class="font-semibold">파일을 드래그하거나 클릭하여 선택하세요</p>
-                <p class="text-sm text-on-surface-variant">PDF, JPG, PNG 최대 5MB</p>
-                <input type="file" name="brFile" class="hidden">
-            </label>
+        <label for="brFileInput"
+       class="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center space-y-4 cursor-pointer">
+    <span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
+    <p class="font-semibold">파일을 클릭하여 선택하세요</p>
+    <p class="text-sm text-on-surface-variant">PDF, JPG, PNG 최대 5MB</p>
+</label>
 
-            <div class="mt-4 text-xs text-on-surface-variant">
-                현재 파일: ${gym.brFile}
-            </div>
-        </div>
+<input id="brFileInput"
+       type="file"
+       name="brFile"
+       accept=".pdf,image/*"
+       class="sr-only">
+       
+       <p id="brFileName" class="mt-2 text-xs text-primary"></p>
+       
+       <img id="brImagePreview"
+     		class="hidden mt-4 max-h-64 w-full object-contain rounded-lg border">
+
+<div id="currentBrFile"
+     class="mt-4 text-xs text-on-surface-variant">
+    현재 파일: ${gym.brFile}
+</div>
 
         <div class="bg-surface-container-low px-6 py-4 flex justify-end gap-3">
             <button type="button" onclick="closeModal('businessModal')" class="px-4 py-2 text-sm rounded-lg">취소</button>
-            <button type="button" onclick="closeModal('businessModal')" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
+            <button type="button" onclick="applyBusinessPreview()" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
         </div>
     </div>
 </div>
@@ -629,7 +672,7 @@ tailwind.config = {
 
         <div id="membershipArea" class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-surface-container-low">
             <c:forEach var="m" items="${membershipList}">
-                <div class="bg-white p-5 rounded-lg border flex flex-col gap-4">
+                <div class="membership-card bg-white p-5 rounded-lg border flex flex-col gap-4">
                     <input type="hidden" name="membershipId" value="${m.membershipNum}">
 
                     <div class="grid grid-cols-2 gap-2">
@@ -645,7 +688,7 @@ tailwind.config = {
 
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm">₩</span>
-                        <input type="number" name="membershipPrice" value="${m.price}"
+                        <input type="number" name="membershipPrice" value="${m.price.intValue()}" step="100" min="100"
                                class="w-full pl-7 py-2 text-sm rounded-lg" placeholder="가격">
                     </div>
 
@@ -662,7 +705,7 @@ tailwind.config = {
 
         <div class="bg-surface-container-low px-6 py-4 flex justify-end gap-3">
             <button type="button" onclick="closeModal('membershipModal')" class="px-4 py-2 text-sm rounded-lg">취소</button>
-            <button type="button" onclick="closeModal('membershipModal')" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
+            <button type="button" onclick="applyMembershipPreview()" class="px-5 py-2 bg-primary text-white text-sm rounded-lg">적용</button>
         </div>
     </div>
 </div>
@@ -752,7 +795,7 @@ function addMembershipCard() {
     const addBtn = area.lastElementChild;
 
     const div = document.createElement("div");
-    div.className = "bg-white p-5 rounded-lg border flex flex-col gap-4";
+    div.className = "membership-card bg-white p-5 rounded-lg border flex flex-col gap-4";
 
     div.innerHTML = `
         <input type="hidden" name="membershipId" value="new">
@@ -770,7 +813,7 @@ function addMembershipCard() {
 
         <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm">₩</span>
-            <input type="number" name="membershipPrice"
+            <input type="number" name="membershipPrice" step="100" min="100"
                    class="w-full pl-7 py-2 text-sm rounded-lg" placeholder="가격">
         </div>
 
@@ -792,7 +835,193 @@ function removeGallery(btn, fileName) {
         input.value += "," + fileName;
     }
 }
-</script>
 
+function applyMembershipPreview() {
+    const preview = document.getElementById("membershipPreview");
+    const cards = document.querySelectorAll("#membershipArea .membership-card");
+
+    preview.innerHTML = "";
+
+    cards.forEach(card => {
+        const typeEl = card.querySelector('select[name="membershipType"]');
+        const repEl = card.querySelector('input[name="membershipTypeRep"]');
+        const priceEl = card.querySelector('input[name="membershipPrice"]');
+
+        if (!typeEl || !repEl || !priceEl) return;
+
+        const type = typeEl.value;
+        const rep = repEl.value.trim();
+        const price = priceEl.value.trim();
+
+        if (!rep || !price) return;
+
+        let title = "";
+
+        if (type === "day") {
+            title = rep + "일 이용권";
+        } else if (type === "month") {
+            title = rep + "개월 회원권";
+        } else {
+            title = "PT " + rep + "회";
+        }
+
+        const formattedPrice = Number(price).toLocaleString();
+
+        preview.innerHTML +=
+            '<div class="px-3 py-2 rounded bg-surface-container-low flex justify-between items-center">' +
+                '<span class="text-[11px] font-bold">' + title + '</span>' +
+                '<p class="text-[11px] font-black">₩' + formattedPrice + '</p>' +
+            '</div>';
+    });
+
+    closeModal("membershipModal");
+}
+
+document.getElementById("brFileInput").addEventListener("change", function () {
+    const file = this.files.length > 0 ? this.files[0] : null;
+    const fileNameEl = document.getElementById("brFileName");
+    const previewImg = document.getElementById("brImagePreview");
+
+    if (!file) {
+        fileNameEl.textContent = "";
+        previewImg.classList.add("hidden");
+        previewImg.src = "";
+        return;
+    }
+
+    fileNameEl.textContent = file.name;
+
+    if (file.type.startsWith("image/")) {
+        previewImg.src = URL.createObjectURL(file);
+        previewImg.classList.remove("hidden");
+    } else {
+        previewImg.classList.add("hidden");
+        previewImg.src = "";
+    }
+});
+
+function applyBusinessPreview() {
+    const input = document.getElementById("brFileInput");
+    const current = document.getElementById("currentBrFile");
+    const preview = document.getElementById("brFilePreview");
+    const mainImg = document.getElementById("brMainImagePreview");
+
+    if (input.files.length > 0) {
+        const file = input.files[0];
+        const fileName = file.name;
+
+        if (current) {
+            current.textContent = "현재 파일: " + fileName;
+        }
+
+        if (preview) {
+            preview.textContent = fileName;
+        }
+
+        if (mainImg) {
+            if (file.type.startsWith("image/")) {
+                mainImg.src = URL.createObjectURL(file);
+                mainImg.classList.remove("hidden");
+            } else {
+                mainImg.src = "";
+                mainImg.classList.add("hidden");
+            }
+        }
+    }
+
+    closeModal("businessModal");
+}
+
+document.getElementById("profileImgInput")?.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    document.getElementById("profilePreview").src = URL.createObjectURL(file);
+});
+
+document.getElementById("backgroundImgInput")?.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    document.getElementById("backgroundPreview").src = URL.createObjectURL(file);
+});
+
+document.getElementById("galleryImgsInput")?.addEventListener("change", function () {
+    const file = this.files[0];
+    const previewImg = document.getElementById("galleryUploadPreview");
+    const addIcon = document.getElementById("galleryAddIcon");
+
+    if (!file || !file.type.startsWith("image/")) {
+        previewImg.classList.add("hidden");
+        previewImg.src = "";
+        addIcon.classList.remove("hidden");
+        return;
+    }
+
+    previewImg.src = URL.createObjectURL(file);
+    previewImg.classList.remove("hidden");
+    addIcon.classList.add("hidden");
+});
+
+function applyProfilePreview() {
+    const input = document.getElementById("profileImgInput");
+    const mainImg = document.getElementById("profileMainPreview");
+
+    if (input && input.files.length > 0) {
+        mainImg.src = URL.createObjectURL(input.files[0]);
+    }
+
+    closeModal("profileModal");
+}
+
+function applyBackgroundPreview() {
+    const input = document.getElementById("backgroundImgInput");
+    const mainImg = document.getElementById("backgroundMainPreview");
+
+    if (input && input.files.length > 0) {
+        mainImg.src = URL.createObjectURL(input.files[0]);
+    }
+
+    closeModal("backgroundModal");
+}
+
+function applyGalleryPreview() {
+    const mainArea = document.getElementById("galleryMainPreview");
+    const input = document.getElementById("galleryImgsInput");
+    const deleteInput = document.getElementById("deleteGallery");
+
+    // 삭제된 기존 이미지 페이지에서도 제거
+    if (deleteInput.value.trim() !== "") {
+        const deleteFiles = deleteInput.value.split(",");
+
+        deleteFiles.forEach(fileName => {
+            const target = mainArea.querySelector('[data-file="' + fileName + '"]');
+            if (target) {
+                target.remove();
+            }
+        });
+    }
+
+    // 새로 추가한 이미지 페이지에 미리보기 추가
+    if (input && input.files.length > 0) {
+        Array.from(input.files).forEach(file => {
+            if (!file.type.startsWith("image/")) return;
+
+            const box = document.createElement("div");
+            box.className = "aspect-square rounded overflow-hidden bg-slate-100 relative";
+
+            const img = document.createElement("img");
+            img.className = "w-full h-full object-cover";
+            img.src = URL.createObjectURL(file);
+
+            box.appendChild(img);
+            mainArea.appendChild(box);
+        });
+    }
+
+    closeModal("galleryModal");
+}
+</script>
+</form>
 </body>
 </html>

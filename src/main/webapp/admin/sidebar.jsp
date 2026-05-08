@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.trainer.UserDTO"%>
+<%@ page import="dto.member.UserDTO"%>
 <%
     String contextPath = request.getContextPath();
     UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImg() %>"
+    <img src="<%= loginUser.getProfileImage() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">

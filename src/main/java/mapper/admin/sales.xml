@@ -32,25 +32,105 @@
         <result property="settlementDeadline" column="settlement_deadline"/>
         <result property="totalSales" column="total_sales"/>
         <result property="totalFee" column="total_fee"/>
-        <result property="netAmount" column="net_amount"/>
+        <result property="totalAmount" column="total_amount"/>
         <result property="settlementStatus" column="status"/> <!-- 컬럼명이 status인 경우 -->
         <result property="completedAt" column="completed_at"/>
     </resultMap>
 
+	<!-- [추가] 대시보드 요약 -->
+    <select id="getSalesSummary" resultType="map">
+        SELECT 
+            IFNULL(SUM(payment_price), 0) as totalSales,
+            IFNULL(SUM(payment_fee), 0) as totalFee,
+            IFNULL(SUM(payment_price) - SUM(payment_fee), 0) as totalAmount
+        FROM PAYMENT
+        WHERE status = '결제완료' 
+        <if test="startDate != null and endDate != null">
+            AND payment_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+    </select>
+    
+    <!-- [추가] 모달창용 정산 세부 내역 조회 (중요) -->
+    <!-- resultType="map"으로 설정하여 Service/Controller에서 Map 형태로 바로 받습니다. -->
+    <select id="selectSettlementDetail" resultType="map">
+        SELECT 
+            u.name AS memberName,
+            p.payment_date AS payDate,
+            p.payment_price AS payAmount,
+            p.payment_fee AS fee,
+            (p.payment_price - p.payment_fee) AS netAmount,
+            COALESCE(pa.bank_name, g.bank_name) AS bankName,
+        	COALESCE(pa.account_number, g.account_number) AS accountNum,
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' THEN g.name
+            	ELSE tu.name 
+        	END AS ownerName
+        FROM PAYMENT p
+    	JOIN USER u ON p.user_id = u.id
+    	LEFT JOIN GYM g ON p.gym_id = g.id
+    	LEFT JOIN TRAINER t ON p.trainer_id = t.id
+    	LEFT JOIN USER tu ON t.user_id = tu.id 
+    	LEFT JOIN PAYOUT_ACCOUNT pa ON t.id = pa.trainer_id
+        WHERE p.status = '결제완료'
+    	<!-- 1. 해당 정산의 대상(헬스장 or 트레이너) 필터링 -->
+    	AND (
+        	CASE 
+            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' 
+            	THEN p.gym_id
+            	ELSE p.trainer_id 
+        	END
+    	) = (SELECT target_id FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	<!-- 2. 해당 정산의 월(Month) 필터링 -->
+    	AND DATE_FORMAT(p.payment_date, '%Y-%m') = (SELECT settlement_month FROM SETTLEMENT WHERE id = #{settlementId})
+    
+    	ORDER BY p.payment_date DESC
+    </select>
     <!-- [섹션 1] 정산 상세 내역 조회 (SettlementResultMap 사용) -->
     <select id="selectSettlementList" resultMap="SettlementResultMap">
-        SELECT * FROM SETTLEMENT
+        SELECT 
+        	s.*,
+        	(SELECT IFNULL(SUM(payment_price), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+           	AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+           	AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_sales,
+        	(SELECT IFNULL(SUM(payment_fee), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+           	AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+           	AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_fee,
+        	(SELECT IFNULL(SUM(payment_price) - SUM(payment_fee), 0) 
+         	FROM PAYMENT p 
+         	WHERE p.status = '결제완료' 
+            AND (CASE WHEN s.target_type = 'GYM' THEN p.gym_id ELSE p.trainer_id END) = s.target_id
+            AND DATE_FORMAT(p.payment_date, '%Y-%m') = s.settlement_month
+        	) as total_amount
+    	FROM SETTLEMENT s
         <where>
             <if test="status != null and status != ''">
-                AND status = #{status}
+                AND s.status = #{status}
             </if>
             <if test="searchKeyword != null and searchKeyword != ''">
-                AND (target_id LIKE CONCAT('%', #{searchKeyword}, '%')) 
+                AND (s.target_id LIKE CONCAT('%', #{searchKeyword}, '%')) 
             </if>
         </where>
-        ORDER BY settlement_deadline ASC
+        ORDER BY s.settlement_deadline ASC
         LIMIT #{limit} OFFSET #{offset}
     </select>
+    <select id="selectSettlementCount" resultType="int">
+		SELECT COUNT(*) FROM SETTLEMENT s
+		<where>
+			<if test="status != null and status != ''">
+				AND s.status = #{status}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (s.target_id LIKE CONCAT('%', #{searchKeyword}, '%'))
+			</if>
+		</where>
+	</select>
 	<!-- [추가] 정산 상태 업데이트 -->
     <update id="updateSettlementStatus">
         UPDATE SETTLEMENT 
@@ -68,7 +148,7 @@
         FROM PAYMENT p
         LEFT JOIN GYM g ON p.gym_id = g.id
         LEFT JOIN TRAINER t ON p.trainer_id = t.id
-        LEFT JOIN USER u ON p.user_id = u.id
+        LEFT JOIN USER u ON t.user_id = u.id
         WHERE p.status = '결제완료'
         <if test="startDate != null and endDate != null">
             AND p.payment_date BETWEEN #{startDate} AND #{endDate}
@@ -144,46 +224,5 @@
             AND (u.name LIKE CONCAT('%', #{paymentSearch}, '%') OR p.id LIKE CONCAT('%', #{paymentSearch}, '%'))
         </if>
     </where>
-    </select>
-
-    <!-- [추가] 대시보드 요약 -->
-    <select id="getSalesSummary" resultType="map">
-        SELECT 
-            IFNULL(SUM(payment_price), 0) as totalSales,
-            IFNULL(SUM(payment_fee), 0) as totalFee,
-            IFNULL(SUM(payment_price) - SUM(payment_fee), 0) as netProfit
-        FROM PAYMENT
-        WHERE status = '결제완료' 
-        <if test="startDate != null and endDate != null">
-            AND payment_date BETWEEN #{startDate} AND #{endDate}
-        </if>
-    </select>
-    
-    <!-- [추가] 모달창용 정산 세부 내역 조회 (중요) -->
-    <!-- resultType="map"으로 설정하여 Service/Controller에서 Map 형태로 바로 받습니다. -->
-    <select id="selectSettlementDetail" resultType="map">
-        SELECT 
-            u.name AS memberName,
-            p.payment_date AS payDate,
-            p.payment_price AS payAmount,
-            p.payment_fee AS fee,
-            (p.payment_price - p.payment_fee) AS netAmount
-        FROM PAYMENT p
-        JOIN USER u ON p.user_id = u.id
-        WHERE p.status = '결제완료'
-    	<!-- 1. 해당 정산의 대상(헬스장 or 트레이너) 필터링 -->
-    	AND (
-        	CASE 
-            	WHEN (SELECT target_type FROM SETTLEMENT WHERE id = #{settlementId}) = 'GYM' 
-            	THEN p.gym_id 
-            	ELSE p.trainer_id 
-        	END
-    	) = (SELECT target_id FROM SETTLEMENT WHERE id = #{settlementId})
-    
-    	<!-- 2. 해당 정산의 월(Month) 필터링 -->
-    	AND DATE_FORMAT(p.payment_date, '%Y-%m') = (SELECT settlement_month FROM SETTLEMENT WHERE id = #{settlementId})
-    
-    	ORDER BY p.payment_date DESC
-    </select>
-    
+    </select>   
 </mapper>

@@ -265,8 +265,8 @@ function pay() {
     amount,
     orderId,
     orderName: productName,
-    successUrl: window.location.origin + CTX + '/member/paymentSuccess',
-    failUrl:    window.location.origin + CTX + '/member/paymentFail'
+    successUrl: window.location.origin + CTX + '/member/paymentSuccess.jsp',
+    failUrl:    window.location.origin + CTX + '/member/paymentFail.jsp'
   });
 }
 

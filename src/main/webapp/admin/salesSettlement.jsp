@@ -106,8 +106,6 @@
         <span>~</span>
         <input type="date" name="endDate" id="endDate" value="${endDate}" class="border rounded-md px-2 py-1">
         
-        <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="ID 검색..." class="border rounded-md px-2 py-1">
-        
         <button type="submit" class="bg-primary text-white px-4 py-2 rounded-md">조회</button>
     </div>
     <input type="hidden" name="status" value="${status}">
@@ -119,19 +117,19 @@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <p class="text-sm font-medium text-gray-500">총 매출액</p>
         <p class="text-2xl font-bold text-gray-900 mt-1">
-            <fmt:formatNumber value="${data.summary.totalSales}" type="currency" currencySymbol="₩" />
+            ₩<fmt:formatNumber value="${data.summary.totalSales}" pattern="#,###"/>
         </p>
     </div>
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">정산 수수료</p>
+        <p class="text-sm font-medium text-gray-500">정산금액</p>
         <p class="text-2xl font-bold text-red-600 mt-1">
-            <fmt:formatNumber value="${data.summary.totalFee}" type="currency" currencySymbol="₩" />
+            ₩<fmt:formatNumber value="${data.summary.totalAmount}" pattern="#,###"/>
         </p>
     </div>
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">순수익</p>
+        <p class="text-sm font-medium text-gray-500">순수익(수수료)</p>
         <p class="text-2xl font-bold text-blue-600 mt-1">
-            <fmt:formatNumber value="${data.summary.netProfit}" type="currency" currencySymbol="₩" />
+            ₩<fmt:formatNumber value="${data.summary.totalFee}" pattern="#,###"/>
         </p>
     </div>
 </div>
@@ -195,7 +193,7 @@
                                 <fmt:formatNumber value="${item.totalSales}" type="number"/>
                             </td>
                             <td class="px-6 py-4 text-right font-bold text-blue-600">
-                                <fmt:formatNumber value="${item.netAmount}" type="number"/>
+                                <fmt:formatNumber value="${item.totalAmount}" type="number"/>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <span class="inline-flex px-2 py-1 rounded-md text-xs font-semibold ${item.settlementStatus == '정산완료' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
@@ -240,38 +238,54 @@
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            
-            <div class="p-6">
-                <!-- 세부 내역 테이블 -->
-                <table class="w-full text-sm text-left mb-6">
-                    <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-semibold">
-                        <tr>
-                            <th class="px-4 py-3">회원명</th>
-                            <th class="px-4 py-3">결제일자</th>
-                            <th class="px-4 py-3 text-right">결제금액</th>
-                            <th class="px-4 py-3 text-right">수수료</th>
-                            <th class="px-4 py-3 text-right">실 정산금액</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalDetailBody" class="divide-y divide-gray-100">
-                        <!-- JS로 데이터가 삽입될 공간 -->
-                    </tbody>
-                </table>
 
-                <!-- 총 합계 영역 -->
-                <div class="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
-                    <div>
-                        <p class="text-xs text-blue-600 font-semibold mb-1">입금 예정 정보</p>
-                        <p id="modalBankInfo" class="text-sm text-gray-700 font-medium">신한은행 110-456-789012 (김태희)</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500">총 정산 지급액</p>
-                        <p id="modalTotalAmount" class="text-2xl font-bold text-primary">₩0</p>
-                    </div>
-                </div>
-            </div>
+					<div class="p-6">
+						<div class="overflow-x-auto mb-6">
+							<table class="w-full text-sm text-left">
+								<thead
+									class="bg-gray-50 text-gray-500 uppercase text-xs font-semibold">
+									<tr>
+										<th class="py-3 px-2">회원명</th>
+										<th class="py-3 px-2">결제일자</th>
+										<th class="py-3 px-2 text-right">결제금액</th>
+									</tr>
+								</thead>
+								<tbody id="modalDetailBody" class="divide-y divide-gray-100">
+								</tbody>
+							</table>
+						</div>
 
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
+						<!-- 총 합계 영역 -->
+						<div
+							class="bg-blue-50 rounded-lg p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-blue-100">
+							<div>
+								<p
+									class="text-xs text-blue-600 font-bold mb-1 uppercase tracking-wider">입금
+									계좌 정보</p>
+								<div class="flex items-center gap-2">
+									<span class="material-symbols-outlined text-blue-500">account_balance</span>
+									<p id="modalBankInfo"
+										class="text-sm text-gray-800 font-bold tracking-tight">정보를
+										로드 중...</p>
+								</div>
+							</div>
+							<div class="text-right space-y-1 min-w-[180px]">
+								<div class="text-xs text-gray-500 flex justify-between gap-4">
+									<span>총 매출:</span> <span id="modalTotalSales" class="font-medium text-gray-900">₩0</span>
+								</div>
+								<div class="text-xs text-red-500 flex justify-between gap-4">
+									<span>수수료(10%):</span> 
+									<span id="modalTotalFee" class="font-medium">₩0</span>
+								</div>
+								<div class="pt-2 mt-2 border-t border-blue-200">
+									<p class="text-xs text-gray-500 font-medium">최종 입금액</p>
+									<p id="modalTotalAmount" class="text-2xl font-black text-primary">₩0</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
                 <button onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">취소</button>
                 <button id="modalConfirmBtn" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-dark shadow-sm transition-all">정산 완료 처리</button>
             </div>
@@ -333,31 +347,36 @@ function openSettlementModal(settlementNum) {
     fetch(url)
         .then(function(res) { return res.json(); })
         .then(function(data) {
-            var html = "";
-            var total = 0;
+        	var html = "";
+        	var sumPayAmount = 0; // 총 결제금액 합계
+        	var sumFee = 0;       // 총 수수료 합계
+        	var sumNetAmount = 0; // 총 정산금 합계
+         
             
             if (!data.details || data.details.length === 0) {
                 html = '<tr><td colspan="5" class="px-4 py-3 text-center">결제 내역이 없습니다.</td></tr>';
             } else {
-                data.details.forEach(function(detail) {
-                    // 숫자에 콤마 찍기 함수
-                    var payAmount = detail.payAmount.toLocaleString();
-                    var fee = detail.fee.toLocaleString();
-                    var netAmount = detail.netAmount.toLocaleString();
-
-                    html += '<tr>' +
-                        '<td class="px-4 py-3 font-medium text-gray-900">' + detail.memberName + '</td>' +
-                        '<td class="px-4 py-3 text-gray-500">' + detail.payDate + '</td>' +
-                        '<td class="px-4 py-3 text-right text-gray-900">₩' + payAmount + '</td>' +
-                        '<td class="px-4 py-3 text-right text-red-500">₩' + fee + '</td>' +
-                        '<td class="px-4 py-3 text-right font-bold text-gray-900">₩' + netAmount + '</td>' +
-                        '</tr>';
-                    total += detail.netAmount;
+            	data.details.forEach(detail => {
+                    html += `<tr class="hover:bg-gray-50/50">
+                        <td class="px-4 py-3 font-medium text-gray-900">\${detail.memberName}</td>
+                        <td class="px-4 py-3 text-gray-500">\${detail.payDate}</td>
+                        <td class="px-4 py-3 text-right text-gray-900">₩\${detail.payAmount.toLocaleString()}</td>
+                    </tr>`;
+                    sumPayAmount += detail.payAmount;
+                    sumFee += detail.fee;
+                    sumNetAmount += detail.netAmount;
                 });
+            	// 컨트롤러에서 보낸 계좌 정보 매핑
+                const bank = data.bankName || "미등록";
+                const acc = data.accountNum || "계좌정보없음";
+                const owner = data.ownerName || "예금주미확인";
+                document.getElementById('modalBankInfo').innerText = bank + " " + acc + " (" + owner + ")";
             }
             
             document.getElementById('modalDetailBody').innerHTML = html;
-            document.getElementById('modalTotalAmount').innerText = '₩' + total.toLocaleString();
+            document.getElementById('modalTotalSales').innerText = '₩' + sumPayAmount.toLocaleString();
+            document.getElementById('modalTotalFee').innerText = '- ₩' + sumFee.toLocaleString();
+            document.getElementById('modalTotalAmount').innerText = '₩' + sumNetAmount.toLocaleString();
             
             // 버튼 이벤트 및 모달 표시
             document.getElementById('modalConfirmBtn').onclick = function() { processSettlement(settlementNum); };

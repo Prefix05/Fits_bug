@@ -32,7 +32,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         params.put("today", today.toString()); // "2026-04-23"
 
         try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            return sqlSession.selectList("notification.findRecentByUserAndMember", params);
+            return sqlSession.selectList("mapper.notification.findRecentByUserAndMember", params);
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
@@ -50,7 +50,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         params.put("userId", userId);
 
         try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            int updated = sqlSession.update("notification.markAsRead", params);
+            int updated = sqlSession.update("mapper.notification.markAsRead", params);
             sqlSession.commit();
             return updated;
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         params.put("memberName", memberName);
 
         try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-            int updated = sqlSession.update("notification.markAllAsRead", params);
+            int updated = sqlSession.update("mapper.notification.markAllAsRead", params);
             sqlSession.commit();
             return updated;
         } catch (Exception e) {

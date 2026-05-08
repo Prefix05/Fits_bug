@@ -6,11 +6,12 @@ import java.util.Map;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
+import dto.member.UserDTO;
 
 public interface InfoEditDao {
 	Gym selectGymMypage(int gymId);
     int updateGym(Gym gym);
-    int updateGymUser(Gym gym);
+    void updateGymUser(UserDTO user);
     int updatePassword(Map<String, Object> param);
     int countEmail(String emailId);
     Schedule selectSchedule(int gymId);

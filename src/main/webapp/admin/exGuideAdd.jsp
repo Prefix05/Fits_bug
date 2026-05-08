@@ -293,11 +293,11 @@ window.onload = function() {
     // 수정 시 이미지/비디오가 있다면 미리보기에 표시
     if("${guide.image}") {
         const imgCont = document.getElementById('imgPreview');
-        imgCont.innerHTML = `<img src="<%=contextPath%>/resources/upload/${guide.image}" class="preview-content">`;
+        imgCont.innerHTML = `<img src="<%=contextPath%>/uploads/${guide.image}" class="preview-content">`;
     }
     if("${guide.video}") {
         const videoCont = document.getElementById('videoPreview');
-        videoCont.innerHTML = `<video src="<%=contextPath%>/resources/upload/${guide.video}" class="preview-content" controls></video>`;
+        videoCont.innerHTML = `<video src="<%=contextPath%>/uploads/${guide.video}" class="preview-content" controls></video>`;
     }
 };
 </script>

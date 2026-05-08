@@ -5,8 +5,6 @@
 
 <mapper namespace="pricingAvailability">
 
-    <!-- ── PRICING ─────────────────────────────────────────── -->
-
     <insert id="insertPricing" parameterType="dto.trainer.PricingDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer_pricing (trainer_id, label, session_count, price, is_popular)
@@ -17,7 +15,7 @@
         DELETE FROM trainer_pricing WHERE trainer_id = #{trainerId}
     </delete>
 
-    <select id="findPricingByTrainerId" parameterType="int" resultType="dto.trainer.PricingDTO">
+    <select id="findPricingByTrainerId" parameterType="int" resultType="PricingDTO">
         SELECT id,
                trainer_id    AS trainerId,
                label,
@@ -33,7 +31,7 @@
 
     <!-- ── AVAILABILITY ─────────────────────────────────────── -->
 
-    <insert id="insertAvailability" parameterType="dto.trainer.AvailabilityDTO"
+    <insert id="insertAvailability" parameterType="AvailabilityDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer_availability (trainer_id, day_of_week, start_time, end_time)
         VALUES (#{trainerId}, #{dayOfWeek}, #{startTime}, #{endTime})
@@ -43,7 +41,7 @@
         DELETE FROM trainer_availability WHERE trainer_id = #{trainerId}
     </delete>
 
-    <select id="findAvailabilityByTrainerId" parameterType="int" resultType="dto.trainer.AvailabilityDTO">
+    <select id="findAvailabilityByTrainerId" parameterType="int" resultType="AvailabilityDTO">
         SELECT id,
                trainer_id  AS trainerId,
                day_of_week AS dayOfWeek,

@@ -1,25 +1,31 @@
 package controller.trainer;
 
-import dao.member.InbodyLogDAO;
-import dao.member.InbodyLogDAOImpl;
-import dto.member.InbodyLogDTO;
-import dto.trainer.ClientDTO;
-import dto.trainer.TrainerDTO;
-import service.trainer.ClientService;
-import service.trainer.ClientServiceImpl;
-import service.trainer.TrainerService;
-import service.trainer.TrainerServiceImpl;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@WebServlet("/trainer/clientDetail")
-public class ClientDetail extends HttpServlet {
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.member.InbodyLogDAO;
+import dao.member.InbodyLogDAOImpl;
+import dto.member.InbodyLogDTO;
+import dto.trainer.ClientDTO;
+import service.trainer.ClientService;
+import service.trainer.ClientServiceImpl;
+import service.trainer.TrainerService;
+import service.trainer.TrainerServiceImpl;
+
+/**
+ * Servlet implementation class ClientDetailCommon
+ */
+@WebServlet("/trainer/clientDetailCommon")
+public class ClientDetailCommon extends HttpServlet {
 
     private final ClientService  clientService  = new ClientServiceImpl();
     private final TrainerService trainerService = new TrainerServiceImpl();
@@ -93,7 +99,7 @@ public class ClientDetail extends HttpServlet {
             request.setAttribute("weightJson",    weightJson.toString());
             request.setAttribute("muscleJson",    muscleJson.toString());
             request.setAttribute("bodyFatJson",   bodyFatJson.toString());
-            request.getRequestDispatcher("/trainer/clientDetail.jsp").forward(request, response);
+            request.getRequestDispatcher("/trainer/clientDetailCommon.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Client ID");

@@ -6,33 +6,36 @@
 <mapper namespace="mapper.dashboard">
 
     <select id="selectNewMemberCount" parameterType="map" resultType="int">
-        SELECT COUNT(*)
-        FROM MEMBER m
-        JOIN `USER` u ON m.user_id = u.id
-        WHERE m.gym_id = #{gymId}
-          AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+        SELECT COUNT(DISTINCT m.id)
+		FROM MEMBER m
+		JOIN `USER` u ON m.user_id = u.id
+		JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+		WHERE mp.gym_id = #{gymId}
+ 		 AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
     </select>
 
     <select id="selectTodayScheduleList" parameterType="map" resultType="dto.gym.TodayPtSchedule">
     SELECT
-        DATE_FORMAT(ps.start_time, '%H:%i') AS startTime,
+        DATE_FORMAT(l.start_time, '%H:%i') AS startTime,
         tu.name AS trainerName,
         mu.name AS memberName,
-        IFNULL(CONCAT('PT ', mem.type_rep, '회권'), 'PT 이용권 없음') AS membershipName,
-        ps.status AS status
-    FROM PT_SESSION ps
-    JOIN TRAINER t ON ps.trainer_id = t.id
+        IFNULL(CONCAT('PT ', m.type_rep, '회권'), 'PT 이용권 없음') AS membershipName,
+        l.status AS status
+    FROM LESSON l
+    JOIN TRAINER t ON l.trainer_id = t.id
     JOIN `USER` tu ON t.user_id = tu.id
-    JOIN MEMBER mb ON ps.client_id = mb.id
+    JOIN MEMBER mb ON l.client_id = mb.id
     JOIN `USER` mu ON mb.user_id = mu.id
-    LEFT JOIN PT_PACKAGE pp ON ps.package_id = pp.id
-    LEFT JOIN MEMBERSHIP_REGISTRATION mr ON pp.mr_id = mr.id
-    LEFT JOIN MEMBERSHIP mem 
-      ON mr.membership_id = mem.id
-     AND mem.type = 'pt'
+    LEFT JOIN MEMBERSHIP_PT mp
+           ON mp.member_id = mb.id
+          AND mp.trainer_id = t.id
+          AND mp.gym_id = #{gymId}
+    LEFT JOIN MEMBERSHIP m
+           ON mp.membership_id = m.id
+          AND m.type = 'pt'
     WHERE t.gym_id = #{gymId}
-      AND ps.lesson_date = CURDATE()
-    ORDER BY ps.start_time
+      AND l.lesson_date = DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+    ORDER BY l.start_time
 </select>
 
     <select id="selectTotalRevenue" parameterType="map" resultType="java.math.BigDecimal">
@@ -65,20 +68,18 @@
     SELECT
         t.id AS trainerId,
         u.name AS trainerName,
-        IFNULL(ps.sessionCount, 0) AS sessionCount,
+        IFNULL(ls.sessionCount, 0) AS sessionCount,
         IFNULL(p.revenue, 0) AS revenue
     FROM TRAINER t
     JOIN `USER` u ON t.user_id = u.id
 
-    -- 세션 수 (중복 방지)
     LEFT JOIN (
         SELECT trainer_id, COUNT(*) AS sessionCount
-        FROM PT_SESSION
+        FROM LESSON
         WHERE status = '완료'
         GROUP BY trainer_id
-    ) ps ON ps.trainer_id = t.id
+    ) ls ON ls.trainer_id = t.id
 
-    -- 매출 (중복 방지 핵심)
     LEFT JOIN (
         SELECT trainer_id, SUM(payment_price) AS revenue
         FROM PAYMENT
@@ -130,27 +131,29 @@
 
     <select id="selectNewMemberGrowthRate" parameterType="map" resultType="double">
         SELECT
-            CASE
-                WHEN prev.cnt = 0 AND curr.cnt > 0 THEN 100
-                WHEN prev.cnt = 0 THEN 0
-                ELSE ROUND((curr.cnt - prev.cnt) / prev.cnt * 100, 1)
-            END
-        FROM
-            (
-                SELECT COUNT(*) AS cnt
-                FROM MEMBER m
-                JOIN `USER` u ON m.user_id = u.id
-                WHERE m.gym_id = #{gymId}
-                  AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
-            ) curr,
-            (
-                SELECT COUNT(*) AS cnt
-                FROM MEMBER m
-                JOIN `USER` u ON m.user_id = u.id
-                WHERE m.gym_id = #{gymId}
-                  AND u.created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
-                  AND u.created_at &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
-            ) prev
+        CASE
+            WHEN prev.cnt = 0 AND curr.cnt > 0 THEN 100
+            WHEN prev.cnt = 0 THEN 0
+            ELSE ROUND((curr.cnt - prev.cnt) / prev.cnt * 100, 1)
+        END
+    FROM
+        (
+            SELECT COUNT(DISTINCT m.id) AS cnt
+            FROM MEMBER m
+            JOIN `USER` u ON m.user_id = u.id
+            JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+            WHERE mp.gym_id = #{gymId}
+              AND u.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+        ) curr,
+        (
+            SELECT COUNT(DISTINCT m.id) AS cnt
+            FROM MEMBER m
+            JOIN `USER` u ON m.user_id = u.id
+            JOIN MEMBERSHIP_PT mp ON mp.member_id = m.id
+            WHERE mp.gym_id = #{gymId}
+              AND u.created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+              AND u.created_at &lt; DATE_FORMAT(NOW(), '%Y-%m-01')
+        ) prev
     </select>
 
     <select id="selectTotalRevenueGrowthRate" parameterType="map" resultType="double">
@@ -236,19 +239,19 @@
     SELECT
         m.type_rep AS month,
         IFNULL(ROUND(COUNT(*) / NULLIF(total.totalCount, 0) * 100), 0) AS percent
-    FROM MEMBERSHIP_REGISTRATION mr
-    JOIN MEMBERSHIP m ON mr.membership_id = m.id
+    FROM MEMBERSHIP_PT mp
+    JOIN MEMBERSHIP m ON mp.membership_id = m.id
     CROSS JOIN (
         SELECT COUNT(*) AS totalCount
-        FROM MEMBERSHIP_REGISTRATION mr2
-        JOIN MEMBERSHIP m2 ON mr2.membership_id = m2.id
-        WHERE m2.gym_id = #{gymId}
+        FROM MEMBERSHIP_PT mp2
+        JOIN MEMBERSHIP m2 ON mp2.membership_id = m2.id
+        WHERE mp2.gym_id = #{gymId}
           AND m2.type = 'month'
-          AND mr2.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+          AND mp2.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
     ) total
-    WHERE m.gym_id = #{gymId}
+    WHERE mp.gym_id = #{gymId}
       AND m.type = 'month'
-      AND mr.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+      AND mp.register_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
     GROUP BY m.type_rep, total.totalCount
     ORDER BY m.type_rep
 </select>

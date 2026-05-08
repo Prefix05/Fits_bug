@@ -22,4 +22,7 @@ public interface MemberDAO {
 	List<Map<String, Object>> selectAuthList() throws Exception;
 	Map<String, Object> selectGymAuthDetail(String userId) throws Exception;
 	Map<String, Object> selectTrainerAuthDetail(String userId) throws Exception;
+	
+	public int updateGymStatus(String userId, String status) throws Exception;
+	public int updateTrainerStatus(String userId, String status) throws Exception;
 }

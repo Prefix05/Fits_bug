@@ -2,22 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="user">
-
-    <resultMap id="userResultMap" type="user">
-        <id property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="password" column="password"/>
-        <result property="name" column="name"/>
-        <result property="tel" column="phone"/>
-        <result property="nickname" column="nickname"/>
-        <result property="profileImg" column="profile_image"/>
-        <result property="role" column="role"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="deleted" column="is_deleted"/>
-        <result property="provider" column="provider"/>
-        <result property="providerId" column="provider_id"/>
-    </resultMap>
+<mapper namespace="mapper.TrainerUser">
 
     <insert id="insertUserTrainer" parameterType="user"
             useGeneratedKeys="true" keyProperty="id">
@@ -30,6 +15,8 @@
             nickname,
             profile_image,
             role,
+            age,
+            gender,
             <if test="provider != null and provider != ''">
                 provider,
             </if>
@@ -41,10 +28,12 @@
             #{email},
             #{password},
             #{name},
-            #{tel},
+            #{phone},
             #{nickname},
-            #{profileImg},
+            #{profileImage},
             #{role},
+            #{age},
+            #{gender},
             <if test="provider != null and provider != ''">
                 #{provider},
             </if>
@@ -54,7 +43,7 @@
         </trim>
     </insert>
 
-    <select id="selectUserById" parameterType="int" resultMap="userResultMap">
+    <select id="selectUserById" parameterType="int" resultType="user">
         SELECT id,
                email,
                password,
@@ -63,6 +52,8 @@
                nickname,
                profile_image,
                role,
+               age,
+               gender,
                created_at,
                is_deleted,
                provider,
@@ -76,20 +67,24 @@
             name     = #{name},
             email    = #{email},
             password = #{password},
-            phone      = #{tel},
-            nickname = #{nickname}
+            phone    = #{phone},
+            nickname = #{nickname},
+            age      = #{age},
+            gender   = #{gender}
         WHERE id = #{id}
     </update>
 
     <update id="updateUserProfile" parameterType="user">
         UPDATE `user` SET
             name     = #{name},
-            phone      = #{tel},
-            nickname = #{nickname}
+            phone    = #{phone},
+            nickname = #{nickname},
+            age      = #{age},
+            gender   = #{gender}
         WHERE id = #{id}
     </update>
 
-    <select id="selectUserTrainer" parameterType="String" resultMap="userResultMap">
+    <select id="selectUserTrainer" parameterType="String" resultType="user">
         SELECT
             id,
             email,
@@ -99,6 +94,8 @@
             nickname,
             profile_image,
             role,
+            age,
+            gender,
             created_at,
             is_deleted,
             provider,

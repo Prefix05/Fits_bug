@@ -9,18 +9,20 @@ public class MemberDTO {
 	private String gymTel;
 	private Integer gymClientCount;
 	private Double gymCal;
-	
+	private Integer gymId;
 	//트레이너
 	private String trainerName;
 	private String trainerTel;
 	private Integer trainerClientCount;
 	private Double trainerCal;
+	private Integer trainerId;
 	
 	//회원
 	private String clientName;
 	private String clientTel;
 	private String ptTrainer;
 	private Double payment;
+	private Integer clientId;
 	
 	private String profileImage;
 	
@@ -29,34 +31,67 @@ public class MemberDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-
-
-
+	
+	
 	public MemberDTO(String regDate, String gymName, String gymTel, Integer gymClientCount, Double gymCal,
-			String trainerName, String trainerTel, Integer trainerClientCount, Double trainerCal, String clientName,
-			String clientTel, String ptTrainer, Double payment, String profileImage) {
+			Integer gymId, String trainerName, String trainerTel, Integer trainerClientCount, Double trainerCal,
+			Integer trainerId, String clientName, String clientTel, String ptTrainer, Double payment, Integer clientId,
+			String profileImage) {
 		super();
 		this.regDate = regDate;
 		this.gymName = gymName;
 		this.gymTel = gymTel;
 		this.gymClientCount = gymClientCount;
 		this.gymCal = gymCal;
+		this.gymId = gymId;
 		this.trainerName = trainerName;
 		this.trainerTel = trainerTel;
 		this.trainerClientCount = trainerClientCount;
 		this.trainerCal = trainerCal;
+		this.trainerId = trainerId;
 		this.clientName = clientName;
 		this.clientTel = clientTel;
 		this.ptTrainer = ptTrainer;
 		this.payment = payment;
+		this.clientId = clientId;
 		this.profileImage = profileImage;
 	}
 
 
+	
+	
+	public Integer getTrainerId() {
+		return trainerId;
+	}
 
 
+
+	public void setTrainerId(Integer trainerId) {
+		this.trainerId = trainerId;
+	}
+
+
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+
+
+	public Integer getGymId() {
+		return gymId;
+	}
+
+
+	public void setGymId(Integer gymId) {
+		this.gymId = gymId;
+	}
 
 
 	public String getRegDate() {

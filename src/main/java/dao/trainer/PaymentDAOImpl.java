@@ -9,7 +9,7 @@ public class PaymentDAOImpl {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         int result = 0;
         try {
-            result = sqlSession.insert("payment.insertPayment", dto);
+            result = sqlSession.insert("mapper.trainerpayment.insertPayment", dto);
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
@@ -24,7 +24,7 @@ public class PaymentDAOImpl {
         SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
         PaymentDTO payment = null;
         try {
-            payment = sqlSession.selectOne("payment.getPaymentByOrderId", orderId);
+            payment = sqlSession.selectOne("mapper.trainerpayment.getPaymentByOrderId", orderId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

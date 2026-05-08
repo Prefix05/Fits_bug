@@ -2,11 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%
-    String contextPath = request.getContextPath();
-%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
-<html lang="ko"><head>
+<html lang="ko">
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -108,13 +108,14 @@
                         const count = item.gymClientCount || 0;
                         // gymCal이 null이면 0으로 처리하고 숫자 포맷팅. 숫자데이터를 3자리마다 , 찍어줌
                         const cal = Number(item.gymCal || 0).toLocaleString();
+                        const profile = item.profileImage ? item.profileImage : 'default.png';
                         
                         html += `
                             <tr class="hover:bg-surface-container-low transition-colors group">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">fitness_center</span>
+                                        	<img src="${contextPath}/trainer/profile-img/\${profile}" width="20px"/>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -197,9 +198,9 @@
 
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-4 border-b border-outline-variant/20">
-<a href="<%= contextPath %>/admin/memberAuth"
+<a href="${contextPath }/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath }/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 
@@ -250,15 +251,15 @@ class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">�
 <!-- Bento Filter Section -->
 <div class="grid grid-cols-12 gap-6 mb-4">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath }/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
 헬스장
 </a>
-<a href="<%= contextPath %>/admin/memberTrainer"
+<a href="${contextPath }/admin/memberTrainer"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:bg-surface-container flex items-center justify-center">
 트레이너
 </a>
-<a href="<%= contextPath %>/admin/memberClient"
+<a href="${contextPath }/admin/memberClient"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surface-variant hover:bg-surface-container flex items-center justify-center">
 회원
 </a>
@@ -318,9 +319,12 @@ placeholder="헬스장명 검색" type="text"/>
 <td class="px-6 py-4 text-sm font-medium text-on-surface">
 ₩<fmt:formatNumber value="${item.gymCal }" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
+<form action="${contextPath }/member/gymDetail">
+<input type="hidden" name="gymId" value="${item.gymId }"/>
 <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>
 </button>
+</form>
 </td>
 </tr>
 </c:forEach>

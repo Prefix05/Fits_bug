@@ -81,8 +81,11 @@
     </script>
 <script>
 function filterMuscle(muscle) {
-    // 현재 contextPath를 사용하여 필터링된 URL로 이동
-    const url = "<%= request.getContextPath() %>/admin/exGuideList" + (muscle ? "?targetMuscle=" + encodeURIComponent(muscle) : "");
+	// 필터 변경 시에는 1페이지로 이동하며 검색어는 유지
+    const keyword = "${param.searchKeyword}";
+    let url = "<%= contextPath %>/admin/exGuideList?page=1";
+    if(muscle) url += "&targetMuscle=" + encodeURIComponent(muscle);
+    if(keyword) url += "&searchKeyword=" + encodeURIComponent(keyword);
     location.href = url;
 }
 function deleteGuide(egNum) {
@@ -91,7 +94,22 @@ function deleteGuide(egNum) {
     }
 }
 function searchGuide(keyword) {
-    location.href = "<%= contextPath %>/admin/exGuideList?searchKeyword=" + encodeURIComponent(keyword);
+	// 검색 시에는 1페이지로 이동하며 필터는 유지
+    const muscle = "${param.targetMuscle}";
+    let url = "<%= contextPath %>/admin/exGuideList?page=1";
+    if(muscle) url += "&targetMuscle=" + encodeURIComponent(muscle);
+    if(keyword) url += "&searchKeyword=" + encodeURIComponent(keyword);
+    location.href = url;
+}
+function goSearch(page) {
+    const muscle = "${param.targetMuscle}";
+    const keyword = document.getElementById("searchInput").value; // 검색창 ID 부여 필요
+    
+    let url = "<%= contextPath %>/admin/exGuideList?page=" + page;
+    if(muscle) url += "&targetMuscle=" + encodeURIComponent(muscle);
+    if(keyword) url += "&searchKeyword=" + encodeURIComponent(keyword);
+    
+    location.href = url;
 }
 </script>
 <style>
@@ -113,88 +131,128 @@ function searchGuide(keyword) {
     <jsp:include page="sidebar.jsp"></jsp:include>
 
     <main class="flex-1 ml-64 min-h-screen">
-        <div class="pt-10 px-10 pb-10">
-            
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-semibold font-headline tracking-tight text-on-surface">운동가이드 관리</h2>
-                    <p class="text-on-surface-variant mt-1">등록된 운동 가이드를 수정하거나 삭제할 수 있는 관리 대시보드입니다.</p>
-                </div>
-                <button onclick="location.href='<%= contextPath %>/admin/exGuideAdd'"
-                    class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm">
-                    <span class="material-symbols-outlined text-lg">add</span>등록
-                </button>
-            </div>
+			<div class="pt-10 px-10 pb-10">
 
-            <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/30 mb-8 flex items-center justify-between">
-                <div class="relative w-72 flex items-center">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                    <input onkeyup="if(window.event.keyCode==13){searchGuide(this.value)}" 
-                        class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all" 
-                        placeholder="운동 가이드 검색..." type="text"/>
-                </div>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-xs font-medium text-on-surface-variant mr-2">분류:</span>
-                    <div class="flex gap-1.5">
-                        <button onclick="filterMuscle('')" 
-                            class="px-3 py-1.5 text-xs font-medium rounded-full ${empty param.targetMuscle ? 'bg-primary text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-gray-200'}">전체</button>
-                        <c:forEach var="muscle" items="${fn:split('가슴,등,하체,팔,어깨,전신', ',')}">
-                            <button onclick="filterMuscle('${muscle}')" 
-                                class="px-3 py-1.5 text-xs font-medium rounded-full ${param.targetMuscle eq muscle ? 'bg-primary text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-gray-200'}">
-                                ${muscle}
-                            </button>
-                        </c:forEach>
-                    </div>
-                </div>
-            </div> <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <c:forEach var="guide" items="${guideList}">
-                        <div class="bg-white rounded-lg border border-outline-variant/20 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-                            <div class="relative aspect-video">
-                                <c:choose>
-                                    <c:when test="${not empty guide.image}">
-                                        <img src="<%= contextPath %>/resources/upload/${guide.image}" class="w-full h-full object-cover" alt="${guide.title}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="<%= contextPath %>/resources/upload/default_exercise.png" class="w-full h-full object-cover" alt="기본이미지"/>
-                                    </c:otherwise>
-                                </c:choose>
-                                <div class="absolute top-2 left-2 bg-primary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">${guide.targetMuscle}</div>
-                            </div>
-                            
-                            <div class="p-4 flex-grow flex flex-col">
-                                <h3 class="font-bold text-sm mb-2 text-on-surface">${guide.title}</h3>
-                                <div class="flex items-center gap-3 text-on-surface-variant text-[11px] mb-4">
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">fitness_center</span> ${guide.type}</span>
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_today</span> <fmt:formatDate value="${guide.regDate}" pattern="yyyy.MM.dd"/></span>
-                                </div>
-                                <div class="flex gap-2 mt-auto">
-                                    <button onclick="location.href='<%= contextPath %>/admin/exGuideAdd?egNum=${guide.egNum}'"
-                                        class="flex-1 py-1.5 border border-primary text-primary text-xs font-semibold rounded hover:bg-primary/5 transition-colors">수정</button>
-                                    <button onclick="deleteGuide(${guide.egNum})"
-                                        class="flex-1 py-1.5 border border-error text-error text-xs font-semibold rounded hover:bg-error/5 transition-colors">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-                
-                <c:if test="${empty guideList}">
-                    <div class="text-center py-20 text-on-surface-variant">등록된 운동 가이드가 없습니다.</div>
-                </c:if>
+				<div class="flex justify-between items-center mb-8">
+					<div>
+						<h2
+							class="text-2xl font-semibold font-headline tracking-tight text-on-surface">운동가이드
+							관리</h2>
+						<p class="text-on-surface-variant mt-1">등록된 운동 가이드를 수정하거나 삭제할
+							수 있는 관리 대시보드입니다.</p>
+					</div>
+					<button
+						onclick="location.href='<%= contextPath %>/admin/exGuideAdd'"
+						class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm">
+						<span class="material-symbols-outlined text-lg">add</span>등록
+					</button>
+				</div>
 
-                <div class="mt-8 flex items-center justify-between border-t border-outline-variant/10 pt-6">
-                    <p class="text-xs text-on-surface-variant">전체 128개 중 1-8 표시 중</p>
-                    <div class="flex items-center gap-1">
-                        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100"><span class="material-symbols-outlined text-lg">chevron_left</span></button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs">1</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-xs font-medium">2</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-xs font-medium">3</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
-                    </div>
-                </div>
-            </div> </div>
-    </main>
+				<div
+					class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/30 mb-8 flex items-center justify-between">
+					<div class="relative w-72 flex items-center">
+						<span
+							class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+						<input id="searchInput"
+							onkeyup="if(window.event.keyCode==13){searchGuide(this.value)}"
+							value="${param.searchKeyword}"
+							class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+							placeholder="운동 가이드 검색..." type="text" />
+					</div>
+					<div class="flex items-center gap-2 flex-wrap">
+						<span class="text-xs font-medium text-on-surface-variant mr-2">분류:</span>
+						<div class="flex gap-1.5">
+							<button onclick="filterMuscle('')"
+								class="px-3 py-1.5 text-xs font-medium rounded-full ${empty param.targetMuscle ? 'bg-primary text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-gray-200'}">전체</button>
+							<c:forEach var="muscle"
+								items="${fn:split('가슴,등,하체,팔,어깨,전신', ',')}">
+								<button onclick="filterMuscle('${muscle}')"
+									class="px-3 py-1.5 text-xs font-medium rounded-full ${param.targetMuscle eq muscle ? 'bg-primary text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-gray-200'}">
+									${muscle}</button>
+							</c:forEach>
+						</div>
+					</div>
+				</div>
+				<div
+					class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-8">
+					<div
+						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						<c:forEach var="guide" items="${guideList}">
+							<div
+								class="bg-white rounded-lg border border-outline-variant/20 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+								<div class="relative aspect-video">
+									<c:choose>
+										<c:when test="${not empty guide.image}">
+											<img src="<%= contextPath %>/uploads/${guide.image}"
+												class="w-full h-full object-cover" alt="${guide.title}" />
+										</c:when>
+										<c:otherwise>
+											<img
+												src="<%= contextPath %>/uploads/default_exercise.png"
+												class="w-full h-full object-cover" alt="기본이미지" />
+										</c:otherwise>
+									</c:choose>
+									<div
+										class="absolute top-2 left-2 bg-primary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">${guide.targetMuscle}</div>
+								</div>
+
+								<div class="p-4 flex-grow flex flex-col">
+									<h3 class="font-bold text-sm mb-2 text-on-surface">${guide.title}</h3>
+									<div
+										class="flex items-center gap-3 text-on-surface-variant text-[11px] mb-4">
+										<span class="flex items-center gap-1"><span
+											class="material-symbols-outlined text-sm">fitness_center</span>
+											${guide.type}</span> <span class="flex items-center gap-1"><span
+											class="material-symbols-outlined text-sm">calendar_today</span>
+											<fmt:formatDate value="${guide.regDate}" pattern="yyyy.MM.dd" /></span>
+									</div>
+									<div class="flex gap-2 mt-auto">
+										<button
+											onclick="location.href='<%= contextPath %>/admin/exGuideAdd?egNum=${guide.egNum}'"
+											class="flex-1 py-1.5 border border-primary text-primary text-xs font-semibold rounded hover:bg-primary/5 transition-colors">수정</button>
+										<button onclick="deleteGuide(${guide.egNum})"
+											class="flex-1 py-1.5 border border-error text-error text-xs font-semibold rounded hover:bg-error/5 transition-colors">삭제</button>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+
+					<c:if test="${empty guideList}">
+						<div class="text-center py-20 text-on-surface-variant">등록된
+							운동 가이드가 없습니다.</div>
+					</c:if>
+
+					<div
+						class="mt-8 flex items-center justify-between border-t border-outline-variant/10 pt-6">
+						<p class="text-xs text-on-surface-variant">전체 ${totalCount}개 중
+							현재 ${pageInfo.curPage}페이지</p>
+						<div class="flex items-center gap-1">
+							<c:if test="${pageInfo.curPage > 1}">
+								<button onclick="goSearch(${pageInfo.curPage - 1})"
+									class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
+									<span class="material-symbols-outlined text-lg">chevron_left</span>
+								</button>
+							</c:if>
+
+							<c:forEach var="i" begin="${pageInfo.startPage}"
+								end="${pageInfo.endPage}">
+								<button onclick="goSearch(${i})"
+									class="w-8 h-8 flex items-center justify-center rounded ${i == pageInfo.curPage ? 'bg-primary text-white font-bold' : 'hover:bg-gray-100'} text-xs">
+									${i}</button>
+							</c:forEach>
+
+							<c:if test="${pageInfo.curPage < pageInfo.allPage}">
+								<button onclick="goSearch(${pageInfo.curPage + 1})"
+									class="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
+									<span class="material-symbols-outlined text-lg">chevron_right</span>
+								</button>
+							</c:if>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
 </div>
 
 </body>

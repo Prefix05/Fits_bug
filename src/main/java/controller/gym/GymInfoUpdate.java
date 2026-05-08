@@ -20,6 +20,7 @@ import javax.servlet.http.Part;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
+import dto.member.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
@@ -48,17 +49,17 @@ public class GymInfoUpdate extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 
 		try {
-			HttpSession session = request.getSession(false);
+			HttpSession session = request.getSession();
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/member/login");
+                return;
+            }
 
-			if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null || session.getAttribute("userId") == null) {
-				response.sendRedirect(request.getContextPath() + "/member/login");
-				return;
-			}
+            Integer gymId = user.getOtherId();
 
-			int gymId = (int) session.getAttribute("gymId");
-			int userId = (int) session.getAttribute("userId");
-
-			GymInfoEditService service = new GymInfoEditServiceImpl();
+		    GymInfoEditService service = new GymInfoEditServiceImpl();
+			
 
 			Gym gym = service.selectGymMypage(gymId);
 			if (gym == null) {
@@ -67,10 +68,12 @@ public class GymInfoUpdate extends HttpServlet {
 
 			// 기본 정보
 			gym.setId(gymId);
-			gym.setUserId(userId);
-//			gym.setEmailId(request.getParameter("emailId"));
-//			gym.setUserName(request.getParameter("userName"));
-//			gym.setTel(request.getParameter("tel"));
+			gym.setUserId(user.getId());
+
+			user.setEmail(request.getParameter("emailId"));
+			user.setName(request.getParameter("userName"));
+			user.setPhone(request.getParameter("tel"));
+
 
 			gym.setName(request.getParameter("gymName"));
 			gym.setPhoneNum(request.getParameter("phoneNum"));
@@ -78,6 +81,7 @@ public class GymInfoUpdate extends HttpServlet {
 			gym.setAddress(request.getParameter("address"));
 			gym.setAddressDetail(request.getParameter("addressDetail"));
 			gym.setPostcode(request.getParameter("postcode"));
+
 
 			// 시설
 			String[] facilities = request.getParameterValues("facility");
@@ -94,7 +98,7 @@ public class GymInfoUpdate extends HttpServlet {
 
 			if (deleteGallery != null && !deleteGallery.trim().isEmpty()) {
 			    String[] deleteFiles = deleteGallery.split(",");
-			    String uploadPath = request.getServletContext().getRealPath("/gym/mainGalleryImages");
+			    String uploadPath = request.getServletContext().getRealPath("/uploads");
 
 			    for (String del : deleteFiles) {
 			        currentFiles.remove(del);
@@ -109,7 +113,7 @@ public class GymInfoUpdate extends HttpServlet {
 			// 갤러리 이미지 추가
 			for (Part part : request.getParts()) {
 			    if ("galleryImgs".equals(part.getName()) && part.getSize() > 0) {
-			        String fileName = savePart(request, part, "/gym/mainGalleryImages");
+			        String fileName = savePart(request, part, "/uploads");
 			        if (fileName != null) {
 			            currentFiles.add(fileName);
 			        }
@@ -119,19 +123,19 @@ public class GymInfoUpdate extends HttpServlet {
 			gym.setFile(String.join(",", currentFiles));
 			
 			// 프로필 이미지 업로드
-			String profileFileName = uploadFile(request, "profileImg", "/gym/gymProfile");
+			String profileFileName = uploadFile(request, "profileImg", "/uploads");
 			if (profileFileName != null) {
 //			    gym.setProfileImg(profileFileName);
 			}
 
 			// 배경 이미지 업로드
-			String backgroundFileName = uploadFile(request, "backgroundImg", "/gym/gymBackImg");
+			String backgroundFileName = uploadFile(request, "backgroundImg", "/uploads");
 			if (backgroundFileName != null) {
 			    gym.setBackgroundImg(backgroundFileName);
 			}
 
 			// 사업자 등록증 업로드
-			String brFileName = uploadFile(request, "brFile", "/gym/businessRegistration");
+			String brFileName = saveAnyFile(request, "brFile", "/uploads");
 			if (brFileName != null) {
 			    gym.setBrFile(brFileName);
 			}
@@ -139,7 +143,9 @@ public class GymInfoUpdate extends HttpServlet {
 			
 
 			service.updateGym(gym);
-			service.updateGymUser(gym);
+			service.updateGymUser(user);
+
+
 			
 			// 운영시간
 			
@@ -227,7 +233,7 @@ public class GymInfoUpdate extends HttpServlet {
 
 		String contentType = part.getContentType();
 
-		if (contentType == null || !contentType.startsWith("image/")) {
+		if (contentType == null || !(contentType.startsWith("image/")|| contentType.equals("application/pdf"))) {
 		    return null;
 		}
 		
@@ -246,6 +252,43 @@ public class GymInfoUpdate extends HttpServlet {
 	    String saveFileName =
 	    	    System.currentTimeMillis() + "_" +
 	    	    java.util.UUID.randomUUID().toString().replace("-", "") + ext;
+
+	    String uploadPath = request.getServletContext().getRealPath(uploadDir);
+
+	    File dir = new File(uploadPath);
+	    if (!dir.exists()) {
+	        dir.mkdirs();
+	    }
+
+	    part.write(uploadPath + File.separator + saveFileName);
+
+	    return saveFileName;
+	}
+	
+	private String saveAnyFile(HttpServletRequest request, String partName, String uploadDir)
+	        throws IOException, ServletException {
+
+	    Part part = request.getPart(partName);
+
+	    if (part == null || part.getSize() == 0) {
+	        return null;
+	    }
+
+	    String originalFileName = new File(part.getSubmittedFileName()).getName();
+
+	    if (originalFileName == null || originalFileName.trim().isEmpty()) {
+	        return null;
+	    }
+
+	    String ext = "";
+	    int dotIndex = originalFileName.lastIndexOf(".");
+	    if (dotIndex != -1) {
+	        ext = originalFileName.substring(dotIndex);
+	    }
+
+	    String saveFileName =
+	            System.currentTimeMillis() + "_" +
+	            java.util.UUID.randomUUID().toString().replace("-", "") + ext;
 
 	    String uploadPath = request.getServletContext().getRealPath(uploadDir);
 

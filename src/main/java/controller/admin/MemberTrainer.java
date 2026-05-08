@@ -2,7 +2,9 @@ package controller.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,17 +32,24 @@ public class MemberTrainer extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String trainerName = request.getParameter("trianerName");
+		String trainerName = request.getParameter("trainerName");
+		String sortColumn = request.getParameter("sortColumn");
+        String sortOrder = request.getParameter("sortOrder");
 		
 		if(trainerName != null) {
 			if(trainerName.trim().isEmpty()) {
 				trainerName = null;
 			}
-			PageInfo pageInfo = new PageInfo(1);
+			
+			Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("pageInfo", new PageInfo(1));
+            paramMap.put("trainerName", trainerName);
+            paramMap.put("sortColumn", sortColumn);
+            paramMap.put("sortOrder", sortOrder);
 			
 			try {
 				MemberService service = new MemberServiceImpl();
-				List<MemberDTO> list = service.trainerList(pageInfo, trainerName);
+				List<MemberDTO> list = service.trainerList(paramMap);
 				
 				response.setContentType("application/json;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -71,21 +80,23 @@ public class MemberTrainer extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = request.getParameter("page");
-		Integer reqPage = 1;
-		if(page!=null) {
-			reqPage = Integer.parseInt(page);
-		}
-		PageInfo pageInfo = new PageInfo(reqPage);
+		int reqPage = (page != null) ? Integer.parseInt(page) : 1;
+		
+		Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("pageInfo", new PageInfo(reqPage));
+        paramMap.put("trainerName", null);
+        paramMap.put("sortColumn", null);
+        paramMap.put("sortOrder", null);
 		
 		try {
 			MemberService service = new MemberServiceImpl();
-			List<MemberDTO> trainerList = service.trainerList(pageInfo, null);
-			System.out.println(trainerList);
+			List<MemberDTO> trainerList = service.trainerList(paramMap);
+			
 			int totalCount = service.totalCnt();
 			int gymCount = service.gymCnt();
 			int trainerCount = service.trainerCnt();
 			int clientCount = service.clientCnt();
-			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("pageInfo", paramMap.get("pageInfo"));
 			request.setAttribute("trainerList", trainerList);
 			request.setAttribute("totalCount", totalCount);
 			request.setAttribute("gymCount", gymCount);

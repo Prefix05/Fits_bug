@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-String contextPath = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 	
+<c:set var="contextPath" value="${pageContext.request.contextPath }"/>
 
 <!-- 🔹 사이드바 -->
 <aside
@@ -15,7 +14,7 @@ String contextPath = request.getContextPath();
 		<div
 			class="text-2xl font-black text-blue-600 dark:text-blue-500 italic mb-4 flex items-center gap-2">
 			<img class="w-8 h-8 rounded-full" alt="Fitbull Logo"
-				src="<%=contextPath%>/resources/images/logo.png"
+				src="${contextPath}/resources/images/logo.png"
 				onerror="this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuCveWQWdmN7R9sHZYJtczW7JlQkSJksW17FyrAjX0sIqVNoO7rUvZ5aVmTxr--s6QdrpYaJkNs9Aj3Lm4Z9ICG1waBV-yEKtgQqf7a77X3bEMweDYmiRv_2wprNj_xs__Vqyh2f5bVQr3QkuYOxRdXb5jfED0ktJFxf9r0RpjFrb6By02eTD3KzReErGiYzzhFyCBXRSRYqsQM2VKkdk7mWWO2R5jjBRMjcPYzPyBozh6wbh3bLzhw8KrRNIyipW0rhClHJNWthxiM'" />
 			<span>핏츠버그</span>
 		</div>
@@ -31,58 +30,23 @@ String contextPath = request.getContextPath();
 		</div>
 
 		<!-- 메뉴 -->
-		<nav class="flex flex-col gap-2">
+		<nav class="flex flex-col gap-2"> 
 
-			<a href="<%=contextPath%>/gym/main"
+			<div class="flex flex-col">
+					<a href="${contextPath}/gym/dashboard"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 						<span class="material-symbols-outlined">home</span>
     					<span class="text-sm">홈</span>
-			</a>
-			    <a href="<%=contextPath%>/member/guide" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">fitness_center</span><span>운동 가이드</span>
-    </a>
-    <a href="<%=contextPath%>/member/trainerList" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">badge</span><span>트레이너</span>
-    </a>
-   <a href="<%=contextPath%>/member/gymList" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">store</span><span>헬스장</span>
-    </a>
-    <a href="<%=contextPath%>/member/community" class="sb-link">
-      <span class="material-symbols-outlined" style="font-size:20px;">groups</span><span>커뮤니티</span>
-    </a>
-
-
-			<div class="flex flex-col">
-
-				<button onclick="toggleMenu()"
-					class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50 w-full text-left">
-
-					<span class="material-symbols-outlined">person</span> <span
-						class="text-sm">마이페이지</span>
-
-					<!-- 화살표 -->
-					<span id="arrow"
-						class="material-symbols-outlined ml-auto transition-transform">
-						expand_more </span>
-				</button>
-
-				<!-- 드롭다운 메뉴 -->
-				<div id="menu" class="hidden flex flex-col mt-2 ml-6 gap-1">
-
-					<a href="<%=contextPath%>/gym/dashboard"
-   					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
-    					<span class="text-sm">대시보드</span>
 					</a>
-					<a href="<%=contextPath%>/gym/schedule"
+					<a href="${contextPath}/gym/schedule"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">calendar_today</span>
     					<span class="text-sm">스케줄</span>
 					</a> 
 					
-					<a href="<%=contextPath%>/gym/memberManage"
+					<a href="${contextPath}/gym/memberManage"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">group</span>
     					<span class="text-sm">회원</span>
 
 					</a>
@@ -90,8 +54,8 @@ String contextPath = request.getContextPath();
 					<div class="flex flex-col">
 
 						<button type="button" onclick="toggleTrainerMenu()"
-							class="flex items-center px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg w-full text-left">
-
+							class="flex items-center gap-3 px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg w-full text-left">
+							<span class="material-symbols-outlined">fitness_center</span>
 							<span>트레이너</span> <span id="trainerArrow"
 								class="material-symbols-outlined ml-auto text-base transition-transform">
 								expand_more </span>
@@ -99,37 +63,61 @@ String contextPath = request.getContextPath();
 
 						<div id="trainerMenu" class="hidden flex flex-col ml-5 mt-1 gap-1">
 
-							<a href="<%=contextPath%>/gym/trainer"
+							<a href="${contextPath}/gym/trainer"
 								class="px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
-								트레이너 관리 </a> <a href="<%=contextPath%>/gym/trainerPending"
-								class="px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+								<span class="material-symbols-outlined">group</span>
+								트레이너 관리 </a> <a href="${contextPath}/gym/trainerPending"
+								class="gap-3 px-4 py-2 text-sm text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+								<span class="material-symbols-outlined">person_add</span>
 								트레이너 등록 </a>
 
 						</div>
 					</div>
 
-					<a href="<%=contextPath%>/gym/sales"
+					<a href="${contextPath}/gym/sales"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">bar_chart</span>
     					<span class="text-sm">매출</span>
 
 					</a> 
 					
-					<a href="<%=contextPath%>/gym/notice"
+					<a href="${contextPath}/gym/notice"
    					   class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">campaign</span>
     					<span class="text-sm">공지사항</span>
 
 					</a>
 					 
-					 <a href="<%=contextPath%>/gym/infoEdit"
+					 <a href="${contextPath}/gym/infoEdit"
    					    class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
-
+						<span class="material-symbols-outlined">edit_square</span>
     					<span class="text-sm">정보수정</span>
-
 					</a>
 
-				</div>
+				<div class="my-3 border-t-2 border-outline-variant/40 mx-2"></div>
+
+			    <a href="${contextPath}/member/guide" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+			    	<span class="material-symbols-outlined">fitness_center</span>
+			    	<span>운동 가이드</span>
+    			</a>
+    			
+			    <a href="${contextPath}/member/trainerList" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+      				<span class="material-symbols-outlined">badge</span>
+      				<span>트레이너</span>
+    			</a>
+    			
+   				<a href="${contextPath}/gym/main" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+      				<span class="material-symbols-outlined">store</span>
+      				<span>헬스장</span>
+    			</a>
+    			
+    			<a href="${contextPath}/member/community" 
+    			    class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+      				<span class="material-symbols-outlined">groups</span>
+      				<span>커뮤니티</span>
+    			</a>
+
+
 			</div>
 
 		</nav>
@@ -139,14 +127,14 @@ String contextPath = request.getContextPath();
 	<div class="mt-auto flex flex-col gap-2 pt-4 border-t border-slate-200">
 
 		<!-- 고객센터 (하단 고정) -->
-		<a href="<%=contextPath%>/support.jsp"
+		<a href="${contextPath}/support.jsp"
 			class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
 			<span class="material-symbols-outlined">support_agent</span> <span
 			class="text-sm">고객센터</span>
 		</a>
 
 		<!-- 로그아웃 -->
-		<button onclick="location.href='<%=contextPath%>/login.jsp'"
+		<button onclick="location.href='${contextPath}/login.jsp'"
 			class="bg-blue-600 text-white py-2 rounded-xl text-sm font-bold">
 			로그아웃</button>
 

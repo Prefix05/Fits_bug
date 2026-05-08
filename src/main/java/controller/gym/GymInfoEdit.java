@@ -40,11 +40,11 @@ public class GymInfoEdit extends HttpServlet {
         Integer gymId = (Integer) session.getAttribute("gymId");
 
         try {
-            GymInfoEditService service = new GymInfoEditServiceImpl();
-
-            Gym gym = service.selectGymMypage(gymId);
-            Schedule schedule = service.selectSchedule(gymId);
-            List<Membership> membershipList = service.selectMembershipList(gymId);
+            GymInfoEditService gymservice = new GymInfoEditServiceImpl();
+            Gym gym = gymservice.selectGymMypage(gymId);
+            
+            Schedule schedule = gymservice.selectSchedule(gymId);
+            List<Membership> membershipList = gymservice.selectMembershipList(gymId);
 
             request.setAttribute("gym", gym);
             request.setAttribute("schedule", schedule);

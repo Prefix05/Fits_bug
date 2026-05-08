@@ -117,6 +117,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public MemberDTO selectMemberByUserId(Integer userId) throws Exception {
+		System.out.println(userId);
 		MemberDTO memberDto = null;
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 

@@ -40,43 +40,10 @@
 
 <body class="bg-white text-on-surface overflow-hidden h-screen">
 
-<!-- Mobile Bottom Nav -->
-<nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">distance</span>
-        <span class="text-[10px] font-medium">내주변</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/dashboard"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-medium">대시보드</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-bold text-blue-700">화원관리</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">chat</span>
-        <span class="text-[10px] font-medium">메시지</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">payments</span>
-        <span class="text-[10px] font-medium">수익</span>
-    </a>
-</nav>
-
 <!-- SideNavBar -->
 <c:set var="activePage" value="calendar" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
 
 <%-- ═════════════════════════════════════════════════════════════ MAIN ════ --%>
 <main class="lg:pl-64 flex flex-col h-screen overflow-hidden">

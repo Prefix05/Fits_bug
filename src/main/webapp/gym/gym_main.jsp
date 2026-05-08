@@ -117,22 +117,56 @@
 <!-- Hero Section -->
 <section>
 <div class="relative h-[240px] rounded-xl overflow-hidden shadow-sm">
-<img alt="Modern high-end gym interior" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOmAriJw7C7IRscUaDd8fksRXMSKZHOVB_8-HXCoQq2K9GCjy4GL9h3g5dh6ZAP3acuI7M9g61BPLNElK6ptpJpqpajwYiOszBAt_J0Kh5ptZu1dkKB6DQVunEBmyiEIOfZTgJ3Qa8m3O_3_E6qnm0jIC_fdHGau6Z8PH8qYbhpwnH6HswH70ba6rM_uGIIcqdDqcJkM8uFap5ohS3Gez3PPjLUR3_oxbqCMu3OpdTXLkMLnGnxJx50HZWp5EmYkyXVeJiorZaSXnH"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-<div class="absolute bottom-6 left-6 flex items-end space-x-4">
-<div class="w-20 h-20 bg-surface-container-lowest rounded-xl p-2 shadow-lg flex items-center justify-center">
-<span class="text-primary font-black text-xl tracking-tighter italic">FBG</span>
-</div>
-<div class="text-white pb-1">
-<h2 class="text-3xl font-black tracking-tight">${gym.name}<span class="material-symbols-outlined text-primary align-middle ml-2" style='font-variation-settings: "FILL" 1; font-size: 24px;'>check_circle</span></h2>
 
-<div class="flex items-center space-x-4 text-[11px] font-medium text-white/90">
-<span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1">call</span>${gym.phoneNum}</span>
-<span class="flex items-center"><span class="material-symbols-outlined text-xs mr-1 text-yellow-400" style='font-variation-settings: "FILL" 1;'>star</span>${gym.rating}(${gym.reviewCount}개 후기)</span>
-</div>
-<p class="text-[11px] font-medium text-white/90 mt-1">${gym.description}</p>
-</div>
-</div>
+    <!-- 배경 이미지 -->
+    <img alt="Gym background"
+         class="w-full h-full object-cover"
+         src="${pageContext.request.contextPath}/trainer/profile-img/${gym.backgroundImg}"
+         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'"/>
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+    <div class="absolute bottom-6 left-6 flex items-end space-x-4">
+
+        <!-- 프로필 로고 -->
+        <div class="w-20 h-20 bg-surface-container-lowest rounded-xl p-1 shadow-lg overflow-hidden">
+            <img class="w-full h-full object-cover rounded-lg"
+                 src="${pageContext.request.contextPath}/trainer/profile-img/${user.profileImage}"
+                 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/profile_img.jpg'">
+        </div>
+
+        <!-- 텍스트 -->
+        <div class="text-white pb-1">
+
+            <h2 class="text-3xl font-black tracking-tight">
+                ${gym.name}
+                <span class="material-symbols-outlined text-primary align-middle ml-2"
+                      style='font-variation-settings: "FILL" 1; font-size: 24px;'>
+                    check_circle
+                </span>
+            </h2>
+
+            <div class="flex items-center space-x-4 text-[11px] font-medium text-white/90">
+
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-xs mr-1">call</span>
+                    ${gym.phoneNum}
+                </span>
+
+                <span class="flex items-center">
+                    <span class="material-symbols-outlined text-xs mr-1 text-yellow-400"
+                          style='font-variation-settings: "FILL" 1;'>star</span>
+                    ${gym.rating}(${gym.reviewCount}개 후기)
+                </span>
+
+            </div>
+
+            <p class="text-[11px] font-medium text-white/90 mt-1">
+                ${gym.description}
+            </p>
+
+        </div>
+    </div>
 </div>
 </section>
 <div class="grid grid-cols-12 gap-6 items-start">
@@ -149,10 +183,9 @@
 		<div class="grid grid-cols-2 gap-2">
 			<c:forEach var="img" items="${images}" varStatus="status">
 				<div class="aspect-video rounded-lg overflow-hidden border border-outline-variant/10">
-					<img alt="Gym gallery image"  
-						 src="${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"
-	 					 onclick="openLightbox(${status.index})"
-     					 class="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer"/>
+					<img alt="Modern high-end gym interior" class="w-full h-full object-cover"
+     					 src="${pageContext.request.contextPath}/trainer/profile-img/${img}"
+     					 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/img/default-bg.png'"/>
 				</div>
 			</c:forEach>
 		</div>
@@ -245,7 +278,7 @@
     		<input type="hidden" name="comment" id="reviewCommentInput">
 		</form>
 	</c:if>
-<div id="reviewList" class="grid grid-cols-2 gap-4">
+<div id="reviewList" class="grid grid-cols-1 gap-4">
     <c:choose>
         <c:when test="${not empty reviewList}">
             <c:forEach var="review" items="${reviewList}">
@@ -286,21 +319,54 @@
 
                             <!-- 본인 리뷰 -->
                         
-                            <c:if test="${not empty sessionScope.loginUser 
-             and sessionScope.loginUser.id == review.clientId}">
-                                <button onclick="editReview(${review.reviewNum})" class="ml-2">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="deleteReview(${review.reviewNum})">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </c:if>
+                            
+                            
                         </div>
                     </div>
 
-                    <p class="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed">
+                    <p class="text-[11px] text-on-surface-variant leading-relaxed">
                         ${review.comment}
                     </p>
+                    
+                    <c:if test="${not empty sessionScope.loginUser 
+          and sessionScope.loginUser.id == review.clientId}">
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewUpdate"
+          class="flex items-center gap-2 mt-3">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <input type="number"
+               name="star"
+               min="1"
+               max="5"
+               value="${review.rating.intValue()}"
+               class="w-16 border rounded px-1 text-xs">
+
+        <input type="text"
+               name="comment"
+               value="${review.comment}"
+               class="border rounded px-2 py-1 text-xs flex-1">
+
+        <button type="submit" class="text-primary">
+            <span class="material-symbols-outlined text-sm">save</span>
+        </button>
+    </form>
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewDelete"
+          class="inline-block mt-2"
+          onsubmit="return confirm('삭제하시겠습니까?');">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <button type="submit" class="text-error">
+            <span class="material-symbols-outlined text-sm">delete</span>
+        </button>
+    </form>
+
+</c:if>
                 </div>
             </c:forEach>
         </c:when>
@@ -320,14 +386,14 @@
 <div id="allReviewBox" class="hidden mt-4 max-h-none overflow-y-auto space-y-3 custom-scrollbar">
     <c:choose>
         <c:when test="${not empty allReviewList}">
-            <c:forEach var="review" items="${allReviewList}">
+            <c:forEach var="review" items="${allReviewList}" begin="${fn:length(reviewList)}">
                 <div class="bg-surface-container-low p-4 rounded-lg">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <div class="text-[11px] font-bold">${review.clientName}</div>
                             <div class="text-[9px] text-outline">${review.createdAt}</div>
                         </div>
-
+						<div class="flex items-center">
                         <div class="flex text-yellow-400 scale-75 origin-right mr-1">
 
     <!-- 채워진 별 -->
@@ -343,11 +409,60 @@
     </c:if>
 
 </div>
+<c:if test="${not empty sessionScope.loginUser or not empty sessionScope.loginGym}">
+        <button class="text-outline hover:text-error ml-2"
+                onclick="reportReview('${review.reviewNum}')">
+            <span class="material-symbols-outlined text-sm">report</span>
+        </button>
+    </c:if>
+</div>
                     </div>
 
                     <p class="text-[11px] text-on-surface-variant leading-relaxed">
                         ${review.comment}
                     </p>
+                    
+                    <c:if test="${not empty sessionScope.loginUser 
+          and sessionScope.loginUser.id == review.clientId}">
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewUpdate"
+          class="flex items-center gap-2 mt-3">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <input type="number"
+               name="star"
+               min="1"
+               max="5"
+               value="${review.rating.intValue()}"
+               class="w-16 border rounded px-1 text-xs">
+
+        <input type="text"
+               name="comment"
+               value="${review.comment}"
+               class="border rounded px-2 py-1 text-xs flex-1">
+
+        <button type="submit" class="text-primary">
+            <span class="material-symbols-outlined text-sm">save</span>
+        </button>
+    </form>
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewDelete"
+          class="inline-block mt-2"
+          onsubmit="return confirm('삭제하시겠습니까?');">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <button type="submit" class="text-error">
+            <span class="material-symbols-outlined text-sm">delete</span>
+        </button>
+    </form>
+
+</c:if>
+                    
+
                 </div>
             </c:forEach>
         </c:when>
@@ -430,22 +545,35 @@
 <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/15">
 <h4 class="text-[10px] font-bold text-on-surface-variant mb-4 uppercase tracking-widest">시설 정보</h4>
 <div class="grid grid-cols-2 gap-2 mb-6">
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">lock</span>
-<span class="text-[10px] font-semibold">락커</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">shower</span>
-<span class="text-[10px] font-semibold">샤워실</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">local_parking</span>
-<span class="text-[10px] font-semibold">주차</span>
-</div>
-<div class="flex items-center p-2 rounded bg-surface-container-low">
-<span class="material-symbols-outlined text-primary text-lg mr-2">apparel</span>
-<span class="text-[10px] font-semibold">운동복</span>
-</div>
+
+    <c:if test="${fn:contains(gym.facility, '개인락커')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">lock</span>
+            <span class="text-[10px] font-semibold">락커</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '샤워실')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">shower</span>
+            <span class="text-[10px] font-semibold">샤워실</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '주차장')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">local_parking</span>
+            <span class="text-[10px] font-semibold">주차</span>
+        </div>
+    </c:if>
+
+    <c:if test="${fn:contains(gym.facility, '운동복')}">
+        <div class="flex items-center p-2 rounded bg-surface-container-low">
+            <span class="material-symbols-outlined text-primary text-lg mr-2">apparel</span>
+            <span class="text-[10px] font-semibold">운동복</span>
+        </div>
+    </c:if>
+
 </div>
 <div class="pt-4 border-t border-outline-variant/10">
 	<h4 class="text-[10px] font-bold text-on-surface-variant mb-3 uppercase tracking-widest">운영 시간</h4>
@@ -535,7 +663,7 @@
 
 const galleryImages =[
 	<c:forEach var="img" items="${images}" varStatus="status">
-	"${pageContext.request.contextPath}/gym/mainGalleryImages/${img}"<c:if test="${!status.last}">,</c:if>
+	"${pageContext.request.contextPath}/trainer/profile-img/${img}"<c:if test="${!status.last}">,</c:if>
 	</c:forEach>
 ];
 
@@ -597,9 +725,7 @@ function prevImage(){
 							<div class="flex-1 min-w-0">
 								<div class="flex justify-between items-baseline mb-0.5">
 									<h3 class="font-bold text-base text-on-surface truncate">${trainer.name}
-										<c:if test="${not empty trainer.memberCount}">
-											<span class="text-xs font-normal text-on-surface-variant ml-1">(${trainer.memberCount}명)</span>
-										</c:if>
+										
 									</h3>
 									<p class="text-[10px] font-semibold text-primary uppercase tracking-wider shrink-0">${trainer.mainSpecial}</p>
 								</div>
@@ -707,15 +833,6 @@ function submitReview(){
     document.getElementById("reviewForm").submit();
 }
 
-function editReview(id){
-    location.href = "${pageContext.request.contextPath}/gym/reviewUpdate?reviewNum=" + id;
-}
-
-function deleteReview(id){
-    if(confirm("삭제하시겠습니까?")){
-        location.href = "${pageContext.request.contextPath}/gym/reviewDelete?reviewNum=" + id;
-    }
-}
 </script>
 
 <!-- Payment Modal -->
@@ -979,7 +1096,7 @@ function submitPayment(event) {
     IMP.init("imp77425055");
 
     IMP.request_pay({
-        channelKey: "channel-key-d3e2f79b-28dd-4cc0-8687-d6e0dd457b31",
+        channelKey: "channel-key-f10a8ff7-975c-4b31-8166-11d080e4eb4e",
         pay_method: "card",
         merchant_uid: "gym_" + new Date().getTime(),
         name: selectedMembership.typeRep + (selectedMembership.type === "month" ? "개월 이용권" : "일 이용권"),
