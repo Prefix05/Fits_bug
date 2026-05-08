@@ -2,10 +2,6 @@ package service.member;
 
 import java.util.List;
 
-
-import dao.gym.GymMainDao;
-import dao.gym.GymMainDaoImpl;
-
 import org.apache.ibatis.session.SqlSession;
 
 import dao.gym.GymMainDao;
@@ -33,7 +29,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int register(UserDTO dto) {
         if (userDAO.isEmailExists(dto.getEmail())) return 0;
-        if (dto.getRole() == null || dto.getRole().isEmpty()) dto.setRole("MEMBER");
+        
+        // 기본 역할 설정
+        if (dto.getRole() == null || dto.getRole().isEmpty()) {
+            dto.setRole("MEMBER");
+        }
         return userDAO.insert(dto);
     }
 
@@ -74,13 +74,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByEmail(String email) { return userDAO.findByEmail(email); }
+    public UserDTO findByEmail(String email) { 
+        return userDAO.findByEmail(email); 
+    }
 
     @Override
-    public List<UserDTO> findAll() { return userDAO.findAll(); }
+    public List<UserDTO> findAll() { 
+        return userDAO.findAll(); 
+    }
 
     @Override
-    public int update(UserDTO dto) { return userDAO.update(dto); }
+    public int update(UserDTO dto) { 
+        return userDAO.update(dto); 
+    }
 
     @Override
     public int updatePassword(String email, String password) {
@@ -88,5 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int delete(int id) { return userDAO.delete(id); }
+    public int delete(int id) { 
+        return userDAO.delete(id); 
+    }
 }

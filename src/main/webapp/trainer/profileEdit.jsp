@@ -19,6 +19,8 @@
 <!-- SideNavBar -->
 <c:set var="activePage" value="profile" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+<jsp:include page="/trainer/mobileTopHeader.jsp"/>
 
 <!-- Main -->
 <main class="lg:pl-64 min-h-screen">
@@ -86,12 +88,40 @@
                            placeholder="활동명 또는 닉네임"/>
                 </div>
 
-                <!-- Tel -->
+                <!-- Phone -->
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">전화번호</label>
-                    <input type="tel" name="tel" value="${sessionScope.loginUser.tel}"
+                    <input type="tel" name="phone" value="${sessionScope.loginUser.phone}"
                            class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
                            placeholder="010-0000-0000"/>
+                </div>
+
+                <!-- Age -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">나이</label>
+                    <input type="number" name="age" value="${sessionScope.loginUser.age > 0 ? sessionScope.loginUser.age : ''}"
+                           min="1" max="100"
+                           class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
+                           placeholder="25"/>
+                </div>
+
+                <!-- Gender -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">성별</label>
+                    <div class="flex gap-4 px-1 py-1">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="gender" value="MALE"
+                                   ${sessionScope.loginUser.gender == 'MALE' ? 'checked' : ''}
+                                   class="w-4 h-4 accent-primary"/>
+                            <span class="text-sm font-medium text-on-surface">남성</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="gender" value="FEMALE"
+                                   ${sessionScope.loginUser.gender == 'FEMALE' ? 'checked' : ''}
+                                   class="w-4 h-4 accent-primary"/>
+                            <span class="text-sm font-medium text-on-surface">여성</span>
+                        </label>
+                    </div>
                 </div>
 
             </section>

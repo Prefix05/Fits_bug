@@ -3,20 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="notification">
-    <resultMap id="notificationMap" type="notification">
-        <id property="notificationId" column="notification_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="memberName" column="member_name"/>
-        <result property="type" column="type"/>
-        <result property="title" column="title"/>
-        <result property="message" column="message"/>
-        <result property="targetUrl" column="target_url"/>
-        <result property="read" column="is_read"/>
-        <result property="createdAtLabel" column="create_date_label"/>
-    </resultMap>
-
-    <select id="findRecentByUserAndMember" parameterType="map" resultMap="notificationMap">
+<mapper namespace="mapper.notification">
+    <select id="findRecentByUserAndMember" parameterType="map" resultType="TrainerNotificationDTO">
         SELECT n.*,
         CASE
         WHEN TIMESTAMPDIFF(MINUTE, n.create_date, NOW()) &lt; 1 THEN '방금 전'

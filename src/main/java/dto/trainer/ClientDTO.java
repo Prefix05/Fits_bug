@@ -12,15 +12,25 @@ public class ClientDTO {
     private Integer height;
     private Integer weight;
     private int trainerId;
+    private String profileImage;
 
     // ──────────────────────────────
     // Getters & Setters
     // ──────────────────────────────
+    
+    public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+	
     public int getClientId() {
         return clientId;
-    }
+    } 
 
-    public void setClientId(int clientId) {
+	public void setClientId(int clientId) {
         this.clientId = clientId;
     }
 

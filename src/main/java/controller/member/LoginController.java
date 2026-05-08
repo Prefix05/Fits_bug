@@ -1,7 +1,6 @@
 package controller.member;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,15 +14,13 @@ import service.member.UserServiceImpl;
 
 @WebServlet("/member/login")
 public class LoginController extends HttpServlet {
-
     private UserService userService = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 이미 로그인된 경우 main으로
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("loginUser") != null) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("loginUser") != null) {
             response.sendRedirect(request.getContextPath() + "/member/main");
             return;
         }
@@ -34,31 +31,47 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        // 1. 유효성 검사 (입력값 확인)
+        if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            request.setAttribute("errorMsg", "이메일과 비밀번호를 입력해주세요.");
+            request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+            return;
+        }
+
         try {
-			String email = request.getParameter("email");
-			String password = request.getParameter("password");
+            // 2. 서비스 계층을 통한 로그인 시도 (수정된 UserDTO 규격에 맞춰 작동)
+            UserDTO loginUser = userService.login(email.trim(), password);
 
-			// USER 테이블 기준 로그인
-			UserDTO loginUser = userService.login(email, password);
-			System.out.println(loginUser);
+            // 3. 로그인 결과 처리
+            if (loginUser != null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("loginUser", loginUser);
+                session.setAttribute("loginEmail", email.trim());
 
-			if (loginUser != null) {
-				HttpSession session = request.getSession();
-				session.setAttribute("loginUser", loginUser); // UserDTO 저장
-				session.setAttribute("loginEmail", email); // 이메일 별도 저장 (다른 DAO에서 사용)
-				if(loginUser.getRole().equals("GYM")) {
-					System.out.println("GYM");
-					response.sendRedirect(request.getContextPath() + "/gym/dashboard");
-				} else if(loginUser.getRole().equals("MEMBER")) {
-					System.out.println("MEMBER");
-					response.sendRedirect(request.getContextPath() + "/member/main");
-				} 
-			} else {
-				request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
-				request.getRequestDispatcher("/member/login.jsp").forward(request, response);
-			}
-        } catch(Exception e) {
-        	e.printStackTrace();
+                // 역할(Role)별 리다이렉트
+                String role = loginUser.getRole();
+                if ("GYM".equals(role)) {
+                    response.sendRedirect(request.getContextPath() + "/gym/main");
+                } else if ("TRAINER".equals(role)) {
+                    response.sendRedirect(request.getContextPath() + "/trainer/main");
+                } else if ("ADMIN".equals(role)) {
+                    response.sendRedirect(request.getContextPath() + "/admin/main");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/member/main");
+                }
+            } else {
+                // 로그인 실패 (비밀번호 불일치 등)
+                request.setAttribute("errorMsg", "아이디 또는 비밀번호가 틀렸습니다.");
+                request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMsg", "로그인 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            request.getRequestDispatcher("/member/login.jsp").forward(request, response);
         }
     }
 }

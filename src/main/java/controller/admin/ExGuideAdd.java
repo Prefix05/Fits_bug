@@ -64,10 +64,9 @@ public class ExGuideAdd extends HttpServlet {
 		// 1. 인코딩 설정 (한글 깨짐 방지)
         request.setCharacterEncoding("UTF-8");
 
-        // 2. 서버 내 물리적 저장 경로 설정 (프로젝트 내 webapp/resources/upload 폴더 기준)
-        String uploadPath = request.getServletContext().getRealPath("/resources/upload");
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
+        String uploadPath = "/uploads";
+        //File uploadDir = new File(uploadPath);
+       // if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
 
         try {
         	String egNumStr = request.getParameter("egNum"); // hidden 필드에서 받음
@@ -127,6 +126,7 @@ public class ExGuideAdd extends HttpServlet {
 
         // UUID를 붙여 파일명 중복 원천 차단
         String savedName = UUID.randomUUID().toString() + "_" + originalName;
+        System.out.println(uploadPath + File.separator + savedName);
         part.write(uploadPath + File.separator + savedName);
         return savedName;
     }

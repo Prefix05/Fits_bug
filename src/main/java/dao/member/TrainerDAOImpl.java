@@ -1,6 +1,8 @@
 package dao.member;
 
 import dto.member.TrainerDTO;
+import dto.trainer.AvailabilityDTO;
+
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisSqlSessionFactory;
 
@@ -39,4 +41,25 @@ public class TrainerDAOImpl implements TrainerDAO {
             return null;
         }
     }
+
+	@Override
+	public List<AvailabilityDTO> findAvailabilityByTrainerId(Integer trainerId) {
+        try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+            return sql.selectList(
+                "pricingAvailability.findAvailabilityByTrainerId", trainerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+	}
+
+	@Override
+	public Map<String, Object> findTrainerInfoById(Integer trainerId) {
+		try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
+			return sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

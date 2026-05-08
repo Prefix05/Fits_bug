@@ -2,7 +2,9 @@ package controller.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,16 +33,22 @@ public class MemberClient extends HttpServlet {
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String clientName = request.getParameter("clientName");
-		
+		String sortColumn = request.getParameter("sortColumn");
+        String sortOrder = request.getParameter("sortOrder");
+        
 		if(clientName != null) {
 			if(clientName.trim().isEmpty()) {
 				clientName = null;
 			}
-			PageInfo pageInfo = new PageInfo(1);
+			Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("pageInfo", new PageInfo(1));
+            paramMap.put("clientName", clientName);
+            paramMap.put("sortColumn", sortColumn);
+            paramMap.put("sortOrder", sortOrder);
 			
 			try {
 				MemberService service = new MemberServiceImpl();
-				List<MemberDTO> list = service.clientList(pageInfo, clientName);
+				List<MemberDTO> list = service.clientList(paramMap);
 				
 				response.setContentType("application/json;charset=UTF-8");
 				PrintWriter out = response.getWriter();
@@ -53,7 +61,7 @@ public class MemberClient extends HttpServlet {
 	                json.append("\"clientName\":\"" + m.getClientName() + "\",");
 	                json.append("\"clientTel\":\"" + m.getClientTel() + "\",");
 	                json.append("\"regDate\":\"" + m.getRegDate() + "\",");
-	                json.append("\"ptTrainer\":" + m.getPtTrainer() + ",");
+	                json.append("\"ptTrainer\":\"" + m.getPtTrainer() + "\",");
 	                json.append("\"payment\":" + m.getPayment());
 	                json.append("}");
 	                if (i < list.size() - 1) json.append(",");
@@ -71,20 +79,22 @@ public class MemberClient extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String page = request.getParameter("page");
-		Integer reqPage = 1;
-		if(page!=null) {
-			reqPage = Integer.parseInt(page);
-		}
-		PageInfo pageInfo = new PageInfo(reqPage);
+		int reqPage = (page != null) ? Integer.parseInt(page) : 1;
+		
+		Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("pageInfo", new PageInfo(reqPage));
+        paramMap.put("clientName", null);
+        paramMap.put("sortColumn", null);
+        paramMap.put("sortOrder", null);
 		
 		try {
 			MemberService service = new MemberServiceImpl();
-			List<MemberDTO> clientList = service.clientList(pageInfo, null);
+			List<MemberDTO> clientList = service.clientList(paramMap);
 			int totalCount = service.totalCnt();
 			int gymCount = service.gymCnt();
 			int trainerCount = service.trainerCnt();
 			int clientCount = service.clientCnt();
-			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("pageInfo", paramMap.get("pageInfo"));
 			request.setAttribute("clientList", clientList);
 			request.setAttribute("totalCount", totalCount);
 			request.setAttribute("gymCount", gymCount);

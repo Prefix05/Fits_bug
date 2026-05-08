@@ -46,8 +46,7 @@ public class InbodyRecordController extends HttpServlet {
         UserDTO user = (UserDTO) request.getSession().getAttribute("loginUser");
         if (user == null) { response.setStatus(401); return; }
 
-        dao.member.MemberDAO memberDao = new dao.member.MemberDAOImpl();
-        int memberId = memberDao.findMemberIdByEmail(user.getEmail());
+        int memberId = user.getOtherId();
 
         InbodyLogDTO dto = new InbodyLogDTO();
         dto.setMemberId(memberId);

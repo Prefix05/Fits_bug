@@ -9,20 +9,18 @@
             t.id,
             u.name,
             u.nickname,
-            u.profile_image                                                 AS profileImg,
+            u.profile_image AS profileImg,
             t.description,
-            t.trainer_type                                                  AS trainerType,
+            t.trainer_type AS trainerType,
             t.address,
-            t.is_verified                                                   AS isVerified,
-            t.approval_status                                               AS approvalStatus,
+            t.is_verified AS isVerified,
+            t.approval_status AS approvalStatus,
             GROUP_CONCAT(DISTINCT ts.type ORDER BY ts.type SEPARATOR ', ') AS specialty,
-            MIN(CASE WHEN tp.is_active = 1 THEN tp.price END)              AS minPrice
+            MIN(CASE WHEN tp.is_active = 1 THEN tp.price END) AS minPrice
         FROM trainer t
         JOIN `user` u ON t.user_id = u.id
         LEFT JOIN trainer_specialization ts ON ts.trainer_id = t.id
         LEFT JOIN trainer_pricing        tp ON tp.trainer_id = t.id
-        WHERE u.is_deleted = 0
-          AND u.role = 'TRAINER'
         <if test="keyword != null and keyword != ''">
             AND (u.name     LIKE CONCAT('%', #{keyword}, '%')
               OR u.nickname  LIKE CONCAT('%', #{keyword}, '%'))

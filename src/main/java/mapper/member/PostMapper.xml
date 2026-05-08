@@ -7,7 +7,6 @@
     <resultMap id="postResultMap" type="dto.member.PostDTO">
         <id     property="id"          column="id"/>
         <result property="userId"      column="user_id"/>
-        <result property="category"    column="category"/>
         <result property="title"       column="title"/>
         <result property="body"        column="body"/>
         <result property="image"       column="image"/>
@@ -23,8 +22,8 @@
          → param: PostDTO
          ────────────────────────────────────────────────────── -->
     <insert id="insert" parameterType="PostDTO">
-        INSERT INTO post (user_id, category, title, body, image, hashtags)
-        VALUES (#{userId}, #{category}, #{title}, #{body}, #{image}, #{hashtags})
+        INSERT INTO post (user_id, title, body, image, hashtags)
+        VALUES (#{userId}, #{title}, #{body}, #{image}, #{hashtags})
     </insert>
 
     <!-- ──────────────────────────────────────────────────────
@@ -33,14 +32,14 @@
          ────────────────────────────────────────────────────── -->
     <select id="getList" resultMap="postResultMap">
         SELECT
-            p.id, p.user_id, p.category, p.title, p.body,
+            p.id, p.user_id, p.title, p.body,
             p.image, p.hashtags, p.created_at,
             SUM(CASE WHEN pr.type = 'like'   THEN 1 ELSE 0 END) AS like_count,
             SUM(CASE WHEN pr.type = 'good'   THEN 1 ELSE 0 END) AS good_count,
             SUM(CASE WHEN pr.type = 'muscle' THEN 1 ELSE 0 END) AS muscle_count
         FROM post p
         LEFT JOIN post_reaction pr ON p.id = pr.post_id
-        GROUP BY p.id, p.user_id, p.category, p.title,
+        GROUP BY p.id, p.user_id, p.post_type, p.title,
                  p.body, p.image, p.hashtags, p.created_at
         ORDER BY p.id DESC
     </select>

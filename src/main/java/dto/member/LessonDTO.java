@@ -3,21 +3,23 @@ package dto.member;
 import java.time.LocalDateTime;
 
 /**
- * ↔ LESSON 테이블 (신규)
- * id, trainer_id, client_id, start_time, end_time,
- * status(예약완료/완료/취소), notes, lesson_date, goal, created_at
+ * ↔ LESSON 테이블 (DB SQL 기준으로 수정)
+ * DB 실제 컬럼:
+ *   id, trainer_id, client_id, start_time, end_time,
+ *   status(예약완료/완료/취소), notes, lesson_date, created_at
+ *
+ * 수정: goal 필드 제거 (DB LESSON 테이블에 없음)
  */
 public class LessonDTO {
 
     private int    id;
     private int    trainerId;    // trainer_id (FK → TRAINER.id)
-    private int    clientId;    // client_id  (FK → MEMBER.id)
-    private String startTime;   // start_time (TIME → String)
-    private String endTime;     // end_time
-    private String status;      // ENUM('예약완료','완료','취소') DEFAULT '예약완료'
-    private String notes;
-    private String lessonDate;  // lesson_date (VARCHAR(50))
-    private String goal;
+    private int    clientId;     // client_id  (FK → MEMBER.id)
+    private String startTime;    // start_time (TIME → String)
+    private String endTime;      // end_time
+    private String status;       // ENUM('예약완료','완료','취소') DEFAULT '예약완료'
+    private String notes;        // notes (LONGTEXT)
+    private String lessonDate;   // lesson_date (VARCHAR(50))
     private LocalDateTime createdAt;
 
     // ── JOIN용 ────────────────────────────────────────────────
@@ -51,9 +53,6 @@ public class LessonDTO {
     public String getLessonDate() { return lessonDate; }
     public void setLessonDate(String lessonDate) { this.lessonDate = lessonDate; }
 
-    public String getGoal() { return goal; }
-    public void setGoal(String goal) { this.goal = goal; }
-
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
@@ -65,4 +64,8 @@ public class LessonDTO {
 
     public String getClientNickname() { return clientNickname; }
     public void setClientNickname(String clientNickname) { this.clientNickname = clientNickname; }
+
+    /** goal 필드 호환용 getter (기존 코드 참조 시 notes 반환) */
+    public String getGoal() { return notes; }
+    public void setGoal(String goal) { this.notes = goal; }
 }

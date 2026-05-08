@@ -47,10 +47,11 @@
     <span></span>
     <span></span>
     <span></span>
+    <span></span>
 </div>
 
 <h2>트레이너 회원가입</h2>
-<p class="subtitle">기본 정보를 입력해 주세요. (1/4)</p>
+<p class="subtitle">기본 정보를 입력해 주세요. (1/5)</p>
 
 <c:if test="${not empty error}">
     <p class="error">
@@ -78,11 +79,20 @@
     </div>
     <div class="field">
         <label class="field-label">전화번호</label>
-        <input type="tel" name="tel" placeholder="010-0000-0000" value="${prefill.tel}" required/>
+        <input type="tel" name="phone" placeholder="010-0000-0000" value="${prefill.phone}" required/>
     </div>
     <div class="field">
         <label class="field-label">닉네임</label>
         <input type="text" name="nickname" placeholder="활동명 또는 닉네임" value="${prefill.nickname}" required/>
+    </div>
+    <div class="field">
+        <label class="field-label">나이</label>
+        <input type="number" name="age" placeholder="25" min="1" max="100" value="${prefill.age}" required/>
+    </div>
+    <div class="field">
+        <label class="field-label">성별</label>
+        <label><input type="radio" name="gender" value="MALE" ${prefill.gender == 'MALE' ? 'checked' : ''}/> 남성</label>&nbsp;&nbsp;
+        <label><input type="radio" name="gender" value="FEMALE" ${prefill.gender == 'FEMALE' ? 'checked' : ''}/> 여성</label>
     </div>
 
     <button type="submit" class="btn-primary">다음</button>

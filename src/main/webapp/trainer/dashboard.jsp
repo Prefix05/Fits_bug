@@ -134,64 +134,11 @@
 </head>
 <body class="bg-surface text-on-surface antialiased">
 
-<!-- Mobile Top Bar -->
-<header
-        class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-[#007AFF] rounded-lg flex items-center justify-center">
-            <span class="material-symbols-outlined text-white text-lg">exercise</span>
-        </div>
-        <h1 class="text-lg font-bold text-on-surface">Fitsbug</h1>
-    </div>
-    <div class="flex items-center gap-1">
-        <button class="p-2 rounded-lg hover:bg-slate-200">
-            <span class="material-symbols-outlined">notifications</span>
-        </button>
-        <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
-            <img alt="${sessionScope.loginTrainer.name}" class="w-8 h-8 rounded-full object-cover"
-                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        </a>
-    </div>
-</header>
-
-<!-- Mobile Bottom Nav -->
-<nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">distance</span>
-        <span class="text-[10px] font-medium">내주변</span>
-    </a>
-    <a href="" class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
-            <span class="material-symbols-outlined text-[22px]"
-                  style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-bold text-blue-700">대시보드</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/clients"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-medium">회원관리</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/calendar"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">chat</span>
-        <span class="text-[10px] font-medium">메시지</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">payments</span>
-        <span class="text-[10px] font-medium">수익</span>
-    </a>
-</nav>
-
 <!-- SideNavBar -->
 <c:set var="activePage" value="dashboard" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+<jsp:include page="/trainer/mobileTopHeader.jsp"/>
 
 <!-- Main Content Shell -->
 <main class="lg:ml-64 min-h-screen flex flex-col pt-20 lg:pt-8 pb-20 lg:pb-0">
@@ -210,26 +157,33 @@
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <c:choose>
                                         <c:when test="${selectedLesson.status eq 'Now'}">
-                                            <span id="lesson-status-badge" class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-green-300 text-xs font-bold rounded-full border border-green-400/30 tracking-wider">${selectedLesson.status}</span>
+                                            <span id="lesson-status-badge"
+                                                  class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-green-300 text-xs font-bold rounded-full border border-green-400/30 tracking-wider">${selectedLesson.status}</span>
                                         </c:when>
                                         <c:when test="${selectedLesson.status eq 'Up Next'}">
-                                            <span id="lesson-status-badge" class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-blue-300 text-xs font-bold rounded-full border border-blue-500/30 tracking-wider">${selectedLesson.status}</span>
+                                            <span id="lesson-status-badge"
+                                                  class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-blue-300 text-xs font-bold rounded-full border border-blue-500/30 tracking-wider">${selectedLesson.status}</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span id="lesson-status-badge" class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-slate-300 text-xs font-bold rounded-full border border-slate-400/30 tracking-wider">${selectedLesson.status}</span>
+                                            <span id="lesson-status-badge"
+                                                  class="whitespace-nowrap px-2.5 py-0.5 bg-primary/20 text-slate-300 text-xs font-bold rounded-full border border-slate-400/30 tracking-wider">${selectedLesson.status}</span>
                                         </c:otherwise>
                                     </c:choose>
-                                    <span id="lesson-time-range" class="whitespace-nowrap flex items-center gap-1 text-blue-200 text-xs font-medium">
+                                    <span id="lesson-time-range"
+                                          class="whitespace-nowrap flex items-center gap-1 text-blue-200 text-xs font-medium">
                                     <span class="material-symbols-outlined text-xs">schedule</span>
                                         ${selectedLesson.startTime} - ${selectedLesson.endTime}
                                     </span>
                                 </div>
                                 <div>
-                                    <h2 id="lesson-member-name" class="text-2xl md:text-3xl font-bold tracking-tight whitespace-nowrap">${selectedLesson.memberName}</h2>
+                                    <h2 id="lesson-member-name"
+                                        class="text-2xl md:text-3xl font-bold tracking-tight whitespace-nowrap">${selectedLesson.memberName}</h2>
                                     <div class="flex items-center gap-2">
-                                        <p id="lesson-name" class="whitespace-nowrap text-blue-100/70 text-sm md:text-lg">${selectedLesson.goal}</p>
+                                        <p id="lesson-name"
+                                           class="whitespace-nowrap text-blue-100/70 text-sm md:text-lg">${selectedLesson.goal}</p>
                                         <span class="h-1 w-1 rounded-full bg-blue-100/30 shrink-0"></span>
-                                        <p id="lesson-duration" class="whitespace-nowrap text-blue-100/50 text-xs md:text-sm font-medium">
+                                        <p id="lesson-duration"
+                                           class="whitespace-nowrap text-blue-100/50 text-xs md:text-sm font-medium">
                                             <c:choose>
                                                 <c:when test="${client != null}">${client.lessonCount}회 남음</c:when>
                                                 <c:otherwise>-</c:otherwise>
@@ -240,10 +194,10 @@
                                 <!-- Actions Row -->
                                 <div class="flex items-center gap-2">
                                     <!-- Mobile: icon buttons -->
-                                    <button
-                                            class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
+                                    <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
+                                       class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
                                         <span class="material-symbols-outlined text-[20px]">person</span>
-                                    </button>
+                                    </a>
                                     <button
                                             class="flex items-center justify-center md:hidden p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition-colors active:scale-95">
                                         <span class="material-symbols-outlined text-[20px]">fitness_center</span>
@@ -255,11 +209,10 @@
 
                                     <!-- Desktop: full buttons -->
                                     <div class="hidden md:flex flex-wrap gap-3">
-                                        <button
-                                                class="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-blue-50 transition-colors active:scale-95">
-                                            프로필
-                                            보기
-                                        </button>
+                                        <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
+                                           class="px-8 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-blue-50 transition-colors active:scale-95">
+                                            프로필 보기
+                                        </a>
                                         <button
                                                 class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold backdrop-blur-md transition-colors active:scale-95">
                                             +
@@ -318,7 +271,8 @@
                         <%-- 수업이 있을 때 목록 표시 --%>
                         <c:otherwise>
                             <c:forEach var="lesson" items="${todayLessons}">
-                                <a href="dashboard?lessonId=${lesson.lessonId}" class="block lesson-item" data-lesson-id="${lesson.lessonId}">
+                                <a href="dashboard?lessonId=${lesson.lessonId}" class="block lesson-item"
+                                   data-lesson-id="${lesson.lessonId}">
                                     <div class="lesson-item-card flex items-center justify-between p-4 mx-0.5 rounded-xl border-2 transition-all ${hasSelectedLesson and selectedLesson.lessonId eq lesson.lessonId ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-surface-container-low border-transparent hover:bg-surface-container-high'}">
                                         <div class="flex items-center gap-4">
                                             <div class="w-12 text-center">
@@ -357,7 +311,9 @@
                 <section class="flex flex-col flex-1 min-h-0 w-full h-full">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-on-surface">알림</h3>
-                        <button id="notifications-mark-all" class="text-xs font-bold text-primary hover:underline">모두 읽음으로 표시</button>
+                        <button id="notifications-mark-all" class="text-xs font-bold text-primary hover:underline">모두
+                            읽음으로 표시
+                        </button>
                     </div>
                     <div
                             class="bg-surface-container-low rounded-2xl overflow-hidden flex flex-col shadow-sm flex-1 max-h-[540px]">
@@ -379,17 +335,20 @@
                                                 <c:choose>
                                                     <c:when test="${notification.type eq 'SCHEDULE'}">
                                                         <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
-                                                            <span class="material-symbols-outlined text-[18px]" data-icon="event_note">event_note</span>
+                                                            <span class="material-symbols-outlined text-[18px]"
+                                                                  data-icon="event_note">event_note</span>
                                                         </div>
                                                     </c:when>
                                                     <c:when test="${notification.type eq 'DIET'}">
                                                         <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0">
-                                                            <span class="material-symbols-outlined text-[18px]" data-icon="restaurant">restaurant</span>
+                                                            <span class="material-symbols-outlined text-[18px]"
+                                                                  data-icon="restaurant">restaurant</span>
                                                         </div>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <div class="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
-                                                            <span class="material-symbols-outlined text-[18px]" data-icon="task_alt">task_alt</span>
+                                                            <span class="material-symbols-outlined text-[18px]"
+                                                                  data-icon="task_alt">task_alt</span>
                                                         </div>
                                                     </c:otherwise>
                                                 </c:choose>

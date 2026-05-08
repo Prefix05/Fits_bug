@@ -34,8 +34,6 @@ public class UpdatePlanController extends HttpServlet {
         member.setEmail(loginUser.getEmail());  // WHERE 조건용 email
         member.setGoals(req.getParameter("goal"));           // goals 컬럼
         member.setExperience(req.getParameter("level"));     // experience 컬럼
-        member.setLevel(req.getParameter("level"));          // 화면용 level
-        member.setFrequency(req.getParameter("frequency")); // 화면용 frequency
 
         try {
             member.setHeight(Integer.parseInt(req.getParameter("height")));

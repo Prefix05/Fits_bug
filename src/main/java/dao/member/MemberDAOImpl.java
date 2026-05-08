@@ -1,9 +1,12 @@
 package dao.member;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
+
 import dto.member.MemberDTO;
 import util.MybatisSqlSessionFactory;
-import java.util.List;
 
 public class MemberDAOImpl implements MemberDAO {
 
@@ -54,9 +57,9 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public MemberDTO findByEmail(String email) {
+    public Map<String,Object> findByEmail(String email) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        MemberDTO result = null;
+        Map<String,Object> result = null;
         try {
             result = session.selectOne(NS + "findByEmail", email);
         } catch (Exception e) {
@@ -67,19 +70,6 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
-    @Override
-    public int findMemberIdByEmail(String email) {
-        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        Integer result = null;
-        try {
-            result = session.selectOne(NS + "findMemberIdByEmail", email);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return result == null ? 0 : result;
-    }
 
     @Override
     public int update(MemberDTO dto) {
@@ -127,9 +117,11 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public MemberDTO selectMemberByUserId(Integer userId) throws Exception {
+		System.out.println(userId);
 		MemberDTO memberDto = null;
 		try (SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-			memberDto = sqlSession.selectOne("mapper.member.selectMemberByUserId", userId);
+
+			memberDto = sqlSession.selectOne("mapper.MemberMapper.selectMemberByUserIdUsingLogin", userId);
 		}
 		return memberDto;
 	}

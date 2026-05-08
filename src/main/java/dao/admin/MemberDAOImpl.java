@@ -1,5 +1,6 @@
 package dao.admin;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -192,5 +193,31 @@ public class MemberDAOImpl implements MemberDAO {
 			sqlSession.close();
 		}
 		return trainerAuthDetail;
+	}
+	
+	@Override
+	public int updateGymStatus(String userId, String status) throws Exception {
+	    SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession(true); // 자동 커밋
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("userId", userId);
+	        map.put("status", status);
+	        return sqlSession.update("mapper.admin.member.updateGymStatus", map);
+	    } finally {
+	        sqlSession.close();
+	    }
+	}
+
+	@Override
+	public int updateTrainerStatus(String userId, String status) throws Exception {
+	    SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession(true);
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("userId", userId);
+	        map.put("status", status);
+	        return sqlSession.update("mapper.admin.member.updateTrainerStatus", map);
+	    } finally {
+	        sqlSession.close();
+	    }
 	}
 }

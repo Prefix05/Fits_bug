@@ -94,11 +94,10 @@ public class SignupController4 extends HttpServlet {
                 trainerService.insertCertifications(
                         trainer.getTrainerId(), certNames, issuingOrgs, issueDates, expiryDates, fileNames);
             }
-            session.removeAttribute("pendingTrainerUserId");
-            response.sendRedirect(request.getContextPath() + "/trainer/login");
+            response.sendRedirect(request.getContextPath() + "/trainer/signup/step5");
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "자격증 저장에 실패했습니다.");
+            request.setAttribute("error", "자격증 저장에 실패했습니다. 다시 시도해 주세요.");
             request.getRequestDispatcher("/trainer/signup4.jsp").forward(request, response);
         }
     }

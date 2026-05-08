@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="dto.trainer.UserDTO"%>
+<%@ page import="dto.member.UserDTO"%>
 <%
     String contextPath = request.getContextPath();
     UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
@@ -16,7 +16,7 @@
 ">
 
   <!-- 로고 -->
-  <a href="<%=contextPath%>/main" style="
+  <a href="<%=contextPath%>/adim/adminMain" style="
     display:flex;align-items:center;gap:10px;
     margin-bottom:22px;padding:0 6px;text-decoration:none;
   ">
@@ -40,7 +40,7 @@
     border-radius:14px;padding:14px;margin-bottom:18px;
     display:flex;align-items:center;gap:12px;
   ">
-    <img src="<%= loginUser.getProfileImg() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImg() %>"
+    <img src="<%= loginUser.getProfileImage() == null ? "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname() : loginUser.getProfileImage() %>"
          style="width:46px;height:46px;border-radius:50%;border:2.5px solid #FF6B35;object-fit:cover;flex-shrink:0;" alt="프로필">
     <div style="min-width:0;">
       <div style="font-weight:700;font-size:14px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -59,7 +59,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/member/main" class="sb-link">
+    <a href="<%=contextPath%>/admin/adminMain" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -108,7 +108,7 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/support" class="sb-link">
+    <a href="<%=contextPath%>/member/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>

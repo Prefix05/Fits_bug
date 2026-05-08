@@ -2,54 +2,57 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="dao.ClientMapper">
-
-    <resultMap id="clientResultMap" type="dto.trainer.ClientDTO">
-        <id property="clientId" column="id"/>
-        <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        <result property="goals" column="goals"/>
-        <result property="nextSession" column="next_session"/>
-        <result property="lessonCount" column="lesson_count"/>
-        <result property="height" column="height"/>
-        <result property="weight" column="weight"/>
-        <result property="lastSession" column="last_session"/>
-        <result property="status" column="status"/>
-        <result property="trainerId" column="trainer_id"/>
-
-    </resultMap>
-
-    <select id="selectClients" resultMap="clientResultMap">
-        SELECT * FROM member
-        <where>
-            trainer_id = #{trainerId}
-            <if test="filter != null and filter != 'all'">
-                AND status = #{filter}
-            </if>
-            <if test="search != null and search != ''">
-                AND name LIKE CONCAT('%', #{search}, '%')
-            </if>
-        </where>
+<mapper namespace="mapper.client">
+    <select id="selectClients" resultType="ClientDTO">
+        SELECT m.id AS clientId, u.nickname AS name, u.age,
+               m.goals, m.height, m.weight,
+               mpt.trainer_id, mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = #{trainerId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
+        <if test="filter != null and filter != 'all'">
+            AND mpt.status = #{filter}
+        </if>
+        <if test="search != null and search != ''">
+            AND u.nickname LIKE CONCAT('%', #{search}, '%')
+        </if>
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="countClients" resultType="int">
-        SELECT COUNT(*) FROM member
-        <where>
-            trainer_id = #{trainerId}
-            <if test="filter != null and filter != 'all'">
-                AND status = #{filter}
-            </if>
-            <if test="search != null and search != ''">
-                AND name LIKE CONCAT('%', #{search}, '%')
-            </if>
-        </where>
+        SELECT COUNT(*)
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT
+            WHERE member_id = m.id AND trainer_id = #{trainerId}
+            ORDER BY id DESC LIMIT 1
+        )
+        WHERE u.is_deleted = 0
+        <if test="filter != null and filter != 'all'">
+            AND mpt.status = #{filter}
+        </if>
+        <if test="search != null and search != ''">
+            AND u.nickname LIKE CONCAT('%', #{search}, '%')
+        </if>
     </select>
 
-    <select id="selectClientById" resultMap="clientResultMap">
-        SELECT *
-        FROM member
-        WHERE id = #{clientId}
+    <select id="selectClientById" resultType="ClientDTO">
+        SELECT m.id AS clientId, u.nickname AS name, u.age, u.profile_image as profileImage,
+               m.goals, m.height, m.weight,
+               mpt.trainer_id, mpt.next_session, mpt.lesson_count, mpt.last_session, mpt.status
+        FROM MEMBER m
+        JOIN USER u ON m.user_id = u.id
+        JOIN MEMBERSHIP_PT mpt ON mpt.id = (
+            SELECT id FROM MEMBERSHIP_PT WHERE member_id = m.id ORDER BY id DESC LIMIT 1
+        )
+        WHERE m.id = #{clientId}
+          AND u.is_deleted = 0
     </select>
 
 </mapper>

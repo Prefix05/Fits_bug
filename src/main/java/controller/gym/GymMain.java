@@ -25,7 +25,7 @@ import service.gym.GymReviewServiceImpl;
 /**
  * Servlet implementation class GymMain
  */
-@WebServlet("/gym/main")
+@WebServlet("/member/gymDetail")
 public class GymMain extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -47,6 +47,7 @@ public class GymMain extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
+
 			HttpSession session = request.getSession();
 
 			UserDTO user = null;
@@ -68,12 +69,14 @@ public class GymMain extends HttpServlet {
 			    gymId = 1; // 임시 기본값
 			}
 //            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
+
 			
 			GymMainService service = new GymMainServiceImpl();
 			GymReviewService reviewService = new GymReviewServiceImpl();
 
 				
 			Map<String,Object> gym = service.getGymMainInfo(gymId);
+			System.out.println(gym);
 			List<Review> reviewList = service.getReviewList(gymId);
 			List<Membership> membershipList = service.getMembershipList(gymId);
 			Schedule schedule = service.getSchedule(gymId);

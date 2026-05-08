@@ -94,17 +94,17 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public void deleteCertifications(SqlSession session, int trainerId) {
-        session.delete("certification.deleteCertifications", trainerId);
+        session.delete("mapper.certification.deleteCertifications", trainerId);
     }
 
     @Override
     public void insertCertification(SqlSession session, CertificationDTO dto) {
-        session.insert("certification.insertCertification", dto);
+        session.insert("mapper.certification.insertCertification", dto);
     }
 
     @Override
     public List<CertificationDTO> findCertificationsByTrainerId(SqlSession session, int trainerId) {
-        return session.selectList("certification.findByTrainerId", trainerId);
+        return session.selectList("mapper.certification.findByTrainerId", trainerId);
     }
 
     // ── Pricing ──────────────────────────────────────────────────────────────

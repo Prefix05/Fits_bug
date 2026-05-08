@@ -37,8 +37,11 @@ public class SignupController extends HttpServlet {
             email = request.getParameter("emailId");
         }
         String password = request.getParameter("password");
-        String tel = request.getParameter("tel");
+        String phone = request.getParameter("phone");
         String nickname = request.getParameter("nickname");
+        int age = 0;
+        try { age = Integer.parseInt(request.getParameter("age")); } catch (Exception ignored) {}
+        String gender = request.getParameter("gender");
 //        String profileImg = request.getParameter("profileImg");
         String provider = request.getParameter("provider");
         String providerId = request.getParameter("providerId");
@@ -55,9 +58,11 @@ public class SignupController extends HttpServlet {
         dto.setName(name);
         dto.setEmail(email);
         dto.setPassword(hashedPassword);
-        dto.setTel(tel);
+        dto.setPhone(phone);
         dto.setNickname(nickname);
 //        dto.setProfileImg(profileImg);
+        dto.setAge(age);
+        dto.setGender(gender);
         dto.setRole(UserDTO.UserRole.TRAINER);
         dto.setProvider(provider);
         dto.setProviderId(providerId);

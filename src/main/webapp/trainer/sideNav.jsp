@@ -34,13 +34,13 @@
         <!-- 메시지 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm transition-colors duration-200 rounded-lg
                   ${ap == 'messages' ? 'font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50' : 'font-medium text-slate-500 hover:bg-slate-200/50'}"
-           href="javascript:void(0)">
+           href="${pageContext.request.contextPath}/trainer/messages">
             <span class="material-symbols-outlined">chat</span>메시지
         </a>
 
         <!-- 수익 -->
         <a class="flex items-center gap-3 px-4 py-3 text-sm transition-colors duration-200 rounded-lg
-                  ${ap == 'payments' ? 'font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50' : 'font-medium text-slate-500 hover:bg-slate-200/50'}"
+                  ${ap == 'earnings' ? 'font-semibold text-blue-700 border-r-4 border-blue-700 bg-slate-200/50' : 'font-medium text-slate-500 hover:bg-slate-200/50'}"
            href="${pageContext.request.contextPath}/trainer/earnings">
             <span class="material-symbols-outlined">payments</span>수익
         </a>
@@ -78,7 +78,8 @@
 
     <!-- 설정, 고객 지원 -->
     <div class="mt-auto pt-6 border-slate-200 dark:border-slate-800 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" href="#">
+        <a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-500 hover:bg-slate-200/50 transition-colors duration-200 rounded-lg" 객
+           href="${pageContext.request.contextPath}/member/support">
             <span class="material-symbols-outlined">help</span>고객 지원
         </a>
         <div class="border-t border-slate-200 dark:border-slate-800 my-2"></div>

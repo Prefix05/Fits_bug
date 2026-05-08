@@ -18,13 +18,15 @@ public class UserDTO {
     private String provider;       // ENUM('kakao','naver')
     private String providerId;     // DB 컬럼: provider_id
     private Integer otherId;
+    private Integer age;
+    private String gender;
 
     public UserDTO() {}
 
-
-    public UserDTO(int id, String email, String password, String name, String phone, boolean emailVerified,
+    
+	public UserDTO(int id, String email, String password, String name, String phone, boolean emailVerified,
 			String nickname, String profileImage, String role, LocalDateTime createdAt, boolean deleted,
-			String provider, String providerId, Integer otherId) {
+			String provider, String providerId, Integer otherId, Integer age, String gender) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -40,48 +42,66 @@ public class UserDTO {
 		this.provider = provider;
 		this.providerId = providerId;
 		this.otherId = otherId;
+		this.age = age;
+		this.gender = gender;
 	}
 
 
-	public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+	public int getId() {
+		return id;
+	}
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+	public String getPassword() {
+		return password;
+	}
 
-    public boolean isEmailVerified() { return emailVerified; }
-    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getNickname() { return nickname; }
-    public void setNickname(String nickname) { this.nickname = nickname; }
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+	public String getPhone() {
+		return phone;
+	}
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public boolean isDeleted() { return deleted; }
-    public void setDeleted(boolean deleted) { this.deleted = deleted; }
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
 
-    public String getProvider() { return provider; }
-    public void setProvider(String provider) { this.provider = provider; }
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
 
-    public String getProviderId() { return providerId; }
-    public void setProviderId(String providerId) { this.providerId = providerId; }
+	public String getNickname() {
+		return nickname;
+	}
 
-    
-
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
 	public String getProfileImage() {
 		return profileImage;
@@ -89,6 +109,46 @@ public class UserDTO {
 
 	public void setProfileImage(String profileImage) {
 		this.profileImage = profileImage;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
+	public String getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
 	}
 
 	public Integer getOtherId() {
@@ -99,15 +159,32 @@ public class UserDTO {
 		this.otherId = otherId;
 	}
 
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone="
 				+ phone + ", emailVerified=" + emailVerified + ", nickname=" + nickname + ", profileImage="
 				+ profileImage + ", role=" + role + ", createdAt=" + createdAt + ", deleted=" + deleted + ", provider="
-				+ provider + ", providerId=" + providerId + ", otherId=" + otherId + "]";
+				+ provider + ", providerId=" + providerId + ", otherId=" + otherId + ", age=" + age + ", gender="
+				+ gender + "]";
 	}
-	
-	
 
+
+ 
 }

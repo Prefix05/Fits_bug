@@ -6,7 +6,7 @@
 <mapper namespace="mapper.trainer.meal">
 
     <!-- Fetch Single Day -->
-    <select id="selectMealsByDay" parameterType="map" resultType="meal">
+    <select id="selectMealsByDay" parameterType="map" resultType="MealDTO">
         SELECT
             id as id,
             member_id AS userId,
@@ -26,7 +26,7 @@
     </select>
 
     <!-- Fetch Range (Monday - Sunday) -->
-    <select id="selectMealsByWeek" parameterType="map" resultType="meal">
+    <select id="selectMealsByWeek" parameterType="map" resultType="MealDTO">
         SELECT
             id as id,
             member_id AS userId,

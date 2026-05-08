@@ -37,7 +37,10 @@ public class MemberAuthDetail extends HttpServlet {
         try {
         MemberService service = new MemberServiceImpl();
         Map<String, Object> m = service.getAuthDetail(userId, authType);
-        System.out.println(m);
+        if (m == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         StringBuilder json = new StringBuilder();
         json.append("{");
         json.append("\"name\":\"").append(m.get("name")).append("\",");
@@ -47,7 +50,7 @@ public class MemberAuthDetail extends HttpServlet {
         json.append("\"profileImg\":\"").append(m.get("profileImg")).append("\",");
         json.append("\"certFile\":\"").append(m.get("certFile")).append("\",");
         json.append("\"address_detail\":\"").append(m.get("address_detail") != null ? m.get("address_detail") : "").append("\",");
-        json.append("\"bizNum\":\"").append(m.get("business_registration_num")).append("\"");
+        json.append("\"bizNum\":\"").append(m.get("bizNum")).append("\"");
         json.append("}");
         
         System.out.println(json.toString());
@@ -64,8 +67,26 @@ public class MemberAuthDetail extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+request.setCharacterEncoding("UTF-8");
+        
+        String userId = request.getParameter("userId");
+        String authType = request.getParameter("authType");
+        String statusAction = request.getParameter("statusAction"); // "APPROVED"
 
+        boolean isSuccess = false;
+        try {
+            MemberService service = new MemberServiceImpl();
+            // 승인 처리 서비스 호출
+            isSuccess = service.approveMember(userId, authType);
+            
+            if(isSuccess) {
+                response.getWriter().print("success");
+            } else {
+                response.getWriter().print("fail");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().print("error");
+        }
+    }
 }

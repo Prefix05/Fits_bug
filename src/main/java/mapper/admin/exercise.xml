@@ -37,12 +37,30 @@
         reg_date as regDate
     FROM EXERCISE_GUIDE
     <where>
-        <if test="value != null and value != ''">
-            AND targetMuscle = #{value}
+        <if test="targetMuscle != null and targetMuscle != ''">
+            AND targetMuscle = #{targetMuscle}
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
         </if>
     </where>
     ORDER BY reg_date DESC
+    LIMIT #{startRow}, 8
     </select>
+    
+    <select id="selectGuideCount" resultType="int" parameterType="map">
+    	SELECT COUNT(*) FROM EXERCISE_GUIDE
+    	<where>
+        	<if test="targetMuscle != null and targetMuscle != ''">
+            	AND targetMuscle = #{targetMuscle}
+        	</if>
+        	<if test="searchKeyword != null and searchKeyword != ''">
+            	AND (title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 	OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+        	</if>
+    	</where>
+	</select>
     
     <select id="selectGuideById" parameterType="int" resultType="exercise">
     	SELECT 
@@ -68,6 +86,5 @@
 
 	<delete id="deleteGuide" parameterType="int">
     	DELETE FROM EXERCISE_GUIDE WHERE id = #{egNum}
-	</delete>
-
+	</delete>	
 </mapper>

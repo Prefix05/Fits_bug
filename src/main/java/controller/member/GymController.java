@@ -16,41 +16,38 @@ import service.member.GymServiceImpl;
 
 @WebServlet("/member/gymList")
 public class GymController extends HttpServlet {
-    private GymService service = new GymServiceImpl();
+	private GymService service = new GymServiceImpl();
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String keyword = req.getParameter("keyword");
-        String category = req.getParameter("category");
-        String sort = req.getParameter("sort");
+		String keyword = req.getParameter("keyword");
+		String category = req.getParameter("category");
+		String sort = req.getParameter("sort");
 
-        String latStr = req.getParameter("lat");
-        String lngStr = req.getParameter("lng");
+		String latStr = req.getParameter("lat");
+		String lngStr = req.getParameter("lng");
 
-        Double lat = null;
-        Double lng = null;
+		Double lat = null;
+		Double lng = null;
 
-        if (latStr != null && lngStr != null) {
-            lat = Double.parseDouble(latStr);
-            lng = Double.parseDouble(lngStr);
-        }
+		if (latStr != null && lngStr != null) {
+			lat = Double.parseDouble(latStr);
+			lng = Double.parseDouble(lngStr);
+		}
 
-        if (keyword == null) keyword = "";
-        if (category == null) category = "전체";
-        if (sort == null) sort = "recommend";
+		if (keyword == null)
+			keyword = "";
+		if (category == null)
+			category = "전체";
+		if (sort == null)
+			sort = "recommend";
 
-        List<GymDTO> list = service.getGymList(keyword, category, sort, lat, lng);
+		List<GymDTO> list = service.getGymList(keyword, category, sort, lat, lng);
+		System.out.println(list);
+		req.setAttribute("gymList", list);
 
-        req.setAttribute("gymList", list);
+		RequestDispatcher rd = req.getRequestDispatcher("/member/gymList.jsp");
+		rd.forward(req, resp);
 
-        // AJAX 요청이면 카드 부분만 반환
-        if ("true".equals(req.getParameter("ajax"))) {
-            RequestDispatcher rd = req.getRequestDispatcher("/member/gymListFragment.jsp");
-            rd.forward(req, resp);
-        } else {
-            RequestDispatcher rd = req.getRequestDispatcher("/member/gymList.jsp");
-            rd.forward(req, resp);
-        }
-    }
+	}
 }
