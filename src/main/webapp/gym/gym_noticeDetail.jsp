@@ -84,8 +84,6 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
         .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); }
     </style>
-<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>    
 </head>
 <body class="antialiased">
 <jsp:include page="common/sidebar.jsp"></jsp:include>
@@ -98,7 +96,7 @@
 
 <!-- Navigation Action Bar -->
 <div class="flex justify-between items-center mb-10">
-<a href="${pageContext.request.contextPath}/gym/notice?gymId=${gymId}" 
+<a href="${pageContext.request.contextPath}/gym/notice" 
    class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors font-medium text-sm group">
 	<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     목록으로 돌아가기
@@ -154,7 +152,7 @@
 
             <div class="grid grid-cols-1 gap-4">
                 <c:forEach var="image" items="${imageList}">
-                	<img src="${pageContext.request.contextPath}/trainer/profile-img/${image.imageUrl}"
+                	<img src="${pageContext.request.contextPath}/noticeDetailImages/${image.imageUrl}"
          				alt="${notice.title}"
      	 				class="w-full h-auto object-cover"/>
                 </c:forEach>
@@ -208,7 +206,7 @@
 <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-on-surface/40 backdrop-blur-md p-4">
     <form action="${pageContext.request.contextPath}/gym/noticeUpdate"
           method="post"
-          onsubmit="return submitNoticeForm();"
+          enctype="multipart/form-data"
           class="bg-surface-container-lowest w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl flex flex-col overflow-hidden">
 
         <input type="hidden" name="noticeId" value="${notice.id}">
@@ -229,17 +227,17 @@
         <div class="flex-1 overflow-y-auto p-8 space-y-8">
 
             <!-- Image Attachment Section -->
- <%--            <div class="space-y-4">
+            <div class="space-y-4">
                 <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">이미지 첨부</label>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
                     <!-- Existing Images -->
-                     <c:forEach var="image" items="${imageList}">
+                    <c:forEach var="image" items="${imageList}">
                         <div class="relative group aspect-video rounded-lg overflow-hidden border border-outline-variant/15">
                         	<input type="checkbox" id="deleteImage${image.imageId}" name="deleteImageIds" value="${image.imageId}" class="peer hidden">
-                            <img src="${pageContext.request.contextPath}/trainer/profile-img/${image.imageUrl}"
-                                
+                            <img src="${pageContext.request.contextPath}/noticeDetailImages/${image.imageUrl}"
+                                 class="w-full h-full object-cover"
                                  alt="${notice.title}">
 
                             <label class="absolute top-2 right-2 bg-error/90 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
@@ -250,43 +248,36 @@
 							<div class="absolute inset-0 bg-black/50 opacity-0 peer-checked:opacity-100 flex items-center justify-center text-white text-xs font-bold">
         						삭제 예정
     						</div>
+
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-1.5">
+                                <p class="text-[10px] text-white truncate px-1">${image.imageUrl}</p>
+                            </div>
                         </div>
-                    </c:forEach> 
+                    </c:forEach>
 
                     <!-- Add Image -->
-                     <label class="aspect-video rounded-lg border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
+                    <label class="aspect-video rounded-lg border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 group cursor-pointer">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">add_photo_alternate</span>
                         <span class="text-xs font-medium text-on-surface-variant group-hover:text-primary transition-colors">이미지 추가</span>
                         <input type="file" name="noticeImages" multiple accept="image/*" class="hidden">
                     </label>
                 </div>
-            </div> --%>
+            </div>
 
             <!-- Title -->
             <div class="space-y-2">
                 <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">제목</label>
                 <input name="title"
-                	   id="noticeTitle"
                        class="w-full px-4 py-3 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none font-medium text-lg"
                        type="text"
                        value="${notice.title}">
             </div>
 
             <!-- Content -->
-         
             <div class="space-y-2">
                 <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">내용</label>
-                <!-- Toast UI Editor 들어갈 자리 -->
-                <div id="editor">${notice.content}
-                </div>
-                
-
-                <!-- 실제 서버로 보낼 hidden input -->
-                <input type="hidden" name="content" id="noticeContent" />                
-                
-<%--                 <textarea name="content"
+                <textarea name="content"
                           class="w-full min-h-[300px] p-6 bg-surface-container-lowest border border-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface leading-relaxed">${notice.content}</textarea>
- --%>
             </div>
         </div>
 
@@ -307,20 +298,10 @@
 </div>
 
 <script>
-let noticeEditor = null;
     function openEditModal() {
     	document.body.style.overflow="hidden";
         document.getElementById("editModal").classList.remove("hidden");
         document.getElementById("editModal").classList.add("flex");
-        if (!noticeEditor) {
-            noticeEditor = new toastui.Editor({
-                el: document.querySelector("#editor"),
-                height: "300px",
-                initialEditType: "wysiwyg",
-                previewStyle: "vertical",
-                placeholder: "회원들에게 알릴 상세 내용을 작성하세요..."
-            });
-        }        
     }
 
     function closeEditModal() {
@@ -328,25 +309,6 @@ let noticeEditor = null;
         document.getElementById("editModal").classList.add("hidden");
         document.getElementById("editModal").classList.remove("flex");
     }
-    
-    function submitNoticeForm() {
-        const title = document.getElementById("noticeTitle").value.trim();
-        const content = noticeEditor.getHTML().trim();
-
-        if (title === "") {
-            alert("제목을 입력하세요.");
-            document.getElementById("noticeTitle").focus();
-            return false;
-        }
-
-        if (content === "" || content === "<p><br></p>") {
-            alert("내용을 입력하세요.");
-            return false;
-        }
-
-        document.getElementById("noticeContent").value = content;
-        return true;
-    }    
 </script>
 
 <!-- Delete Confirm Modal -->

@@ -601,7 +601,7 @@
 			<c:when test="${not empty trainerList}">
 				<c:forEach var="trainer" items="${trainerList}" begin="0" end="2">
 					<img class="w-8 h-8 rounded-full border-2 border-white object-cover" 
-						 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}"
+						 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
 						 alt="${trainer.name}"/>
 				</c:forEach>
 				<c:if test="${trainerCount > 3}">
@@ -719,7 +719,8 @@ function prevImage(){
 							<div class="relative shrink-0">
 								<img class="w-12 h-12 rounded-full object-cover border-2 border-primary-container/20 group-hover:border-primary transition-colors" 
      								 alt="${trainer.name}" 
-     								 src="${pageContext.request.contextPath}/trainer/profile-img/${trainer.profileImg}"/>
+     								 src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+     								 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"/>
 							</div>
 							<div class="flex-1 min-w-0">
 								<div class="flex justify-between items-baseline mb-0.5">
@@ -1105,12 +1106,39 @@ function submitPayment(event) {
         buyer_tel: "010-0000-0000"
     }, function (rsp) {
         if (rsp.success) {
-            location.href =
-            	"${pageContext.request.contextPath}/gym/payment/complete"
-                + "?imp_uid=" + rsp.imp_uid
-                + "&merchant_uid=" + rsp.merchant_uid
-                + "&membershipId=" + selectedMembership.id
-                + "&startDate=" + selectedMembership.startDate;
+
+        	fetch("${pageContext.request.contextPath}/gym/tossPayment", {
+        	    method: "POST",
+        	    headers: {
+        	        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        	    },
+        	    body:
+        	        "paymentKey=" + encodeURIComponent(rsp.imp_uid) +
+        	        "&orderId=" + encodeURIComponent(rsp.merchant_uid) +
+        	        "&amount=" + encodeURIComponent(parseInt(selectedMembership.price)) +
+        	        "&status=" + encodeURIComponent("DONE") +
+        	        "&membershipNum=" + encodeURIComponent(selectedMembership.id) +
+        	        "&startDate=" + encodeURIComponent(selectedMembership.startDate)
+        	})
+        	.then(res => res.text())
+        	.then(text => {
+        	    console.log("서버 응답:", text);
+
+        	    const data = JSON.parse(text);
+
+        	    if (data.success) {
+        	        alert("결제가 완료되었습니다.");
+        	        closePaymentModal();
+        	        location.reload();
+        	    } else {
+        	        alert(data.message);
+        	    }
+        	})
+        	.catch(err => {
+        	    console.error(err);
+        	    alert("결제 저장 중 오류가 발생했습니다.");
+        	});
+
         } else {
             alert("결제 실패: " + rsp.error_msg);
         }

@@ -12,8 +12,6 @@ import service.gym.GymNoticeServiceImpl;
 
 import java.io.File;
 import dto.gym.NoticeImages;
-import dto.member.UserDTO;
-
 import javax.servlet.annotation.MultipartConfig;
 
 @WebServlet("/gym/noticeWrite")
@@ -31,15 +29,15 @@ public class GymNoticeWrite extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-		HttpSession session = request.getSession();
-		UserDTO user = (UserDTO)session.getAttribute("loginUser");
-        if (user == null) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
         }
 
         try {
-            Integer gymId = user.getOtherId();
+            int gymId = (int) session.getAttribute("gymId");
 
             String title = request.getParameter("title");
             String content = request.getParameter("content");
@@ -60,7 +58,7 @@ public class GymNoticeWrite extends HttpServlet {
             GymNoticeService service = new GymNoticeServiceImpl();
             service.writeNotice(notice);
             
-            String uploadPath = request.getServletContext().getRealPath("/uploads");
+            String uploadPath = request.getServletContext().getRealPath("/noticeDetailImages");
 
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
@@ -105,7 +103,7 @@ public class GymNoticeWrite extends HttpServlet {
                 }
             }
 
-            response.sendRedirect(request.getContextPath() + "/gym/notice?gymId="+gymId);
+            response.sendRedirect(request.getContextPath() + "/gym/notice");
 
         } catch (Exception e) {
             e.printStackTrace();

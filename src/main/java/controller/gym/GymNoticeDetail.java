@@ -29,7 +29,6 @@ public class GymNoticeDetail extends HttpServlet {
 
         try {
             String noticeIdStr = request.getParameter("noticeId");
-            String gymId = request.getParameter("gymId");
 
             if (noticeIdStr == null || noticeIdStr.trim().isEmpty()) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -55,7 +54,6 @@ public class GymNoticeDetail extends HttpServlet {
 
             request.setAttribute("notice", notice);
             request.setAttribute("imageList", imageList);
-            request.setAttribute("gymId", gymId);
 
             request.getRequestDispatcher("/gym/gym_noticeDetail.jsp")
                    .forward(request, response);

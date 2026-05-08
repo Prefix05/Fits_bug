@@ -20,4 +20,5 @@ public interface GymPaymentDao {
     int countCancelRequest(int gymId) throws Exception;
     void updateCancelApprove(int paymentNum, int gymId) throws Exception;
     void cancelPtSessionByPayment(int paymentNum)throws Exception;
+    int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment) throws Exception;
 }

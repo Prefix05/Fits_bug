@@ -56,19 +56,12 @@ public class GymMain extends HttpServlet {
 			if (session != null && session.getAttribute("loginUser") != null) {
 			    user = (UserDTO) session.getAttribute("loginUser");
 
-			    if (user.getOtherId() != null) {
-			        gymId = user.getOtherId();
-			    }
+			    
 			}
 
 			if (gymId == null && request.getParameter("gymId") != null) {
 			    gymId = Integer.parseInt(request.getParameter("gymId"));
 			}
-
-			if (gymId == null) {
-			    gymId = 1; // 임시 기본값
-			}
-//            Integer gymId = Integer.parseInt(request.getParameter("gymId"));
 
 			
 			GymMainService service = new GymMainServiceImpl();

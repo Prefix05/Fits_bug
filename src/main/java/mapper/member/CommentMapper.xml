@@ -12,16 +12,22 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
     
+
     <insert id="insert" parameterType="CommentDTO">
         INSERT INTO comment (post_num, user_id, body)
-        VALUES (#{postNum}, #{userId}, #{body})
+        VALUES (
+            #{postNum},
+            (SELECT id FROM user WHERE email = #{userId}),
+            #{body}
+        )
     </insert>
 
     <select id="findByPostNum" parameterType="int" resultMap="commentResultMap">
-        SELECT id, post_num, user_id, body, created_at
-        FROM comment
-        WHERE post_num = #{postNum}
-        ORDER BY id ASC
+        SELECT c.id, c.post_num, u.email AS user_id, c.body, c.created_at
+        FROM comment c
+        INNER JOIN user u ON c.user_id = u.id
+        WHERE c.post_num = #{postNum}
+        ORDER BY c.id ASC
     </select>
 
 </mapper>

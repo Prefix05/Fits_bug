@@ -117,23 +117,16 @@
 		<c:forEach var="trainer" items="${trainerList}">
 			<div class="bg-surface-container-lowest rounded-xl p-6 flex flex-col md:flex-row items-center gap-6 group transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-on-surface/5">
 			
-				<c:choose>
-					<c:when test="${trainer.profileImg != null}">
-					<img src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+				<img src="${pageContext.request.contextPath}/gym/trainerProfileImgs/${trainer.profileImg}"
+					 onerror="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"
 					 class="w-20 h-20 rounded-full object-cover"/>
-					</c:when>
-					<c:otherwise>
-				<img src="this.src='${pageContext.request.contextPath}/img/profile_img.jpg'"
-					 class="w-20 h-20 rounded-full object-cover"/>
-					</c:otherwise>
-				</c:choose>
 				<div class="flex-1 text-center md:text-left flex flex-col justify-center">
 						<h3 class="text-xl font-extrabold tracking-tight" style="">${trainer.name} 트레이너</h3>
              	</div>
              	
  				<form action="${pageContext.request.contextPath}/gym/trainerApprove" method="post"
                       class="flex flex-row md:flex-col gap-2 w-full md:w-32">
-                    <input type="hidden" name="trainerId" value="${trainer.trainerId}">
+                    <input type="hidden" name="trainerId" value="${trainer.id}">
                     <button type="submit"
                             class="flex-1 active-pill text-on-primary py-2.5 rounded-lg text-xs font-black transition-all active:scale-95">
                         승인

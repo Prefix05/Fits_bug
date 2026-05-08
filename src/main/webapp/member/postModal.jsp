@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<!-- ============================================================
-     핏불 게시글 작성 모달 (postModal.jsp)
-     ============================================================ -->
 <div id="postModal" style="
   display:none; position:fixed; inset:0; z-index:2000;
   background:rgba(26,31,54,0.55); align-items:center; justify-content:center;
@@ -93,7 +90,7 @@
       <!-- 내용 -->
       <div>
         <label style="font-size:13px;font-weight:700;color:#5A6480;display:block;margin-bottom:8px;">내용</label>
-        <textarea name="content" placeholder="오늘 운동 어땠나요? 자유롭게 기록해보세요 🔥" style="
+        <textarea name="body" placeholder="오늘 운동 어땠나요? 자유롭게 기록해보세요 🔥" style="
           width:100%;padding:14px 18px;border-radius:14px;border:2px solid #E8EDF5;
           background:#F7F9FC;font-family:'Noto Sans KR',sans-serif;font-size:14px;
           color:#1A1F36;outline:none;resize:none;min-height:110px;

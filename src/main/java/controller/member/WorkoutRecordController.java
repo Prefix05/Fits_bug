@@ -70,17 +70,9 @@ public class WorkoutRecordController extends HttpServlet {
 
         int memberId = user.getOtherId();
 
-        // ── WORKOUT_LOG 구성 ─────────────────────────────────
         WorkoutLogDTO dto = new WorkoutLogDTO();
         dto.setMemberId(memberId);
-        dto.setDate(LocalDate.now());                         
-
-        String startStr = request.getParameter("startTime");
-        String endStr   = request.getParameter("endTime");
-        if (startStr != null && !startStr.isEmpty())
-            dto.setStartTime(LocalTime.parse(startStr));
-        if (endStr   != null && !endStr.isEmpty())
-            dto.setEndTime(LocalTime.parse(endStr));
+        dto.setDate(LocalDate.now());
 
         String title  = request.getParameter("name");    // 운동명
         String wtStr  = request.getParameter("weight");  // 무게

@@ -105,7 +105,7 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/member/support" class="sb-link">
+    <a href="<%=contextPath%>/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>

@@ -13,17 +13,8 @@
 		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
 		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
 		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
-		
-		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
-		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
-		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
-		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
-		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
-		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
-		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
-		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
-		<typeAlias type="dto.trainer.TrainerDTO" alias="TrainerDTO"/>
-		
+		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
 		<typeAlias alias="GymDTO"     		type="dto.member.GymDTO"/>
@@ -41,6 +32,7 @@
         <typeAlias alias="ChatRoomDTO"    	type="dto.member.ChatRoomDTO"/>
 		<typeAlias alias="ChatMessageDTO" 	type="dto.member.ChatMessageDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="TossDTO"  		type="dto.member.TossDTO"/>
         <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
         <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
         <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
@@ -54,6 +46,17 @@
         <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
 		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
 		<typeAlias type="dto.gym.Gym"  alias="gym"/>
+
+		<!-- Trainer Mapper Alias -->
+		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
+		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
+		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
+		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
+		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
+		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
+		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
+		<typeAlias type="dto.trainer.TrainerDTO" alias="TrainerDTO"/>
 	</typeAliases>
 
 	<environments default="development">
@@ -92,7 +95,9 @@
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
 		<mapper resource="mapper/gym/payment.xml"/>
+		<mapper resource="mapper/gym/tossPayment.xml"/>
 		
+
 
 		<mapper resource="mapper/member/MemberMapper.xml"/>
 		<mapper resource="mapper/member/UserMapper.xml"/>
@@ -120,6 +125,7 @@
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
         <mapper resource="mapper/member/LessonMapper.xml"/>
+        <mapper resource="mapper/member/TossMapper.xml"/>
 		<mapper resource="mapper/member/TrainerMapper.xml"/>
 		<mapper resource="mapper/member/trainerListMapper.xml"/>
 		<mapper resource="mapper/member/TrainerPricingMapper.xml"/>
@@ -127,7 +133,6 @@
 		<mapper resource="mapper/member/TrainerTraitsMapper.xml"/>
 		<mapper resource="mapper/member/TrainerCertificationMapper.xml"/>
 		
-		<mapper resource="mapper/trainer/message.xml"/>
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>

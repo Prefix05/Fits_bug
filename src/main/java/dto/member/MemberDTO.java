@@ -294,7 +294,6 @@ public class MemberDTO {
 
 	@Override
 	public String toString() {
-
 		return "MemberDTO [id=" + id + ", userId=" + userId + ", purpose=" + purpose + ", experience=" + experience
 				+ ", height=" + height + ", weight=" + weight + ", diet=" + diet + ", exerciseCountGoal="
 				+ exerciseCountGoal + ", address=" + address + ", latitude=" + latitude + ", longitude=" + longitude
@@ -305,5 +304,4 @@ public class MemberDTO {
 				+ lastSession + ", status=" + status + "]";
 	}
 	
-
 }

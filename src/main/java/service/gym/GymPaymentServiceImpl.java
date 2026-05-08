@@ -15,10 +15,7 @@ public class GymPaymentServiceImpl implements GymPaymentService{
 
 	@Override
 	public int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment) throws Exception{
-		int mrResult = dao.insertMembershipRegistration(membershipRegistration);
-        payment.setMrNum(membershipRegistration.getMrNum());
-        int paymentResult = dao.insertPayment(payment);
-        return mrResult + paymentResult;
+		return dao.registerMembershipAndPayment(membershipRegistration, payment);
 	}
 
 	@Override

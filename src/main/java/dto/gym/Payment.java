@@ -25,16 +25,21 @@ public class Payment {
     private String membershipName;
     private String reason;
     private Timestamp canceledAt;
+    private String orderId;
 	public Payment() {
 		super();
 	}
 	
 	
 
+	
+
+
+
 	public Payment(Integer paymentNum, Integer userId, String userName, Integer membershipNum, Integer mrNum,
 			Integer gymId, Integer trainerId, Timestamp paymentDate, BigDecimal paymentPrice, BigDecimal paymentFee,
 			String method, String status, String paymentType, String memberName, String membershipName, String reason,
-			Timestamp canceledAt) {
+			Timestamp canceledAt, String orderId) {
 		super();
 		this.paymentNum = paymentNum;
 		this.userId = userId;
@@ -53,7 +58,32 @@ public class Payment {
 		this.membershipName = membershipName;
 		this.reason = reason;
 		this.canceledAt = canceledAt;
+		this.orderId = orderId;
 	}
+
+
+
+
+	
+
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+
+
+
+
+
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+
+
+
 
 
 
@@ -261,6 +291,10 @@ public class Payment {
 
 
 
+
+
+
+
 	@Override
 	public String toString() {
 		return "Payment [paymentNum=" + paymentNum + ", userId=" + userId + ", userName=" + userName
@@ -268,8 +302,12 @@ public class Payment {
 				+ trainerId + ", paymentDate=" + paymentDate + ", paymentPrice=" + paymentPrice + ", paymentFee="
 				+ paymentFee + ", method=" + method + ", status=" + status + ", paymentType=" + paymentType
 				+ ", memberName=" + memberName + ", membershipName=" + membershipName + ", reason=" + reason
-				+ ", canceledAt=" + canceledAt + "]";
+				+ ", canceledAt=" + canceledAt + ", orderId=" + orderId + "]";
 	}
+
+
+
+	
 
 	
 

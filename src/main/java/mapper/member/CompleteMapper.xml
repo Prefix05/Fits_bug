@@ -4,44 +4,44 @@
 
 <mapper namespace="mapper.CompleteMapper">
 
-    <!-- ──────────────────────────────────────────────────────
-         CompleteDAOImpl.insertLog(String userId)
-         → param: string
-         ────────────────────────────────────────────────────── -->
+    <!-- 오운완 게시글 작성 시 오늘 workout_log 기록 삽입 (중복 방지) -->
     <insert id="insertLog" parameterType="string">
-        INSERT INTO complete_log (user_id, workout_date)
-        VALUES (#{userId}, NOW())
+        INSERT INTO workout_log (member_id, date)
+        SELECT m.id, CURDATE()
+        FROM member m
+        INNER JOIN user u ON m.user_id = u.id
+        WHERE u.email = #{userId}
+          AND NOT EXISTS (
+              SELECT 1 FROM workout_log wl2
+              WHERE wl2.member_id = m.id AND wl2.date = CURDATE()
+          )
     </insert>
 
-    <!-- ──────────────────────────────────────────────────────
-         CompleteDAOImpl.getWeekLog(String userId)
-         → param: string, return: List<String>
-         ────────────────────────────────────────────────────── -->
     <select id="getWeekLog" parameterType="string" resultType="string">
-        SELECT DATE_FORMAT(workout_date, '%a') AS d
-        FROM complete_log
-        WHERE user_id = #{userId}
-          AND YEARWEEK(workout_date) = YEARWEEK(NOW())
+        SELECT DATE_FORMAT(wl.date, '%a') AS d
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
+          AND YEARWEEK(wl.date, 1) = YEARWEEK(CURDATE(), 1)
+        GROUP BY wl.date
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         CompleteDAOImpl.getStreak(String userId)
-         → param: string, return: int
-         ────────────────────────────────────────────────────── -->
     <select id="getStreak" parameterType="string" resultType="int">
-        SELECT COUNT(*)
-        FROM complete_log
-        WHERE user_id = #{userId}
+        SELECT COUNT(DISTINCT wl.date)
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
+          AND wl.date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
     </select>
 
-    <!-- ──────────────────────────────────────────────────────
-         CompleteDAOImpl.getBestStreak(String userId)
-         → param: string, return: int
-         ────────────────────────────────────────────────────── -->
     <select id="getBestStreak" parameterType="string" resultType="int">
-        SELECT COUNT(*)
-        FROM complete_log
-        WHERE user_id = #{userId}
+        SELECT COUNT(DISTINCT wl.date)
+        FROM workout_log wl
+        INNER JOIN member m ON wl.member_id = m.id
+        INNER JOIN user   u ON m.user_id    = u.id
+        WHERE u.email = #{userId}
     </select>
 
 </mapper>

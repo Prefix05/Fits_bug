@@ -98,21 +98,21 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 	public void approveRefund(int paymentNum, int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 
-	    try {
-	        Map<String, Object> param = new HashMap<>();
-	        param.put("paymentNum", paymentNum);
-	        param.put("gymId", gymId);
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("paymentNum", paymentNum);
+			param.put("gymId", gymId);
 
-	        session.update("mapper.payment.approveRefund", param);
-	        session.commit();
+			session.update("mapper.payment.approveRefund", param);
+			session.commit();
 
-	    } catch (Exception e) {
-	        session.rollback();
-	        throw e;
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
 
-	    } finally {
-	        session.close();
-	    }
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
@@ -139,21 +139,21 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 	public void updateCancelApprove(int paymentNum, int gymId) throws Exception {
 		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 
-	    try {
-	        Map<String, Object> param = new HashMap<>();
-	        param.put("paymentNum", paymentNum);
-	        param.put("gymId", gymId);
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("paymentNum", paymentNum);
+			param.put("gymId", gymId);
 
-	        session.update("mapper.payment.updateCancelApprove", param);
-	        session.commit();
+			session.update("mapper.payment.updateCancelApprove", param);
+			session.commit();
 
-	    } catch (Exception e) {
-	        session.rollback();
-	        throw e;
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
 
-	    } finally {
-	        session.close();
-	    }
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
@@ -169,6 +169,31 @@ public class GymPaymentDaoImpl implements GymPaymentDao {
 			session.close();
 		}
 
+	}
+
+	@Override
+	public int registerMembershipAndPayment(MembershipRegistration membershipRegistration, Payment payment)
+			throws Exception {
+		SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+
+		try {
+			int mrResult = session.insert("mapper.payment.insertMembershipRegistration", membershipRegistration);
+
+			payment.setMrNum(membershipRegistration.getMrNum());
+
+			int paymentResult = session.insert("mapper.payment.insertPayment", payment);
+
+			session.commit();
+
+			return mrResult + paymentResult;
+
+		} catch (Exception e) {
+			session.rollback();
+			throw e;
+
+		} finally {
+			session.close();
+		}
 	}
 
 	

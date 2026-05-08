@@ -99,12 +99,26 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
     </div>
   </div>
 
-  <!-- 오운완 스트릭 카드 (DB 기반 - CompleteController에서 weekLog/streak/best attribute 제공) -->
+  <!-- 오운완 스트릭 카드 -->
   <%
-    int[] weekLog = (int[]) request.getAttribute("weekLog");   // 7칸 배열 (0=월~6=일)
-    int streak    = request.getAttribute("streak") != null ? (int) request.getAttribute("streak") : 0;
-    int best      = request.getAttribute("best")   != null ? (int) request.getAttribute("best")   : 0;
-    if (weekLog == null) weekLog = new int[7];
+  Object streakObj = request.getAttribute("streak");
+  Object bestObj = request.getAttribute("best");
+  
+  int streak = (streakObj != null) ? Integer.parseInt(String.valueOf(streakObj)) : 0;
+  int best   = (bestObj   != null) ? Integer.parseInt(String.valueOf(bestObj))   : 0;
+
+  java.util.List<String> weekLogList = (java.util.List<String>) request.getAttribute("weekLog");
+  if (weekLogList == null) weekLogList = new java.util.ArrayList<>();
+    // 이번 주 월~일 날짜 배열 생성 후 weekLogList 와 비교
+    java.time.LocalDate today = java.time.LocalDate.now();
+    java.time.LocalDate monday = today.with(java.time.DayOfWeek.MONDAY);
+    String[] daysKR = {"월","화","수","목","금","토","일"};
+    // DB는 DATE_FORMAT(date,'%a') → Mon,Tue,Wed,Thu,Fri,Sat,Sun
+    String[] daysEn = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
+    boolean[] weekDone = new boolean[7];
+    for (int i = 0; i < 7; i++) {
+        weekDone[i] = weekLogList.contains(daysEn[i]);
+    }
     int remaining = Math.max(0, 7 - streak);
   %>
   <div style="background:white;border-radius:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:20px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
@@ -121,9 +135,8 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
         </div>
         <div style="display:flex;gap:10px;margin-top:12px;">
           <%
-            String[] daysKR = {"월","화","수","목","금","토","일"};
             for (int i = 0; i < 7; i++) {
-              boolean done = weekLog[i] > 0;
+              boolean done = weekDone[i];
           %>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
             <div class="streak-dot <%=done ? "done" : "empty"%>">
@@ -144,7 +157,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
   <!-- 카테고리 탭 -->
   <div style="background:#F7F9FC;border:1.5px solid #E8EDF5;border-radius:99px;padding:4px;display:inline-flex;gap:2px;margin-bottom:20px;">
     <button onclick="filterPost('all',this)" class="cat-tab active">전체</button>
-    <button onclick="filterPost('owun',this)" class="cat-tab">🏆 오운완</button>
+    <button onclick="filterPost('exerciseComplete',this)" class="cat-tab">🏆 오운완</button>
     <button onclick="filterPost('free',this)" class="cat-tab">💬 자유게시판</button>
   </div>
 
@@ -176,9 +189,11 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
         <button onclick="react(this, 999, 'like')" id="btn-like-999" class="react-btn">❤️ <span id="like-999">24</span></button>
         <button onclick="react(this, 999, 'good')" id="btn-good-999" class="react-btn">👍 <span id="good-999">18</span></button>
         <button onclick="react(this, 999, 'muscle')" id="btn-muscle-999" class="react-btn">💪 <span id="muscle-999">31</span></button>
-        <button onclick="toggleComment(this, 999)" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:13px;color:#9DA8C0;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;" onmouseover="this.style.color='#FF6B35'" onmouseout="this.style.color='#9DA8C0'">
-          <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 댓글 12
-        </button>
+        <%-- DB 게시글 반복문(c:forEach) 내부의 댓글 버튼 부분 --%>
+<button onclick="toggleComment(this,${post.id})" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:13px;color:#9DA8C0;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;" onmouseover="this.style.color='#FF6B35'" onmouseout="this.style.color='#9DA8C0'">
+  <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 
+  댓글 <span id="commentCount-${post.id}">0</span>
+</button>
       </div>
     </div>
     <div class="comment-box" style="display:none;background:#F7F9FC;border-top:1.5px solid #E8EDF5;padding:16px 18px;">
@@ -193,10 +208,10 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
 
   <!-- DB 게시글 출력 -->
   <c:forEach var="post" items="${postList}">
-  <article class="post ${post.category} fb-post-card">
+  <article class="post ${post.postType} fb-post-card" data-post-id="${post.id}">
     <div style="padding:14px 18px 0;">
       <c:choose>
-        <c:when test="${post.category eq 'owun'}">
+        <c:when test="${post.postType eq 'exerciseComplete'}">
           <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;background:linear-gradient(135deg,#FF6B35,#FFD166);color:white;font-size:12px;font-weight:800;">🏆 오운완</span>
         </c:when>
         <c:otherwise>
@@ -224,12 +239,13 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
       <p style="font-size:14px;color:#5A6480;line-height:1.6;">${post.body}</p>
       <div style="font-size:13px;color:#00BFA5;font-weight:600;margin-top:8px;">${post.hashtags}</div>
       <div style="display:flex;gap:8px;margin-top:14px;align-items:center;">
-        <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">${post.likeCount}</span></button>
-        <button onclick="react(this,${post.id},'good')" id="btn-good-${post.id}" class="react-btn">👍 <span id="good-${post.id}">${post.goodCount}</span></button>
-        <button onclick="react(this,${post.id},'muscle')" id="btn-muscle-${post.id}" class="react-btn">💪 <span id="muscle-${post.id}">${post.muscleCount}</span></button>
+        <button onclick="react(this,${post.id},'like')" id="btn-like-${post.id}" class="react-btn">❤️ <span id="like-${post.id}">0</span></button>
+        <button onclick="react(this,${post.id},'good')" id="btn-good-${post.id}" class="react-btn">👍 <span id="good-${post.id}">0</span></button>
+        <button onclick="react(this,${post.id},'muscle')" id="btn-muscle-${post.id}" class="react-btn">💪 <span id="muscle-${post.id}">0</span></button>
         <button onclick="toggleComment(this,${post.id})" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:13px;color:#9DA8C0;background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;" onmouseover="this.style.color='#FF6B35'" onmouseout="this.style.color='#9DA8C0'">
-          <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 댓글
-        </button>
+  <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span> 
+  댓글 <span id="commentCount-${post.id}">0</span>
+</button>
       </div>
     </div>
     <div class="comment-box" style="display:none;background:#F7F9FC;border-top:1.5px solid #E8EDF5;padding:16px 18px;">
@@ -264,7 +280,7 @@ body { font-family: 'Noto Sans KR', 'Nunito', sans-serif; background: #F7F9FC; d
           <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${post.userId}" style="width:38px;height:38px;border-radius:50%;border:2px solid #E8EDF5;" alt="랭킹">
           <div style="flex:1;min-width:0;">
             <div style="font-weight:700;font-size:13px;color:#1A1F36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${post.userId}</div>
-            <div style="font-size:12px;color:#FF6B35;font-weight:700;">🔥 ${post.likeCount + post.goodCount + post.muscleCount}점</div>
+            <div style="font-size:12px;color:#FF6B35;font-weight:700;">🔥 <span class="rank-score" data-post-id="${post.id}">-</span></div>
           </div>
         </div>
         </c:if>
@@ -334,56 +350,107 @@ function loadComments(postNum) {
   fetch('commentList?postNum=' + postNum)
     .then(res => res.json())
     .then(list => {
+      // 1. 댓글 개수 업데이트
+      const countSpan = document.getElementById('commentCount-' + postNum);
+      if (countSpan) {
+        countSpan.innerText = list.length; // 가져온 리스트의 개수만큼 표시
+      }
+
       const box = document.getElementById('commentList-' + postNum);
       if (!box) return;
-      box.innerHTML = list.map(c => `
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${c.userEmail}" style="width:30px;height:30px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;">
-          <div style="background:white;border:1.5px solid #E8EDF5;border-radius:12px;padding:8px 14px;flex:1;">
-            <div style="font-weight:700;font-size:12px;color:#1A1F36;">${c.userEmail}</div>
-            <div style="font-size:13px;color:#5A6480;margin-top:2px;">${c.body}</div>
-          </div>
-        </div>
-      `).join('');
+
+      box.innerHTML = list.map(function(c) {
+        return '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">'
+          + '<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=' + c.userId + '"'
+          + ' style="width:30px;height:30px;border-radius:50%;border:2px solid #E8EDF5;flex-shrink:0;">'
+          + '<div style="background:white;border:1.5px solid #E8EDF5;border-radius:12px;padding:8px 14px;flex:1;">'
+          + '<div style="font-weight:700;font-size:12px;color:#1A1F36;">' + c.userId + '</div>'
+          + '<div style="font-size:13px;color:#5A6480;margin-top:2px;">' + c.body + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
     }).catch(err => console.error('댓글 로드 실패:', err));
 }
 
 // 댓글 작성
+// ★ 파라미터: postNum + body (세션에서 userId는 서버가 직접 가져감)
 function writeComment(postNum) {
   const input = document.getElementById('commentInput-' + postNum);
-  const content = input.value.trim();
-  if (!content) return;
+  const body = input.value.trim();
+  if (!body) return;
   fetch('comment', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'postNum=' + postNum + '&nickname=<%= nickname %>&content=' + encodeURIComponent(content)
-  }).then(res => res.text()).then(result => {
-    if (result === 'ok') { input.value = ''; loadComments(postNum); }
-  });
+    body: 'postNum=' + postNum + '&body=' + encodeURIComponent(body)
+  }).then(res => res.json()).then(data => {
+    if (data.result === 'ok') {
+      input.value = '';
+      loadComments(postNum);
+    } else if (data.result === 'notLogin') {
+      alert('로그인 후 댓글을 작성할 수 있습니다.');
+    }
+  }).catch(err => console.error('댓글 작성 실패:', err));
 }
 
 // 리액션
+// ★ ReactionController 응답이 JSON으로 변경됨 {"result":"ok"|"duplicate"|"notLogin"}
 function react(btn, postNum, type) {
-  if (btn.disabled) return;
+  if (btn.classList.contains('reacted')) return;
   fetch('reaction', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body: 'postNum=' + postNum + '&type=' + type
-  }).then(res => res.text()).then(result => {
-    if (result === 'ok') {
+  }).then(res => res.json()).then(data => {
+    if (data.result === 'ok') {
       const span = document.getElementById(type + '-' + postNum);
-      if (span) span.innerText = parseInt(span.innerText) + 1;
-      btn.disabled = true;
+      if (span) span.innerText = parseInt(span.innerText || '0') + 1;
       btn.classList.add('reacted');
-
-      // 오운완 게시글이고 muscle 리액션이면 핏불 따봉 애니메이션
+      // 오운완 게시글 + muscle 이면 핏불 응원
       const article = btn.closest('article');
-      if (article && article.classList.contains('owun')) {
+      if (article && article.classList.contains('exerciseComplete') && type === 'muscle') {
         showFitbullCheer('💪 대단해! 같이 운동해요!');
       }
+    } else if (data.result === 'duplicate') {
+      btn.classList.add('reacted'); // 이미 눌렀으면 UI만 동기화
+    } else if (data.result === 'notLogin') {
+      alert('로그인 후 리액션을 누를 수 있습니다.');
+    }
+  }).catch(err => console.error('리액션 오류:', err));
+}
+
+// 리액션 카운트 AJAX 로드 (ReactionCountController)
+function loadReactionCounts(postId) {
+  fetch('reactionCount?postId=' + postId)
+    .then(res => res.json())
+    .then(data => {
+      var total = 0;
+      ['like', 'good', 'muscle'].forEach(function(type) {
+        var span = document.getElementById(type + '-' + postId);
+        var btn  = document.getElementById('btn-' + type + '-' + postId);
+        if (span && data[type]) {
+          span.innerText = data[type].count;
+          total += data[type].count;
+        }
+        if (btn && data[type] && data[type].reacted) {
+          btn.classList.add('reacted');
+        }
+      });
+      // 사이드 랭킹 점수 업데이트
+      var rankEl = document.querySelector('.rank-score[data-post-id="' + postId + '"]');
+      if (rankEl) rankEl.innerText = total + '점';
+    }).catch(function(err) { console.error('리액션 카운트 로드 실패:', err); });
+}
+
+// 페이지 로드 시 DB 게시글 카드 리액션 카운트 일괄 로드
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('article.fb-post-card[data-post-id]').forEach(article => {
+    const postId = article.getAttribute('data-post-id');
+    if (postId) {
+      loadReactionCounts(postId); // 리액션 로드
+      loadComments(postId);       // 댓글 개수 로드 (이 함수 내부에 개수 업데이트 로직이 있으므로 호출만 하면 됩니다)
     }
   });
-}
+});
 
 // 신고 모달
 function openReportModal(postNum) {

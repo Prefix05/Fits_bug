@@ -40,32 +40,36 @@
             parameterType="dto.gym.Payment"
             useGeneratedKeys="true"
             keyProperty="paymentNum">
+        INSERT INTO PAYMENT (
         user_id,
-            user_name,
-            membership_id,
-            mp_id,
-            gym_id,
-            trainer_id,
-            payment_date,
-            payment_price,
-            payment_fee,
-            method,
-            status,
-            payment_type
-        ) VALUES (
-            #{userId},
-            #{userName},
-            #{membershipNum},
-            #{mrNum},
-            #{gymId},
-            #{trainerId},
-            NOW(),
-            #{paymentPrice},
-            #{paymentFee},
-            #{method},
-            #{status},
-            #{paymentType}
-        )
+        user_name,
+        membership_id,
+        mp_id,
+        gym_id,
+        order_id,
+        trainer_id,
+        payment_date,
+        payment_price,
+        payment_fee,
+        method,
+        status,
+        payment_type
+    ) VALUES (
+        #{userId},
+        #{userName},
+        #{membershipNum},
+        #{mrNum},
+        #{gymId},
+        #{orderId},
+        #{trainerId},
+        NOW(),
+        #{paymentPrice},
+        #{paymentFee},
+        #{method},
+        #{status},
+        #{paymentType}
+    )
+
     </insert>
 
     <select id="selectMembershipRegistration"
@@ -96,8 +100,9 @@
             user_id AS userId,
             user_name AS userName,
             membership_id AS membershipNum,
-            mr_id AS mrNum,
+            mp_id AS mrNum,
             gym_id AS gymId,
+            order_id AS orderId,
             trainer_id AS trainerId,
             payment_date AS paymentDate,
             payment_price AS paymentPrice,
@@ -229,7 +234,7 @@
 		WHERE id = #{paymentNum}
 		  AND gym_id = #{gymId}
 		  AND status = '취소요청'
-</update>
+	</update>
 
     <update id="cancelPtSessionByPayment" parameterType="int">
         UPDATE LESSON l

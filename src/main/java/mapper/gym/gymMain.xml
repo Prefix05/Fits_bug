@@ -7,7 +7,7 @@
 
 
 
-    <select id="selectGymMainInfo" parameterType="Integer" resultType="map">
+    <select id="selectGymMainInfo" parameterType="int" resultType="map">
     SELECT
         g.id,
         g.name,
@@ -16,11 +16,11 @@
         g.address,
         g.file,
         IFNULL(ROUND(AVG(r.rating), 1), 0) AS rating,
-        COUNT(DISTINCT r.id) AS reviewCount
+        COUNT(DISTINCT r.id) AS review_count
     FROM GYM g
     LEFT JOIN REVIEW_GYM r
         ON g.id = r.gym_id
-    WHERE g.id = #{gymId}
+    WHERE g.id = #{value}
     GROUP BY
         g.id,
         g.name,
@@ -94,7 +94,4 @@
 		values (#{email},#{password},#{name},'GYM')
 	</insert>
 
-	<select id="selectGymByUserId" parameterType="Integer" resultType="dto.gym.Gym">
-		select * from gym where user_id=#{userId}
-	</select>
 </mapper>

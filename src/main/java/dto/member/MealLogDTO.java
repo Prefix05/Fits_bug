@@ -1,11 +1,5 @@
 package dto.member;
 
-/**
- * ↔ MEAL_LOG 테이블 (DB SQL 기준으로 수정)
- * DB 실제 컬럼:
- *   id, member_id, meal_date, meal, derscription(typo),
- *   totcalorie, meal_time, calories, protein, carbs, fat, image_url
- */
 public class MealLogDTO {
 
     private int    id;
@@ -20,12 +14,6 @@ public class MealLogDTO {
     private int    carbs;          // carbs (INTEGER)
     private int    fat;            // fat (INTEGER)
     private String imageUrl;       // image_url (VARCHAR(255))
-
-    // ── 화면 표시용 (JOIN용, DB 컬럼 아님) ──────────────────────
-    private String email;          // USER.email (JOIN용)
-    private String foodName;       // 개별 식품명 (상세 입력 시 사용)
-    private double gram;           // 섭취량 (g)
-    private double calorie;        // 단일 식품 칼로리
 
     public MealLogDTO() {}
 
@@ -73,16 +61,4 @@ public class MealLogDTO {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    // 화면용
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getFoodName() { return foodName; }
-    public void setFoodName(String foodName) { this.foodName = foodName; }
-
-    public double getGram() { return gram; }
-    public void setGram(double gram) { this.gram = gram; }
-
-    public double getCalorie() { return calorie; }
-    public void setCalorie(double calorie) { this.calorie = calorie; }
 }

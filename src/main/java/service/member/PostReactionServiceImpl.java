@@ -1,5 +1,8 @@
 package service.member;
 
+import java.util.List;
+import java.util.Map;
+
 import dao.member.PostDAO;
 import dao.member.PostDAOImpl;
 import dao.member.PostReactionDAO;
@@ -8,34 +11,22 @@ import dto.member.NotificationDTO;
 
 public class PostReactionServiceImpl implements PostReactionService {
 
-    private PostReactionDAO dao = new PostReactionDAOImpl();
-
-    // 🔥 게시글 작성자 찾기
-    private PostDAO postDAO = new PostDAOImpl();
-
-    // 🔥 알림
+    private PostReactionDAO dao    = new PostReactionDAOImpl();
+    private PostDAO         postDAO = new PostDAOImpl();
     private NotificationService notificationService = new NotificationServiceImpl();
 
     @Override
     public int addReaction(int postId, String userEmail, String type) {
-
         int result = dao.addReaction(postId, userEmail, type);
 
-        // 🔥 좋아요일 때만 알림 생성
-        if ("like".equals(type)) {
-
-            // 1. 게시글 작성자 이메일
+        if (result > 0 && "like".equals(type)) {
             String writerEmail = postDAO.getWriterEmail(postId);
-
-            // 🔥 자기 글이면 알림 안보냄
-            if (!writerEmail.equals(userEmail)) {
-
+            if (writerEmail != null && !writerEmail.equals(userEmail)) {
                 NotificationDTO n = new NotificationDTO();
                 n.setEmail(writerEmail);
                 n.setType("like");
                 n.setMessage("회원님의 게시글에 좋아요가 눌렸습니다");
-                n.setUrl("communityDetail.jsp?id=" + postId);
-
+                n.setUrl("/member/post");
                 notificationService.create(n);
             }
         }
@@ -46,5 +37,15 @@ public class PostReactionServiceImpl implements PostReactionService {
     @Override
     public int getReactionCount(int postId, String type) {
         return dao.getReactionCount(postId, type);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllCounts(int postId) {
+        return dao.getAllCounts(postId);
+    }
+
+    @Override
+    public int hasReacted(int postId, String userId, String type) {
+        return dao.hasReacted(postId, userId, type);
     }
 }

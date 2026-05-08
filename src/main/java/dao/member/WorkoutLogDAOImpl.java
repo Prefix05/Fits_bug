@@ -5,8 +5,11 @@ import dto.member.WorkoutDetailDTO;
 import dto.member.WorkoutLogDTO;
 import util.MybatisSqlSessionFactory;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkoutLogDAOImpl implements WorkoutLogDAO {
 
@@ -34,14 +37,12 @@ public class WorkoutLogDAOImpl implements WorkoutLogDAO {
         int result = 0;
         try {
             result = session.insert(NS + "insert", dto);
-
             if (result > 0 && dto.getDetails() != null) {
                 for (WorkoutDetailDTO detail : dto.getDetails()) {
-                    detail.setWorkoutId(dto.getId()); // 생성된 workout_id 세팅
+                    detail.setWorkoutId(dto.getId());
                     session.insert(NS + "insertDetail", detail);
                 }
             }
-
             session.commit();
         } catch (Exception e) {
             session.rollback();
@@ -81,7 +82,6 @@ public class WorkoutLogDAOImpl implements WorkoutLogDAO {
         return list;
     }
 
-    // ✅ 오늘 날짜 기록만 조회
     @Override
     public List<WorkoutLogDTO> findTodayByMemberId(int memberId) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
@@ -94,5 +94,38 @@ public class WorkoutLogDAOImpl implements WorkoutLogDAO {
             session.close();
         }
         return list;
+    }
+
+    @Override
+    public WorkoutLogDTO findTodayLog(int memberId) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        WorkoutLogDTO result = null;
+        try {
+            result = session.selectOne(NS + "findTodayLog", memberId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
+    public int updateEndTime(int workoutLogId, LocalTime endTime) {
+        SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        int result = 0;
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("workoutLogId", workoutLogId);
+            param.put("endTime", endTime);
+            result = session.update(NS + "updateEndTime", param);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return result;
     }
 }
