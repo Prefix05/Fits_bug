@@ -183,12 +183,12 @@ function goSearch(page) {
 								<div class="relative aspect-video">
 									<c:choose>
 										<c:when test="${not empty guide.image}">
-											<img src="<%= contextPath %>/resources/upload/${guide.image}"
+											<img src="<%= contextPath %>/uploads/${guide.image}"
 												class="w-full h-full object-cover" alt="${guide.title}" />
 										</c:when>
 										<c:otherwise>
 											<img
-												src="<%= contextPath %>/resources/upload/default_exercise.png"
+												src="<%= contextPath %>/uploads/default_exercise.png"
 												class="w-full h-full object-cover" alt="기본이미지" />
 										</c:otherwise>
 									</c:choose>

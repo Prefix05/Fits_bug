@@ -134,24 +134,8 @@
 
 <!-- SideNavBar -->
 <c:set var="activePage" value="clients" scope="request"/>
-<jsp:include page="/trainer/sideNav.jsp"/>
-<jsp:include page="/trainer/mobileBottomNav.jsp"/>
-
 
 <div class="lg:ml-64 min-h-screen flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0">
-    <!-- Top Navigation -->
-    <header
-            class="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-8 h-16">
-        <div class="flex items-center gap-4">
-            <a href="${pageContext.request.contextPath}/trainer/clientDetail">
-            <button class="hover:opacity-70 transition-opacity active:scale-95 duration-150 text-blue-700">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            </a>
-            <h1 class="font-sans tracking-tight text-lg font-semibold text-on-surface">회원목록</h1>
-        </div>
-    </header>
-
     <main class="flex-1 p-4 md:p-6 lg:p-8 max-w-6xl mx-auto w-full space-y-6 lg:space-y-8">
         <!-- Client Overview Section -->
         <section
@@ -293,31 +277,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div
-                                class="bg-surface-container-low p-6 rounded-2xl relative border border-outline-variant/10">
-                            <div
-                                    class="absolute -top-2 left-6 w-4 h-4 bg-surface-container-low border-l border-t border-outline-variant/10 rotate-45">
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-2">
-                                        <span
-                                                class="material-symbols-outlined text-primary text-[18px]">edit_note</span>
-                                    <p class="text-xs font-bold text-primary uppercase tracking-widest">Trainer
-                                        Feedback</p>
-                                </div>
-                                <div class="relative">
-                                        <textarea
-                                                class="w-full bg-transparent border-none p-0 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 resize-none min-h-[80px]"
-                                                placeholder="Add your feedback here..."></textarea>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button
-                                            class="px-8 py-2.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md">
-                                        POST FEEDBACK
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
                 <!-- Recent Workout Section -->
@@ -363,31 +322,6 @@
                                     <p class="font-bold text-on-surface">Tricep Pushdown (Cables)</p>
                                     <p class="text-xs text-on-surface-variant font-medium">3 Sets × 15 Reps • 25kg
                                     </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                                class="bg-surface-container-low p-6 rounded-2xl relative border border-outline-variant/10">
-                            <div
-                                    class="absolute -top-2 left-6 w-4 h-4 bg-surface-container-low border-l border-t border-outline-variant/10 rotate-45">
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-2">
-                                        <span
-                                                class="material-symbols-outlined text-primary text-[18px]">edit_note</span>
-                                    <p class="text-xs font-bold text-primary uppercase tracking-widest">Trainer
-                                        Feedback</p>
-                                </div>
-                                <div class="relative">
-                                        <textarea
-                                                class="w-full bg-transparent border-none p-0 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 resize-none min-h-[80px]"
-                                                placeholder="Add your workout feedback here..."></textarea>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button
-                                            class="px-8 py-2.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md">
-                                        POST FEEDBACK
-                                    </button>
                                 </div>
                             </div>
                         </div>

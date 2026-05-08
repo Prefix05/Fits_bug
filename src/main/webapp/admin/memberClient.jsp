@@ -114,7 +114,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">person</span>
+                                        <img src="${contextPath}/trainer/profile-img/\${profile}" width="20px"/>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -307,7 +307,7 @@ placeholder="회원이름 검색" type="text"/>
 <td class="px-6 py-4 text-sm font-medium text-on-surface">
 ₩<fmt:formatNumber value="${item.payment }" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
-<form action="${contextPath }/trainer/clientDetail">
+<form action="${contextPath }/trainer/clientDetailCommon">
 <input type="hidden" name="clientId" value="${item.clientId }"/>
 <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>

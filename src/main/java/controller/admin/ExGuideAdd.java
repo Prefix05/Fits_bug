@@ -64,7 +64,7 @@ public class ExGuideAdd extends HttpServlet {
 		// 1. 인코딩 설정 (한글 깨짐 방지)
         request.setCharacterEncoding("UTF-8");
 
-        String uploadPath = "/uploads";
+        String uploadPath = request.getServletContext().getRealPath("/uploads");
         //File uploadDir = new File(uploadPath);
        // if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
 
