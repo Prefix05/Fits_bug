@@ -1,6 +1,9 @@
 package dao.member;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
+
 import dto.member.MemberDTO;
 import dto.member.UserDTO;
 import util.MybatisSqlSessionFactory;
@@ -26,9 +29,9 @@ public class MyPageDAOImpl implements MyPageDAO {
     }
 
     @Override
-    public MemberDTO selectMember(String email) {
+    public Map<String, Object> selectMember(String email) {
         SqlSession session = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
-        MemberDTO result = null;
+        Map<String, Object> result = null;
         try {
             result = session.selectOne(MEMBER_NS + "findByEmail", email);
         } catch (Exception e) {

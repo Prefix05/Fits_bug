@@ -1,5 +1,8 @@
 package service.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dao.member.MyPageDAO;
 import dao.member.MyPageDAOImpl;
 import dto.member.MemberDTO;
@@ -15,31 +18,46 @@ public class MyPageServiceImpl implements MyPageService {
 
         UserDTO userDto = dao.selectUser(email);
 
-        MemberDTO member = dao.selectMember(email);
+        Map<String, Object> member = dao.selectMember(email);
 
         if (member == null) {
-            member = new MemberDTO();
+            member = new HashMap<>();
         }
 
-        // USER 정보를 member JOIN 필드에 보완 (null 방어)
+        // USER 정보 보완
         if (userDto != null) {
-            if (member.getEmail() == null)      member.setEmail(userDto.getEmail());
-            if (member.getNickname() == null)   member.setNickname(userDto.getNickname());
-            if (member.getProfile_image() == null) member.setProfile_image(userDto.getProfileImage());
-            if (member.getRole() == null)       member.setRole(userDto.getRole());
+
+            if (member.get("email") == null) {
+                member.put("email", userDto.getEmail());
+            }
+
+            if (member.get("nickname") == null) {
+                member.put("nickname", userDto.getNickname());
+            }
+
+            if (member.get("profile_image") == null) {
+                member.put("profile_image", userDto.getProfileImage());
+            }
+
+            if (member.get("role") == null) {
+                member.put("role", userDto.getRole());
+            }
         }
 
         MyPageDTO dto = new MyPageDTO();
+
         dto.setMember(member);
+
         return dto;
     }
 
     @Override
     public void updateMyPage(UserDTO user, MemberDTO member) {
+
         if (user != null) {
             dao.updateUser(user);
         }
-        
+
         if (member != null) {
             dao.updateMemberPlan(member);
         }

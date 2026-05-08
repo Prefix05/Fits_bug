@@ -40,7 +40,7 @@ public class PaymentSuccessController extends HttpServlet {
 
     private static final String TOSS_SECRET_KEY = "test_sk_Ba5PzR0ArnB5zP0Dd4jGrvmYnNeD";
 
-    private static final double FEE_RATE = 0.20;
+    private static final double FEE_RATE = 0.10;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -568,7 +568,7 @@ public class PaymentSuccessController extends HttpServlet {
     private String getBasicToken() {
 
         String auth =
-                TOSS_SECRET_KEY + "test_sk_Ba5PzR0ArnB5zP0Dd4jGrvmYnNeD";
+                TOSS_SECRET_KEY;
 
         return "Basic "
                 + Base64.getEncoder()

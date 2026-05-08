@@ -12,7 +12,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>핏츠버그 - ${fn:escapeXml(t.name)} 트레이너</title>
-<script src="https://js.tosspayments.com/v1/toss"></script>
+<script src="https://js.tosspayments.com/v1/"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"/>
 <style>
@@ -231,7 +231,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
 <script>
 const CTX = '${ctx}';
-const TRAINER_ID   = ${t.id};
+const TRAINER_ID   = '${t.id}';
 const TRAINER_NAME = '${fn:escapeXml(t.name)}';
 const TRAINER_TYPE = '${t.trainerType}'; // GYM_EMPLOYED / GYM_RENTAL / FREELANCE
 

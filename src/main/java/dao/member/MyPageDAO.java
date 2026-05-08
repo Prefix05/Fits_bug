@@ -1,5 +1,7 @@
 package dao.member;
 
+import java.util.Map;
+
 import dto.member.MemberDTO;
 import dto.member.UserDTO;
 
@@ -13,7 +15,7 @@ public interface MyPageDAO {
     UserDTO selectUser(String email);
 
     // MEMBER 테이블 조회 (회원 정보 + 운동 계획 통합)
-    MemberDTO selectMember(String email);
+    Map<String, Object> selectMember(String email);
 
     // USER 기본 정보 수정 (nickname, phone)
     void updateUser(UserDTO user);
