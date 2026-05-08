@@ -57,6 +57,8 @@ public class JoinController extends HttpServlet {
         session.setAttribute("nickname", request.getParameter("nickname"));
         session.setAttribute("name", request.getParameter("name"));
         session.setAttribute("phone", request.getParameter("phone"));
+        session.setAttribute("age",    request.getParameter("age"));
+        session.setAttribute("gender", request.getParameter("gender"));
         session.setAttribute("role", request.getParameter("role"));
 
         response.sendRedirect(request.getContextPath() + "/member/step2");

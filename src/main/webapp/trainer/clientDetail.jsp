@@ -127,48 +127,16 @@
         </button>
         <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
             <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
-                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
+                 src="${not empty client.profileImage ? pageContext.request.contextPath.concat('/uploads/').concat(client.profileImage) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
         </a>
     </div>
 </header>
 
-<!-- Mobile Bottom Nav -->
-<nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">distance</span>
-        <span class="text-[10px] font-medium">내주변</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/dashboard"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-medium">대시보드</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-bold text-blue-700">화원관리</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">chat</span>
-        <span class="text-[10px] font-medium">메시지</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">payments</span>
-        <span class="text-[10px] font-medium">수익</span>
-    </a>
-</nav>
-
 <!-- SideNavBar -->
 <c:set var="activePage" value="clients" scope="request"/>
-<jsp:include page="/trainer/sideNav.jsp"/>
+<%-- <jsp:include page="/trainer/sideNav.jsp"/> --%>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+
 
 <div class="lg:ml-64 min-h-screen flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0">
     <!-- Top Navigation -->
@@ -260,50 +228,47 @@
                     <div
                             class="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/10 space-y-8">
                         <!-- Summary Stats Cards -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                            <div data-metric="weight" onclick="showMetric('weight', this)"
-                                 class="metric-card ring-2 ring-primary p-4 rounded-2xl bg-primary/5 border border-primary/10">
-                                <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Weight
-                                </p>
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-2xl font-bold text-on-surface">78</span>
-                                    <span class="text-xs font-medium text-on-surface-variant">kg</span>
-                                    <span class="text-[11px] font-bold text-primary ml-auto flex items-center"><span
-                                            class="material-symbols-outlined text-sm">arrow_downward</span>
-                                            7.2kg</span>
+                        <c:choose>
+                            <c:when test="${latestInbody != null}">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                                    <div data-metric="weight" onclick="showMetric('weight', this)"
+                                         class="metric-card ring-2 ring-primary p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                                        <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Weight</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-2xl font-bold text-on-surface">${latestInbody.weight}</span>
+                                            <span class="text-xs font-medium text-on-surface-variant">kg</span>
+                                        </div>
+                                    </div>
+                                    <div data-metric="muscle" onclick="showMetric('muscle', this)"
+                                         class="metric-card p-4 rounded-2xl bg-green-50 border border-green-100">
+                                        <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">Muscle Mass</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-2xl font-bold text-on-surface">${latestInbody.muscleMass}</span>
+                                            <span class="text-xs font-medium text-on-surface-variant">kg</span>
+                                        </div>
+                                    </div>
+                                    <div data-metric="bodyFat" onclick="showMetric('bodyFat', this)"
+                                         class="metric-card p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                                        <p class="text-[10px] font-bold text-tertiary uppercase tracking-widest mb-1">Body Fat</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-2xl font-bold text-on-surface">${latestInbody.bodyFat}</span>
+                                            <span class="text-xs font-medium text-on-surface-variant">kg</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div data-metric="weight" onclick="showMetric('muscle', this)"
-                                 class="metric-card p-4 rounded-2xl bg-green-50 border border-green-100">
-                                <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">
-                                    Muscle Mass</p>
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-2xl font-bold text-on-surface">34</span>
-                                    <span class="text-xs font-medium text-on-surface-variant">kg</span>
-                                    <span
-                                            class="text-[11px] font-bold text-green-700 ml-auto flex items-center"><span
-                                            class="material-symbols-outlined text-sm">arrow_upward</span>
-                                            1.5kg</span>
+                                <!-- Multi-Line Graph Area -->
+                                <div>
+                                    <canvas id="myChart"></canvas>
                                 </div>
-                            </div>
-                            <div data-metric="weight" onclick="showMetric('bodyFat', this)"
-                                 class="metric-card p-4 rounded-2xl bg-orange-50 border border-orange-100">
-                                <p class="text-[10px] font-bold text-tertiary uppercase tracking-widest mb-1">Body
-                                    Fat</p>
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-2xl font-bold text-on-surface">18</span>
-                                    <span class="text-xs font-medium text-on-surface-variant">%</span>
-                                    <span
-                                            class="text-[11px] font-bold text-tertiary ml-auto flex items-center"><span
-                                            class="material-symbols-outlined text-sm">arrow_downward</span>
-                                            4%</span>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="flex flex-col items-center justify-center py-12 text-center text-on-surface-variant gap-2">
+                                    <span class="material-symbols-outlined text-4xl">monitor_weight</span>
+                                    <p class="font-semibold">인바디 기록이 없습니다</p>
+                                    <p class="text-sm">회원이 인바디를 등록하면 여기에 표시됩니다.</p>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Multi-Line Graph Area -->
-                        <div>
-                            <canvas id="myChart"></canvas>
-                        </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </section>
                 <!-- Recent Meal -->
@@ -429,27 +394,6 @@
                     </div>
                 </section>
             </div>
-            <!-- Right Column: Sidebar content -->
-            <div class="lg:col-span-4 space-y-8">
-                <!-- Upcoming Sessions -->
-                <section class="space-y-4">
-                    <h3 class="text-2xl font-bold tracking-tight">Upcoming Sessions</h3>
-                    <div
-                            class="bg-surface-container-lowest p-5 rounded-3xl border border-outline-variant/10 flex items-center gap-5 hover:bg-surface-container-low transition-colors cursor-pointer group">
-                        <div
-                                class="w-16 h-16 bg-blue-50 rounded-2xl flex flex-col items-center justify-center border border-blue-100 shadow-sm">
-                            <span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Oct</span>
-                            <span class="text-2xl font-bold text-primary leading-none">24</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold text-lg text-on-surface">Lower Body Strength</p>
-                            <p class="text-sm text-on-surface-variant font-medium">Thursday • 14:00 PM</p>
-                        </div>
-                        <span
-                                class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
-                    </div>
-                </section>
-            </div>
         </div>
     </main>
 </div>
@@ -458,24 +402,14 @@
 <script>
 
     const chartData = {
-        weight: [
-            {x: '2026-04-20', y: 78},
-            {x: '2026-04-21', y: 77.5},
-            {x: '2026-04-23', y: 77}
-        ],
-        bodyFat: [
-            {x: '2026-04-20', y: 22},
-            {x: '2026-04-21', y: 21.8},
-            {x: '2026-04-23', y: 21.5}
-        ],
-        muscle: [
-            {x: '2026-04-20', y: 33},
-            {x: '2026-04-21', y: 33.2},
-            {x: '2026-04-23', y: 33.4}
-        ]
+        weight:  ${weightJson},
+        bodyFat: ${bodyFatJson},
+        muscle:  ${muscleJson}
     };
 
-    const myChart = new Chart(document.getElementById('myChart'), {
+    const myChartEl = document.getElementById('myChart');
+    if (!myChartEl) { /* no inbody data — chart canvas not rendered */ }
+    const myChart = myChartEl ? new Chart(myChartEl, {
         type: 'line',
         data: {
             datasets: [{
@@ -493,7 +427,7 @@
                 }
             }
         }
-    });
+    }) : null;
 
     function setActiveCard(type, element) {
         document.querySelectorAll('.metric-card').forEach(card => {
@@ -539,8 +473,10 @@
             };
         }
 
-        myChart.data.datasets = [dataset];
-        myChart.update();
+        if (myChart) {
+            myChart.data.datasets = [dataset];
+            myChart.update();
+        }
 
         setActiveCard(type, element);
 

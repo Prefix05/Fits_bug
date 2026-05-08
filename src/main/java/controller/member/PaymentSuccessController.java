@@ -1,6 +1,7 @@
 package controller.member;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import dao.member.MemberDAO;
 import dao.member.MemberDAOImpl;
 import dto.member.MemberDTO;
+import dto.member.MembershipRegistrationDTO;
 import dto.member.PaymentDTO;
 import dto.member.TrainerDTO;
 import dto.member.UserDTO;
@@ -29,15 +31,13 @@ public class PaymentSuccessController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // ── 1. Session check ─────────────────────────────────────────────
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("loginUser") == null) {
-            // Not logged in — store the success params so we can resume after login
             resp.sendRedirect(req.getContextPath() + "/member/login");
             return;
         }
 
-        // ── 2. Parse Toss params ──────────────────────────────────────────
+
         String orderId   = req.getParameter("orderId");
         String amountStr = req.getParameter("amount");
 
@@ -46,7 +46,6 @@ public class PaymentSuccessController extends HttpServlet {
             return;
         }
 
-        // orderId format: PT-{trainerId}-{sessionCount}-{timestamp}
         String[] parts = orderId.split("-");
         if (parts.length < 4) {
             req.setAttribute("errorMsg", "잘못된 주문 ID 형식입니다: " + orderId);
@@ -72,42 +71,66 @@ public class PaymentSuccessController extends HttpServlet {
         String userName = user.getName() != null ? user.getName() : user.getNickname();
         double fee      = Math.round(amount * FEE_RATE * 100.0) / 100.0;
 
-        // ── 3. Save to DB ─────────────────────────────────────────────────
+
         TrainerDTO trainer = null;
         try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
 
+            // MEMBER.id 조회
+            MemberDTO memberDto = sql.selectOne("mapper.MemberMapper.findByUserId", userId);
+            if (memberDto == null) {
+                req.setAttribute("errorMsg", "회원 정보를 찾을 수 없습니다.");
+                req.getRequestDispatcher("/member/paymentSuccess.jsp").forward(req, resp);
+                return;
+            }
+            int memberId = memberDto.getId();
+
             trainer = sql.selectOne("mapper.TrainerMapper.findById", trainerId);
+
+            MembershipRegistrationDTO mpDto = new MembershipRegistrationDTO();
+            mpDto.setMemberId(memberId);
+            mpDto.setTrainerId(trainerId);
+            mpDto.setRegisterDate(LocalDate.now().toString());
+            mpDto.setStartDate(LocalDate.now().toString());
+            mpDto.setEndDate(LocalDate.now().plusMonths(3).toString()); // 기본 3개월
+            mpDto.setStatus("active");
+            mpDto.setLessonCount(sessionCount);
+            sql.insert("mapper.MembershipMapper.insertRegistration", mpDto);
+
 
             PaymentDTO payment = new PaymentDTO();
             payment.setUserId(userId);
             payment.setUserName(userName);
             payment.setTrainerId(trainerId);
+            payment.setMpId(mpDto.getId());  // mp_id 설정
             payment.setPaymentPrice(amount);
             payment.setPaymentFee(fee);
             payment.setMethod("카드");
             payment.setStatus("결제완료");
             payment.setPaymentType("PT");
-
             sql.insert("mapper.PaymentMapper.insert", payment);
 
-            Map<String, Object> memberUpdate = new HashMap<>();
-            memberUpdate.put("userId",      userId);
-            memberUpdate.put("trainerId",   trainerId);
-            memberUpdate.put("sessionCount", sessionCount);
-            sql.update("mapper.MemberMapper.updateTrainerAndLessons", memberUpdate);
+            Map<String, Object> ptParams = new HashMap<>();
+            ptParams.put("memberId",     memberId);
+            ptParams.put("trainerId",    trainerId);
+            ptParams.put("sessionCount", sessionCount);
+
+            int existing = sql.selectOne("mapper.MemberMapper.findMembershipPtByMemberAndTrainer", ptParams);
+            if (existing > 0) {
+                sql.update("mapper.MemberMapper.updateMembershipPtLessons", ptParams);
+            } else {
+                sql.insert("mapper.MemberMapper.insertMembershipPt", ptParams);
+            }
 
             sql.commit();
 
-            // Refresh session memberInfo so the new trainer_id is visible immediately
             MemberDAO memberDao = new MemberDAOImpl();
-            MemberDTO freshMember = memberDao.findByEmail(user.getEmail());
+            Map<String,Object> freshMember = memberDao.findByEmail(user.getEmail());
             if (freshMember != null) {
                 session.setAttribute("memberInfo", freshMember);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Surface the real error so it's visible during development
             req.setAttribute("errorMsg", "DB 저장 오류: " + e.getMessage());
             req.setAttribute("trainerName",  trainer != null ? trainer.getName() : "트레이너");
             req.setAttribute("sessionCount", sessionCount);
@@ -117,7 +140,6 @@ public class PaymentSuccessController extends HttpServlet {
             return;
         }
 
-        // ── 4. Forward to success page ────────────────────────────────────
         req.setAttribute("trainerName",  trainer != null ? trainer.getName() : "트레이너");
         req.setAttribute("sessionCount", sessionCount);
         req.setAttribute("amount",       (long) amount);

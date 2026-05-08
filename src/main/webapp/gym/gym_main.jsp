@@ -245,7 +245,7 @@
     		<input type="hidden" name="comment" id="reviewCommentInput">
 		</form>
 	</c:if>
-<div id="reviewList" class="grid grid-cols-2 gap-4">
+<div id="reviewList" class="grid grid-cols-1 gap-4">
     <c:choose>
         <c:when test="${not empty reviewList}">
             <c:forEach var="review" items="${reviewList}">
@@ -286,21 +286,54 @@
 
                             <!-- 본인 리뷰 -->
                         
-                            <c:if test="${not empty sessionScope.loginUser 
-             and sessionScope.loginUser.id == review.clientId}">
-                                <button onclick="editReview(${review.reviewNum})" class="ml-2">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </button>
-                                <button onclick="deleteReview(${review.reviewNum})">
-                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </c:if>
+                            
+                            
                         </div>
                     </div>
 
-                    <p class="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed">
+                    <p class="text-[11px] text-on-surface-variant leading-relaxed">
                         ${review.comment}
                     </p>
+                    
+                    <c:if test="${not empty sessionScope.loginUser 
+          and sessionScope.loginUser.id == review.clientId}">
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewUpdate"
+          class="flex items-center gap-2 mt-3">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <input type="number"
+               name="star"
+               min="1"
+               max="5"
+               value="${review.rating.intValue()}"
+               class="w-16 border rounded px-1 text-xs">
+
+        <input type="text"
+               name="comment"
+               value="${review.comment}"
+               class="border rounded px-2 py-1 text-xs flex-1">
+
+        <button type="submit" class="text-primary">
+            <span class="material-symbols-outlined text-sm">save</span>
+        </button>
+    </form>
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewDelete"
+          class="inline-block mt-2"
+          onsubmit="return confirm('삭제하시겠습니까?');">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <button type="submit" class="text-error">
+            <span class="material-symbols-outlined text-sm">delete</span>
+        </button>
+    </form>
+
+</c:if>
                 </div>
             </c:forEach>
         </c:when>
@@ -320,14 +353,14 @@
 <div id="allReviewBox" class="hidden mt-4 max-h-none overflow-y-auto space-y-3 custom-scrollbar">
     <c:choose>
         <c:when test="${not empty allReviewList}">
-            <c:forEach var="review" items="${allReviewList}">
+            <c:forEach var="review" items="${allReviewList}" begin="${fn:length(reviewList)}">
                 <div class="bg-surface-container-low p-4 rounded-lg">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <div class="text-[11px] font-bold">${review.clientName}</div>
                             <div class="text-[9px] text-outline">${review.createdAt}</div>
                         </div>
-
+						<div class="flex items-center">
                         <div class="flex text-yellow-400 scale-75 origin-right mr-1">
 
     <!-- 채워진 별 -->
@@ -343,11 +376,60 @@
     </c:if>
 
 </div>
+<c:if test="${not empty sessionScope.loginUser or not empty sessionScope.loginGym}">
+        <button class="text-outline hover:text-error ml-2"
+                onclick="reportReview('${review.reviewNum}')">
+            <span class="material-symbols-outlined text-sm">report</span>
+        </button>
+    </c:if>
+</div>
                     </div>
 
                     <p class="text-[11px] text-on-surface-variant leading-relaxed">
                         ${review.comment}
                     </p>
+                    
+                    <c:if test="${not empty sessionScope.loginUser 
+          and sessionScope.loginUser.id == review.clientId}">
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewUpdate"
+          class="flex items-center gap-2 mt-3">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <input type="number"
+               name="star"
+               min="1"
+               max="5"
+               value="${review.rating.intValue()}"
+               class="w-16 border rounded px-1 text-xs">
+
+        <input type="text"
+               name="comment"
+               value="${review.comment}"
+               class="border rounded px-2 py-1 text-xs flex-1">
+
+        <button type="submit" class="text-primary">
+            <span class="material-symbols-outlined text-sm">save</span>
+        </button>
+    </form>
+
+    <form method="post"
+          action="${pageContext.request.contextPath}/gym/reviewDelete"
+          class="inline-block mt-2"
+          onsubmit="return confirm('삭제하시겠습니까?');">
+
+        <input type="hidden" name="reviewNum" value="${review.reviewNum}">
+
+        <button type="submit" class="text-error">
+            <span class="material-symbols-outlined text-sm">delete</span>
+        </button>
+    </form>
+
+</c:if>
+                    
+
                 </div>
             </c:forEach>
         </c:when>
@@ -596,9 +678,7 @@ function prevImage(){
 							<div class="flex-1 min-w-0">
 								<div class="flex justify-between items-baseline mb-0.5">
 									<h3 class="font-bold text-base text-on-surface truncate">${trainer.name}
-										<c:if test="${not empty trainer.memberCount}">
-											<span class="text-xs font-normal text-on-surface-variant ml-1">(${trainer.memberCount}명)</span>
-										</c:if>
+										
 									</h3>
 									<p class="text-[10px] font-semibold text-primary uppercase tracking-wider shrink-0">${trainer.mainSpecial}</p>
 								</div>
@@ -706,15 +786,6 @@ function submitReview(){
     document.getElementById("reviewForm").submit();
 }
 
-function editReview(id){
-    location.href = "${pageContext.request.contextPath}/gym/reviewUpdate?reviewNum=" + id;
-}
-
-function deleteReview(id){
-    if(confirm("삭제하시겠습니까?")){
-        location.href = "${pageContext.request.contextPath}/gym/reviewDelete?reviewNum=" + id;
-    }
-}
 </script>
 
 <!-- Payment Modal -->
@@ -978,7 +1049,7 @@ function submitPayment(event) {
     IMP.init("imp77425055");
 
     IMP.request_pay({
-        channelKey: "channel-key-d3e2f79b-28dd-4cc0-8687-d6e0dd457b31",
+        channelKey: "channel-key-f10a8ff7-975c-4b31-8166-11d080e4eb4e",
         pay_method: "card",
         merchant_uid: "gym_" + new Date().getTime(),
         name: selectedMembership.typeRep + (selectedMembership.type === "month" ? "개월 이용권" : "일 이용권"),

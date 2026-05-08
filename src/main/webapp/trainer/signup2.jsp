@@ -85,10 +85,11 @@
     <span class="done"></span>
     <span></span>
     <span></span>
+    <span></span>
 </div>
 
 <h2>트레이너 프로필</h2>
-<p class="subtitle">회원들에게 표시될 프로필 정보를 입력해 주세요. (2/4)</p>
+<p class="subtitle">회원들에게 표시될 프로필 정보를 입력해 주세요. (2/5)</p>
 
 <p class="error" style="${empty error ? 'display:none' : ''}">${error}</p>
 

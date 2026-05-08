@@ -13,10 +13,17 @@
 		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
 		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
 		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
-		<typeAlias type="dto.trainer.LessonDTO" alias="lesson"/>
-		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
-		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
-		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
+		
+		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
+		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
+		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
+		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
+		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
+		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
+		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
+		<typeAlias type="dto.trainer.TrainerDTO" alias="TrainerDTO"/>
+		
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
 		<typeAlias alias="GymDTO"     		type="dto.member.GymDTO"/>
@@ -57,7 +64,9 @@
 				<property name="url" value="jdbc:mariadb://localhost:3306/fitsbug"/>
 				<property name="username" value="root"/>
 				<property name="password" value="7564"/>
+<!-- 				최대 활성 커넥션 수 : 동시에 사용할 수 있는 최대 커녁센 수-->
 				<property name="poolMaximumActiveConnections" value="500"/>
+<!-- 				최대 유효 커넥션 수 : 사용하지않고 대기 상태를 유지할 커넥선 개수-->
 				<property name="poolMaximumIdleConnections" value="500"/>
 			</dataSource>
 		</environment>
@@ -69,7 +78,7 @@
 		<mapper resource="mapper/admin/report.xml"/>
 		<mapper resource="mapper/admin/inquiry.xml"/>
 		<mapper resource="mapper/admin/sales.xml"/>
-		
+
 		<mapper resource="mapper/gym/gymMain.xml"/>
 		<mapper resource="mapper/gym/gymNotice.xml"/>
 		<mapper resource="mapper/gym/gymTrainerView.xml"/>
@@ -110,8 +119,15 @@
 		<mapper resource="mapper/member/ChartMapper.xml"/>
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
-        <mapper resource="mapper/member/LessonMapper.xml"/> 
-        
+        <mapper resource="mapper/member/LessonMapper.xml"/>
+		<mapper resource="mapper/member/TrainerMapper.xml"/>
+		<mapper resource="mapper/member/trainerListMapper.xml"/>
+		<mapper resource="mapper/member/TrainerPricingMapper.xml"/>
+		<mapper resource="mapper/member/TrainerSpecializationMapper.xml"/>
+		<mapper resource="mapper/member/TrainerTraitsMapper.xml"/>
+		<mapper resource="mapper/member/TrainerCertificationMapper.xml"/>
+		
+		<mapper resource="mapper/trainer/message.xml"/>
 		<mapper resource="mapper/trainer/lesson.xml"/>
 		<mapper resource="mapper/trainer/notification.xml"/>
 		<mapper resource="mapper/trainer/client.xml"/>

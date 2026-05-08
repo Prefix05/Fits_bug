@@ -130,9 +130,17 @@ public class GymDTO {
 
     public int getPrice()             { return price; }
     public void setPrice(int v)       { this.price = v; }
+	@Override
+	public String toString() {
+		return "GymDTO [id=" + id + ", userId=" + userId + ", name=" + name + ", backgroundImg=" + backgroundImg
+				+ ", businessRegistrationNum=" + businessRegistrationNum + ", brFile=" + brFile + ", phoneNum="
+				+ phoneNum + ", address=" + address + ", addressDetail=" + addressDetail + ", postcode=" + postcode
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", description=" + description + ", file="
+				+ file + ", facility=" + facility + ", approvalStatus=" + approvalStatus + ", gymCode=" + gymCode
+				+ ", bankName=" + bankName + ", accountNumber=" + accountNumber + ", image=" + image + ", specialty="
+				+ specialty + ", rating=" + rating + ", distance=" + distance + ", score=" + score + ", price=" + price
+				+ "]";
+	}
 
-    @Override
-    public String toString() {
-        return "GymDTO{id=" + id + ", name='" + name + "', address='" + address + "'}";
-    }
+
 }

@@ -47,7 +47,6 @@ public class GymInfoUpdate extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		
 
 		try {
 			HttpSession session = request.getSession();
@@ -58,9 +57,29 @@ public class GymInfoUpdate extends HttpServlet {
             }
 
             Integer gymId = user.getOtherId();
+
+		    GymInfoEditService service = new GymInfoEditServiceImpl();
 			
-			GymInfoEditService service = new GymInfoEditServiceImpl();
+
 			Gym gym = service.selectGymMypage(gymId);
+			if (gym == null) {
+			    throw new ServletException("헬스장 정보 없음");
+			}
+
+			// 기본 정보
+			gym.setId(gymId);
+			gym.setUserId(user.getId());
+//			gym.setEmailId(request.getParameter("emailId"));
+//			gym.setUserName(request.getParameter("userName"));
+//			gym.setTel(request.getParameter("tel"));
+
+			gym.setName(request.getParameter("gymName"));
+			gym.setPhoneNum(request.getParameter("phoneNum"));
+			gym.setDescription(request.getParameter("description"));
+			gym.setAddress(request.getParameter("address"));
+			gym.setAddressDetail(request.getParameter("addressDetail"));
+			gym.setPostcode(request.getParameter("postcode"));
+
 
 			// 시설
 			String[] facilities = request.getParameterValues("facility");
@@ -104,7 +123,7 @@ public class GymInfoUpdate extends HttpServlet {
 			// 프로필 이미지 업로드
 			String profileFileName = uploadFile(request, "profileImg", "/gym/gymProfile");
 			if (profileFileName != null) {
-			    user.setProfileImage(profileFileName);
+//			    gym.setProfileImg(profileFileName);
 			}
 
 			// 배경 이미지 업로드
@@ -119,10 +138,8 @@ public class GymInfoUpdate extends HttpServlet {
 			    gym.setBrFile(brFileName);
 			}
 
-			
-
 			service.updateGym(gym);
-			service.updateGymUser(gym);
+//			service.updateGymUser(gym);
 			
 			// 운영시간
 			
@@ -143,6 +160,8 @@ public class GymInfoUpdate extends HttpServlet {
 			schedule.setAvailableWeekdayEnd(LocalTime.parse(request.getParameter("weekdayEnd")));
 			schedule.setAvailableWeekendStart(LocalTime.parse(request.getParameter("weekendStart")));
 			schedule.setAvailableWeekendEnd(LocalTime.parse(request.getParameter("weekendEnd")));
+			
+		
 
 			service.updateSchedule(schedule);
 

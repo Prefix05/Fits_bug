@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import dto.gym.Review;
+import dto.member.UserDTO;
 import service.gym.GymReviewService;
 import service.gym.GymReviewServiceImpl;
 
@@ -23,15 +24,15 @@ public class GymReviewUpdate extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession(false);
-        
-        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/member/login");
-            return;
-        }
-
         try {
-            int loginUserId = (Integer) session.getAttribute("userId");
+        	HttpSession session = request.getSession();
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+
+			if (user == null) {
+				response.sendRedirect(request.getContextPath() + "/member/login");
+				return;
+			}
+        	
 
             int reviewNum = Integer.parseInt(request.getParameter("reviewNum"));
             int star = Integer.parseInt(request.getParameter("star"));
@@ -48,11 +49,11 @@ public class GymReviewUpdate extends HttpServlet {
 
             Review review = new Review();
             review.setReviewNum(reviewNum);
-            review.setClientId(loginUserId);
+            review.setClientId(user.getId());
             review.setRating((double)star);
             review.setComment(comment);
 
-            service.updateReview(review, loginUserId);
+            service.updateReview(review, user.getId());
 
             response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + origin.getGymId());
 

@@ -2,9 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%
-    String contextPath = request.getContextPath();
-%>    
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />  
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -80,13 +78,20 @@
       }
     </script>
 <script type="text/javascript">
+	let currentSortColumn = 'clientName';
+	let currentSortOrder = 'ASC';	
+	
 	function fn_search(){
 		const keyword = $("#searchKeyword").val();
 
 		$.ajax({
             url: "${pageContext.request.contextPath}/admin/memberClient",
             type: "POST",
-            data: { clientName: keyword },
+            data: { 
+            	clientName: keyword,
+                sortColumn: currentSortColumn,
+                sortOrder: currentSortOrder
+            },
             dataType: "json",
             success: function(data) {
                 let html = "";
@@ -100,7 +105,7 @@
                         const name = item.clientName || '이름 없음';
                         const tel = item.clientTel || '-';
                         const date = item.regDate || '-';
-                        const ptTrainer = item.ptTrainer || 0;
+                        const ptTrainer = item.ptTrainer || '없음';
                         // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
                         const payment = Number(item.payment || 0).toLocaleString();
                         
@@ -109,7 +114,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">fitness_client</span>
+                                            <span class="material-symbols-outlined">person</span>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -136,6 +141,17 @@
             }
         });
     }
+	
+	function fn_sort(column){
+        if(currentSortColumn === column){
+            currentSortOrder = (currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+        } else {
+            currentSortColumn = column;
+            currentSortOrder = 'ASC';
+        }
+        fn_search();
+    }
+	
 	$(document).ready(function() {
         // ID가 searchKeyword인 입력창에서 키보드가 눌렸을 때
         $("#searchKeyword").on("keydown", function(e) {
@@ -179,9 +195,9 @@
 
 <!-- Main Tabs -->
 <div class="flex gap-8 mb-4 border-b border-outline-variant/20">
-<a href="<%= contextPath %>/admin/memberAuth"
+<a href="${contextPath }/admin/memberAuth"
 class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors relative">자격승인</a>
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath }/admin/memberGym"
 class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">회원리스트</a>
 </div>
 
@@ -232,28 +248,18 @@ class="pb-4 text-sm font-bold text-primary border-b-2 border-primary relative">�
 <!-- Bento Filter Section -->
 <div class="grid grid-cols-12 gap-6 mb-4">
 <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-1 rounded-xl flex shadow-sm border border-outline-variant/10">
-<a href="<%= contextPath %>/admin/memberGym"
+<a href="${contextPath }/admin/memberGym"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:bg-surface-container flex items-center justify-center">
 헬스장
 </a>
-<a href="<%= contextPath %>/admin/memberTrainer"
+<a href="${contextPath }/admin/memberTrainer"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surface-variant hover:bg-surface-container flex items-center justify-center">
 트레이너
 </a>
-<a href="<%= contextPath %>/admin/memberClient"
+<a href="${contextPath }/admin/memberClient"
 class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all bg-primary text-white shadow-md flex items-center justify-center">
 회원
 </a>
-</div>
-<div class="col-span-12 lg:col-span-8 flex justify-end items-center gap-4">
-<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest rounded-lg border border-outline-variant/20 shadow-sm">
-<span class="text-xs font-label text-on-surface-variant">기간 설정</span>
-<select class="text-sm border-none bg-transparent focus:ring-0 cursor-pointer text-on-surface font-medium">
-<option>전체 기간</option>
-<option>최근 1개월</option>
-<option>최근 3개월</option>
-</select>
-</div>
 </div>
 </div>
 <!-- Table Section -->
@@ -274,9 +280,10 @@ placeholder="회원이름 검색" type="text"/>
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
-<th class="px-6 py-4 font-semibold">회원정보</th>
-<th class="px-6 py-4 font-semibold">가입일자</th>
-<th class="px-6 py-4 font-semibold">담당트레이너</th><th class="px-6 py-4 font-semibold">결제내역</th>
+<th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('clientName')">회원정보 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+<th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('regDate')">가입일자 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+<th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('ptTrainer')">담당트레이너 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+<th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('payment')">결제내역 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
 <th class="px-6 py-4 font-semibold text-right">상세보기</th>
 </tr>
 </thead>
@@ -287,7 +294,7 @@ placeholder="회원이름 검색" type="text"/>
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
 <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">fitness_client</span>
+<span class="material-symbols-outlined">person</span>
 </div>
 <div>
 <p class="text-sm font-bold text-on-surface">${item.clientName }</p>
@@ -300,9 +307,12 @@ placeholder="회원이름 검색" type="text"/>
 <td class="px-6 py-4 text-sm font-medium text-on-surface">
 ₩<fmt:formatNumber value="${item.payment }" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
+<form action="${contextPath }/trainer/clientDetail">
+<input type="hidden" name="clientId" value="${item.clientId }"/>
 <button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
 <span class="material-symbols-outlined">chevron_right</span>
 </button>
+</form>
 </td>
 </tr>
 </c:forEach>
@@ -322,7 +332,7 @@ placeholder="회원이름 검색" type="text"/>
 <div class="flex items-center gap-1">
 <c:choose>
 <c:when test="${pageInfo.curPage>1 }">
-<a href="memberGym?page=${pageInfo.curPage-1}"
+<a href="memberClient?page=${pageInfo.curPage-1}"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
 </a>
@@ -342,7 +352,7 @@ ${page }
 </button>
 </c:when>
 <c:otherwise>
-<a href="memberGym?page=${page }"
+<a href="memberClient?page=${page }"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">
 ${page }
 </a>
@@ -352,7 +362,7 @@ ${page }
 
 <c:choose>
 <c:when test="${pageInfo.curPage < pageInfo.allPage}">
-<a href="memberGym?page=${pageInfo.curPage + 1}"
+<a href="memberClient?page=${pageInfo.curPage + 1}"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
 </a>

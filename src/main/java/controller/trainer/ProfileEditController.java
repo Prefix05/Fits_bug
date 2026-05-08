@@ -92,20 +92,28 @@ public class ProfileEditController extends HttpServlet {
         }
 
         try {
-            // 1. Update user basic info (name, tel, nickname)
+            // 1. Update user basic info (name, phone, nickname, age, gender)
+            int age = 0;
+            try { age = Integer.parseInt(request.getParameter("age")); } catch (Exception ignored) {}
+            String gender = request.getParameter("gender");
+
             UserDTO userUpdate = new UserDTO();
             userUpdate.setId(loginUser.getId());
             userUpdate.setName(request.getParameter("name"));
-            userUpdate.setTel(request.getParameter("tel"));
+            userUpdate.setPhone(request.getParameter("phone"));
             userUpdate.setNickname(request.getParameter("nickname"));
+            userUpdate.setAge(age);
+            userUpdate.setGender(gender);
 
             SignupService signupService = new SignupServiceImpl();
             signupService.updateUserProfile(userUpdate);
 
             // Refresh session with updated user info
             loginUser.setName(userUpdate.getName());
-            loginUser.setTel(userUpdate.getTel());
+            loginUser.setPhone(userUpdate.getPhone());
             loginUser.setNickname(userUpdate.getNickname());
+            loginUser.setAge(age);
+            loginUser.setGender(gender);
 
             // 2. Handle profile image upload
             Part profileImagePart = request.getPart("profileImage");
@@ -114,7 +122,7 @@ public class ProfileEditController extends HttpServlet {
                 String original = Paths.get(profileImagePart.getSubmittedFileName()).getFileName().toString();
                 profileImageFileName = "profile_" + loginUser.getId() + "_" + original;
                 profileImagePart.write(uploadDir + File.separator + profileImageFileName);
-//                loginUser.setProfileImg(profileImageFileName);
+                loginUser.setProfileImg(profileImageFileName);
             }
 
             // 3. Update trainer type, gym, address, description

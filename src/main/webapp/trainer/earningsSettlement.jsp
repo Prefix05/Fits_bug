@@ -56,29 +56,11 @@
     </a>
 </header>
 
-<!-- Mobile Bottom Nav -->
-<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">dashboard</span>
-        <span class="text-[10px] font-medium">대시보드</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/clients" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-medium">회원관리</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/calendar" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/earnings" class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700">
-        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings:"FILL" 1;'>payments</span>
-        <span class="text-[10px] font-bold text-blue-700">수익</span>
-    </a>
-</nav>
-
 <!-- Sidebar -->
 <c:set var="activePage" value="payments" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+
 
 <div class="lg:ml-64 pt-16 lg:pt-0 pb-24 lg:pb-0">
     <main class="p-4 md:p-8 max-w-5xl mx-auto space-y-6">

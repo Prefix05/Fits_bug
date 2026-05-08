@@ -47,43 +47,12 @@
 </head>
 <body class="bg-surface text-on-surface">
 
-<!-- Mobile Top Bar -->
-<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-[#007AFF] rounded-lg flex items-center justify-center">
-            <span class="material-symbols-outlined text-white text-lg">exercise</span>
-        </div>
-        <h1 class="text-lg font-bold text-on-surface">Fitsbug</h1>
-    </div>
-    <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full">
-        <img alt="profile" class="w-8 h-8 rounded-full object-cover"
-             src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-    </a>
-</header>
-
-<!-- Mobile Bottom Nav -->
-<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="${pageContext.request.contextPath}/trainer/dashboard" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">dashboard</span>
-        <span class="text-[10px] font-medium">대시보드</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/clients" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-medium">회원관리</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/calendar" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/earnings" class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700">
-        <span class="material-symbols-outlined text-[22px]" style='font-variation-settings:"FILL" 1;'>payments</span>
-        <span class="text-[10px] font-bold text-blue-700">수익</span>
-    </a>
-</nav>
-
 <!-- Sidebar -->
-<c:set var="activePage" value="payments" scope="request"/>
+<c:set var="activePage" value="earnings" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+<jsp:include page="/trainer/mobileTopHeader.jsp"/>
+
 
 <div class="lg:ml-64 pt-16 lg:pt-0 pb-24 lg:pb-0">
     <main class="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
@@ -131,19 +100,15 @@
             </c:when>
             <c:otherwise>
                 <!-- No completed PT payments this month -->
-                <section class="bg-surface-container-low border border-outline-variant/20 rounded-2xl p-6 md:p-8">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-primary">pending</span>
-                        </div>
-                        <div>
-                            <p class="font-bold text-on-surface">${currentMonth} 결제 내역 없음</p>
-                            <p class="text-sm text-on-surface-variant mt-0.5">
-                                이번 달 완료된 PT 결제가 없습니다.
-                            </p>
-                        </div>
+                <div class="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3.5 shadow-sm">
+                    <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-white text-[18px]" style="font-variation-settings:'FILL' 1;">notifications</span>
                     </div>
-                </section>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-yellow-900 leading-snug">${currentMonth} 결제 내역 없음</p>
+                        <p class="text-xs text-yellow-700 mt-0.5 leading-snug">이번 달 완료된 PT 결제가 없습니다.</p>
+                    </div>
+                </div>
             </c:otherwise>
         </c:choose>
 
@@ -157,7 +122,7 @@
                 <c:when test="${empty settlementHistory}">
                     <div class="flex flex-col items-center justify-center h-40 gap-2 text-center">
                         <span class="material-symbols-outlined text-4xl text-slate-300">bar_chart</span>
-                        <p class="text-sm text-on-surface-variant">정산 내역이 없습니다</p>
+                        <p class="text-sm font-semibold text-on-surface">정산 내역이 없습니다</p>
                     </div>
                 </c:when>
                 <c:otherwise>

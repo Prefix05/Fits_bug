@@ -129,64 +129,12 @@
 
 <body class="bg-surface text-on-surface antialiased">
 
-<!-- Mobile Top Bar -->
-<header
-        class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-[#007AFF] rounded-lg flex items-center justify-center">
-            <span class="material-symbols-outlined text-white text-lg">exercise</span>
-        </div>
-        <h1 class="text-lg font-bold text-on-surface">Fitsbug</h1>
-    </div>
-    <div class="flex items-center gap-1">
-        <button class="p-2 rounded-lg hover:bg-slate-200">
-            <span class="material-symbols-outlined">notifications</span>
-        </button>
-        <a href="${pageContext.request.contextPath}/trainer/profile" class="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
-            <img alt="연진호" class="w-8 h-8 rounded-full object-cover"
-                 src="${not empty sessionScope.loginUser.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(sessionScope.loginUser.profileImg) : pageContext.request.contextPath.concat('/img/profile_img.jpg')}"/>
-        </a>
-    </div>
-</header>
-
-<!-- Mobile Bottom Nav -->
-<nav
-        class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-2 py-2 flex items-center justify-around">
-    <a href="#"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">distance</span>
-        <span class="text-[10px] font-medium">내주변</span>
-    </a>
-    <a href="" class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-            <span class="material-symbols-outlined text-[22px]"
-                  style='font-variation-settings: "FILL" 1;'>dashboard</span>
-        <span class="text-[10px] font-bold text-blue-700">대시보드</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/clients"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-blue-700 transition-colors">
-        <span class="material-symbols-outlined text-[22px]">group</span>
-        <span class="text-[10px] font-medium">회원관리</span>
-    </a>
-    <a href="${pageContext.request.contextPath}/trainer/calendar"
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-        <span class="text-[10px] font-medium">일정</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">chat</span>
-        <span class="text-[10px] font-medium">메시지</span>
-    </a>
-    <a href=""
-       class="flex flex-col items-center gap-1 px-3 py-1 text-slate-400 hover:text-primary transition-colors">
-        <span class="material-symbols-outlined text-[22px]">payments</span>
-        <span class="text-[10px] font-medium">수익</span>
-    </a>
-</nav>
-
 <!-- SideNavBar -->
 <c:set var="activePage" value="clients" scope="request"/>
 <jsp:include page="/trainer/sideNav.jsp"/>
+<jsp:include page="/trainer/mobileBottomNav.jsp"/>
+<jsp:include page="/trainer/mobileTopHeader.jsp"/>
+
 
 
 <!-- Main Content Canvas (Adjusted with ml-64) -->
@@ -236,9 +184,6 @@
                             <option>정렬 기준: 최근 활동</option>
                             <option>정렬 기준: 남은 세션</option>
                         </select>
-                        <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-lg"
-                                data-icon="expand_more" style="">expand_more</span>
                     </div>
                 </div>
             </div>
@@ -258,69 +203,72 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                <c:forEach var="client" items="${clients}">
-                    <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
-                       class="block no-underline">
-                        <div class="bg-white border border-surface-container-highest rounded-2xl p-3 md:p-5
+                        <c:forEach var="client" items="${clients}">
+                            <a href="${pageContext.request.contextPath}/trainer/clientDetail?clientId=${client.clientId}"
+                               class="block no-underline">
+                                <div class="bg-white border border-surface-container-highest rounded-2xl p-3 md:p-5
                 grid grid-cols-[1fr_auto] md:grid-cols-[280px_1fr_auto]
                 items-center gap-3 md:gap-6 hover:shadow-md transition-shadow
                 min-h-[72px] md:min-h-[96px] group cursor-pointer">
-                            <div class="flex items-start gap-3">
-                                <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center
                         border-2 border-white shadow-sm shrink-0">
                 <span class="text-primary font-bold text-base">
                         ${fn:substring(client.name, 0, 1)}
                 </span>
-                                </div>
-                                <div class="flex flex-col gap-1">
-                                    <h3 class="text-base font-bold text-on-surface leading-none">${client.name}</h3>
-                                    <div class="flex flex-wrap gap-2 mt-1">
-                                        <c:forEach var="tag" items="${fn:split(client.goals, ',')}">
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <h3 class="text-base font-bold text-on-surface leading-none">${client.name}</h3>
+                                            <div class="flex flex-wrap gap-2 mt-1">
+                                                <c:forEach var="tag" items="${fn:split(client.goals, ',')}">
                         <span class="text-[10px] bg-surface-container-low text-on-surface-variant
                                      font-medium px-2 py-0.5 rounded-full">
                                 ${fn:trim(tag)}
                         </span>
-                                        </c:forEach>
+                                                </c:forEach>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="hidden md:grid grid-cols-3 gap-4 lg:gap-6 px-4 lg:px-6
+                                    <div class="hidden md:grid grid-cols-3 gap-4 lg:gap-6 px-4 lg:px-6
                     border-x border-gray-50 items-start client-stats">
-                                <div>
-                                    <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">다음
-                                        세션</p>
-                                    <p class="text-sm font-bold text-on-surface">${client.nextSession}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">남은 세션
-                                        횟수</p>
-                                        <%-- 2개 이하면 경고 색상 --%>
-                                    <c:choose>
-                                        <c:when test="${client.lessonCount <= 2}">
-                                            <p class="text-sm font-bold text-error flex items-center gap-1">
-                                                    ${client.lessonCount}
-                                                <span class="material-symbols-outlined text-sm">warning</span>
-                                            </p>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <p class="text-sm font-bold text-on-surface">${client.lessonCount}</p>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">전
-                                        세션</p>
-                                    <p class="text-sm font-medium text-outline">${client.lastSession}</p>
-                                </div>
-                            </div>
-                            <div class="flex justify-end items-center gap-2">
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">
+                                                다음
+                                                세션</p>
+                                            <p class="text-sm font-bold text-on-surface">${client.nextSession}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">
+                                                남은 세션
+                                                횟수</p>
+                                                <%-- 2개 이하면 경고 색상 --%>
+                                            <c:choose>
+                                                <c:when test="${client.lessonCount <= 3}">
+                                                    <p class="text-sm font-bold text-error flex items-center gap-1">
+                                                            ${client.lessonCount}
+                                                        <span class="material-symbols-outlined text-sm">warning</span>
+                                                    </p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p class="text-sm font-bold text-on-surface">${client.lessonCount}</p>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-outline tracking-widest mb-0.5">
+                                                전
+                                                세션</p>
+                                            <p class="text-sm font-medium text-outline">${client.lastSession}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end items-center gap-2">
             <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
                 chevron_right
             </span>
-                            </div>
-                        </div>
-                    </a>
-                </c:forEach>
+                                    </div>
+                                </div>
+                            </a>
+                        </c:forEach>
                     </c:otherwise>
                 </c:choose>
             </div>

@@ -92,10 +92,11 @@
     <span class="done"></span>
     <span class="done"></span>
     <span></span>
+    <span></span>
 </div>
 
 <h2>정산 정보</h2>
-<p class="subtitle">수익 정산 방식을 설정해 주세요. (3/4)</p>
+<p class="subtitle">수익 정산 방식을 설정해 주세요. (3/5)</p>
 
 <p class="error" style="${empty error ? 'display:none' : ''}">${error}</p>
 

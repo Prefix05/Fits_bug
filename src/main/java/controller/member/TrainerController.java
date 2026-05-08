@@ -30,7 +30,7 @@ public class TrainerController extends HttpServlet {
         if (sort == null) sort = "latest";
 
         List<TrainerDTO> list = service.getTrainerList(keyword, category, sort);
-
+        System.out.println(list);
         req.setAttribute("trainerList", list);
 
         // AJAX 요청인지 판단

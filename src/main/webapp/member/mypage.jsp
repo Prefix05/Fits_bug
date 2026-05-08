@@ -139,7 +139,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
     <div style="display:flex;gap:20px;align-items:flex-start;">
       <div style="text-align:center;">
         <img id="profileImg"
-          src="upload/<%= user.getProfile_image() == null ? "default.png" : user.getProfile_image() %>"
+          src="upload/<%= user.getProfileImage() == null ? "default.png" : user.getProfileImage() %>"
           onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.getNickname() %>'"
           style="width:90px;height:90px;border-radius:50%;border:3px solid #FF6B35;object-fit:cover;" alt="프로필">
         <form id="uploadForm">

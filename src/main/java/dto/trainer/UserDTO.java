@@ -7,14 +7,16 @@ public class UserDTO {
     private String email;
     private String password;
     private String name;
-    private String tel;
+    private String phone;
     private String nickname;
-    private String profileImg;
+    private String profileImage;
     private UserRole role;
     private LocalDateTime createdAt;
     private boolean deleted;
     private String provider;
     private String providerId;
+    private int age;
+    private String gender;
 
     public enum UserRole {
         MEMBER,
@@ -55,12 +57,12 @@ public class UserDTO {
         this.name = name;
     }
 
-    public String getTel() {
-        return tel;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getNickname() {
@@ -74,11 +76,11 @@ public class UserDTO {
 
 
     public String getProfileImg() {
-		return profileImg;
+		return profileImage;
 	}
 
 	public void setProfileImg(String profileImg) {
-		this.profileImg = profileImg;
+		this.profileImage = profileImg;
 	}
 
 	public UserRole getRole() {
@@ -121,10 +123,26 @@ public class UserDTO {
         this.providerId = providerId;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", tel=" + tel
-				+ ", nickname=" + nickname + ", profileImg=" + profileImg + ", role=" + role + ", createdAt="
+		return "UserDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", phone=" + phone
+				+ ", nickname=" + nickname + ", profileImage=" + profileImage + ", role=" + role + ", createdAt="
 				+ createdAt + ", deleted=" + deleted + ", provider=" + provider + ", providerId=" + providerId + "]";
 	}
     

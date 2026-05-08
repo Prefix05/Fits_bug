@@ -69,6 +69,12 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 <input name="nickname" placeholder="닉네임" class="fb-inp">
 <input name="name" placeholder="이름" class="fb-inp">
 <input name="phone" placeholder="전화번호" class="fb-inp">
+<input name="age" type="number" placeholder="나이" class="fb-inp" min="1" max="120">
+<div style="margin-top:10px;">
+  <label>성별&nbsp;</label>
+  <label><input type="radio" name="gender" value="MALE"> 남성</label>&nbsp;
+  <label><input type="radio" name="gender" value="FEMALE"> 여성</label>
+</div>
 
 <button class="btn-main">가입하기</button>
 

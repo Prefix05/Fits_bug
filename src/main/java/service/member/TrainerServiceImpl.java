@@ -1,10 +1,12 @@
 package service.member;
 
 import java.util.List;
+import java.util.Map;
 
 import dao.member.TrainerDAO;
 import dao.member.TrainerDAOImpl;
 import dto.member.TrainerDTO;
+import dto.trainer.AvailabilityDTO;
 
 public class TrainerServiceImpl implements TrainerService {
     private TrainerDAO dao = new TrainerDAOImpl();
@@ -18,4 +20,16 @@ public class TrainerServiceImpl implements TrainerService {
     public TrainerDTO getTrainerDetail(int trainerId) {
         return dao.getTrainerDetail(trainerId);
     }
+
+	@Override
+	public List<AvailabilityDTO> getTrainerAvailabilityList(Integer trainerId) {
+		// TODO Auto-generated method stub
+		return dao.findAvailabilityByTrainerId(trainerId);
+	}
+
+	@Override
+	public Map<String, Object> getTrainerInfoByTrainerId(Integer trainerId) {
+		// TODO Auto-generated method stub
+		return dao.findTrainerInfoById(trainerId);
+	}
 }

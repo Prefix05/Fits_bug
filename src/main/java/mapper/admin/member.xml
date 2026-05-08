@@ -36,7 +36,7 @@
 	
 	
 	<select id="selectGymList" parameterType="Map" resultType="member">
-		select g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
+		select g.id as gymId, g.name as gymName, u.phone as gymTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as gymClientCount, ifnull(sum(p.payment_price*0.9),0) as gymCal 
 		from gym g 
 		left join user u on(g.user_id=u.id)
 		left join member m on(u.id=m.id)
@@ -62,7 +62,7 @@
 	</select>
 	
 	<select id="selectTrainerList" parameterType="Map" resultType="member">
-		select u.name as trainerName, u.profile_image ,u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
+		select t.id as trainerId, u.name as trainerName, u.profile_image ,u.phone as trainerTel, u.created_at as regDate, ifnull(count(distinct m.id),0) as trainerClientCount, ifnull(sum(p.payment_price*0.9),0) as trainerCal
 		from trainer t
 		left join user u on(t.user_id=u.id)
 		left join member m on(u.id=m.id)
@@ -90,7 +90,7 @@
 	
 	
 	<select id="selectClientList" parameterType="Map" resultType="member">
-		select u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
+		select m.id as clientId, u.name as clientName, u.phone as clientTel, u.created_at as regDate, IFNULL(tu.name, '담당 없음') AS ptTrainer, 
         IFNULL(SUM(p.payment_price), 0) AS payment
 		from member m
 		left join user u on(m.user_id=u.id)

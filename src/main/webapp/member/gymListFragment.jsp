@@ -40,11 +40,11 @@ for (GymDTO g : list) {
 
   <!-- 이미지 영역 -->
   <div style="position:relative;overflow:hidden;height:200px;">
-    <img src="<%=g.getImage() != null ? g.getImage() : ""%>"
+    <img src="<%=contextPath%>/trainer/profile-img/<%=g.getBackgroundImg() != null ? g.getBackgroundImg() : ""%>"
          style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s;"
          onmouseover="this.style.transform='scale(1.05)'"
          onmouseout="this.style.transform='scale(1)'"
-         onerror="this.src='https://via.placeholder.com/400x200?text=헬스장'"
+         
          alt="<%=g.getName()%>">
 
     <!-- 전문분야 뱃지 -->

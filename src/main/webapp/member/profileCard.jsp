@@ -5,8 +5,8 @@ UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 MemberDTO memberInfo = (MemberDTO) session.getAttribute("memberInfo");
 if (loginUser == null) return;
 
-String imgSrc = (loginUser.getProfileImg() != null && !loginUser.getProfileImg().isEmpty())
-    ? request.getContextPath() + "/upload/" + loginUser.getProfileImg()
+String imgSrc = (loginUser.getProfileImage() != null && !loginUser.getProfileImage().isEmpty())
+    ? request.getContextPath() + "/upload/" + loginUser.getProfileImage()
     : "https://api.dicebear.com/7.x/adventurer/svg?seed=" + loginUser.getNickname();
 %>
 

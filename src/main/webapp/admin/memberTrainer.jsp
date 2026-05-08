@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath }"/>   
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -78,13 +78,20 @@
       }
     </script>
 <script type="text/javascript">
+	let currentSortColumn = 'trainerName';
+	let currentSortOrder = 'ASC';
+	
 	function fn_search(){
 		const keyword = $("#searchKeyword").val();
 
 		$.ajax({
             url: "${pageContext.request.contextPath}/admin/memberTrainer",
             type: "POST",
-            data: { trainerName: keyword },
+            data: { 
+            	trainerName: keyword,
+                sortColumn: currentSortColumn,
+                sortOrder: currentSortOrder
+            	},
             dataType: "json",
             success: function(data) {
                 let html = "";
@@ -101,13 +108,14 @@
                         const count = item.trainerClientCount || 0;
                         // gymCal이 null이면 0으로 처리하고 숫자 포맷팅
                         const cal = Number(item.trainerCal || 0).toLocaleString();
+                        const profile = item.profileImage ? item.profileImage : 'default.png';
                         
                         html += `
                             <tr class="hover:bg-surface-container-low transition-colors group">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <img src=${profileImage} width="20px"/>
+                                            <img src="${contextPath}/trainer/profile-img/\${profile}" width="20px"/>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>
@@ -134,6 +142,17 @@
             }
         });
     }
+	
+	function fn_sort(column){
+        if(currentSortColumn === column){
+            currentSortOrder = (currentSortOrder === 'ASC') ? 'DESC' : 'ASC';
+        } else {
+            currentSortColumn = column;
+            currentSortOrder = 'ASC';
+        }
+        fn_search();
+    }
+	
 	$(document).ready(function() {
         // ID가 searchKeyword인 입력창에서 키보드가 눌렸을 때
         $("#searchKeyword").on("keydown", function(e) {
@@ -242,16 +261,6 @@ class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-.surf
 회원
 </a>
 </div>
-<div class="col-span-12 lg:col-span-8 flex justify-end items-center gap-4">
-<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest rounded-lg border border-outline-variant/20 shadow-sm">
-<span class="text-xs font-label text-on-surface-variant">기간 설정</span>
-<select class="text-sm border-none bg-transparent focus:ring-0 cursor-pointer text-on-surface font-medium">
-<option>전체 기간</option>
-<option>최근 1개월</option>
-<option>최근 3개월</option>
-</select>
-</div>
-</div>
 </div>
 <!-- Table Section -->
 <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
@@ -270,44 +279,40 @@ placeholder="트레이너 이름 검색" type="text"/>
 </div>
 <table class="w-full text-left border-collapse">
 <thead>
-<tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
-<th class="px-6 py-4 font-semibold">트레이너정보</th>
-<th class="px-6 py-4 font-semibold">가입일자</th>
-<th class="px-6 py-4 font-semibold">담당회원 수</th>
-<th class="px-6 py-4 font-semibold">정산내역</th>
-<th class="px-6 py-4 font-semibold text-right">상세보기</th>
-</tr>
-</thead>
+            <tr class="bg-surface-container-low/50 text-on-surface-variant text-xs font-label uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('trainerName')">트레이너정보 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+                <th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('regDate')">가입일자 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+                <th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('trainerClientCount')">담당회원 수 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+                <th class="px-6 py-4 font-semibold cursor-pointer" onclick="fn_sort('trainerCal')">정산내역 <span class="material-symbols-outlined text-xs">unfold_more</span></th>
+                <th class="px-6 py-4 font-semibold text-right">상세보기</th>
+            </tr>
+        </thead>
 <tbody id="memberTableBody" class="divide-y divide-outline-variant/10">
 <!-- Row  -->
 <c:forEach var="item" items="${trainerList }">
 <tr class="hover:bg-surface-container-low transition-colors group">
 <td class="px-6 py-4">
 <div class="flex items-center gap-4">
-<img src="${contextPath}/trainer/profile-img/${item.profileImage}" width="40px" style="border-radius:50%"/>
+<img src="${contextPath}/trainer/profile-img/${not empty item.profileImage ? item.profileImage : 'default.png'}" class="rounded-full h-10 w-10 object-cover border border-outline-variant/10"/>
 <div>
 <p class="text-sm font-bold text-on-surface">${item.trainerName }</p>
 <p class="text-xs text-on-surface-variant">${item.trainerTel }</p>
 </div>
 </div>
 </td>
-<td class="px-6 py-4 text-sm text-on-surface-variant">${item.regDate }</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">${item.trainerClientCount }</td>
-<td class="px-6 py-4 text-sm font-medium text-on-surface">
-₩<fmt:formatNumber value="${item.trainerCal }" pattern="#,###"/></td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">${item.regDate}</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">${item.trainerClientCount}</td>
+<td class="px-6 py-4 text-sm font-medium text-on-surface">₩<fmt:formatNumber value="${item.trainerCal}" pattern="#,###"/></td>
 <td class="px-6 py-4 text-right">
-<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
+<form action="${contextPath }/member/trainerDetail">
+<input type="hidden" name="trainerId" value="${item.trainerId }"/>
+	<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</form>
 </td>
 </tr>
 </c:forEach>
-<c:if test="${empty trainerList }">
-<tr>
-<td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
-등록된 트레이너 정보가 없습니다.
-</td>
-</tr>
+<c:if test="${empty trainerList}">
+ <tr><td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">등록된 트레이너 정보가 없습니다.</td></tr>
 </c:if>
 </tbody>
 </table>
@@ -318,7 +323,7 @@ placeholder="트레이너 이름 검색" type="text"/>
 <div class="flex items-center gap-1">
 <c:choose>
 <c:when test="${pageInfo.curPage>1 }">
-<a href="memberGym?page=${pageInfo.curPage-1}"
+<a href="memberTrainer?page=${pageInfo.curPage-1}"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
 </a>
@@ -338,7 +343,7 @@ ${page }
 </button>
 </c:when>
 <c:otherwise>
-<a href="memberGym?page=${page }"
+<a href="memberTrainer?page=${page }"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container text-xs font-medium">
 ${page }
 </a>
@@ -348,7 +353,7 @@ ${page }
 
 <c:choose>
 <c:when test="${pageInfo.curPage < pageInfo.allPage}">
-<a href="memberGym?page=${pageInfo.curPage + 1}"
+<a href="memberTrainer?page=${pageInfo.curPage + 1}"
 class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
 </a>

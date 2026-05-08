@@ -4,9 +4,10 @@
 
 <mapper namespace="mapper.UserMapper">
 
+
     <!-- 로그인 (email + password) -->
     <select id="findByEmailAndPassword" parameterType="map" resultType="UserDTO">
-        SELECT id, email, password, name, phone, email_verified,
+        SELECT id, email, password, name, phone, age, gender, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email    = #{email}
@@ -16,10 +17,23 @@
 
     <!-- 이메일로 조회 -->
     <select id="findByEmail" parameterType="string" resultType="UserDTO">
-        SELECT id, email, password, name, phone, email_verified,
+        SELECT id, email, password, name, phone, age, gender, email_verified,
                nickname, profile_image, role, created_at, is_deleted, provider, provider_id
         FROM USER
         WHERE email = #{email}
+          AND is_deleted = 0
+    </select>
+
+    <!-- id로 조회 -->
+    <select id="findById" parameterType="int" resultType="UserDTO">
+        SELECT id, email, password, name, phone, age,
+               email_verified AS emailVerified,
+               nickname, profile_image AS profileImage, role,
+               created_at AS createdAt,
+               is_deleted AS deleted,
+               provider, provider_id AS providerId
+        FROM USER
+        WHERE id = #{id}
           AND is_deleted = 0
     </select>
 
@@ -28,30 +42,40 @@
         SELECT COUNT(*) FROM USER WHERE email = #{email}
     </select>
 
+    <!-- 닉네임 중복 체크 -->
+    <select id="isNicknameExists" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USER WHERE nickname = #{nickname}
+    </select>
+
     <!-- 전체 조회 (관리자용) -->
     <select id="findAll" resultType="UserDTO">
-        SELECT id, email, password, name, phone, email_verified,
-               nickname, profile_image, role, created_at, is_deleted as deleted, provider, provider_id
+        SELECT id, email, password, name, phone, age,
+               email_verified AS emailVerified,
+               nickname, profile_image AS profileImage, role,
+               created_at AS createdAt,
+               is_deleted AS deleted,
+               provider, provider_id AS providerId
         FROM USER
         WHERE is_deleted = 0
         ORDER BY id DESC
     </select>
 
     <!-- 회원가입 INSERT -->
-    <insert id="insert" parameterType="UserDTO">
+    <insert id="insert" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO USER (
-            email, password, name, phone, email_verified,
+            email, password, name, phone, age, gender, email_verified,
             nickname, profile_image, role,
-            created_at, is_deleted as deleted, provider, provider_id
+            created_at, is_deleted, provider, provider_id
         ) VALUES (
-            #{email}, #{password}, #{name}, #{phone}, #{emailVerified},
-            #{nickname}, #{profile_image}, #{role},
+            #{email}, #{password}, #{name}, #{phone}, #{age}, #{gender}, #{emailVerified},
+            #{nickname}, #{profileImage}, #{role},
             NOW(), 0, #{provider}, #{providerId}
         )
     </insert>
 
     <!-- 소셜 회원가입 (카카오/네이버) -->
-    <insert id="insertSocial" parameterType="UserDTO">
+
+    <insert id="insertSocial" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO USER (
             email, nickname, email_verified, role,
             provider, provider_id, created_at, is_deleted as deleted
@@ -76,9 +100,19 @@
         UPDATE USER SET password = #{password} WHERE email = #{email}
     </update>
 
-    <!-- 회원 탈퇴 (soft delete) -->
-    <update id="delete" parameterType="int">
-        UPDATE USER SET is_deleted = 1 WHERE id = #{id}
-    </update>
+
+    <!-- provider_id로 소셜 사용자 조회 -->
+    <select id="findByProviderId" parameterType="map" resultType="UserDTO">
+        SELECT id, email, password, name, phone, age,
+               email_verified AS emailVerified,
+               nickname, profile_image AS profileImage, role,
+               created_at AS createdAt,
+               is_deleted AS deleted,
+               provider, provider_id AS providerId
+        FROM USER
+        WHERE provider    = #{provider}
+          AND provider_id = #{providerId}
+          AND is_deleted  = 0
+    </select>
 
 </mapper>

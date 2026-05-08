@@ -2,6 +2,7 @@ package controller.member;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,17 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.session.SqlSession;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import dao.member.MemberDAO;
-import dao.member.MemberDAOImpl;
-import dto.member.MemberDTO;
-import dto.member.TrainerDTO;
 import dto.member.UserDTO;
 import dto.trainer.AvailabilityDTO;
-import util.MybatisSqlSessionFactory;
+import service.member.MemberService;
+import service.member.MemberServiceImpl;
+import service.member.TrainerService;
+import service.member.TrainerServiceImpl;
 
 @WebServlet("/member/main")
 public class MainController extends HttpServlet {
@@ -37,40 +33,25 @@ public class MainController extends HttpServlet {
             return;
         }
 
-        MemberDTO memberInfo = (MemberDTO) session.getAttribute("memberInfo");
-        if (memberInfo == null) {
-            MemberDAO memberDao = new MemberDAOImpl();
-            memberInfo = memberDao.findByEmail(loginUser.getEmail());
-            if (memberInfo != null) {
-                session.setAttribute("memberInfo", memberInfo);
-            }
-        }
-
+        MemberService service = new MemberServiceImpl();
+        Map<String,Object> memberInfo = service.findByEmail(loginUser.getEmail());
+        System.out.println(memberInfo);
+        request.setAttribute("memberInfo", memberInfo);
         // Load trainer availability for schedule widget (fresh every request)
-        if (memberInfo != null && memberInfo.getTrainerId() != null && memberInfo.getTrainerId() > 0) {
-            try (SqlSession sql = MybatisSqlSessionFactory.getSqlSessionFactory().openSession()) {
-                List<AvailabilityDTO> availList = sql.selectList(
-                    "pricingAvailability.findAvailabilityByTrainerId", memberInfo.getTrainerId());
-
-                JSONArray arr = new JSONArray();
-                for (AvailabilityDTO a : availList) {
-                    JSONObject obj = new JSONObject();
-                    obj.put("dayOfWeek", a.getDayOfWeek());
-                    obj.put("startTime", a.getStartTime());
-                    obj.put("endTime", a.getEndTime());
-                }
-                request.setAttribute("availabilityJson", arr.toString());
-
-                TrainerDTO trainer = sql.selectOne("mapper.TrainerMapper.findById", memberInfo.getTrainerId());
-                if (trainer != null) {
-                    request.setAttribute("scheduleTrainerName", trainer.getName());
-                }
-            } catch (Exception e) {
-                request.setAttribute("availabilityJson", "[]");
-            }
-        } else {
-            request.setAttribute("availabilityJson", "[]");
-        }
+        if (memberInfo != null && memberInfo.get("trainer_id") != null) {
+        	Integer trainerId = (Integer)memberInfo.get("trainer_id");
+        	
+        	//트레이너 일정
+        	TrainerService trainerService = new TrainerServiceImpl();       			
+        	List<AvailabilityDTO> availList = trainerService.getTrainerAvailabilityList(trainerId);
+        	request.setAttribute("availList", availList);
+        	System.out.println(availList);
+        	//트레이너 이름
+        	Map<String,Object> trainer = trainerService.getTrainerInfoByTrainerId(trainerId);
+        	if(trainer!=null) request.setAttribute("scheduleTrainerName",trainer.get("name"));
+        	System.out.println(trainer.get("name"));
+            
+        } 
 
         request.getRequestDispatcher("/member/main.jsp").forward(request, response);
     }

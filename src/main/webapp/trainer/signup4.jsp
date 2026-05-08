@@ -86,10 +86,11 @@
     <span class="done"></span>
     <span class="done"></span>
     <span class="done"></span>
+    <span></span>
 </div>
 
 <h2>자격증 등록</h2>
-<p class="subtitle">보유하신 자격증이나 수료증을 추가해 주세요. 나중에 언제든지 수정할 수 있습니다.</p>
+<p class="subtitle">보유하신 자격증이나 수료증을 추가해 주세요. (4/5)</p>
 
 <p class="error">${error}</p>
 
@@ -102,7 +103,7 @@
 
     <div class="btn-row">
         <button type="button" class="btn-skip" onclick="skipStep()">건너뛰기</button>
-        <button type="submit" class="btn-primary">완료 및 가입 마치기</button>
+        <button type="submit" class="btn-primary">다음</button>
     </div>
 </form>
 

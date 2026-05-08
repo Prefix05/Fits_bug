@@ -148,7 +148,7 @@
         FROM PAYMENT p
         LEFT JOIN GYM g ON p.gym_id = g.id
         LEFT JOIN TRAINER t ON p.trainer_id = t.id
-        LEFT JOIN USER u ON p.user_id = u.id
+        LEFT JOIN USER u ON t.user_id = u.id
         WHERE p.status = '결제완료'
         <if test="startDate != null and endDate != null">
             AND p.payment_date BETWEEN #{startDate} AND #{endDate}

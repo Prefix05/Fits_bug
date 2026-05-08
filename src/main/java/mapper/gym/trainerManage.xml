@@ -10,41 +10,47 @@
             parameterType="map"
             resultType="dto.gym.TrainerList">
         SELECT
-    		t.id AS trainerId,
-    		t.user_id AS userId,
-    		u.name AS name,
-    		u.phone AS phoneNum,
-    		u.profile_image AS profileImg,
-    		t.trainer_type AS trainerType,
-    		t.approval_status AS approvalStatus,
-    		COUNT(DISTINCT p.client_id) AS memberCount
-        FROM TRAINER t
-        JOIN `USER` u
-          ON t.user_id = u.id
-        LEFT JOIN PT_PACKAGE p
-          ON t.id = p.trainer_id
-         AND (p.expires_at IS NULL OR p.expires_at >= NOW())
-        WHERE t.gym_id = #{gymId}
-          AND t.approval_status = 'APPROVED'
-          AND u.is_deleted = false
+        t.id AS trainerId,
+        t.user_id AS userId,
+        u.name AS name,
+        u.phone AS phoneNum,
+        u.profile_image AS profileImg,
+        t.trainer_type AS trainerType,
+        t.approval_status AS approvalStatus,
+        COUNT(DISTINCT mp.member_id) AS memberCount
 
-        <if test="keyword != null and keyword != ''">
-            AND (
-                u.name LIKE CONCAT('%', #{keyword}, '%')
-                OR CAST(t.id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
-            )
-        </if>
+    FROM TRAINER t
 
-        GROUP BY
-    		t.id,
-    		t.user_id,
-    		u.name,
-    		u.phone,
-    		u.profile_image,
-    		t.trainer_type,
-    		t.approval_status
+    JOIN `USER` u
+      ON t.user_id = u.id
 
-        ORDER BY t.id DESC
+    LEFT JOIN MEMBERSHIP_PT mp
+      ON t.id = mp.trainer_id
+     AND mp.status = 'active'
+
+    WHERE t.gym_id = #{gymId}
+      AND t.approval_status = 'APPROVED'
+      AND u.is_deleted = false
+
+    <!-- 검색 -->
+    <if test="keyword != null and keyword != ''">
+        AND (
+            u.name LIKE CONCAT('%', #{keyword}, '%')
+            OR CAST(t.id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </if>
+
+    GROUP BY
+        t.id,
+        t.user_id,
+        u.name,
+        u.phone,
+        u.profile_image,
+        t.trainer_type,
+        t.approval_status
+
+    ORDER BY t.id DESC
+
     </select>
 
 
@@ -53,45 +59,38 @@
             parameterType="int"
             resultType="dto.gym.TrainerAssign">
         SELECT
-            tu.name AS trainerName,
-            mu.name AS memberName,
-            DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS assignedAt,
-            CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-            CONCAT((p.total_sessions - p.sessions_used), '회') AS remainingInfo,
+        tu.name AS trainerName,
+        mu.name AS memberName,
+        mp.register_date AS assignedAt,
+        CONCAT('PT ', ms.type_rep, '회') AS membershipName,
+        CONCAT(IFNULL(mp.lesson_count, 0), '회') AS remainingCount,
 
-            CASE
-                WHEN p.expires_at IS NULL OR p.expires_at >= NOW() THEN '이용중'
-                ELSE '종료'
-            END AS status
+        CASE
+            WHEN mp.status = 'active' THEN '이용중'
+            ELSE '종료'
+        END AS status
 
-        FROM PT_PACKAGE p
+    FROM MEMBERSHIP_PT mp
 
-        JOIN TRAINER t
-          ON p.trainer_id = t.id
+    JOIN TRAINER t
+      ON mp.trainer_id = t.id
 
-        JOIN `USER` tu
-          ON t.user_id = tu.id
+    JOIN `USER` tu
+      ON t.user_id = tu.id
 
-        JOIN MEMBER m
-          ON p.client_id = m.id
+    JOIN MEMBER m
+      ON mp.member_id = m.id
 
-        JOIN `USER` mu
-          ON m.user_id = mu.id
+    JOIN `USER` mu
+      ON m.user_id = mu.id
 
-        LEFT JOIN LESSON s
-          ON p.id = s.pt_package_id
+    JOIN MEMBERSHIP ms
+      ON mp.membership_id = ms.id
 
-        WHERE t.gym_id = #{gymId}
+    WHERE t.gym_id = #{value}
+      AND ms.type = 'pt'
 
-        GROUP BY
-            p.id,
-            tu.name,
-            mu.name,
-            p.total_sessions,
-            p.sessions_used,
-            p.expires_at
-
-        ORDER BY assignedAt DESC
+    ORDER BY mp.register_date DESC
     </select>
 
 
@@ -101,26 +100,30 @@
         resultType="dto.gym.TrainerMemberView">
     SELECT
         u.name AS memberName,
-        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-        (p.total_sessions - p.sessions_used) AS remainingSession,
-        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-    FROM PT_PACKAGE p
+        CONCAT('PT ', ms.type_rep, '회') AS membershipName,
+        IFNULL(mp.lesson_count, 0) AS remainingSession,
+        DATE_FORMAT(mp.start_date, '%Y-%m-%d') AS startDate
+
+    FROM MEMBERSHIP_PT mp
+
     JOIN TRAINER t
-      ON p.trainer_id = t.id
+      ON mp.trainer_id = t.id
+
     JOIN MEMBER m
-      ON p.client_id = m.id
+      ON mp.member_id = m.id
+
     JOIN `USER` u
       ON m.user_id = u.id
-    LEFT JOIN LESSON s
-      ON p.id = s.pt_package_id
-    WHERE p.trainer_id = #{trainerId}
+
+    JOIN MEMBERSHIP ms
+      ON mp.membership_id = ms.id
+
+    WHERE mp.trainer_id = #{trainerId}
       AND t.gym_id = #{gymId}
-      AND (p.expires_at IS NULL OR p.expires_at >= NOW())
-    GROUP BY
-        p.id,
-        u.name,
-        p.total_sessions,
-        p.sessions_used
+      AND mp.status = 'active'
+      AND ms.type = 'pt'
+
+    ORDER BY mp.start_date DESC
 </select>
 
 
@@ -130,26 +133,30 @@
         resultType="dto.gym.TrainerMemberView">
     SELECT
         u.name AS memberName,
-        CONCAT('PT ', p.total_sessions, '회') AS membershipName,
-        (p.total_sessions - p.sessions_used) AS remainingSession,
-        DATE_FORMAT(MIN(s.lesson_date), '%Y-%m-%d') AS startDate
-    FROM PT_PACKAGE p
+        CONCAT('PT ', ms.type_rep, '회') AS membershipName,
+        IFNULL(mp.lesson_count, 0) AS remainingSession,
+        DATE_FORMAT(mp.start_date, '%Y-%m-%d') AS startDate
+
+    FROM MEMBERSHIP_PT mp
+
     JOIN TRAINER t
-      ON p.trainer_id = t.id
+      ON mp.trainer_id = t.id
+
     JOIN MEMBER m
-      ON p.client_id = m.id
+      ON mp.member_id = m.id
+
     JOIN `USER` u
       ON m.user_id = u.id
-    LEFT JOIN LESSON s
-      ON p.id = s.pt_package_id
-    WHERE p.trainer_id = #{trainerId}
+
+    JOIN MEMBERSHIP ms
+      ON mp.membership_id = ms.id
+
+    WHERE mp.trainer_id = #{trainerId}
       AND t.gym_id = #{gymId}
-      AND p.expires_at &lt; NOW()
-    GROUP BY
-        p.id,
-        u.name,
-        p.total_sessions,
-        p.sessions_used
+      AND mp.status = 'expired'
+      AND ms.type = 'pt'
+
+    ORDER BY mp.start_date DESC
 </select>
 
 </mapper>

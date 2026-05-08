@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="trainer">
-
     <insert id="insertTrainer" parameterType="dto.trainer.TrainerDTO"
             useGeneratedKeys="true" keyProperty="trainerId">
         INSERT INTO trainer (
@@ -43,7 +42,7 @@
         WHERE id = #{trainerId}
     </update>
 
-    <select id="findByUserId" parameterType="int" resultType="dto.trainer.TrainerDTO">
+    <select id="findByUserId" parameterType="int" resultType="TrainerDTO">
         SELECT
             t.id                        AS trainerId,
             t.user_id                   AS userId,
@@ -59,8 +58,7 @@
             t.approval_status           AS approvalStatus,
             t.is_verified               AS isVerified,
             u.name,
-            u.email,
-            u.created_at                AS createdAt
+            u.email
         FROM trainer t
         JOIN `user` u ON t.user_id = u.id
         WHERE t.user_id = #{userId}

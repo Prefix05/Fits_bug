@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import dto.member.UserDTO;
 import service.gym.GymPaymentService;
 import service.gym.GymPaymentServiceImpl;
 
@@ -22,25 +23,26 @@ public class GymRefundApprove extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession(false);
-
-        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("login_required");
-            return;
-        }
-        
-        int gymId = (int) session.getAttribute("gymId");
-
-        String paymentNumStr = request.getParameter("paymentNum");
-
-        if (paymentNumStr == null || paymentNumStr.trim().isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("invalid_payment");
-            return;
-        }
-
         try {
+        	
+        	HttpSession session = request.getSession();
+			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+
+			if (user == null) {
+				response.sendRedirect(request.getContextPath() + "/member/login");
+				return;
+			}
+
+			Integer gymId = user.getOtherId();
+			
+			String paymentNumStr = request.getParameter("paymentNum");
+
+	        if (paymentNumStr == null || paymentNumStr.trim().isEmpty()) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            response.getWriter().write("invalid_payment");
+	            return;
+	        }
+			
             int paymentNum = Integer.parseInt(paymentNumStr);
 
             GymPaymentService service = new GymPaymentServiceImpl();

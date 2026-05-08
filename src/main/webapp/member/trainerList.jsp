@@ -95,7 +95,7 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
             <!-- 프로필 이미지 -->
             <div style="position:relative;overflow:hidden;height:220px;background:#F0F4FF;">
-              <img src="${not empty t.profileImg ? pageContext.request.contextPath.concat('/uploads/').concat(t.profileImg) : ''}"
+              <img src="${not empty t.profileImg ? pageContext.request.contextPath.concat('/trainer/profile-img/').concat(t.profileImg) : ''}"
                    style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s;"
                    onmouseover="this.style.transform='scale(1.05)'"
                    onmouseout="this.style.transform='scale(1)'"
@@ -158,10 +158,13 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
               </div>
 
               <!-- 상세보기 버튼 -->
+              <form action="${pageContext.request.contextPath}/member/trainerDetail">
+              <input type="hidden" name="trainerId" value="${t.id}"/>
               <button style="width:100%;padding:10px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 12px rgba(255,107,53,0.3);transition:all 0.2s;"
                       onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
                 상세보기 →
               </button>
+              </form>
             </div>
           </div>
         </c:forEach>
