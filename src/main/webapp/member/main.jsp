@@ -85,15 +85,15 @@ if(loginUser == null){
     <div style="background:white;border-radius:16px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:#E8F8F6;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">💪</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#1A1F36;">95kg</div>
-        <div style="font-size:12px;color:#9DA8C0;font-weight:600;">벤치프레스 최고</div>
+        <div style="font-size:22px;font-weight:900;color:#1A1F36;" id="statBestWorkout">-</div>
+        <div style="font-size:12px;color:#9DA8C0;font-weight:600;">오늘 최고 운동</div>
       </div>
     </div>
 
     <div style="background:white;border-radius:16px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;">
       <div style="width:48px;height:48px;border-radius:12px;background:#FFF9E6;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🥗</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#1A1F36;">1,820</div>
+        <div style="font-size:22px;font-weight:900;color:#1A1F36;" id="statTodayCalorie">-</div>
         <div style="font-size:12px;color:#9DA8C0;font-weight:600;">오늘 칼로리(kcal)</div>
       </div>
     </div>
@@ -197,15 +197,9 @@ if(loginUser == null){
         <h3 style="font-size:15px;font-weight:800;color:#1A1F36;">💪 운동 기록</h3>
         <span style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">오늘</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF3EE;border-radius:10px;">
-          <span style="font-size:13px;font-weight:600;color:#1A1F36;">#1 벤치프레스</span>
-          <span style="font-size:13px;color:#FF6B35;font-weight:700;">95kg × 5회</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF3EE;border-radius:10px;">
-          <span style="font-size:13px;font-weight:600;color:#1A1F36;">#2 스쿼트</span>
-          <span style="font-size:13px;color:#FF6B35;font-weight:700;">100kg × 5회</span>
-        </div>
+      <!-- DB에서 AJAX로 로드 -->
+      <div id="workoutList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+        <p style="font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;">불러오는 중...</p>
       </div>
       <button onclick="openWorkoutModal()" style="
         width:100%;padding:10px;border-radius:10px;
@@ -224,11 +218,11 @@ if(loginUser == null){
         <h3 style="font-size:15px;font-weight:800;color:#1A1F36;">🥗 식단 기록</h3>
         <span style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">오늘</span>
       </div>
-      <div style="padding:10px 12px;background:#E8F8F6;border-radius:10px;margin-bottom:8px;">
-        <div style="font-size:13px;font-weight:600;color:#1A1F36;">닭가슴살 200g + 고구마 150g</div>
-        <div style="font-size:12px;color:#00897B;margin-top:3px;font-weight:600;">약 580 kcal</div>
+      <!-- DB에서 AJAX로 로드 -->
+      <div id="mealList" style="margin-bottom:8px;">
+        <p style="font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;">불러오는 중...</p>
       </div>
-      <div style="font-size:12px;color:#9DA8C0;margin-bottom:14px;">총 2끼 · 약 1,820 kcal</div>
+      <div id="mealSummary" style="font-size:12px;color:#9DA8C0;margin-bottom:14px;"></div>
       <button onclick="openFoodModal()" style="
         width:100%;padding:10px;border-radius:10px;
         border:2px dashed #E8EDF5;background:white;cursor:pointer;
@@ -244,33 +238,11 @@ if(loginUser == null){
     <div style="background:white;border-radius:20px;padding:20px;border:1.5px solid #E8EDF5;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
         <h3 style="font-size:15px;font-weight:800;color:#1A1F36;">📊 인바디 기록</h3>
-        <span style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">03.15</span>
+        <span id="inbodyDateLabel" style="font-size:11px;color:#9DA8C0;background:#F7F9FC;padding:3px 10px;border-radius:99px;font-weight:600;">최근</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-            <span style="font-weight:600;color:#5A6480;">체중</span><span style="font-weight:700;color:#1A1F36;">75kg</span>
-          </div>
-          <div style="height:7px;background:#F0F0F0;border-radius:99px;overflow:hidden;">
-            <div style="width:75%;height:100%;background:linear-gradient(90deg,#FF6B35,#FFD166);border-radius:99px;"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-            <span style="font-weight:600;color:#5A6480;">골격근량</span><span style="font-weight:700;color:#1A1F36;">30kg</span>
-          </div>
-          <div style="height:7px;background:#F0F0F0;border-radius:99px;overflow:hidden;">
-            <div style="width:65%;height:100%;background:linear-gradient(90deg,#00BFA5,#26D4BB);border-radius:99px;"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-            <span style="font-weight:600;color:#5A6480;">체지방량</span><span style="font-weight:700;color:#1A1F36;">12kg</span>
-          </div>
-          <div style="height:7px;background:#F0F0F0;border-radius:99px;overflow:hidden;">
-            <div style="width:30%;height:100%;background:linear-gradient(90deg,#FF4D4D,#FF8C5A);border-radius:99px;"></div>
-          </div>
-        </div>
+      <!-- DB에서 AJAX로 로드 -->
+      <div id="inbodyList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+        <p style="font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;">불러오는 중...</p>
       </div>
       <button onclick="openInbodyModal()" style="
         width:100%;padding:10px;border-radius:10px;
@@ -617,6 +589,11 @@ if(loginUser == null){
       background:linear-gradient(135deg,#00BFA5,#26D4BB);color:white;font-weight:700;font-size:15px;
       font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,191,165,0.3);
     ">칼로리 계산</button>
+    <button onclick="saveMeal()" style="
+      width:100%;margin-top:8px;padding:13px;border-radius:99px;border:none;cursor:pointer;
+      background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:white;font-weight:700;font-size:15px;
+      font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(255,107,53,0.3);
+    ">저장하기</button>
     <button onclick="closeFoodModal()" style="
       width:100%;margin-top:8px;padding:11px;border-radius:99px;border:1.5px solid #E8EDF5;
       background:white;color:#5A6480;font-weight:600;font-size:14px;cursor:pointer;
@@ -633,11 +610,11 @@ if(loginUser == null){
       <button onclick="closeInbodyModal()" style="width:32px;height:32px;border-radius:50%;border:none;background:#F7F9FC;color:#5A6480;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;">
-      <input placeholder="체중 (kg)" class="fb-modal-input" type="number">
-      <input placeholder="골격근량 (kg)" class="fb-modal-input" type="number">
-      <input placeholder="체지방량 (kg)" class="fb-modal-input" type="number">
+      <input id="inbodyWeight" placeholder="체중 (kg)" class="fb-modal-input" type="number" step="0.1">
+      <input id="inbodyMuscle" placeholder="골격근량 (kg)" class="fb-modal-input" type="number" step="0.1">
+      <input id="inbodyFat"    placeholder="체지방량 (kg)" class="fb-modal-input" type="number" step="0.1">
     </div>
-    <button style="
+    <button onclick="saveInbody()" style="
       width:100%;margin-top:20px;padding:13px;border-radius:99px;border:none;cursor:pointer;
       background:linear-gradient(135deg,#9333EA,#A855F7);color:white;font-weight:700;font-size:15px;
       font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(147,51,234,0.3);
@@ -1012,46 +989,143 @@ function loadChatCount(){
   });
 }
 
-window.onload=function(){
-  loadChart('workout');
-  loadHotTime();
-  loadChatCount();
-  loadTodayWorkout();   // ✅ 오늘 운동 기록 카드 로드
-};
+window.onload = function() {
+	  loadChart('workout');
+	  loadHotTime();
+	  loadChatCount();
+	  loadTodayWorkout();
+	  loadTodayMeal();
+	  loadLatestInbody();
 
-/* ── 오늘 운동 기록 카드 로드 ─────────────────────────── */
-function loadTodayWorkout(){
+	  const params = new URLSearchParams(location.search);
+	  if (params.get('reserved') === '1') showToast('✅ 예약이 완료되었습니다!', '#00BFA5');
+	  if (params.get('reserveError') === '1') showToast('❌ 예약 중 오류가 발생했습니다.', '#FF4D4D');
+	  if (params.get('reserveError') === 'noLessons') {
+	      const modal = document.getElementById('noLessonsModal');
+	      if(modal) modal.style.display = 'flex';
+	  }
+	};
+/* ── 오늘 운동 기록 카드 로드 (workout_log + workout_detail) ── */
+function loadTodayWorkout() {
   fetch("workout")
-    .then(function(r){ return r.json(); })
-    .then(function(data){
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
       var box = document.getElementById("workoutList");
-      if(!data || data.length === 0){
+      if (!data || data.length === 0) {
         box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>오늘 운동 기록이 없습니다</p>";
         document.getElementById("statBestWorkout").innerText = "-";
         return;
       }
       box.innerHTML = "";
       var maxVol = 0, bestTitle = "";
-      data.forEach(function(d, i){
-        var vol = (d.weight||0) * (d.rep||0) * (d.set||1);
-        if(vol > maxVol){ maxVol = vol; bestTitle = d.title; }
+      data.forEach(function(d, i) {
+        var vol = (d.weight || 0) * (d.rep || 0) * (d.set || 1);
+        if (vol > maxVol) { maxVol = vol; bestTitle = d.title; }
         box.innerHTML +=
           '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#FFF3EE;border-radius:10px;">' +
-            '<span style="font-size:13px;font-weight:600;color:#1A1F36;">#' + (i+1) + ' ' + d.title + '</span>' +
+            '<span style="font-size:13px;font-weight:600;color:#1A1F36;">#' + (i + 1) + ' ' + d.title + '</span>' +
             '<span style="font-size:13px;color:#FF6B35;font-weight:700;">' + d.weight + 'kg × ' + d.rep + '회</span>' +
           '</div>';
       });
-      if(bestTitle) document.getElementById("statBestWorkout").innerText = bestTitle;
+      if (bestTitle) document.getElementById("statBestWorkout").innerText = bestTitle;
     })
-    .catch(function(){ /* 무시 */ });
+    .catch(function() {
+      var box = document.getElementById("workoutList");
+      if (box) box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>불러오기 실패</p>";
+    });
+}
 
+/* ── 오늘 식단 기록 카드 로드 (meal_log) ── */
+function loadTodayMeal() {
+  fetch("food")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var box     = document.getElementById("mealList");
+      var summary = document.getElementById("mealSummary");
+      var calStat = document.getElementById("statTodayCalorie");
 
-  // Reservation result toast
-  const params = new URLSearchParams(location.search);
-  if (params.get('reserved') === '1') showToast('✅ 예약이 완료되었습니다!', '#00BFA5');
-  if (params.get('reserveError') === '1') showToast('❌ 예약 중 오류가 발생했습니다.', '#FF4D4D');
-  if (params.get('reserveError') === 'noLessons') document.getElementById('noLessonsModal').style.display = 'flex';
-};
+      // 오늘 날짜(YYYY-MM-DD) 필터
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-'
+        + String(today.getMonth() + 1).padStart(2, '0') + '-'
+        + String(today.getDate()).padStart(2, '0');
+
+      var todayList = (data || []).filter(function(f) {
+        return f.date && f.date.substring(0, 10) === todayStr;
+      });
+
+      if (todayList.length === 0) {
+        box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>오늘 식단 기록이 없습니다</p>";
+        summary.innerText = "";
+        if (calStat) calStat.innerText = "-";
+        return;
+      }
+
+      box.innerHTML = "";
+      var totalCal = 0;
+      todayList.forEach(function(f) {
+        totalCal += (f.calorie || 0);
+        box.innerHTML +=
+          '<div style="padding:10px 12px;background:#E8F8F6;border-radius:10px;margin-bottom:6px;">' +
+            '<div style="font-size:13px;font-weight:600;color:#1A1F36;">' + f.food + '</div>' +
+            '<div style="font-size:12px;color:#00897B;margin-top:3px;font-weight:600;">' + f.calorie + ' kcal</div>' +
+          '</div>';
+      });
+
+      summary.innerText = "총 " + todayList.length + "끼 · 약 " + totalCal.toLocaleString() + " kcal";
+      if (calStat) calStat.innerText = totalCal.toLocaleString();
+    })
+    .catch(function() {
+      var box = document.getElementById("mealList");
+      if (box) box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>불러오기 실패</p>";
+    });
+}
+
+/* ── 최근 인바디 기록 카드 로드 (inbody_log) ── */
+function loadLatestInbody() {
+  fetch("inbody")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var box       = document.getElementById("inbodyList");
+      var dateLabel = document.getElementById("inbodyDateLabel");
+
+      if (!data || data.length === 0) {
+        box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>인바디 기록이 없습니다</p>";
+        return;
+      }
+
+      // 가장 최근 기록 1건
+      var d = data[0];
+      if (dateLabel && d.date) dateLabel.innerText = d.date.substring(0, 10);
+
+      // 프로그레스바 너비 계산 (체중 max 120kg, 골격근량 max 60kg, 체지방량 max 40kg 기준)
+      var weightPct  = Math.min(Math.round((d.weight  || 0) / 120 * 100), 100);
+      var musclePct  = Math.min(Math.round((d.muscle  || 0) / 60  * 100), 100);
+      var fatPct     = Math.min(Math.round((d.fat     || 0) / 40  * 100), 100);
+
+      box.innerHTML =
+        makeInbodyRow("체중",    d.weight  || 0, "kg", weightPct, "linear-gradient(90deg,#FF6B35,#FFD166)") +
+        makeInbodyRow("골격근량", d.muscle  || 0, "kg", musclePct, "linear-gradient(90deg,#00BFA5,#26D4BB)") +
+        makeInbodyRow("체지방량", d.fat     || 0, "kg", fatPct,    "linear-gradient(90deg,#FF4D4D,#FF8C5A)");
+    })
+    .catch(function() {
+      var box = document.getElementById("inbodyList");
+      if (box) box.innerHTML = "<p style='font-size:13px;color:#9DA8C0;text-align:center;padding:12px 0;'>불러오기 실패</p>";
+    });
+}
+
+function makeInbodyRow(label, value, unit, pct, gradient) {
+  return '<div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">' +
+      '<span style="font-weight:600;color:#5A6480;">' + label + '</span>' +
+      '<span style="font-weight:700;color:#1A1F36;">' + value + unit + '</span>' +
+    '</div>' +
+    '<div style="height:7px;background:#F0F0F0;border-radius:99px;overflow:hidden;">' +
+      '<div style="width:' + pct + '%;height:100%;background:' + gradient + ';border-radius:99px;transition:width 0.6s ease;"></div>' +
+    '</div>' +
+  '</div>';
+}
+
 
 function showToast(msg, color) {
   const t = document.createElement('div');
@@ -1066,12 +1140,25 @@ function showToast(msg, color) {
 }
 
 /* 모달 열기/닫기 */
-function openWorkoutModal(){ document.getElementById("workoutModal").style.display="flex"; }
+function openWorkoutModal(){ 
+  const modal = document.getElementById("workoutModal");
+  if(modal) modal.style.display = "flex"; 
+  else console.error("workoutModal ID를 찾을 수 없습니다.");
+}
 function closeWorkoutModal(){ document.getElementById("workoutModal").style.display="none"; }
-function openFoodModal(){ document.getElementById("foodModal").style.display="flex"; }
+
+function openFoodModal(){ 
+  const modal = document.getElementById("foodModal");
+  if(modal) modal.style.display = "flex"; 
+}
 function closeFoodModal(){ document.getElementById("foodModal").style.display="none"; }
-function openInbodyModal(){ document.getElementById("inbodyModal").style.display="flex"; }
+
+function openInbodyModal(){ 
+  const modal = document.getElementById("inbodyModal");
+  if(modal) modal.style.display = "flex"; 
+}
 function closeInbodyModal(){ document.getElementById("inbodyModal").style.display="none"; }
+
 function closeFeedbackListModal(){ document.getElementById("feedbackListModal").style.display="none"; }
 function openNotification(){ document.getElementById("notificationModal").style.display="flex"; loadNotification(); }
 function closeNotification(){ document.getElementById("notificationModal").style.display="none"; }
@@ -1109,8 +1196,7 @@ function saveWorkout(){
       document.getElementById("name").value   = "";
       document.getElementById("weight").value = "";
       document.getElementById("reps").value   = "";
-      // 운동기록 카드 즉시 갱신 (페이지 새로고침 없음)
-      loadTodayWorkout();
+      loadTodayWorkout();  // 운동 기록 카드 즉시 갱신
     } else {
       alert("저장에 실패했습니다. 다시 시도해주세요.");
     }
@@ -1118,12 +1204,89 @@ function saveWorkout(){
   .catch(function(){ alert("서버 연결 오류가 발생했습니다."); });
 }
 
-function calcCalorie(){
-  const name=document.getElementById("foodName").value;
-  const gram=document.getElementById("gram").value;
-  fetch("food",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,gram})})
-  .then(res=>res.json())
-  .then(data=>{document.getElementById("result").innerText="🔥 칼로리: "+data.calorie+" kcal";});
+// 칼로리 계산 (간이 계산, 저장 없음)
+function calcCalorie() {
+  var name = document.getElementById("foodName").value.trim();
+  var gram = parseFloat(document.getElementById("gram").value) || 0;
+  if (!name) { alert("음식명을 입력해주세요."); return; }
+
+  // 간이 칼로리 계산 (100g 기준 대략값)
+  var calorieMap = {
+    "닭가슴살":165,"삶은달걀":155,"현미밥":130,"고구마":86,"브로콜리":34,
+    "오트밀":389,"아보카도":160,"연어":208,"두부":76,"고등어":205
+  };
+  var baseCalorie = calorieMap[name] || 100; // 없으면 100kcal/100g
+  var calorie = Math.round(baseCalorie * gram / 100);
+
+  document.getElementById("result").innerText = "🔥 칼로리: " + calorie + " kcal";
+  // 계산 결과를 숨김 필드에 저장
+  document.getElementById("result").setAttribute("data-calorie", calorie);
+}
+
+// 식단 저장 (DB 연동)
+function saveMeal() {
+  var foodName = document.getElementById("foodName").value.trim();
+  var gram     = document.getElementById("gram").value;
+  var resultEl = document.getElementById("result");
+  var calorie  = resultEl.getAttribute("data-calorie") || "0";
+
+  if (!foodName) { alert("음식명을 입력해주세요."); return; }
+
+  fetch("food", {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: "foodName=" + encodeURIComponent(foodName)
+        + "&gram="     + encodeURIComponent(gram)
+        + "&calorie="  + encodeURIComponent(calorie)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      closeFoodModal();
+      document.getElementById("foodName").value = "";
+      document.getElementById("gram").value = "";
+      resultEl.innerText = "";
+      resultEl.removeAttribute("data-calorie");
+      loadTodayMeal();   // 식단 기록 카드 즉시 갱신
+      showToast("✅ 식단이 기록되었습니다!", "#00BFA5");
+    } else {
+      alert("저장에 실패했습니다.");
+    }
+  })
+  .catch(function() { alert("서버 연결 오류가 발생했습니다."); });
+}
+
+// 인바디 저장 (DB 연동)
+function saveInbody() {
+  var weight = document.getElementById("inbodyWeight").value;
+  var muscle = document.getElementById("inbodyMuscle").value;
+  var fat    = document.getElementById("inbodyFat").value;
+
+  if (!weight || parseFloat(weight) <= 0) {
+    alert("체중을 입력해주세요."); return;
+  }
+
+  fetch("inbody", {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: "weight=" + encodeURIComponent(weight)
+        + "&muscle=" + encodeURIComponent(muscle || "0")
+        + "&fat="    + encodeURIComponent(fat    || "0")
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      closeInbodyModal();
+      document.getElementById("inbodyWeight").value = "";
+      document.getElementById("inbodyMuscle").value = "";
+      document.getElementById("inbodyFat").value    = "";
+      loadLatestInbody();  // 인바디 기록 카드 즉시 갱신
+      showToast("✅ 인바디가 기록되었습니다!", "#9333EA");
+    } else {
+      alert("저장에 실패했습니다. " + (res.msg || ""));
+    }
+  })
+  .catch(function() { alert("서버 연결 오류가 발생했습니다."); });
 }
 
 function submitReview(){

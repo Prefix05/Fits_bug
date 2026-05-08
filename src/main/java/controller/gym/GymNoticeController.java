@@ -7,13 +7,9 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
 import dto.gym.GymNotice;
-import dto.member.UserDTO;
 import service.gym.GymNoticeService;
 import service.gym.GymNoticeServiceImpl;
 
@@ -27,18 +23,19 @@ public class GymNoticeController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
         try {
-			HttpSession session = request.getSession();
-			UserDTO user = (UserDTO)session.getAttribute("loginUser");
-            if (user == null) {
+            HttpSession session = request.getSession(false);
+
+            if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
                 response.sendRedirect(request.getContextPath() + "/member/login");
                 return;
             }
 
-            Integer gymId = user.getOtherId();
+            Integer gymId = (Integer) session.getAttribute("gymId");
 
             String sort = request.getParameter("sort");
             if (sort == null || sort.isEmpty()) {
@@ -59,8 +56,9 @@ public class GymNoticeController extends HttpServlet {
             param.put("sort", sort);
             param.put("pageSize", pageSize);
             param.put("offset", offset);
-            
+
             GymNoticeService service = new GymNoticeServiceImpl();
+
             int totalCount = service.getNoticeCount(gymId);
             List<GymNotice> noticeList = service.getNoticeList(param);
 
@@ -76,7 +74,6 @@ public class GymNoticeController extends HttpServlet {
                 endPage = totalPage;
             }
 
-            request.setAttribute("gymId", gymId);
             request.setAttribute("noticeList", noticeList);
             request.setAttribute("noticeCount", totalCount);
             request.setAttribute("sort", sort);

@@ -132,15 +132,15 @@
                 </p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-sm font-medium text-gray-500">총 정산금액</p>
+                <p class="text-sm font-medium text-gray-500">플랫폼 수수료</p>
                 <p class="text-2xl font-bold text-red-500 mt-2">
-                    ₩<fmt:formatNumber value="${data.summary.totalAmount}" pattern="#,###"/>
+                    ₩<fmt:formatNumber value="${data.summary.totalFee}" pattern="#,###"/>
                 </p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-sm font-medium text-gray-500">순수익(수수료)</p>
+                <p class="text-sm font-medium text-gray-500">순수익</p>
                 <p class="text-2xl font-bold text-blue-600 mt-2">
-                    ₩<fmt:formatNumber value="${data.summary.totalFee}" pattern="#,###"/>
+                    ₩<fmt:formatNumber value="${data.summary.netProfit}" pattern="#,###"/>
                 </p>
             </div>
         </div>
@@ -188,7 +188,7 @@
                         <td class="px-6 py-4 font-medium text-gray-900">${item.gymName}</td>
                         <td class="px-6 py-4 text-gray-700">${not empty item.trainerName ? item.trainerName : '전체'}</td>
                         <td class="px-6 py-4 text-right font-bold text-gray-900">₩<fmt:formatNumber value="${item.paymentPrice}" pattern="#,###"/></td>
-                        <td class="px-6 py-4 text-right text-red-400">₩<fmt:formatNumber value="${item.netAmount}" pattern="#,###"/></td>
+                        <td class="px-6 py-4 text-right text-red-400">₩<fmt:formatNumber value="${item.netProfit}" pattern="#,###"/></td>
                         <td class="px-6 py-4 text-right font-semibold text-primary">₩<fmt:formatNumber value="${item.paymentFee}" pattern="#,###"/></td>
                     </tr>
                     </c:forEach>
@@ -204,7 +204,7 @@
                 <tr class="font-bold text-gray-900">
                     <td colspan="4" class="px-6 py-8 text-right text-lg">합계</td>
                     <td class="px-6 py-8 text-right text-lg">₩ <fmt:formatNumber value="${data.summary.totalSales}" pattern="#,###"/></td>
-                    <td class="px-6 py-8 text-right text-lg text-red-400">₩ <fmt:formatNumber value="${data.summary.totalAmount}" pattern="#,###"/></td>
+                    <td class="px-6 py-8 text-right text-lg text-red-400">₩ <fmt:formatNumber value="${data.summary.netProfit}" pattern="#,###"/></td>
                     <td class="px-6 py-8 text-right text-2xl text-primary">₩ <fmt:formatNumber value="${data.summary.totalFee}" pattern="#,###"/></td>
                 </tr>
             </tfoot>

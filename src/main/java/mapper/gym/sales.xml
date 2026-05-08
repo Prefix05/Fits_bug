@@ -163,14 +163,42 @@
 
     <!-- 트레이너 매출 TOP -->
     <select id="selectTopTrainerList" parameterType="map" resultType="dto.gym.SalesTopTrainer">
-    SELECT trainer_id AS trainerId, u.name AS trainerName,SUM(payment_price) AS totalSales, u.profile_image AS profileImg
-    FROM payment p
-    JOIN trainer t ON(t.id=p.trainer_id)
-    JOIN user u ON(u.id=t.user_id)
-    WHERE p.gym_id = 1
-	 GROUP BY p.trainer_id
-	 ORDER BY SUM(payment_price) desc
-	 LIMIT 5
+    SELECT
+        t.id AS trainerId,
+        tu.name AS trainerName,
+        tu.profile_image AS profileImg,
+        IFNULL(p.totalSales, 0) AS totalSales,
+        IFNULL(ps.sessionCount, 0) AS sessionCount
+    FROM TRAINER t
+    JOIN `USER` tu ON t.user_id = tu.id
+
+    LEFT JOIN (
+        SELECT m.trainer_id, SUM(p.payment_price) AS totalSales
+        FROM PAYMENT p
+        JOIN MEMBERSHIP m ON p.membership_id = m.id
+        WHERE p.status = '결제완료'
+          AND m.type = 'pt'
+
+        <if test="startDate != null and startDate != ''">
+            AND DATE(p.payment_date) <![CDATA[>=]]> #{startDate}
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND DATE(p.payment_date) <![CDATA[<=]]> #{endDate}
+        </if>
+
+        GROUP BY m.trainer_id
+    ) p ON p.trainer_id = t.id
+
+    LEFT JOIN (
+        SELECT trainer_id, COUNT(*) AS sessionCount
+        FROM LESSON
+        GROUP BY trainer_id
+    ) ps ON ps.trainer_id = t.id
+
+    WHERE t.gym_id = #{gymNum}
+    ORDER BY totalSales DESC
+    LIMIT 5
 </select>
 
 

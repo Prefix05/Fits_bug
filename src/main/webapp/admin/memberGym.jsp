@@ -115,7 +115,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                            <span class="material-symbols-outlined">fitness_center</span>
+                                        	<img src="${contextPath}/trainer/profile-img/\${profile}" width="20px"/>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-on-surface">\${name}</p>

@@ -3,16 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.MembershipMapper">
-
-    <!--
-        MEMBERSHIP 테이블: id, gym_id, trainer_id, type, type_rep, price
-        MEMBERSHIP_PT 테이블: id, member_id, membership_id, gym_id,
-                              register_date, start_date, end_date, status,
-                              trainer_id, next_session, lesson_count, last_session
-
-        ※ 기존 코드의 MEMBERSHIP_REGISTRATION → 실제 DB 테이블명은 MEMBERSHIP_PT
-    -->
-
     <resultMap id="membershipResultMap" type="dto.member.MembershipDTO">
         <id     property="id"        column="id"/>
         <result property="gymId"     column="gym_id"/>
@@ -55,7 +45,16 @@
         FROM MEMBERSHIP WHERE trainer_id = #{trainerId}
     </select>
 
-    <!-- MEMBERSHIP_PT 등록 (기존 insertRegistration → MEMBERSHIP_PT 테이블로 수정) -->
+    <!-- trainer_id + session 수(type_rep)로 MEMBERSHIP.id 조회 -->
+    <select id="findByTrainerAndCount" parameterType="map" resultType="int">
+        SELECT id FROM MEMBERSHIP
+        WHERE trainer_id = #{trainerId}
+          AND type_rep   = #{sessionCount}
+          AND type       = 'pt'
+        LIMIT 1
+    </select>
+
+    <!-- MEMBERSHIP_PT 등록: gymId/trainerId nullable 처리 -->
     <insert id="insertRegistration" parameterType="dto.member.MembershipRegistrationDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO MEMBERSHIP_PT (
@@ -63,9 +62,19 @@
             register_date, start_date, end_date,
             status, trainer_id, lesson_count
         ) VALUES (
-            #{memberId}, #{membershipId}, #{gymId},
+            #{memberId},
+            #{membershipId},
+            <choose>
+                <when test="gymId != null">#{gymId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
             #{registerDate}, #{startDate}, #{endDate},
-            #{status}, #{trainerId}, #{lessonCount}
+            #{status},
+            <choose>
+                <when test="trainerId != null">#{trainerId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
+            #{lessonCount}
         )
     </insert>
 

@@ -1,7 +1,6 @@
 package service.member;
 
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 
 import dao.gym.GymMainDao;

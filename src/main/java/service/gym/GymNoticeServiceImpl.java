@@ -10,9 +10,7 @@ import dto.gym.NoticeImages;
 
 public class GymNoticeServiceImpl implements GymNoticeService {
 	private GymNoticeDao gymNoticeDao = new GymNoticeDaoImpl();
-	public GymNoticeServiceImpl() {
-		System.out.println("GymNoticeServiceImpl");
-	}
+	
 	@Override
 	public int getNoticeCount(int gymId) throws Exception {
 		return gymNoticeDao.selectNoticeCount(gymId);

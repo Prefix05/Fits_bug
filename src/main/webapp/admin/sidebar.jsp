@@ -16,7 +16,7 @@
 ">
 
   <!-- 로고 -->
-  <a href="<%=contextPath%>/adim/adminMain" style="
+  <a href="<%=contextPath%>/main" style="
     display:flex;align-items:center;gap:10px;
     margin-bottom:22px;padding:0 6px;text-decoration:none;
   ">
@@ -59,7 +59,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/admin/adminMain" class="sb-link">
+    <a href="<%=contextPath%>/member/main" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -108,7 +108,7 @@
 
   <!-- 하단 -->
   <div style="border-top:1.5px solid #E8EDF5;padding-top:14px;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <a href="<%=contextPath%>/member/support" class="sb-link">
+    <a href="<%=contextPath%>/support" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>

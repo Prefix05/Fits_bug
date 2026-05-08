@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
-import dto.member.UserDTO;
 import service.gym.GymInfoEditService;
 import service.gym.GymInfoEditServiceImpl;
 
@@ -31,14 +30,14 @@ public class GymInfoEdit extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-		HttpSession session = request.getSession();
-		UserDTO user = (UserDTO)session.getAttribute("loginUser");
-        if (user == null) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
             response.sendRedirect(request.getContextPath() + "/member/login");
             return;
-        } 
+        }
 
-        Integer gymId = user.getOtherId();
+        Integer gymId = (Integer) session.getAttribute("gymId");
 
         try {
             GymInfoEditService gymservice = new GymInfoEditServiceImpl();
@@ -47,7 +46,6 @@ public class GymInfoEdit extends HttpServlet {
             Schedule schedule = gymservice.selectSchedule(gymId);
             List<Membership> membershipList = gymservice.selectMembershipList(gymId);
 
-            request.setAttribute("user", user);
             request.setAttribute("gym", gym);
             request.setAttribute("schedule", schedule);
             request.setAttribute("membershipList", membershipList);

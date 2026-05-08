@@ -8,8 +8,7 @@ public class SalesDTO {
 	private Timestamp paymentDate; //매출, 결제
 	private Double paymentPrice; //매출, 결제
 	private Integer membershipNum;
-	private Integer mpNum;
-	private Double netAmount; //계산식 써야함
+	private Integer mrNum;
 	
 	//정산용 DTO
 	private Integer settlementNum;
@@ -19,7 +18,7 @@ public class SalesDTO {
 	private String settlementDeadline;
 	private Double totalSales;
 	private Double totalFee;
-	private Double totalAmount;
+	private Double netAmount;
 	private String bankName;
 	private String accountNumber;
 	private String settlementStatus; //ENUM 매칭
@@ -32,7 +31,7 @@ public class SalesDTO {
 	private Integer trainerId;
 	private String trainerName;
 	private Double paymentFee;
-	
+	private Double netProfit; //payment테이블에 해당칼럼없음. 계산식 써야할듯
 	
 	//결제용 DTO
 	private Integer userNum;
@@ -48,35 +47,24 @@ public class SalesDTO {
 	
 	// --- [6. 비즈니스 로직 메서드] ---
     // DB에 없는 netProfit을 가공해서 반환하는 메서드 예시
-	public Double getNetAmount() { 
-        if (this.paymentPrice != null && this.paymentFee != null) {
-            return this.paymentPrice - this.paymentFee;
+    public Double getNetProfit() {
+    	if (this.paymentPrice != null && this.paymentFee != null) {
+            this.netProfit = this.paymentPrice - this.paymentFee; // 필드에 값을 할당하여 경고 해결
+            return this.netProfit;
         }
-        return netAmount != null ? netAmount : 0.0; 
+        return 0.0;
     }
-	
-    public void setNetAmount(Double netAmount) { this.netAmount= netAmount; }
 
-    
-    public Double getTotalAmount() { 
-        if (this.totalSales != null && this.totalFee != null) {
-            return this.totalSales - this.totalFee;
-        }
-        return totalAmount != null ? totalAmount : 0.0; 
-    }
-	
-    public void setTotalAmount(Double totalAmount) { this.totalAmount = totalAmount; }
-    
 	public SalesDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public SalesDTO(Integer paymentNum, Timestamp paymentDate, Double paymentPrice, Integer membershipNum,
-			Integer mpNum, Integer settlementNum, Integer targetNum, String targetType, String settlementMonth,
-			String settlementDeadline, Double totalSales, Double totalFee, Double totalAmount, String bankName,
+			Integer mrNum, Integer settlementNum, Integer targetNum, String targetType, String settlementMonth,
+			String settlementDeadline, Double totalSales, Double totalFee, Double netAmount, String bankName,
 			String accountNumber, String settlementStatus, Timestamp completedAt, String memo, Integer gymId,
-			String gymName, Integer trainerId, String trainerName, Double paymentFee, Double netAmount, Integer userNum,
+			String gymName, Integer trainerId, String trainerName, Double paymentFee, Double netProfit, Integer userNum,
 			String userName, String method, String paymentStatus, Timestamp canceledAt, String reason,
 			String tossPaymentKey, String tossOrderId) {
 		super();
@@ -84,7 +72,7 @@ public class SalesDTO {
 		this.paymentDate = paymentDate;
 		this.paymentPrice = paymentPrice;
 		this.membershipNum = membershipNum;
-		this.mpNum = mpNum;
+		this.mrNum = mrNum;
 		this.settlementNum = settlementNum;
 		this.targetNum = targetNum;
 		this.targetType = targetType;
@@ -92,7 +80,7 @@ public class SalesDTO {
 		this.settlementDeadline = settlementDeadline;
 		this.totalSales = totalSales;
 		this.totalFee = totalFee;
-		this.totalAmount = totalAmount;
+		this.netAmount = netAmount;
 		this.bankName = bankName;
 		this.accountNumber = accountNumber;
 		this.settlementStatus = settlementStatus;
@@ -103,7 +91,7 @@ public class SalesDTO {
 		this.trainerId = trainerId;
 		this.trainerName = trainerName;
 		this.paymentFee = paymentFee;
-		this.netAmount= netAmount;
+		this.netProfit = netProfit;
 		this.userNum = userNum;
 		this.userName = userName;
 		this.method = method;
@@ -146,12 +134,12 @@ public class SalesDTO {
 		this.membershipNum = membershipNum;
 	}
 
-	public Integer getMpNum() {
-		return mpNum;
+	public Integer getMrNum() {
+		return mrNum;
 	}
 
-	public void setMpNum(Integer mpNum) {
-		this.mpNum = mpNum;
+	public void setMrNum(Integer mrNum) {
+		this.mrNum = mrNum;
 	}
 
 	public Integer getSettlementNum() {
@@ -208,6 +196,14 @@ public class SalesDTO {
 
 	public void setTotalFee(Double totalFee) {
 		this.totalFee = totalFee;
+	}
+
+	public Double getNetAmount() {
+		return netAmount;
+	}
+
+	public void setNetAmount(Double netAmount) {
+		this.netAmount = netAmount;
 	}
 
 	public String getBankName() {
@@ -352,5 +348,9 @@ public class SalesDTO {
 
 	public void setTossOrderId(String tossOrderId) {
 		this.tossOrderId = tossOrderId;
+	}
+
+	public void setNetProfit(Double netProfit) {
+		this.netProfit = netProfit;
 	}
 }

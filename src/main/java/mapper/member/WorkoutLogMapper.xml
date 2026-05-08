@@ -21,11 +21,41 @@
         </collection>
     </resultMap>
 
+    <!-- INSERT: start_time/end_time NULL 허용 -->
     <insert id="insert" parameterType="dto.member.WorkoutLogDTO"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO WORKOUT_LOG (member_id, session_id, date, start_time, end_time, gym_id)
-        VALUES (#{memberId}, #{sessionId}, #{date}, #{startTime}, #{endTime}, #{gymId})
+        VALUES (
+            #{memberId},
+            #{sessionId},
+            #{date},
+            #{startTime},
+            #{endTime},
+            <choose>
+                <when test="gymId != null and gymId > 0">#{gymId}</when>
+                <otherwise>NULL</otherwise>
+            </choose>
+        )
     </insert>
+
+    <!-- 오늘 날짜 workout_log 단건 조회 (있으면 재사용) -->
+    <select id="findTodayLog" parameterType="int" resultMap="workoutLogResultMap">
+        SELECT
+            wl.id, wl.member_id, wl.session_id, wl.date,
+            wl.start_time, wl.end_time, wl.gym_id
+        FROM WORKOUT_LOG wl
+        WHERE wl.member_id = #{memberId}
+          AND wl.date = CURDATE()
+        ORDER BY wl.id DESC
+        LIMIT 1
+    </select>
+
+    <!-- end_time 업데이트 (운동 추가할 때마다 마지막 시간 갱신) -->
+    <update id="updateEndTime" parameterType="map">
+        UPDATE WORKOUT_LOG
+        SET end_time = #{endTime}
+        WHERE id = #{workoutLogId}
+    </update>
 
     <insert id="insertDetail" parameterType="dto.member.WorkoutDetailDTO">
         INSERT INTO WORKOUT_DETAIL (workout_id, title, `set`, rep, weight)

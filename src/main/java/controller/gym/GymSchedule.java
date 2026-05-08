@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dto.member.UserDTO;
 import service.gym.GymScheduleService;
 import service.gym.GymScheduleServiceImpl;
 
@@ -39,15 +38,14 @@ public class GymSchedule extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		try {
-			HttpSession session = request.getSession();
-			UserDTO user = (UserDTO)session.getAttribute("loginUser");
+			HttpSession session = request.getSession(false);
 
-			if (user == null) {
+			if (session == null || session.getAttribute("loginUser") == null || session.getAttribute("gymId") == null) {
 				response.sendRedirect(request.getContextPath() + "/member/login");
 				return;
 			}
 
-			Integer gymId = user.getOtherId();
+			Integer gymId = (Integer) session.getAttribute("gymId");
 
 			String weekOffsetStr = request.getParameter("weekOffset");
 
@@ -69,8 +67,12 @@ public class GymSchedule extends HttpServlet {
 
 			request.getRequestDispatcher("/gym/gym_schedule.jsp").forward(request, response);
 
-		}  catch (Exception e) {
+		} catch (NumberFormatException e) {
+			response.sendRedirect(request.getContextPath() + "/gym/schedule");
+
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ServletException(e);
 		}
 	}
 
