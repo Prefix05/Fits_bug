@@ -13,9 +13,7 @@
 		<typeAlias type="dto.admin.ReportDTO" alias="report"/>
 		<typeAlias type="dto.admin.InquiryDTO" alias="inquiry"/>
 		<typeAlias type="dto.admin.SalesDTO" alias="sales"/>
-		<typeAlias type="dto.trainer.LessonDTO" alias="lesson"/>
 		<typeAlias type="dto.trainer.NotificationDTO" alias="notification"/>
-		<typeAlias type="dto.trainer.ClientDTO" alias="client"/>
 		<typeAlias type="dto.trainer.MealDTO" alias="meal"/>
 		<typeAlias alias="MemberDTO"        type="dto.member.MemberDTO"/>
 		<typeAlias alias="UserDTO"        	type="dto.member.UserDTO"/>
@@ -48,6 +46,17 @@
         <typeAlias alias="TrainerReviewDTO" type="dto.member.TrainerReviewDTO"/>
 		<typeAlias type="dto.trainer.UserDTO" alias="user"/>
 		<typeAlias type="dto.gym.Gym"  alias="gym"/>
+
+		<!-- Trainer Mapper Alias -->
+		<typeAlias type="dto.trainer.CertificationDTO"  alias="CertificationDTO"/>
+		<typeAlias type="dto.trainer.ClientDTO" alias="ClientDTO"/>
+		<typeAlias type="dto.trainer.LessonDTO" alias="TrainerLessonDTO"/>
+		<typeAlias type="dto.trainer.MealDTO" alias="MealDTO"/>
+		<typeAlias type="dto.trainer.NotificationDTO" alias="TrainerNotificationDTO"/>
+		<typeAlias type="dto.trainer.PayoutAccountDTO" alias="PayoutAccountDTO"/>
+		<typeAlias type="dto.trainer.PricingDTO" alias="PricingDTO"/>
+		<typeAlias type="dto.trainer.AvailabilityDTO" alias="AvailabilityDTO"/>
+		<typeAlias type="dto.trainer.TrainerDTO" alias="TrainerDTO"/>
 	</typeAliases>
 
 	<environments default="development">
