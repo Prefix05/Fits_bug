@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import dto.gym.Membership;
 import dto.gym.MembershipRegistration;
 import dto.gym.Payment;
+import dto.member.UserDTO;
 import service.gym.GymPaymentService;
 import service.gym.GymPaymentServiceImpl;
 
@@ -35,84 +36,75 @@ public class GymPayment extends HttpServlet {
 
 		GymPaymentService paymentService = new GymPaymentServiceImpl();
 
-		HttpSession session = request.getSession(false);
-
-		if (session == null || session.getAttribute("loginUser") == null ||  session.getAttribute("userId") == null || session.getAttribute("memberId") == null) {
-			response.sendRedirect(request.getContextPath() + "/member/login");
-			return;
-		}
-		
-		String gymId = request.getParameter("gymId");
-		
-		if (gymId == null || gymId.trim().isEmpty()) {
-		    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "gymId 없음");
-		    return;
-		}
-
 		String path = request.getPathInfo();
 
 		try {
-		if ("/complete".equals(path)) {
+			if ("/complete".equals(path)) {
+				
+				HttpSession session = request.getSession();
+				UserDTO user = (UserDTO)session.getAttribute("loginUser");
+		        if (user == null) {
+		            response.sendRedirect(request.getContextPath() + "/member/login");
+		            return;
+		        } 
 
-			int userId = (Integer) session.getAttribute("userId");
-			int memberId = (Integer) session.getAttribute("memberId");
-			String userName = (String) session.getAttribute("userName");
+		        Integer gymId = user.getOtherId();
 
-			int membershipNum = Integer.parseInt(request.getParameter("membershipId"));
-			String startDateStr = request.getParameter("startDate");
-			
-			if (startDateStr == null || startDateStr.trim().isEmpty()) {
-			    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "startDate 없음");
-			    return;
-			}
+				int membershipNum = Integer.parseInt(request.getParameter("membershipId"));
+				String startDateStr = request.getParameter("startDate");
 
-			Membership membership = paymentService.getMembership(membershipNum);
+				if (startDateStr == null || startDateStr.trim().isEmpty()) {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "startDate 없음");
+					return;
+				}
 
-			if (membership == null) {
-				response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + gymId);
+				Membership membership = paymentService.getMembership(membershipNum);
+
+				if (membership == null) {
+					response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + gymId);
+					return;
+				}
+
+				LocalDate startLocalDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_DATE);
+				LocalDate endLocalDate;
+
+				if ("day".equals(membership.getType())) {
+					endLocalDate = startLocalDate.plusDays(membership.getTypeRep() - 1);
+				} else if ("month".equals(membership.getType())) {
+					endLocalDate = startLocalDate.plusMonths(membership.getTypeRep());
+				} else {
+					throw new ServletException("헬스장 이용권 결제에서는 day/month 타입만 처리 가능합니다.");
+				}
+
+				MembershipRegistration mr = new MembershipRegistration();
+				mr.setMemberNum(user.getOtherId());
+				mr.setMembershipNum(membershipNum);
+				mr.setStartDate(Date.valueOf(startLocalDate));
+				mr.setEndDate(Date.valueOf(endLocalDate));
+				mr.setStatus("active");
+
+				Payment payment = new Payment();
+				payment.setUserId(user.getId());
+				payment.setUserName(user.getName());
+				payment.setMembershipNum(membershipNum);
+				payment.setGymId(membership.getGymNum());
+				payment.setTrainerId(null);
+				payment.setPaymentPrice(membership.getPrice());
+				payment.setPaymentFee(BigDecimal.ZERO);
+				payment.setMethod("PORTONE");
+				payment.setStatus("결제완료");
+				payment.setPaymentType("MEMBERSHIP");
+
+				paymentService.registerMembershipAndPayment(mr, payment);
+
+				response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + membership.getGymNum());
 				return;
 			}
-
-			LocalDate startLocalDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_DATE);
-			LocalDate endLocalDate;
-
-			if ("day".equals(membership.getType())) {
-			    endLocalDate = startLocalDate.plusDays(membership.getTypeRep() - 1);
-			} else if ("month".equals(membership.getType())) {
-			    endLocalDate = startLocalDate.plusMonths(membership.getTypeRep());
-			}else {
-			    throw new ServletException("헬스장 이용권 결제에서는 day/month 타입만 처리 가능합니다.");
-			}
-
-			MembershipRegistration mr = new MembershipRegistration();
-			mr.setMemberNum(memberId);
-			mr.setMembershipNum(membershipNum);
-			mr.setStartDate(Date.valueOf(startLocalDate));
-			mr.setEndDate(Date.valueOf(endLocalDate));
-			mr.setStatus("active");
-
-			Payment payment = new Payment();
-			payment.setUserId(userId);
-			payment.setUserName(userName);
-			payment.setMembershipNum(membershipNum);
-			payment.setGymId(membership.getGymNum());
-			payment.setTrainerId(null);
-			payment.setPaymentPrice(membership.getPrice());
-			payment.setPaymentFee(BigDecimal.ZERO);
-			payment.setMethod("PORTONE");
-			payment.setStatus("결제완료");
-			payment.setPaymentType("MEMBERSHIP");
-
-			paymentService.registerMembershipAndPayment(mr, payment);
-
-			response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + membership.getGymNum());
-			return;
-		}
-		}catch(Exception e) {
-		    e.printStackTrace();
-		    throw new ServletException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException(e);
 		}
 
-		response.sendRedirect(request.getContextPath() + "/gym/main?gymId=" + gymId);
+		response.sendRedirect(request.getContextPath() + "/gym/main");
 	}
 }

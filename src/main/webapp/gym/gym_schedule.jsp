@@ -185,7 +185,7 @@ body {
                                     <div class="session-badge rounded flex flex-col justify-center text-white text-[10px] p-1.5 leading-tight"
                                          data-trainer-id="${session.trainerId}">
                                         <span class="font-bold">
-                                            ${session.startTime} | ${session.trainerName} [${session.specialization}]
+                                            ${session.startTime} | ${session.trainerName} 
                                         </span>
                                         <span class="opacity-80">
                                             회원: ${session.clientName}

@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import dto.gym.Gym;
 import dto.gym.Membership;
 import dto.gym.Schedule;
+import dto.member.UserDTO;
 import util.MybatisSqlSessionFactory;
 
 public class InfoEditDaoImpl implements InfoEditDao{
@@ -38,12 +39,12 @@ public class InfoEditDaoImpl implements InfoEditDao{
 	}
 
 	@Override
-	public int updateGymUser(Gym gym) {
+	public void updateGymUser(UserDTO user) {
 		SqlSession sqlSession = MybatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
-			int res = sqlSession.update("mapper.infoEdit.updateGymUser", gym);
+			sqlSession.update("mapper.infoEdit.updateGymUser", user);
 	        sqlSession.commit();
-	        return res;
+	        
 		} catch (Exception e) {
 		    sqlSession.rollback();
 		    throw e;
