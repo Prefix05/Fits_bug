@@ -110,17 +110,17 @@
 <h2 class="text-2xl font-semibold mb-6">신고 및 문의내역 관리</h2>
 <!-- Summary Indicators -->
 <section class="grid grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">전체 내역</p>
-                <p class="text-2xl font-bold">${totalCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            <div class="bg-white py-3 px-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center">
+                <p class="text-[11px] text-gray-400 mb-1 font-medium">전체 내역</p>
+                <p class="text-xl font-bold">${totalCount }건 <span class="text-xs font-normal text-gray-300">건</span></p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-primary border-y border-r border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">신고 내역</p>
-                <p class="text-2xl font-bold text-error">${reportCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            <div class="bg-white py-3 px-6 rounded-xl shadow-sm border-l-4 border-primary border-y border-r border-gray-100 flex flex-col justify-center">
+                <p class="text-[11px] text-gray-400 mb-1 font-medium">신고 내역</p>
+                <p class="text-xl font-bold text-error">${reportCount }건 <span class="text-xs font-normal text-gray-300">건</span></p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-error border-y border-r border-gray-100">
-                <p class="text-xs text-gray-400 mb-1 font-medium">문의 내역</p>
-                <p class="text-2xl font-bold text-primary">${inquiryCount }건 <span class="text-sm font-normal text-gray-300">건</span></p>
+            <div class="bg-white py-3 px-6 rounded-xl shadow-sm border-l-4 border-error border-y border-r border-gray-100 flex flex-col justify-center">
+                <p class="text-[11px] text-gray-400 mb-1 font-medium">문의 내역</p>
+                <p class="text-xl font-bold text-primary">${inquiryCount }건 <span class="text-xs font-normal text-gray-300">건</span></p>
             </div>
             
 </section>

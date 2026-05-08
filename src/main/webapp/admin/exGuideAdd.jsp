@@ -181,13 +181,23 @@ placeholder="운동 방법, 주의사항, 호흡법 등을 상세히 기록해 �
 <textarea name="keyPoint" class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-4 py-3 rounded-lg transition-all hangul-lh min-h-[200px]" 
 placeholder="운동 시 반드시 지켜야 할 자세의 핵심 포인트를 입력해 주세요." rows="6">${guide.keyPoint}</textarea>
 </div>
+<div class="space-y-2 pt-4">
+    <label class="text-xs font-bold text-outline uppercase tracking-wider">유튜브 영상 주소 (URL)</label>
+    <div class="flex gap-2">
+        <input name="video" id="videoUrlInput" value="${guide.video}" 
+               class="w-full bg-surface-container-low border-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm px-0 py-3 transition-all placeholder:text-outline-variant" 
+               placeholder="https://www.youtube.com/watch?v=..." type="text"
+               oninput="updateYoutubePreview(this.value)"/>
+    </div>
+    <p class="text-[11px] text-outline">유튜브 '공유' 버튼을 눌러 나오는 주소를 복사해서 붙여넣어 주세요.</p>
+</div>
+
 <div class="pt-4">
 <button class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 rounded-xl font-bold text-base transition-all scale-100 active:scale-[0.98] shadow-lg shadow-primary/20" 
 type="submit"> ${empty guide ? "가이드 등록하기" : "수정 완료하기"}
 </button>
 </div>
  <input type="file" name="imageFile" id="imageFile" hidden onchange="previewMedia(this, 'imgPreview')"> 
- <input type="file" name="videoFile" id="videoFile" hidden onchange="previewMedia(this, 'videoPreview')">
 </form>
 </section>
 </div>
@@ -207,13 +217,15 @@ type="submit"> ${empty guide ? "가이드 등록하기" : "수정 완료하기"}
     </div>
 
     <div class="relative group h-64">
-        <div id="videoPreview" onclick="document.getElementById('videoFile').click()" 
-             class="w-full h-full border-2 border-dashed border-outline-variant/50 rounded-xl p-10 flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-all cursor-pointer overflow-hidden">
-            <span class="material-symbols-outlined text-outline group-hover:text-primary mb-3 text-4xl">movie</span>
-            <p class="text-sm font-medium text-on-surface-variant">영상 업로드</p>
-            <p class="text-xs text-outline mt-1">MP4, MOV (최대 100MB)</p>
-        </div>
-       
+        <div id="videoPreview" 
+                     class="w-full h-full border-2 border-dashed border-outline-variant/50 rounded-xl flex flex-col items-center justify-center bg-black transition-all overflow-hidden">
+                    <div id="videoPlaceholder" class="flex flex-col items-center">
+                        <span class="material-symbols-outlined text-outline mb-3 text-4xl">movie</span>
+                        <p class="text-sm font-medium text-on-surface-variant">유튜브 미리보기</p>
+                    </div>
+                    <iframe id="ytPreviewIframe" class="w-full h-full hidden" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+					</iframe>
+                </div>
     </div>
 </div>
 </div>
@@ -247,26 +259,16 @@ function setupSelection(selector, inputId) {
 
 // 2. 미디어 미리보기 기능
 function previewMedia(input, previewId) {
-    if (input.files && input.files[0]) {
+	if (input.files && input.files[0]) {
         const reader = new FileReader();
         const container = document.getElementById(previewId);
         
         reader.onload = function(e) {
-            // 기존 내용을 비우고 새로 넣음
             container.innerHTML = ''; 
-            
-            if(input.id === 'imageFile') {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'preview-content'; // 위에서 정의한 CSS 클래스
-                container.appendChild(img);
-            } else {
-                const video = document.createElement('video');
-                video.src = e.target.result;
-                video.className = 'preview-content';
-                video.controls = true;
-                container.appendChild(video);
-            }
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-content';
+            container.appendChild(img);
         }
         reader.readAsDataURL(input.files[0]);
     }
@@ -295,10 +297,42 @@ window.onload = function() {
         const imgCont = document.getElementById('imgPreview');
         imgCont.innerHTML = `<img src="<%=contextPath%>/uploads/${guide.image}" class="preview-content">`;
     }
-    if("${guide.video}") {
-        const videoCont = document.getElementById('videoPreview');
-        videoCont.innerHTML = `<video src="<%=contextPath%>/uploads/${guide.video}" class="preview-content" controls></video>`;
+    const existingVideo = "${guide.video}";
+    if(existingVideo && existingVideo.trim() !== "") {
+        updateYoutubePreview(existingVideo);
     }
 };
+
+//1. 유튜브 URL에서 ID 추출 및 미리보기 업데이트
+function updateYoutubePreview(url) {
+    const previewContainer = document.getElementById('videoPreview');
+    const iframe = document.getElementById('ytPreviewIframe');
+    const placeholder = document.getElementById('videoPlaceholder');
+
+    if (!url || url.trim() === "") {
+        iframe.classList.add('hidden');
+        iframe.src = "";
+        placeholder.style.display = 'flex';
+        return;
+    }
+
+    // 보완된 유튜브 ID 추출 정규식 (shorts 및 다양한 URL 대응)
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    const videoId = (match && match[7].length === 11) ? match[7] : null;
+
+    if (videoId) {
+        // 보안 및 정책 준수를 위한 주소 형식: https://www.youtube.com/embed/영상ID
+        iframe.src = "https://www.youtube.com/embed/" + videoId;
+        iframe.classList.remove('hidden');
+        placeholder.style.display = 'none';
+    } else {
+        // 올바른 형식이 아닐 경우
+        iframe.classList.add('hidden');
+        iframe.src = "";
+        placeholder.style.display = 'flex';
+    }
+    document.getElementById('videoUrlInput').setAttribute('value', url);
+}
 </script>
 </body></html>

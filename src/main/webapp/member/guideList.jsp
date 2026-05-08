@@ -100,7 +100,7 @@ h2.section-title{font-size:22px;font-weight:700;margin-bottom:16px;}
 .detail-top{display:grid;grid-template-columns:1fr 1fr;gap:0;}
 @media(max-width:700px){.detail-top{grid-template-columns:1fr;}}
 .detail-left{background:#1a1a2e;display:flex;flex-direction:column;}
-.gif-wrap{position:relative;width:100%;padding-bottom:65%;background:#0d0d1a;overflow:hidden;}
+.gif-wrap{position:relative;width:100%;padding-bottom:65%;background:#000;overflow:hidden;border-radius: 12px 0 0 0;}
 .gif-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 .gif-label{position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:13px;font-weight:700;padding:3px 10px;border-radius:5px;}
 .target-wrap{padding:18px 22px 22px;}
@@ -132,10 +132,13 @@ h2.section-title{font-size:22px;font-weight:700;margin-bottom:16px;}
 <main>
 <div class="page-wrap">
 
-  <h2 class="section-title">운동 가이드</h2>
-
+  <h1 style="font-size:26px;font-weight:900;color:#1A1F36;letter-spacing:-.5px;">운동 가이드 🎥</h1>
+	<p style="font-size:14px;color:#9DA8C0;margin-top:4px;">운동에 도움이 되는 가이드입니다.</p>
+	<p style="font-size:14px;color:#9DA8C0;">원하는 정보를 자유롭게 찾아보세요!</p>
+	
   <input class="search-input" type="text" id="searchInput"
-         placeholder="🔍 운동명 검색..." oninput="applyFilter()">
+         placeholder="🔍 운동명 검색..." oninput="applyFilter()"
+         style='margin-top:20px'>
 
   <div class="filter-row" id="muscleFilter">
     <% for (String m : new String[]{"전체","가슴","등","어깨","팔","전신","하체","복근"}) { %>
@@ -158,8 +161,14 @@ h2.section-title{font-size:22px;font-weight:700;margin-bottom:16px;}
     <div class="detail-top">
       <div class="detail-left">
         <div class="gif-wrap">
-          <img id="d-gif" src="" alt="운동 GIF">
-          <span class="gif-label">GIF</span>
+          <iframe id="d-video-iframe" src="" frameborder="0" allowfullscreen 
+          	style="display:none; position:absolute; inset:0; width:100%; height:100%;"></iframe>
+  
+  		  <video id="d-video-file" controls playsinline
+         	style="display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000;"></video>
+  
+  		 <img id="d-gif" src="" alt="운동" 
+       		style="display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
         </div>
         <div class="target-wrap">
           <p class="target-title">Target Muscles</p>
@@ -235,10 +244,9 @@ h2.section-title{font-size:22px;font-weight:700;margin-bottom:16px;}
      onclick="openDetail(this)">
 
       <div class="card-thumb">
-        <img src="<%=image%>" alt="<%=title%>"
+        <img src="<%= contextPath %>/uploads/<%=image%>" alt="<%=title%>"
              onerror="this.style.display='none';this.parentElement.style.background='#dee2e6'">
         <% if (!image.isEmpty()) { %>
-        <span class="gif-badge">GIF</span>
         <% } %>
       </div>
 
@@ -252,8 +260,6 @@ h2.section-title{font-size:22px;font-weight:700;margin-bottom:16px;}
 
         <!-- ✅ 수정5: 카드 안에 버튼 직접 배치 (항상 하단 보임) -->
         <div class="card-btns" onclick="event.stopPropagation()">
-          <button class="card-btn-video"
-                  onclick="openVideoById('<%=safeVideo%>')">📹 영상</button>
           <button class="card-btn-start"
                   onclick="startRecordById(<%=eid%>)">기록 시작</button>
         </div>
@@ -366,6 +372,45 @@ function openDetail(card){
 	  const muscle = card.dataset.muscle;
 	  const type = card.dataset.type;
 	  const diff = card.dataset.level;
+	  
+	// 모든 미디어 엘리먼트 초기화 및 숨기기
+	  const vIframe = document.getElementById('d-video-iframe');
+	  const vFile = document.getElementById('d-video-file');
+	  const imgGif = document.getElementById('d-gif');
+
+	  vIframe.style.display = 'none';
+	  vIframe.src = '';
+	  vFile.style.display = 'none';
+	  vFile.pause();
+	  vFile.src = '';
+	  imgGif.style.display = 'none';
+
+	  // 영상 처리 로직
+	  if (ytUrl && ytUrl.includes('youtube.com') || ytUrl.includes('youtu.be')) {
+		// 유튜브 영상 ID 추출 정규식
+	        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+	        const match = ytUrl.match(regExp);
+	        const videoId = (match && match[2].length === 11) ? match[2] : null;
+
+	        if (videoId) {
+	            // 임베드용 URL로 변환하여 할당
+	            vIframe.src = "https://www.youtube.com/embed/" + videoId + "?rel=0&modestbranding=1";
+	            vIframe.style.display = 'block';
+	        } else {
+	            // ID 추출 실패 시 기본 GIF 노출
+	            imgGif.style.display = 'block';
+	        }
+	    } else if (ytUrl && ytUrl.trim() !== "") {
+	        // 서버 내부의 일반 영상 파일(.mp4 등)인 경우
+	        vFile.style.display = 'block';
+	        vFile.src = "<%= contextPath %>/uploads/" + ytUrl;
+	        vFile.load();
+	    } else if (gifUrl) {
+	        // 영상 정보가 전혀 없을 때 기존 GIF 이미지 노출
+	        imgGif.style.display = 'block';
+	        imgGif.src = "<%= contextPath %>/uploads/" + gifUrl;
+	    }
+	  
 
 	  let keypoints = [];
 	  try {
@@ -415,8 +460,7 @@ function startRecordById(id){
 
 function watchVideo(){
   if(!curYtUrl){ alert('영상 정보가 없습니다.'); return; }
-  document.getElementById('yt-frame').src = curYtUrl+'?autoplay=1';
-  document.getElementById('video-modal').style.display='flex';
+  document.querySelector('.gif-wrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function closeVideo(){
   document.getElementById('yt-frame').src='';

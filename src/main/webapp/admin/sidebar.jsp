@@ -16,11 +16,11 @@
 ">
 
   <!-- 로고 -->
-  <a href="<%=contextPath%>/main" style="
+  <a href="<%=contextPath%>/admin/main" style="
     display:flex;align-items:center;gap:10px;
     margin-bottom:22px;padding:0 6px;text-decoration:none;
   ">
-    <img src="<%=contextPath%>/resources/images/fitbull_icon.png"
+    <img src="<%=contextPath%>/uploads/fitbull_icon.png"
          style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #FF6B35;"
          onerror="this.style.display='none';this.nextElementSibling.style.display='block'" alt="핏불">
     <div style="display:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B35,#00BFA5);flex-shrink:0;"></div>
@@ -49,9 +49,6 @@
       <div style="font-size:11px;color:#9DA8C0;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
         <%= loginUser.getEmail() %>
       </div>
-      <div style="font-size:11px;color:#00897B;background:#E8F8F6;padding:2px 8px;border-radius:99px;margin-top:5px;display:inline-block;font-weight:700;">
-        맞춤 플랜 진행 중 💪
-      </div>
     </div>
   </div>
   <% } %>
@@ -59,7 +56,7 @@
   <!-- 네비게이션 -->
   <nav style="display:flex;flex-direction:column;gap:3px;flex:1;">
 
-    <a href="<%=contextPath%>/member/main" class="sb-link">
+    <a href="<%=contextPath%>/admin/main" class="sb-link">
       <span class="material-symbols-outlined" style="font-size:20px;">home</span><span>홈</span>
     </a>
     <a href="<%=contextPath%>/member/guide" class="sb-link">
@@ -112,9 +109,12 @@
       <span class="material-symbols-outlined" style="font-size:20px;">support_agent</span><span>고객센터</span>
     </a>
     <% if(loginUser != null){ %>
-    <button onclick="location.href='<%=contextPath%>/member/logout'" class="sb-btn-main">
-      <span class="material-symbols-outlined" style="font-size:18px;">logout</span>로그아웃
-    </button>
+    <form action="<%=contextPath%>/member/logout" method="post">
+      <button type="submit" class="sb-btn-main">
+        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+        로그아웃
+      </button>
+    </form>
     <% } else { %>
     <button onclick="location.href='<%=contextPath%>/member/login'" class="sb-btn-main">
       <span class="material-symbols-outlined" style="font-size:18px;">login</span>로그인

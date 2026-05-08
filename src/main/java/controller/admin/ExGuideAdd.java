@@ -66,7 +66,7 @@ public class ExGuideAdd extends HttpServlet {
 
         String uploadPath = request.getServletContext().getRealPath("/uploads");
         //File uploadDir = new File(uploadPath);
-       // if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
+        // if (!uploadDir.exists()) uploadDir.mkdirs(); // 폴더가 없으면 생성
 
         try {
         	String egNumStr = request.getParameter("egNum"); // hidden 필드에서 받음
@@ -76,12 +76,11 @@ public class ExGuideAdd extends HttpServlet {
             String targetMuscle = request.getParameter("targetMuscle");
             String description = request.getParameter("description");
             String keyPoint = request.getParameter("keyPoint");
+            String videoUrl = request.getParameter("video");
             
             // 3. 파일 처리 (MultipartFile 대신 request.getPart() 사용)
             Part imagePart = request.getPart("imageFile"); // JSP의 name과 일치
-            Part videoPart = request.getPart("videoFile");
             String image = saveFile(imagePart, uploadPath);
-            String video = saveFile(videoPart, uploadPath);
 
             // 4. DTO 생성 및 수동 매핑 (Spring이 아니므로 하나씩 직접 넣어야 함)
             ExerciseDTO dto = new ExerciseDTO();
@@ -91,12 +90,12 @@ public class ExGuideAdd extends HttpServlet {
             dto.setTargetMuscle(targetMuscle);
             dto.setDescription(description);
             dto.setKeyPoint(keyPoint);
+            dto.setVideo(videoUrl);
             
          // 4. 분기 작전 (등록 vs 수정)
             if (egNumStr == null || egNumStr.isEmpty()) {
                 // [신규 등록]
                 dto.setImage(image);
-                dto.setVideo(video);
                 exerciseService.registerExerciseGuide(dto);
             } else {
                 // [기존 수정]
@@ -105,8 +104,14 @@ public class ExGuideAdd extends HttpServlet {
                 
                 // 만약 새로운 파일을 올리지 않았다면 기존 파일명을 유지해야 함
                 // (이 로직은 서비스나 DAO에서 처리하거나, 여기서 기존 정보를 다시 불러와 세팅)
-                if(image != null) dto.setImage(image);
-                if(video != null) dto.setVideo(video);
+                if(image != null) {
+                    dto.setImage(image);
+                } else {
+                    // 이미지를 새로 선택 안 했다면 기존 이미지 유지 로직 필요
+                    // 기존 데이터를 불러와서 세팅하거나, DAO에서 null 체크를 해야 합니다.
+                    ExerciseDTO oldData = exerciseService.getExerciseDetail(egNum);
+                    dto.setImage(oldData.getImage());
+                }
                 
                 exerciseService.modifyExerciseGuide(dto); // 서비스에 modify 메서드 추가 필요
             }
