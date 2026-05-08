@@ -106,7 +106,7 @@
       				<span>트레이너</span>
     			</a>
     			
-   				<a href="${contextPath}/gym/main" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
+   				<a href="${contextPath}/member/gymList" class="flex items-center gap-3 px-4 py-2 rounded-xl text-slate-500 hover:bg-blue-50">
       				<span class="material-symbols-outlined">store</span>
       				<span>헬스장</span>
     			</a>

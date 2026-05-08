@@ -8,19 +8,37 @@ public class Membership {
 	private String type;
 	private int typeRep;
 	private BigDecimal price;
+	private Integer trainerNum;
 	
 	public Membership() {
 		super();
 	}
 
-	public Membership(int membershipNum, int gymNum, String type, int typeRep, BigDecimal price) {
+	
+
+	public Membership(int membershipNum, int gymNum, String type, int typeRep, BigDecimal price, Integer trainerNum) {
 		super();
 		this.membershipNum = membershipNum;
 		this.gymNum = gymNum;
 		this.type = type;
 		this.typeRep = typeRep;
 		this.price = price;
+		this.trainerNum = trainerNum;
 	}
+
+
+	
+	public Integer getTrainerNum() {
+		return trainerNum;
+	}
+
+
+
+	public void setTrainerNum(Integer trainerNum) {
+		this.trainerNum = trainerNum;
+	}
+
+
 
 	public int getMembershipNum() {
 		return membershipNum;
@@ -62,11 +80,15 @@ public class Membership {
 		this.price = price;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "Membership [membershipNum=" + membershipNum + ", gymNum=" + gymNum + ", type=" + type + ", typeRep="
-				+ typeRep + ", price=" + price + "]";
+				+ typeRep + ", price=" + price + ", trainerNum=" + trainerNum + "]";
 	}
+
+	
 	
 	
 }

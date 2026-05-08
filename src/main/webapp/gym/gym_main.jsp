@@ -1105,12 +1105,39 @@ function submitPayment(event) {
         buyer_tel: "010-0000-0000"
     }, function (rsp) {
         if (rsp.success) {
-            location.href =
-            	"${pageContext.request.contextPath}/gym/payment/complete"
-                + "?imp_uid=" + rsp.imp_uid
-                + "&merchant_uid=" + rsp.merchant_uid
-                + "&membershipId=" + selectedMembership.id
-                + "&startDate=" + selectedMembership.startDate;
+
+        	fetch("${pageContext.request.contextPath}/gym/tossPayment", {
+        	    method: "POST",
+        	    headers: {
+        	        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        	    },
+        	    body:
+        	        "paymentKey=" + encodeURIComponent(rsp.imp_uid) +
+        	        "&orderId=" + encodeURIComponent(rsp.merchant_uid) +
+        	        "&amount=" + encodeURIComponent(parseInt(selectedMembership.price)) +
+        	        "&status=" + encodeURIComponent("DONE") +
+        	        "&membershipNum=" + encodeURIComponent(selectedMembership.id) +
+        	        "&startDate=" + encodeURIComponent(selectedMembership.startDate)
+        	})
+        	.then(res => res.text())
+        	.then(text => {
+        	    console.log("서버 응답:", text);
+
+        	    const data = JSON.parse(text);
+
+        	    if (data.success) {
+        	        alert("결제가 완료되었습니다.");
+        	        closePaymentModal();
+        	        location.reload();
+        	    } else {
+        	        alert(data.message);
+        	    }
+        	})
+        	.catch(err => {
+        	    console.error(err);
+        	    alert("결제 저장 중 오류가 발생했습니다.");
+        	});
+
         } else {
             alert("결제 실패: " + rsp.error_msg);
         }

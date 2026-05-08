@@ -92,6 +92,7 @@
 		<mapper resource="mapper/gym/sales.xml"/>
 		<mapper resource="mapper/gym/infoEdit.xml"/>
 		<mapper resource="mapper/gym/payment.xml"/>
+		<mapper resource="mapper/gym/tossPayment.xml"/>
 		
 
 		<mapper resource="mapper/member/MemberMapper.xml"/>

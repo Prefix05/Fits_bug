@@ -34,21 +34,8 @@
         ps.status AS status,
         HOUR(ps.start_time) AS startHour,
         WEEKDAY(ps.lesson_date) + 1 AS dayOfWeek,
-        IFNULL(
-            GROUP_CONCAT(
-                CASE s.type
-                    WHEN 'YOGA' THEN '요가'
-                    WHEN 'HYPERTROPHY' THEN '근비대'
-                    WHEN 'BODY' THEN '보디빌딩'
-                    WHEN 'STRENGTH' THEN '스트렝스'
-                    WHEN 'REHABILITATION' THEN '재활'
-                END
-                ORDER BY s.type
-                SEPARATOR ', '
-            ),
-            ''
-        ) AS specialization
-    FROM Lesson ps
+        '' AS specialization
+    FROM LESSON ps
     JOIN TRAINER t
       ON ps.trainer_id = t.id
     JOIN `USER` trainer_user
@@ -57,8 +44,6 @@
       ON ps.client_id = m.id
     JOIN `USER` client_user
       ON m.user_id = client_user.id
-    LEFT JOIN TRAINER_SPECIALIZATION s
-      ON ps.trainer_id = s.trainer_id
     WHERE t.gym_id = #{gymId}
       AND ps.lesson_date >= #{weekStart}
       AND ps.lesson_date &lt; #{weekEnd}
