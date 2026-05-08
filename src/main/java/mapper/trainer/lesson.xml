@@ -5,7 +5,6 @@
 <mapper namespace="lesson">
     <select id="findLessonsByDate" parameterType="map" resultType="TrainerLessonDTO">
         SELECT l.id,
-               l.goal,
                u.nickname AS member_name,
                l.client_id,
                l.status,
@@ -26,7 +25,6 @@
 
     <select id="findLessonsByDateRange" parameterType="map" resultType="TrainerLessonDTO">
         SELECT l.id,
-               l.goal,
                u.nickname AS member_name,
                l.client_id,
                l.status,
@@ -46,8 +44,8 @@
     </select>
 
     <insert id="insertLesson" parameterType="map">
-        INSERT INTO LESSON (trainer_id, client_id, lesson_date, start_time, end_time, status, goal)
-        VALUES (#{trainerId}, #{clientId}, #{lessonDate}, #{startTime}, #{endTime}, '예약완료', #{goal})
+        INSERT INTO LESSON (trainer_id, client_id, lesson_date, start_time, end_time, status)
+        VALUES (#{trainerId}, #{clientId}, #{lessonDate}, #{startTime}, #{endTime}, '예약완료')
     </insert>
 
     <!-- Returns [{lesson_date: "YYYY-MM-DD", cnt: N}, ...] for month overview dots -->
