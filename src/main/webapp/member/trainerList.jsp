@@ -62,10 +62,14 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
     </div>
     <!-- 카테고리 칩 -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <c:forEach var="cat" items="${['전체','근력','다이어트','체형교정','벌크업','재활','필라테스','크로스핏']}">
-        <button class="cat-chip ${cat == category ? 'active' : ''}"
-                onclick="setCategory('${cat}',this)">${cat}</button>
-      </c:forEach>
+      <button class="cat-chip ${category == '전체'      ? 'active' : ''}" onclick="setCategory('전체',this)">전체</button>
+      <button class="cat-chip ${category == '근력'      ? 'active' : ''}" onclick="setCategory('근력',this)">근력</button>
+      <button class="cat-chip ${category == '다이어트'   ? 'active' : ''}" onclick="setCategory('다이어트',this)">다이어트</button>
+      <button class="cat-chip ${category == '체형교정'   ? 'active' : ''}" onclick="setCategory('체형교정',this)">체형교정</button>
+      <button class="cat-chip ${category == '벌크업'     ? 'active' : ''}" onclick="setCategory('벌크업',this)">벌크업</button>
+      <button class="cat-chip ${category == '재활'      ? 'active' : ''}" onclick="setCategory('재활',this)">재활</button>
+      <button class="cat-chip ${category == '필라테스'   ? 'active' : ''}" onclick="setCategory('필라테스',this)">필라테스</button>
+      <button class="cat-chip ${category == '크로스핏'   ? 'active' : ''}" onclick="setCategory('크로스핏',this)">크로스핏</button>
     </div>
   </div>
 

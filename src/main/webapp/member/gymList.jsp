@@ -132,6 +132,14 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
 </div>
 
+<form action="<%=contextPath%>/member/gymList" id="locForm">
+	<input type="hidden" name="keyword" id="keywordLoc"/>
+	<input type="hidden" name="sort" id="sortLoc"/>
+	<input type="hidden" name="category" id="categoryLoc"/>
+	<input type="hidden" name="lat" id="latLoc"/>
+	<input type="hidden" name="lng" id="lngLoc"/>
+</form>
+
 <script>
 var userLat = null, userLng = null;
 var currentCategory = '<%=category%>';
@@ -148,12 +156,12 @@ if (navigator.geolocation) {
             showLocBanner('ok', '📍 내 위치 기준으로 가까운 헬스장을 표시하고 있어요');
             // 거리순 자동 선택
             document.getElementById('sort').value = 'distance';
-            fetchData();
+            //fetchData();
         },
         function(err) {
             showLocBanner('error', '위치 정보를 가져올 수 없습니다. 추천순으로 표시합니다.');
             document.getElementById('sort').value = 'recommend';
-            fetchData();
+			//fetchData();
         },
         { timeout: 8000 }
     );
@@ -209,8 +217,16 @@ function fetchData() {
     var keyword = document.getElementById('keyword').value;
     var sort    = document.getElementById('sort').value;
     var spinner = document.getElementById('spinner');
+    
+    document.getElementById('keywordLoc').value = document.getElementById('keyword').value
+    document.getElementById('sortLoc').value = document.getElementById('sort').value
+    document.getElementById('categoryLoc').value = currentCategory
+    document.getElementById('latLoc').value = userLat
+    document.getElementById('lngLoc').value = userLng
 
-    var url = '<%=contextPath%>/member/gymList?ajax=true'
+    document.getElementById("locForm").submit();
+    
+<%--     var url = '<%=contextPath%>/member/gymList?ajax=true'
         + '&keyword=' + encodeURIComponent(keyword)
         + '&sort='    + encodeURIComponent(sort)
         + '&category='+ encodeURIComponent(currentCategory);
@@ -229,7 +245,7 @@ function fetchData() {
             spinner.style.display = 'none';
             updateCount();
         })
-        .catch(function(){ spinner.style.display = 'none'; });
+        .catch(function(){ spinner.style.display = 'none'; }); --%>
 }
 
 function updateCount() {

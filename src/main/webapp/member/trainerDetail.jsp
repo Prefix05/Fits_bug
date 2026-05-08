@@ -12,7 +12,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>핏츠버그 - ${fn:escapeXml(t.name)} 트레이너</title>
-<script src="https://js.tosspayments.com/v1/payment"></script>
+<script src="https://js.tosspayments.com/v1/toss"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"/>
 <style>
@@ -231,8 +231,9 @@ body{font-family:'Noto Sans KR','Nunito',sans-serif;background:#F7F9FC;display:f
 
 <script>
 const CTX = '${ctx}';
-const TRAINER_ID = ${t.id};
+const TRAINER_ID   = ${t.id};
 const TRAINER_NAME = '${fn:escapeXml(t.name)}';
+const TRAINER_TYPE = '${t.trainerType}'; // GYM_EMPLOYED / GYM_RENTAL / FREELANCE
 
 function selectPkg(label, pkgName, price) {
   document.querySelectorAll('.pkg-label').forEach(l => l.classList.remove('selected'));
@@ -256,14 +257,16 @@ function pay() {
   const amount       = parseInt(radio.value);
   const productName  = radio.dataset.name || 'PT';
   const sessionCount = parseInt(radio.dataset.count) || 1;
-  const orderId      = 'PT-' + TRAINER_ID + '-' + sessionCount + '-' + Date.now();
+  // orderId 형식: PT-{trainerId}-{sessionCount}-{trainerType}-{timestamp}
+  // PaymentSuccessController에서 파싱해 gymId/trainerId 분기에 사용
+  const orderId      = 'PT-' + TRAINER_ID + '-' + sessionCount + '-' + TRAINER_TYPE + '-' + Date.now();
   const tossPayments = TossPayments("test_ck_5OWRapdA8dJO4LMYoZWYVo1zEqZK");
   tossPayments.requestPayment("카드", {
     amount,
     orderId,
     orderName: productName,
-    successUrl: window.location.origin + CTX + '/member/paymentSuccess.jsp',
-    failUrl:    window.location.origin + CTX + '/member/paymentFail.jsp'
+    successUrl: window.location.origin + CTX + '/member/paymentSuccess',
+    failUrl:    window.location.origin + CTX + '/member/paymentFail'
   });
 }
 

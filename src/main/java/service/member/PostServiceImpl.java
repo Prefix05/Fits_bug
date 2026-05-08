@@ -10,22 +10,16 @@ import dto.member.PostDTO;
 
 public class PostServiceImpl implements PostService {
 
-    PostDAO dao;
-    CompleteDAO completeDAO;
-
-    public PostServiceImpl() {
-        dao = new PostDAOImpl();
-        completeDAO = new CompleteDAOImpl();
-    }
+    private PostDAO     dao         = new PostDAOImpl();
+    private CompleteDAO completeDAO = new CompleteDAOImpl();
 
     @Override
-    public int writePost(PostDTO dto) {
-
+    public int writePost(PostDTO dto, String userEmail) {
         int result = dao.insert(dto);
 
-        // 🔥 오운완이면 기록 저장
-        if(result > 0 && "owun".equals(dto.getCategory())){
-            completeDAO.insertLog(dto.getUserId());
+        // postType = "exerciseComplete" 이면 오운완 기록 저장
+        if (result > 0 && "exerciseComplete".equals(dto.getPostType())) {
+            completeDAO.insertLog(userEmail);
         }
 
         return result;

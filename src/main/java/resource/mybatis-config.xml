@@ -34,6 +34,7 @@
         <typeAlias alias="ChatRoomDTO"    	type="dto.member.ChatRoomDTO"/>
 		<typeAlias alias="ChatMessageDTO" 	type="dto.member.ChatMessageDTO"/>
         <typeAlias alias="NotificationDTO"  type="dto.member.NotificationDTO"/>
+        <typeAlias alias="TossDTO"  		type="dto.member.TossDTO"/>
         <typeAlias alias="PaymentDTO"       type="dto.member.PaymentDTO"/>
         <typeAlias alias="PtFeedbackDTO"    type="dto.member.PtFeedbackDTO"/>
         <typeAlias alias="ReportDTO"        type="dto.member.ReportDTO"/>
@@ -113,6 +114,7 @@
         <mapper resource="mapper/member/CompleteMapper.xml"/>
         <mapper resource="mapper/member/MembershipMapper.xml"/>
         <mapper resource="mapper/member/LessonMapper.xml"/>
+        <mapper resource="mapper/member/TossMapper.xml"/>
 		<mapper resource="mapper/member/TrainerMapper.xml"/>
 		<mapper resource="mapper/member/trainerListMapper.xml"/>
 		<mapper resource="mapper/member/TrainerPricingMapper.xml"/>

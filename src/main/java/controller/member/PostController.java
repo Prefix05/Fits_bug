@@ -16,8 +16,6 @@ import dao.member.CompleteDAO;
 import dao.member.CompleteDAOImpl;
 import dto.member.PostDTO;
 import dto.member.UserDTO;
-import service.member.PostReactionService;
-import service.member.PostReactionServiceImpl;
 import service.member.PostService;
 import service.member.PostServiceImpl;
 
@@ -25,38 +23,29 @@ import service.member.PostServiceImpl;
 @MultipartConfig
 public class PostController extends HttpServlet {
 
-    PostService service = new PostServiceImpl();
-    CompleteDAO completeDAO = new CompleteDAOImpl();
-    PostReactionService rs = new PostReactionServiceImpl();
+    private PostService  service     = new PostServiceImpl();
+    private CompleteDAO  completeDAO = new CompleteDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        // ✅ String → UserDTO로 수정 (loginUser는 UserDTO 객체)
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-        String userId = (loginUser != null) ? loginUser.getEmail() : null;
+        HttpSession session   = request.getSession();
+        UserDTO     loginUser = (UserDTO) session.getAttribute("loginUser");
 
         List<PostDTO> list = service.getPosts();
-
-        // 점수 기준 정렬
-        list.sort((a, b) ->
-            (b.getLikeCount() + b.getGoodCount() + b.getMuscleCount()) -
-            (a.getLikeCount() + a.getGoodCount() + a.getMuscleCount())
-        );
-
         request.setAttribute("postList", list);
 
-        // 스트릭 데이터 (null 방어)
-        if (userId != null) {
-            request.setAttribute("weekLog", completeDAO.getWeekLog(userId));
-            request.setAttribute("streak",  completeDAO.getStreak(userId));
-            request.setAttribute("best",    completeDAO.getBestStreak(userId));
+        if (loginUser != null) {
+            String email = loginUser.getEmail();
+            request.setAttribute("weekLog", completeDAO.getWeekLog(email));
+            request.setAttribute("streak",  completeDAO.getStreak(email));
+            request.setAttribute("best",    completeDAO.getBestStreak(email));
         }
 
         request.getRequestDispatcher("/member/community.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -64,37 +53,52 @@ public class PostController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession();
-        // ✅ String → UserDTO로 수정
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-        String userId = (loginUser != null) ? loginUser.getEmail() : null;
+        HttpSession session   = request.getSession();
+        UserDTO     loginUser = (UserDTO) session.getAttribute("loginUser");
+
+
+        if (loginUser == null) {
+            response.sendRedirect(request.getContextPath() + "/member/login");
+            return;
+        }
+
+
+        int    userId = loginUser.getId();
+        String email  = loginUser.getEmail();   // 오운완 기록용
 
         String category = request.getParameter("category");
+        String postType = "owun".equals(category) ? "exerciseComplete" : "free";
+
         String title    = request.getParameter("title");
-        String body  = request.getParameter("body");
+        String body     = request.getParameter("body");
         String hashtags = request.getParameter("hashtags");
 
-        Part filePart = request.getPart("image");
-        String fileName = filePart != null ? filePart.getSubmittedFileName() : "";
-
         String dbPath = "";
-        if (fileName != null && !fileName.isEmpty()) {
-            String uploadPath = request.getServletContext().getRealPath("/upload");
-            java.io.File dir = new java.io.File(uploadPath);
-            if (!dir.exists()) dir.mkdir();
-            filePart.write(uploadPath + "/" + fileName);
-            dbPath = "upload/" + fileName;
+        try {
+            Part filePart = request.getPart("image");
+            if (filePart != null) {
+                String fileName = filePart.getSubmittedFileName();
+                if (fileName != null && !fileName.isEmpty()) {
+                    String uploadPath = request.getServletContext().getRealPath("/upload");
+                    java.io.File dir = new java.io.File(uploadPath);
+                    if (!dir.exists()) dir.mkdirs();
+                    filePart.write(uploadPath + "/" + fileName);
+                    dbPath = "upload/" + fileName;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         PostDTO dto = new PostDTO();
-        dto.setUserId(userId);
-        dto.setCategory(category);
+        dto.setUserId(userId);      
+        dto.setPostType(postType);  
         dto.setTitle(title);
         dto.setBody(body);
         dto.setImage(dbPath);
         dto.setHashtags(hashtags);
 
-        service.writePost(dto);
+        service.writePost(dto, email);
 
         response.sendRedirect("post");
     }
